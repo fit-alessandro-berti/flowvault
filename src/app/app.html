@@ -210,6 +210,15 @@
                 </section>
               } @else {
                 @if (patternGraph(pattern); as graph) {
+                  <div class="graph-toolbar">
+                    <button
+                      type="button"
+                      class="ghost-button graph-open-button"
+                      (click)="openFullScreenGraph(pattern)"
+                    >
+                      Open full screen
+                    </button>
+                  </div>
                   <div class="graph-scroll" aria-label="Selected intra-state pattern graph">
                     <svg
                       class="pattern-graph"
@@ -396,6 +405,15 @@
                 </section>
               } @else {
                 @if (patternGraph(pattern); as graph) {
+                  <div class="graph-toolbar">
+                    <button
+                      type="button"
+                      class="ghost-button graph-open-button"
+                      (click)="openFullScreenGraph(pattern)"
+                    >
+                      Open full screen
+                    </button>
+                  </div>
                   <div class="graph-scroll" aria-label="Selected inter-state pattern graph">
                     <svg
                       class="pattern-graph"
@@ -473,6 +491,93 @@
         </section>
       </div>
     </section>
+  }
+
+  @if (fullScreenPattern(); as pattern) {
+    <div
+      class="modal-backdrop graph-modal-backdrop"
+      role="presentation"
+      (click)="closeFullScreenGraph()"
+    >
+      <section
+        class="state-modal graph-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="graph-dialog-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header class="state-modal-header">
+          <h2 id="graph-dialog-title">{{ pattern.label }}</h2>
+          <button type="button" class="ghost-button" (click)="closeFullScreenGraph()">Close</button>
+        </header>
+
+        @if (patternGraph(pattern, true); as graph) {
+          <div class="graph-scroll graph-scroll-expanded" aria-label="Full-screen pattern graph">
+            <svg
+              class="pattern-graph pattern-graph-expanded"
+              [attr.viewBox]="'0 0 ' + graph.width + ' ' + graph.height"
+              [attr.width]="graph.width"
+              [attr.height]="graph.height"
+              role="img"
+            >
+              <defs>
+                <marker
+                  [attr.id]="pattern.id + '-fullscreen-arrowhead'"
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="8"
+                  markerHeight="8"
+                  orient="auto-start-reverse"
+                >
+                  <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                </marker>
+              </defs>
+              @for (edge of graph.edges; track edge.id) {
+                <line
+                  [attr.class]="'graph-edge graph-edge-' + edge.kind"
+                  [attr.x1]="edge.x1"
+                  [attr.y1]="edge.y1"
+                  [attr.x2]="edge.x2"
+                  [attr.y2]="edge.y2"
+                  [attr.marker-end]="
+                    edge.kind === 'oo' ? null : 'url(#' + pattern.id + '-fullscreen-arrowhead)'
+                  "
+                ></line>
+                <text
+                  class="graph-edge-label"
+                  [attr.x]="(edge.x1 + edge.x2) / 2"
+                  [attr.y]="(edge.y1 + edge.y2) / 2 - 7"
+                >
+                  {{ edge.label }}
+                </text>
+              }
+              @for (node of graph.nodes; track node.id) {
+                <g [attr.class]="'graph-node graph-node-' + node.kind">
+                  <title>{{ node.title }}</title>
+                  <rect
+                    [attr.x]="node.x"
+                    [attr.y]="node.y"
+                    [attr.width]="graph.nodeWidth"
+                    [attr.height]="graph.nodeHeight"
+                  ></rect>
+                  <text
+                    [attr.x]="node.x + graph.nodeWidth / 2"
+                    [attr.y]="node.y + graph.nodeHeight / 2 - (node.lines.length - 1) * 8 + 5"
+                  >
+                    @for (line of node.lines; track $index) {
+                      <tspan [attr.x]="node.x + graph.nodeWidth / 2" [attr.dy]="$first ? 0 : 16">
+                        {{ line }}
+                      </tspan>
+                    }
+                  </text>
+                </g>
+              }
+            </svg>
+          </div>
+        }
+      </section>
+    </div>
   }
 
   @if (isStateDialogOpen()) {

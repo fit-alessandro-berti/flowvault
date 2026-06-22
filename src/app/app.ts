@@ -24,7 +24,7 @@ interface PatternGraphNode {
   title: string;
   x: number;
   y: number;
-  kind: 'control' | 'object';
+  kind: 'control' | 'change' | 'object';
 }
 
 interface PatternGraphEdge {
@@ -70,6 +70,7 @@ export class App {
   protected readonly selectedInterPatternId = signal('');
   protected readonly intraVisualization = signal<PatternVisualization>('text');
   protected readonly interVisualization = signal<PatternVisualization>('text');
+  protected readonly fullScreenPattern = signal<StatePattern | null>(null);
   protected readonly hasDocument = computed(() => this.summary() !== null);
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
   protected readonly intraPatterns = computed(() => this.patternAnalysis()?.intra ?? []);
@@ -200,6 +201,7 @@ export class App {
       this.patternAnalysis.set(null);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
+      this.fullScreenPattern.set(null);
       this.isStateDialogOpen.set(false);
       this.initializeStatePresetForFile(file.name);
     } catch (error) {
@@ -212,6 +214,7 @@ export class App {
       this.patternAnalysis.set(null);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
+      this.fullScreenPattern.set(null);
       this.isStateDialogOpen.set(false);
     } finally {
       this.isLoading.set(false);
@@ -266,6 +269,14 @@ export class App {
     this.interVisualization.set(visualization);
   }
 
+  protected openFullScreenGraph(pattern: StatePattern): void {
+    this.fullScreenPattern.set(pattern);
+  }
+
+  protected closeFullScreenGraph(): void {
+    this.fullScreenPattern.set(null);
+  }
+
   protected patternOptionLabel(pattern: StatePattern): string {
     return `${pattern.support.toLocaleString()}x | ${pattern.label}`;
   }
@@ -280,16 +291,16 @@ export class App {
     return Math.max(edges.length - limit, 0);
   }
 
-  protected patternGraph(pattern: StatePattern): PatternGraph {
-    const nodeWidth = 190;
-    const nodeHeight = 68;
-    const controlGap = 238;
-    const controlStartX = 86;
-    const objectStartY = 292;
-    const objectColumnGap = 236;
-    const objectRowGap = 104;
+  protected patternGraph(pattern: StatePattern, expanded = false): PatternGraph {
+    const nodeWidth = expanded ? 260 : 190;
+    const nodeHeight = expanded ? 92 : 68;
+    const controlGap = expanded ? 330 : 238;
+    const controlStartX = expanded ? 120 : 86;
+    const objectStartY = expanded ? 380 : 292;
+    const objectColumnGap = expanded ? 330 : 236;
+    const objectRowGap = expanded ? 140 : 104;
     const width = Math.max(
-      960,
+      expanded ? 1320 : 960,
       controlStartX * 2 + Math.max(pattern.sequence.length - 1, 0) * controlGap + nodeWidth,
     );
     const objectColumns = Math.max(1, Math.floor((width - 120) / objectColumnGap));
@@ -298,17 +309,17 @@ export class App {
 
     const controlNodes = pattern.sequence.map((label, index) => ({
       id: `control-${index}`,
-      lines: wrapGraphLabel(label),
+      lines: wrapGraphLabel(label, expanded ? 31 : 22, expanded ? 5 : 4),
       title: label,
       x: controlStartX + index * controlGap,
       y: 52,
-      kind: 'control' as const,
+      kind: label.startsWith('CHANGE ') ? ('change' as const) : ('control' as const),
     }));
     const objectNodes = pattern.object_types.map((objectType, index) => ({
       id: `object-${index}`,
-      lines: wrapGraphLabel(objectType),
+      lines: wrapGraphLabel(objectType, expanded ? 31 : 22, expanded ? 5 : 4),
       title: objectType,
-      x: 86 + (index % objectColumns) * objectColumnGap,
+      x: controlStartX + (index % objectColumns) * objectColumnGap,
       y: objectStartY + Math.floor(index / objectColumns) * objectRowGap,
       kind: 'object' as const,
     }));
@@ -409,9 +420,7 @@ function selectedPattern(patterns: StatePattern[], selectedId: string): StatePat
   return patterns.find((pattern) => pattern.id === selectedId) ?? patterns[0] ?? null;
 }
 
-function wrapGraphLabel(label: string): string[] {
-  const maxLineLength = 22;
-  const maxLines = 4;
+function wrapGraphLabel(label: string, maxLineLength: number, maxLines: number): string[] {
   const chunks = label
     .trim()
     .replace(/\s+\[/g, '\n[')

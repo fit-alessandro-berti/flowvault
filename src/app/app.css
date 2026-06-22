@@ -506,13 +506,15 @@ textarea:focus {
   background: #fbfdfc;
 }
 
+.graph-modal {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+}
+
 .pattern-graph {
   display: block;
   min-width: 100%;
-}
-
-.pattern-graph marker path {
-  fill: #31544e;
 }
 
 .graph-edge {
@@ -545,6 +547,16 @@ textarea:focus {
 
 .graph-node-control rect {
   fill: #e9f5f1;
+}
+
+.graph-node-change rect {
+  fill: #fff0da;
+  stroke: #b45f1a;
+  stroke-width: 2;
+}
+
+.graph-node-change text {
+  fill: #7a3710;
 }
 
 .graph-node-object rect {

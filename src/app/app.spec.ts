@@ -185,10 +185,25 @@ describe('App', () => {
     const native = fixture.nativeElement as HTMLElement;
     expect(native.querySelectorAll('svg.pattern-graph').length).toBe(2);
     expect(native.querySelectorAll('.graph-node-control').length).toBeGreaterThan(0);
+    expect(native.querySelectorAll('.graph-node-change').length).toBeGreaterThan(0);
     expect(native.querySelectorAll('.graph-edge-df').length).toBeGreaterThan(0);
     expect(native.querySelectorAll('.graph-node tspan').length).toBeGreaterThan(
       native.querySelectorAll('.graph-node').length,
     );
     expect(native.querySelector('.graph-edge-oo')?.getAttribute('marker-end')).toBeNull();
+
+    const openButtons = native.querySelectorAll<HTMLButtonElement>('.graph-open-button');
+    expect(openButtons.length).toBe(2);
+    openButtons[1].click();
+    fixture.detectChanges();
+
+    expect(native.querySelector('.graph-modal')).toBeTruthy();
+    expect(native.querySelector('svg.pattern-graph-expanded')).toBeTruthy();
+    expect(native.textContent).toContain('Open -> Closed on Order');
+
+    native.querySelector<HTMLButtonElement>('.graph-modal .ghost-button')?.click();
+    fixture.detectChanges();
+
+    expect(native.querySelector('.graph-modal')).toBeFalsy();
   });
 });
