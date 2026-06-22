@@ -1,6 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { exportBaseName, formatHintForFile } from './ocel-file';
-import { OcelDocumentHandle, OcelSummary, OcelWasmService } from './ocel-wasm.service';
+import {
+  OcelDocumentHandle,
+  OcelSummary,
+  OcelWasmService,
+  StateQueryResult,
+} from './ocel-wasm.service';
 
 interface SummaryCard {
   label: string;
@@ -21,6 +26,8 @@ export class App {
   protected readonly isLoading = signal(false);
   protected readonly fileName = signal('');
   protected readonly errorMessage = signal('');
+  protected readonly stateMessage = signal('');
+  protected readonly stateQuery = signal(DEFAULT_STATE_QUERY);
   protected readonly summary = signal<OcelSummary | null>(null);
   protected readonly hasDocument = computed(() => this.summary() !== null);
   protected readonly summaryCards = computed<SummaryCard[]>(() => {
@@ -73,6 +80,31 @@ export class App {
     this.exportDocument('xml');
   }
 
+  onStateQueryChange(event: Event): void {
+    this.stateQuery.set((event.target as HTMLTextAreaElement).value);
+  }
+
+  applyStateQuery(): void {
+    if (!this.documentHandle) {
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.stateMessage.set('');
+
+    try {
+      const result = JSON.parse(
+        this.documentHandle.applyStateQuery(this.stateQuery()),
+      ) as StateQueryResult;
+      this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
+      this.stateMessage.set(
+        `Added ${result.attribute} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
+      );
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
   private async importFile(file: File): Promise<void> {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -85,12 +117,14 @@ export class App {
       this.documentHandle = imported.document;
       this.fileName.set(file.name);
       this.summary.set(imported.summary);
+      this.stateMessage.set('');
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
       this.summary.set(null);
       this.fileName.set(file.name);
       this.documentHandle?.free();
       this.documentHandle = undefined;
+      this.stateMessage.set('');
     } finally {
       this.isLoading.set(false);
     }
@@ -122,6 +156,14 @@ export class App {
     URL.revokeObjectURL(url);
   }
 }
+
+const DEFAULT_STATE_QUERY = `STATE state AS CASE
+  WHEN object.status IS NOT NULL THEN object.status
+  WHEN object.state IS NOT NULL THEN object.state
+  WHEN object.is_blocked = 'Yes' THEN 'Blocked'
+  WHEN event.type LIKE '%cancel%' THEN 'Exception'
+  ELSE 'Normal'
+END`;
 
 function errorToMessage(error: unknown): string {
   if (error instanceof Error) {

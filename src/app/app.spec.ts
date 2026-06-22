@@ -23,7 +23,7 @@ describe('App', () => {
     fixture.detectChanges();
 
     const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button'));
-    expect(buttons.length).toBe(2);
+    expect(buttons.length).toBe(3);
     expect(buttons.every((button) => button.disabled)).toBe(true);
   });
 

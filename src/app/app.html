@@ -14,6 +14,10 @@
         <span aria-hidden="true">XML</span>
         Export
       </button>
+      <button type="button" (click)="applyStateQuery()" [disabled]="!hasDocument()">
+        <span aria-hidden="true">STATE</span>
+        Add State
+      </button>
     </div>
   </header>
 
@@ -56,6 +60,28 @@
     <p class="message error">{{ errorMessage() }}</p>
   }
 
+  @if (hasDocument()) {
+    <section class="state-query" aria-label="State query">
+      <div class="state-query-header">
+        <div>
+          <h2>State Query</h2>
+        </div>
+        <button type="button" (click)="applyStateQuery()">Apply</button>
+      </div>
+
+      <textarea
+        spellcheck="false"
+        [value]="stateQuery()"
+        (input)="onStateQueryChange($event)"
+        aria-label="SQL-like state query"
+      ></textarea>
+    </section>
+  }
+
+  @if (stateMessage()) {
+    <p class="message success">{{ stateMessage() }}</p>
+  }
+
   @if (summary(); as summaryValue) {
     <section class="details" aria-label="OCEL import details">
       <div>
@@ -73,6 +99,10 @@
       <div>
         <span>Lifecycle indexes</span>
         <strong>{{ summaryValue.objects_with_lifecycle }}</strong>
+      </div>
+      <div>
+        <span>Stateful events</span>
+        <strong>{{ summaryValue.stateful_events }}</strong>
       </div>
     </section>
   }

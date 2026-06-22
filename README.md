@@ -40,6 +40,38 @@ This keeps large logs more compact in memory while preserving standard JSON/XML 
 
 The importer validates duplicate IDs/types, declared attribute types, unknown event/object types, unknown relationship targets, scalar JSON attributes, and timestamp parsing.
 
+## State-Aware Event Enrichment
+
+Flowvault implements the state-aware OCEL idea from Kretzschmann, Berti, and van der Aalst by adding a derived string event attribute named `state`. The paper models states as discrete values derived from dynamic object attributes, then enriches events with state context and transition information. Flowvault focuses on the event enrichment part: a SQL-like query is evaluated against each event and its related objects, then the resulting state is exported as a normal OCEL 2.0 event attribute.
+
+The state query syntax is:
+
+```sql
+STATE state AS CASE
+  WHEN object.status IS NOT NULL THEN object.status
+  WHEN object.state IS NOT NULL THEN object.state
+  WHEN object.is_blocked = 'Yes' THEN 'Blocked'
+  WHEN event.type LIKE '%cancel%' THEN 'Exception'
+  ELSE 'Normal'
+END
+```
+
+Supported fields:
+
+- `event.id`, `event.type`, `event.time`, and `event.<attribute>`
+- `object.id`, `object.type`, and `object.<attribute>` for objects related to the event
+
+Object attributes are resolved at the event timestamp using the latest object attribute value at or before that time. A condition containing object fields is true if any related object satisfies the full condition. The result after `THEN` or `ELSE` can be a string/number/boolean literal or a field reference such as `object.status`.
+
+Supported predicates:
+
+- comparisons: `=`, `!=`, `<>`, `<`, `<=`, `>`, `>=`
+- `LIKE` with `%` wildcards
+- `IS NULL` and `IS NOT NULL`
+- boolean composition with `AND`, `OR`, `NOT`, and parentheses
+
+Reapplying a query replaces the existing `state` attribute on every assigned event. The exporter also adds the `state` attribute definition to every event type so the generated JSON/XML remains self-describing.
+
 ## Commands
 
 Install JavaScript dependencies:
@@ -106,3 +138,4 @@ No server-side API is required. The OCEL file is parsed locally in the browser b
 - OCEL 2.0 JSON format: https://www.ocel-standard.org/specification/formats/json/
 - OCEL 2.0 XML format: https://www.ocel-standard.org/specification/formats/xml/
 - OCEL 2.0 specification: https://www.ocel-standard.org/2.0/ocel20_specification.pdf
+- State-Aware Object-Centric Process Mining: Enhancing OCEL 2.0 with Explicit State Transitions: https://www.alessandroberti.it/new_papers/2025_Dina_SAOCPM.pdf

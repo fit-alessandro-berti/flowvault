@@ -10,6 +10,7 @@ export interface OcelSummary {
   o2o_relationships: number;
   interned_strings: number;
   objects_with_lifecycle: number;
+  stateful_events: number;
 }
 
 export interface OcelDocumentHandle {
@@ -17,7 +18,14 @@ export interface OcelDocumentHandle {
   exportJson(): string;
   exportXml(): string;
   objectLifecycleJson(objectId: string): string;
+  applyStateQuery(query: string): string;
   free(): void;
+}
+
+export interface StateQueryResult {
+  attribute: string;
+  assigned_events: number;
+  total_events: number;
 }
 
 export interface ImportedOcelDocument {
