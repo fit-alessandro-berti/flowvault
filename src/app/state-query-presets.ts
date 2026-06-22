@@ -23,7 +23,7 @@ END`,
     name: 'Purchase Size',
     query: `STATE state AS CASE
   WHEN object.po_quantity > 500 THEN 'Large PO'
-  WHEN object.pr_quantity > 500 THEN 'Large Requisition'
+  WHEN object.pr_quantity >= 500 THEN 'Large Requisition'
   WHEN object.po_product = 'Notebooks' THEN 'Maverick Buying'
   ELSE 'Standard Purchase'
 END`,
@@ -54,10 +54,10 @@ END`,
   {
     id: 'container-load-size',
     logKey: 'container_logistics',
-    name: 'Load Size',
+    name: 'Load Planning',
     query: `STATE state AS CASE
-  WHEN object.AmountofContainers >= 6 THEN 'Large Transport'
-  WHEN object.AmountofHandlingUnits >= 8 THEN 'Dense Container'
+  WHEN event.type = 'Book Vehicles' THEN 'Vehicle Booking'
+  WHEN event.type LIKE '%Load%' THEN 'Transport Loading'
   WHEN object.AmountofGoods >= 900 THEN 'Large Order'
   ELSE 'Standard Load'
 END`,
@@ -90,9 +90,9 @@ END`,
     logKey: 'order-management',
     name: 'Value and Weight',
     query: `STATE state AS CASE
+  WHEN object.weight >= 10 THEN 'Heavy'
   WHEN object.price >= 1000 THEN 'High Value'
   WHEN object.price >= 250 THEN 'Medium Value'
-  WHEN object.weight >= 10 THEN 'Heavy'
   ELSE 'Standard'
 END`,
   },
@@ -105,7 +105,44 @@ END`,
   WHEN event.type = 'reorder item' THEN 'Replenishment'
   WHEN event.type = 'payment reminder' THEN 'Payment Risk'
   WHEN event.type = 'failed delivery' THEN 'Delivery Risk'
-  ELSE 'Nominal'
+ELSE 'Nominal'
+END`,
+  },
+  {
+    id: 'inventory-stock-status',
+    logKey: 'inventory_management_simulated',
+    name: 'Stock Status',
+    query: `STATE state AS CASE
+  WHEN event."Current Status" = 'Understock' THEN 'Understock'
+  WHEN event."Current Status" = 'Overstock' THEN 'Overstock'
+  WHEN event."Current Status" = 'Normal' THEN 'Normal'
+  ELSE 'Unknown Stock Status'
+END`,
+  },
+  {
+    id: 'inventory-activity-phase',
+    logKey: 'inventory_management_simulated',
+    name: 'Activity Phase',
+    query: `STATE state AS CASE
+  WHEN event.type LIKE 'START%' THEN 'Status Start'
+  WHEN event.type LIKE 'END%' THEN 'Status End'
+  WHEN event.type LIKE 'ST CHANGE%' THEN 'Status Transition'
+  WHEN event.type LIKE '%Goods Receipt%' THEN 'Replenishment'
+  WHEN event.type LIKE '%Goods Issue%' THEN 'Consumption'
+  WHEN event.type LIKE '%Purchase%' THEN 'Procurement'
+  WHEN event.type LIKE '%Sales%' THEN 'Sales Demand'
+  ELSE 'Inventory Activity'
+END`,
+  },
+  {
+    id: 'inventory-risk-band',
+    logKey: 'inventory_management_simulated',
+    name: 'Inventory Risk Band',
+    query: `STATE state AS CASE
+  WHEN event."Stock After" = 0 THEN 'Zero Stock'
+  WHEN event."Current Status" = 'Understock' THEN 'Understock Risk'
+  WHEN event."Stock After" > event."Reorder Point (ROP)" AND event."Current Status" = 'Overstock' THEN 'Overstock Risk'
+  ELSE 'Balanced'
 END`,
   },
 ];

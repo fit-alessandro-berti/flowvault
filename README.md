@@ -75,8 +75,9 @@ Reapplying a query replaces the existing `state` attribute on every assigned eve
 The UI opens the state query editor as an overlay after import. For the bundled fixture logs it proposes three named presets on the left:
 
 - `ocel20_example`: Payment Block Status, Purchase Size, Actor and Automation
-- `container_logistics`: Shipment Status, Load Size, Process Phase
+- `container_logistics`: Shipment Status, Load Planning, Process Phase
 - `order-management`: Fulfillment Stage, Value and Weight, Exception Risk
+- `inventory_management_simulated`: Stock Status, Activity Phase, Inventory Risk Band
 
 Selecting a preset writes its query into the editor on the right. `OK` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
 

@@ -1252,18 +1252,20 @@ fn compare_query_values(left: &QueryValue, op: CompareOp, right: &QueryValue) ->
 
 fn query_values_equal(left: &QueryValue, right: &QueryValue) -> bool {
     match (left, right) {
-        (QueryValue::String(left), QueryValue::String(right)) => left == right,
-        (QueryValue::Number(left), QueryValue::Number(right)) => {
-            (*left - *right).abs() < f64::EPSILON
-        }
         (QueryValue::Boolean(left), QueryValue::Boolean(right)) => left == right,
+        _ if query_value_as_number(left).is_some() && query_value_as_number(right).is_some() => {
+            (query_value_as_number(left).expect("checked numeric left")
+                - query_value_as_number(right).expect("checked numeric right"))
+            .abs()
+                < f64::EPSILON
+        }
         _ => left.as_state_string() == right.as_state_string(),
     }
 }
 
 fn compare_ordered(left: &QueryValue, right: &QueryValue) -> Option<i8> {
-    match (left, right) {
-        (QueryValue::Number(left), QueryValue::Number(right)) => {
+    match (query_value_as_number(left), query_value_as_number(right)) {
+        (Some(left), Some(right)) => {
             if left < right {
                 Some(-1)
             } else if left > right {
@@ -1281,6 +1283,14 @@ fn compare_ordered(left: &QueryValue, right: &QueryValue) -> Option<i8> {
                 std::cmp::Ordering::Greater => Some(1),
             }
         }
+    }
+}
+
+fn query_value_as_number(value: &QueryValue) -> Option<f64> {
+    match value {
+        QueryValue::Number(value) => Some(*value),
+        QueryValue::String(value) => value.trim().parse::<f64>().ok(),
+        QueryValue::Boolean(_) => None,
     }
 }
 
@@ -1573,7 +1583,7 @@ impl QueryParser {
                     return Ok(ValueExpr::Literal(QueryValue::Boolean(false)));
                 }
                 if self.consume_token(&Token::Dot) {
-                    let field = self.parse_identifier()?;
+                    let field = self.parse_field_name()?;
                     if identifier.eq_ignore_ascii_case("EVENT") {
                         Ok(ValueExpr::Field(FieldRef::Event(
                             field.to_ascii_lowercase(),
@@ -1593,6 +1603,15 @@ impl QueryParser {
             }
             other => Err(OcelError::new(format!(
                 "expected field or literal in state query, found {other:?}"
+            ))),
+        }
+    }
+
+    fn parse_field_name(&mut self) -> OcelResult<String> {
+        match self.next().cloned() {
+            Some(Token::Identifier(identifier)) | Some(Token::String(identifier)) => Ok(identifier),
+            other => Err(OcelError::new(format!(
+                "expected field name in state query, found {other:?}"
             ))),
         }
     }
@@ -2336,6 +2355,7 @@ fn escape_xml(value: &str, attribute: bool) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::HashSet;
     use std::fs;
     use std::path::{Path, PathBuf};
 
@@ -2494,7 +2514,7 @@ mod tests {
             let mut log = CompactOcelLog::from_input(&input, Some("json"))
                 .unwrap_or_else(|err| panic!("failed to import {fixture}: {err}"));
 
-            for (name, query) in queries {
+            for (name, query, expected_states) in queries {
                 log.apply_state_query(query)
                     .unwrap_or_else(|err| panic!("preset '{name}' failed on {fixture}: {err}"));
                 assert_eq!(
@@ -2502,7 +2522,39 @@ mod tests {
                     log.summary().events,
                     "preset '{name}' should assign all events in {fixture}"
                 );
+                assert_eq!(
+                    event_states(&log),
+                    expected_states
+                        .iter()
+                        .map(|state| state.to_string())
+                        .collect::<HashSet<_>>(),
+                    "preset '{name}' produced unexpected states in {fixture}"
+                );
             }
+        }
+    }
+
+    #[test]
+    fn imports_new_inventory_management_fixtures() {
+        for (fixture, format) in [
+            ("inventory_management_simulated.json", "json"),
+            ("inventory_management_simulated.xml", "xml"),
+        ] {
+            let fixture_path = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../files/ocel2")
+                .join(fixture);
+            let input = fs::read_to_string(&fixture_path)
+                .unwrap_or_else(|err| panic!("failed to read {}: {err}", fixture_path.display()));
+            let summary = CompactOcelLog::from_input(&input, Some(format))
+                .unwrap_or_else(|err| panic!("failed to import {fixture}: {err}"))
+                .summary();
+
+            assert_eq!(summary.event_types, 30);
+            assert_eq!(summary.object_types, 7);
+            assert_eq!(summary.events, 2301);
+            assert_eq!(summary.objects, 1701);
+            assert_eq!(summary.e2o_relationships, 10956);
+            assert_eq!(summary.o2o_relationships, 0);
         }
     }
 
@@ -2619,7 +2671,28 @@ mod tests {
         })
     }
 
-    fn fixture_state_queries() -> Vec<(&'static str, Vec<(&'static str, &'static str)>)> {
+    fn event_states(log: &CompactOcelLog) -> HashSet<String> {
+        log.events
+            .iter()
+            .flat_map(|event| {
+                event.attributes.iter().filter_map(|attribute| {
+                    if log.pool.resolve(attribute.name) == "state" {
+                        match &attribute.value {
+                            AttrValue::String(symbol) => Some(log.pool.resolve(*symbol).to_owned()),
+                            _ => None,
+                        }
+                    } else {
+                        None
+                    }
+                })
+            })
+            .collect()
+    }
+
+    fn fixture_state_queries() -> Vec<(
+        &'static str,
+        Vec<(&'static str, &'static str, &'static [&'static str])>,
+    )> {
         vec![
             (
                 "ocel20_example.json",
@@ -2632,15 +2705,27 @@ mod tests {
   WHEN event.type LIKE '%Invoice%' THEN 'Invoice Handling'
   ELSE 'Procurement'
 END"#,
+                        &[
+                            "Invoice Blocked",
+                            "Payment Execution",
+                            "Invoice Handling",
+                            "Procurement",
+                        ],
                     ),
                     (
                         "Purchase Size",
                         r#"STATE state AS CASE
   WHEN object.po_quantity > 500 THEN 'Large PO'
-  WHEN object.pr_quantity > 500 THEN 'Large Requisition'
+  WHEN object.pr_quantity >= 500 THEN 'Large Requisition'
   WHEN object.po_product = 'Notebooks' THEN 'Maverick Buying'
   ELSE 'Standard Purchase'
 END"#,
+                        &[
+                            "Large PO",
+                            "Large Requisition",
+                            "Maverick Buying",
+                            "Standard Purchase",
+                        ],
                     ),
                     (
                         "Actor and Automation",
@@ -2650,6 +2735,12 @@ END"#,
   WHEN event.po_creator = 'Mario' OR event.invoice_inserter = 'Mario' THEN 'Maverick Flow'
   ELSE 'Regular Work'
 END"#,
+                        &[
+                            "Manual Block Control",
+                            "Automated Payment",
+                            "Maverick Flow",
+                            "Regular Work",
+                        ],
                     ),
                 ],
             ),
@@ -2665,15 +2756,22 @@ END"#,
   WHEN object.Status = 'empty' THEN 'Empty'
   ELSE 'Planning'
 END"#,
+                        &["Shipped", "In Transit", "Loaded", "Empty", "Planning"],
                     ),
                     (
-                        "Load Size",
+                        "Load Planning",
                         r#"STATE state AS CASE
-  WHEN object.AmountofContainers >= 6 THEN 'Large Transport'
-  WHEN object.AmountofHandlingUnits >= 8 THEN 'Dense Container'
+  WHEN event.type = 'Book Vehicles' THEN 'Vehicle Booking'
+  WHEN event.type LIKE '%Load%' THEN 'Transport Loading'
   WHEN object.AmountofGoods >= 900 THEN 'Large Order'
   ELSE 'Standard Load'
 END"#,
+                        &[
+                            "Vehicle Booking",
+                            "Transport Loading",
+                            "Large Order",
+                            "Standard Load",
+                        ],
                     ),
                     (
                         "Process Phase",
@@ -2683,6 +2781,7 @@ END"#,
   WHEN event.type LIKE '%Order%' OR event.type LIKE '%Create%' OR event.type LIKE '%Book%' THEN 'Planning'
   ELSE 'Warehouse Handling'
 END"#,
+                        &["Outbound", "Loading", "Planning", "Warehouse Handling"],
                     ),
                 ],
             ),
@@ -2698,15 +2797,23 @@ END"#,
   WHEN event.type LIKE '%pay%' OR event.type = 'payment reminder' THEN 'Payment'
   ELSE 'Order Handling'
 END"#,
+                        &[
+                            "Delivery Failure",
+                            "Delivered",
+                            "Packaging",
+                            "Payment",
+                            "Order Handling",
+                        ],
                     ),
                     (
                         "Value and Weight",
                         r#"STATE state AS CASE
+  WHEN object.weight >= 10 THEN 'Heavy'
   WHEN object.price >= 1000 THEN 'High Value'
   WHEN object.price >= 250 THEN 'Medium Value'
-  WHEN object.weight >= 10 THEN 'Heavy'
   ELSE 'Standard'
 END"#,
+                        &["High Value", "Medium Value", "Heavy", "Standard"],
                     ),
                     (
                         "Exception Risk",
@@ -2717,6 +2824,65 @@ END"#,
   WHEN event.type = 'failed delivery' THEN 'Delivery Risk'
   ELSE 'Nominal'
 END"#,
+                        &[
+                            "Stock Exception",
+                            "Replenishment",
+                            "Payment Risk",
+                            "Delivery Risk",
+                            "Nominal",
+                        ],
+                    ),
+                ],
+            ),
+            (
+                "inventory_management_simulated.json",
+                vec![
+                    (
+                        "Stock Status",
+                        r#"STATE state AS CASE
+  WHEN event."Current Status" = 'Understock' THEN 'Understock'
+  WHEN event."Current Status" = 'Overstock' THEN 'Overstock'
+  WHEN event."Current Status" = 'Normal' THEN 'Normal'
+  ELSE 'Unknown Stock Status'
+END"#,
+                        &["Understock", "Overstock", "Normal"],
+                    ),
+                    (
+                        "Activity Phase",
+                        r#"STATE state AS CASE
+  WHEN event.type LIKE 'START%' THEN 'Status Start'
+  WHEN event.type LIKE 'END%' THEN 'Status End'
+  WHEN event.type LIKE 'ST CHANGE%' THEN 'Status Transition'
+  WHEN event.type LIKE '%Goods Receipt%' THEN 'Replenishment'
+  WHEN event.type LIKE '%Goods Issue%' THEN 'Consumption'
+  WHEN event.type LIKE '%Purchase%' THEN 'Procurement'
+  WHEN event.type LIKE '%Sales%' THEN 'Sales Demand'
+  ELSE 'Inventory Activity'
+END"#,
+                        &[
+                            "Status Start",
+                            "Status End",
+                            "Status Transition",
+                            "Replenishment",
+                            "Consumption",
+                            "Procurement",
+                            "Sales Demand",
+                        ],
+                    ),
+                    (
+                        "Inventory Risk Band",
+                        r#"STATE state AS CASE
+  WHEN event."Stock After" = 0 THEN 'Zero Stock'
+  WHEN event."Current Status" = 'Understock' THEN 'Understock Risk'
+  WHEN event."Stock After" > event."Reorder Point (ROP)" AND event."Current Status" = 'Overstock' THEN 'Overstock Risk'
+  ELSE 'Balanced'
+END"#,
+                        &[
+                            "Zero Stock",
+                            "Understock Risk",
+                            "Overstock Risk",
+                            "Balanced",
+                        ],
                     ),
                 ],
             ),
