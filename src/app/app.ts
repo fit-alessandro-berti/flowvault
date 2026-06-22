@@ -20,7 +20,7 @@ type PatternVisualization = 'text' | 'graph';
 
 interface PatternGraphNode {
   id: string;
-  label: string;
+  lines: string[];
   title: string;
   x: number;
   y: number;
@@ -40,6 +40,8 @@ interface PatternGraphEdge {
 interface PatternGraph {
   width: number;
   height: number;
+  nodeWidth: number;
+  nodeHeight: number;
   nodes: PatternGraphNode[];
   edges: PatternGraphEdge[];
 }
@@ -279,21 +281,24 @@ export class App {
   }
 
   protected patternGraph(pattern: StatePattern): PatternGraph {
-    const controlGap = 148;
-    const controlWidth = 132;
-    const controlStartX = 72;
-    const objectStartY = 218;
+    const nodeWidth = 190;
+    const nodeHeight = 68;
+    const controlGap = 238;
+    const controlStartX = 86;
+    const objectStartY = 292;
+    const objectColumnGap = 236;
+    const objectRowGap = 104;
     const width = Math.max(
-      760,
-      controlStartX * 2 + Math.max(pattern.sequence.length - 1, 0) * controlGap + controlWidth,
+      960,
+      controlStartX * 2 + Math.max(pattern.sequence.length - 1, 0) * controlGap + nodeWidth,
     );
-    const objectColumns = Math.max(1, Math.floor((width - 96) / 174));
+    const objectColumns = Math.max(1, Math.floor((width - 120) / objectColumnGap));
     const objectRows = Math.max(1, Math.ceil(pattern.object_types.length / objectColumns));
-    const height = objectStartY + objectRows * 76 + 42;
+    const height = objectStartY + objectRows * objectRowGap + 54;
 
     const controlNodes = pattern.sequence.map((label, index) => ({
       id: `control-${index}`,
-      label: compactGraphLabel(label),
+      lines: wrapGraphLabel(label),
       title: label,
       x: controlStartX + index * controlGap,
       y: 52,
@@ -301,10 +306,10 @@ export class App {
     }));
     const objectNodes = pattern.object_types.map((objectType, index) => ({
       id: `object-${index}`,
-      label: compactGraphLabel(objectType),
+      lines: wrapGraphLabel(objectType),
       title: objectType,
-      x: 72 + (index % objectColumns) * 174,
-      y: objectStartY + Math.floor(index / objectColumns) * 76,
+      x: 86 + (index % objectColumns) * objectColumnGap,
+      y: objectStartY + Math.floor(index / objectColumns) * objectRowGap,
       kind: 'object' as const,
     }));
     const nodes = [...controlNodes, ...objectNodes];
@@ -329,10 +334,10 @@ export class App {
         )?.weight ?? 1;
       edges.push({
         id: `df-${index}`,
-        x1: source.x + controlWidth,
-        y1: source.y + 23,
+        x1: source.x + nodeWidth,
+        y1: source.y + nodeHeight / 2,
         x2: target.x,
-        y2: target.y + 23,
+        y2: target.y + nodeHeight / 2,
         label: weight.toLocaleString(),
         kind: 'df',
       });
@@ -346,9 +351,9 @@ export class App {
       }
       edges.push({
         id: `eo-${index}`,
-        x1: source.x + controlWidth / 2,
-        y1: source.y + 46,
-        x2: target.x + controlWidth / 2,
+        x1: source.x + nodeWidth / 2,
+        y1: source.y + nodeHeight,
+        x2: target.x + nodeWidth / 2,
         y2: target.y,
         label: edge.weight.toLocaleString(),
         kind: 'eo',
@@ -363,16 +368,16 @@ export class App {
       }
       edges.push({
         id: `oo-${index}`,
-        x1: source.x + controlWidth,
-        y1: source.y + 23,
-        x2: target.x,
-        y2: target.y + 23,
+        x1: source.x + nodeWidth / 2,
+        y1: source.y + nodeHeight / 2,
+        x2: target.x + nodeWidth / 2,
+        y2: target.y + nodeHeight / 2,
         label: edge.weight.toLocaleString(),
         kind: 'oo',
       });
     }
 
-    return { width, height, nodes, edges };
+    return { width, height, nodeWidth, nodeHeight, nodes, edges };
   }
 
   private loadStatePatterns(): void {
@@ -404,10 +409,48 @@ function selectedPattern(patterns: StatePattern[], selectedId: string): StatePat
   return patterns.find((pattern) => pattern.id === selectedId) ?? patterns[0] ?? null;
 }
 
-function compactGraphLabel(label: string): string {
-  if (label.length <= 28) {
-    return label;
+function wrapGraphLabel(label: string): string[] {
+  const maxLineLength = 22;
+  const maxLines = 4;
+  const chunks = label
+    .trim()
+    .replace(/\s+\[/g, '\n[')
+    .split('\n')
+    .map((chunk) => chunk.replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+  const lines: string[] = [];
+
+  for (const chunk of chunks) {
+    let current = '';
+    for (const word of chunk.split(' ')) {
+      for (const part of splitLongWord(word, maxLineLength)) {
+        const candidate = current ? `${current} ${part}` : part;
+        if (candidate.length <= maxLineLength) {
+          current = candidate;
+        } else {
+          lines.push(current);
+          current = part;
+        }
+      }
+    }
+    if (current) {
+      lines.push(current);
+    }
   }
 
-  return `${label.slice(0, 25)}...`;
+  if (lines.length <= maxLines) {
+    return lines;
+  }
+
+  const trimmed = lines.slice(0, maxLines);
+  trimmed[maxLines - 1] = `${trimmed[maxLines - 1].slice(0, maxLineLength - 3)}...`;
+  return trimmed;
+}
+
+function splitLongWord(word: string, maxLineLength: number): string[] {
+  const parts: string[] = [];
+  for (let index = 0; index < word.length; index += maxLineLength) {
+    parts.push(word.slice(index, index + maxLineLength));
+  }
+  return parts.length > 0 ? parts : [''];
 }

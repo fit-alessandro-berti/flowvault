@@ -93,6 +93,8 @@ After a state query has been applied, Flowvault runs the pattern detection core 
 
 The browser UI shows separate intra-state and inter-state sections after state enrichment. Each section has a frequency-sorted pattern dropdown and a `Text`/`Graph` view switch. The graphical view uses deterministic native SVG layout instead of a graph dependency, because the WASM API already returns the compact graph model needed by the page.
 
+In the graph view, directly-follows and event-to-object-type edges are drawn with direction. Object-object context edges are drawn as undirected type links because they summarize co-participating object types in the segment, not a causal order.
+
 The WASM-facing method is `statePatternsJson()`, which returns:
 
 ```json

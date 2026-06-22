@@ -196,7 +196,7 @@
                       <h3>Object Type Context</h3>
                       @for (edge of topEdges(pattern.oo_edges); track edge.source + edge.target) {
                         <p>
-                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                          {{ edge.source }} - {{ edge.target }} <strong>{{ edge.weight }}</strong>
                         </p>
                       }
                       @if (pattern.oo_edges.length === 0) {
@@ -238,7 +238,9 @@
                           [attr.y1]="edge.y1"
                           [attr.x2]="edge.x2"
                           [attr.y2]="edge.y2"
-                          [attr.marker-end]="'url(#' + pattern.id + '-arrowhead)'"
+                          [attr.marker-end]="
+                            edge.kind === 'oo' ? null : 'url(#' + pattern.id + '-arrowhead)'
+                          "
                         ></line>
                         <text
                           class="graph-edge-label"
@@ -251,9 +253,26 @@
                       @for (node of graph.nodes; track node.id) {
                         <g [attr.class]="'graph-node graph-node-' + node.kind">
                           <title>{{ node.title }}</title>
-                          <rect [attr.x]="node.x" [attr.y]="node.y" width="132" height="46"></rect>
-                          <text [attr.x]="node.x + 66" [attr.y]="node.y + 27">
-                            {{ node.label }}
+                          <rect
+                            [attr.x]="node.x"
+                            [attr.y]="node.y"
+                            [attr.width]="graph.nodeWidth"
+                            [attr.height]="graph.nodeHeight"
+                          ></rect>
+                          <text
+                            [attr.x]="node.x + graph.nodeWidth / 2"
+                            [attr.y]="
+                              node.y + graph.nodeHeight / 2 - (node.lines.length - 1) * 7 + 4
+                            "
+                          >
+                            @for (line of node.lines; track $index) {
+                              <tspan
+                                [attr.x]="node.x + graph.nodeWidth / 2"
+                                [attr.dy]="$first ? 0 : 14"
+                              >
+                                {{ line }}
+                              </tspan>
+                            }
                           </text>
                         </g>
                       }
@@ -363,7 +382,7 @@
                       <h3>Object Type Context</h3>
                       @for (edge of topEdges(pattern.oo_edges); track edge.source + edge.target) {
                         <p>
-                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                          {{ edge.source }} - {{ edge.target }} <strong>{{ edge.weight }}</strong>
                         </p>
                       }
                       @if (pattern.oo_edges.length === 0) {
@@ -405,7 +424,9 @@
                           [attr.y1]="edge.y1"
                           [attr.x2]="edge.x2"
                           [attr.y2]="edge.y2"
-                          [attr.marker-end]="'url(#' + pattern.id + '-arrowhead)'"
+                          [attr.marker-end]="
+                            edge.kind === 'oo' ? null : 'url(#' + pattern.id + '-arrowhead)'
+                          "
                         ></line>
                         <text
                           class="graph-edge-label"
@@ -418,9 +439,26 @@
                       @for (node of graph.nodes; track node.id) {
                         <g [attr.class]="'graph-node graph-node-' + node.kind">
                           <title>{{ node.title }}</title>
-                          <rect [attr.x]="node.x" [attr.y]="node.y" width="132" height="46"></rect>
-                          <text [attr.x]="node.x + 66" [attr.y]="node.y + 27">
-                            {{ node.label }}
+                          <rect
+                            [attr.x]="node.x"
+                            [attr.y]="node.y"
+                            [attr.width]="graph.nodeWidth"
+                            [attr.height]="graph.nodeHeight"
+                          ></rect>
+                          <text
+                            [attr.x]="node.x + graph.nodeWidth / 2"
+                            [attr.y]="
+                              node.y + graph.nodeHeight / 2 - (node.lines.length - 1) * 7 + 4
+                            "
+                          >
+                            @for (line of node.lines; track $index) {
+                              <tspan
+                                [attr.x]="node.x + graph.nodeWidth / 2"
+                                [attr.dy]="$first ? 0 : 14"
+                              >
+                                {{ line }}
+                              </tspan>
+                            }
                           </text>
                         </g>
                       }

@@ -597,9 +597,8 @@ impl CompactOcelLog {
                 *eo_edges
                     .entry((event_label.clone(), related_type.clone()))
                     .or_default() += 1;
-                *oo_edges
-                    .entry((leading_type.clone(), related_type))
-                    .or_default() += 1;
+                let oo_pair = unordered_pair(&leading_type, &related_type);
+                *oo_edges.entry(oo_pair).or_default() += 1;
             }
         }
 
@@ -1302,6 +1301,14 @@ fn edge_map_to_vec(edges: BTreeMap<(String, String), usize>) -> Vec<PatternEdge>
             weight,
         })
         .collect()
+}
+
+fn unordered_pair(left: &str, right: &str) -> (String, String) {
+    if left <= right {
+        (left.to_owned(), right.to_owned())
+    } else {
+        (right.to_owned(), left.to_owned())
+    }
 }
 
 /// Parsed OCEL document exposed to JavaScript.

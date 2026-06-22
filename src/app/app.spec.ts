@@ -186,5 +186,9 @@ describe('App', () => {
     expect(native.querySelectorAll('svg.pattern-graph').length).toBe(2);
     expect(native.querySelectorAll('.graph-node-control').length).toBeGreaterThan(0);
     expect(native.querySelectorAll('.graph-edge-df').length).toBeGreaterThan(0);
+    expect(native.querySelectorAll('.graph-node tspan').length).toBeGreaterThan(
+      native.querySelectorAll('.graph-node').length,
+    );
+    expect(native.querySelector('.graph-edge-oo')?.getAttribute('marker-end')).toBeNull();
   });
 });
