@@ -10,7 +10,7 @@ use chrono::{DateTime, NaiveDate, NaiveDateTime, SecondsFormat, Utc};
 use roxmltree::{Document, Node};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Number, Value};
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt::{Display, Write};
 use wasm_bindgen::prelude::*;
 
@@ -477,6 +477,223 @@ impl CompactOcelLog {
             .map_err(|err| OcelError::new(format!("could not serialize state query result: {err}")))
     }
 
+    fn state_patterns_json(&self) -> OcelResult<String> {
+        let analysis = self.detect_state_patterns()?;
+        serde_json::to_string(&analysis).map_err(|err| {
+            OcelError::new(format!("could not serialize state pattern analysis: {err}"))
+        })
+    }
+
+    fn detect_state_patterns(&self) -> OcelResult<PatternAnalysis> {
+        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+            OcelError::new("event state attribute is missing; apply a state query first")
+        })?;
+
+        if !self
+            .events
+            .iter()
+            .any(|event| self.event_state(event, state_attribute).is_some())
+        {
+            return Err(OcelError::new(
+                "event state attribute is empty; apply a state query first",
+            ));
+        }
+
+        let mut intra = HashMap::<PatternKey, PatternAccumulator>::new();
+        let mut inter = HashMap::<PatternKey, PatternAccumulator>::new();
+
+        for (object_index, object) in self.objects.iter().enumerate() {
+            let state_lifecycle = object
+                .lifecycle
+                .iter()
+                .filter_map(|event_index| {
+                    self.event_state(&self.events[*event_index], state_attribute)
+                        .map(|state| (*event_index, state.to_owned()))
+                })
+                .collect::<Vec<_>>();
+
+            if state_lifecycle.is_empty() {
+                continue;
+            }
+
+            let episodes = state_episodes(&state_lifecycle);
+            for episode in &episodes {
+                let instance = self.pattern_instance(
+                    PatternFamily::Intra,
+                    object_index,
+                    episode.state.clone(),
+                    None,
+                    self.intra_sequence(&state_lifecycle, episode),
+                    &state_lifecycle[episode.start..=episode.end],
+                );
+                insert_pattern_instance(&mut intra, instance);
+            }
+
+            for episode_pair in episodes.windows(2) {
+                let [left, right] = episode_pair else {
+                    continue;
+                };
+                if left.state == right.state {
+                    continue;
+                }
+
+                let mut segment_events = Vec::with_capacity(right.end - left.start + 1);
+                segment_events.extend_from_slice(&state_lifecycle[left.start..=left.end]);
+                segment_events.extend_from_slice(&state_lifecycle[right.start..=right.end]);
+
+                let instance = self.pattern_instance(
+                    PatternFamily::Inter,
+                    object_index,
+                    left.state.clone(),
+                    Some(right.state.clone()),
+                    self.inter_sequence(&state_lifecycle, left, right),
+                    &segment_events,
+                );
+                insert_pattern_instance(&mut inter, instance);
+            }
+        }
+
+        Ok(PatternAnalysis {
+            intra: summarize_patterns(intra.into_values().collect()),
+            inter: summarize_patterns(inter.into_values().collect()),
+        })
+    }
+
+    fn pattern_instance(
+        &self,
+        family: PatternFamily,
+        leading_object_index: usize,
+        state: String,
+        to_state: Option<String>,
+        sequence: Vec<String>,
+        segment_events: &[(usize, String)],
+    ) -> PatternInstance {
+        let leading_object = &self.objects[leading_object_index];
+        let leading_type = self.pool.resolve(leading_object.type_name).to_owned();
+        let mut object_types = BTreeSet::from([leading_type.clone()]);
+        let mut eo_edges = BTreeMap::<(String, String), usize>::new();
+        let mut oo_edges = BTreeMap::<(String, String), usize>::new();
+
+        for (event_index, state) in segment_events {
+            let event = &self.events[*event_index];
+            let event_label = self.state_aware_event_label(*event_index, state);
+
+            for relationship in &event.relationships {
+                if relationship.object_id == leading_object.id {
+                    continue;
+                }
+
+                let Some(related_object_index) =
+                    self.object_index.get(&relationship.object_id).copied()
+                else {
+                    continue;
+                };
+                let related_type = self
+                    .pool
+                    .resolve(self.objects[related_object_index].type_name)
+                    .to_owned();
+
+                object_types.insert(related_type.clone());
+                *eo_edges
+                    .entry((event_label.clone(), related_type.clone()))
+                    .or_default() += 1;
+                *oo_edges
+                    .entry((leading_type.clone(), related_type))
+                    .or_default() += 1;
+            }
+        }
+
+        let mut df_edges = BTreeMap::<(String, String), usize>::new();
+        for pair in sequence.windows(2) {
+            let [source, target] = pair else {
+                continue;
+            };
+            *df_edges
+                .entry((source.clone(), target.clone()))
+                .or_default() += 1;
+        }
+
+        PatternInstance {
+            family,
+            leading_object_type: leading_type,
+            state,
+            to_state,
+            sequence,
+            object_types,
+            df_edges,
+            eo_edges,
+            oo_edges,
+        }
+    }
+
+    fn state_aware_event_label(&self, event_index: usize, state: &str) -> String {
+        format!(
+            "{} [{}]",
+            self.pool.resolve(self.events[event_index].type_name),
+            state
+        )
+    }
+
+    fn intra_sequence(
+        &self,
+        state_lifecycle: &[(usize, String)],
+        episode: &StateEpisode,
+    ) -> Vec<String> {
+        let mut sequence = Vec::with_capacity(episode.end - episode.start + 3);
+        sequence.push(format!("START {}", episode.state));
+        sequence.extend(
+            state_lifecycle[episode.start..=episode.end]
+                .iter()
+                .map(|(event_index, state)| self.state_aware_event_label(*event_index, state)),
+        );
+        sequence.push(format!("END {}", episode.state));
+        sequence
+    }
+
+    fn inter_sequence(
+        &self,
+        state_lifecycle: &[(usize, String)],
+        left: &StateEpisode,
+        right: &StateEpisode,
+    ) -> Vec<String> {
+        let mut sequence = Vec::with_capacity(right.end - left.start + 4);
+        sequence.push(format!("START {}", left.state));
+        sequence.extend(
+            state_lifecycle[left.start..=left.end]
+                .iter()
+                .map(|(event_index, state)| self.state_aware_event_label(*event_index, state)),
+        );
+        sequence.push(format!("CHANGE {} -> {}", left.state, right.state));
+        sequence.extend(
+            state_lifecycle[right.start..=right.end]
+                .iter()
+                .map(|(event_index, state)| self.state_aware_event_label(*event_index, state)),
+        );
+        sequence.push(format!("END {}", right.state));
+        sequence
+    }
+
+    fn event_state<'a>(&'a self, event: &'a Event, state_attribute: Symbol) -> Option<&'a str> {
+        event.attributes.iter().find_map(|attribute| {
+            if attribute.name == state_attribute {
+                match attribute.value {
+                    AttrValue::String(symbol) => Some(self.pool.resolve(symbol)),
+                    _ => None,
+                }
+            } else {
+                None
+            }
+        })
+    }
+
+    fn symbol_for_value(&self, value: &str) -> Option<Symbol> {
+        self.pool
+            .values
+            .iter()
+            .position(|candidate| candidate == value)
+            .map(|index| Symbol(index as u32))
+    }
+
     fn ensure_event_attribute(&mut self, attribute_symbol: Symbol, attr_type: AttrType) {
         for event_type in &mut self.event_types {
             if !event_type
@@ -848,6 +1065,245 @@ impl CompactOcelLog {
     }
 }
 
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct PatternAnalysis {
+    intra: Vec<PatternSummary>,
+    inter: Vec<PatternSummary>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct PatternSummary {
+    id: String,
+    family: &'static str,
+    label: String,
+    leading_object_type: String,
+    state: Option<String>,
+    from_state: Option<String>,
+    to_state: Option<String>,
+    support: usize,
+    mass: usize,
+    sequence: Vec<String>,
+    object_types: Vec<String>,
+    df_edges: Vec<PatternEdge>,
+    eo_edges: Vec<PatternEdge>,
+    oo_edges: Vec<PatternEdge>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct PatternEdge {
+    source: String,
+    target: String,
+    weight: usize,
+}
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+enum PatternFamily {
+    Intra,
+    Inter,
+}
+
+impl PatternFamily {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Intra => "intra",
+            Self::Inter => "inter",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+struct PatternKey {
+    family: PatternFamily,
+    leading_object_type: String,
+    state: String,
+    to_state: Option<String>,
+    sequence: Vec<String>,
+    eo_pairs: Vec<(String, String)>,
+    oo_pairs: Vec<(String, String)>,
+}
+
+#[derive(Debug)]
+struct PatternInstance {
+    family: PatternFamily,
+    leading_object_type: String,
+    state: String,
+    to_state: Option<String>,
+    sequence: Vec<String>,
+    object_types: BTreeSet<String>,
+    df_edges: BTreeMap<(String, String), usize>,
+    eo_edges: BTreeMap<(String, String), usize>,
+    oo_edges: BTreeMap<(String, String), usize>,
+}
+
+impl PatternInstance {
+    fn key(&self) -> PatternKey {
+        PatternKey {
+            family: self.family,
+            leading_object_type: self.leading_object_type.clone(),
+            state: self.state.clone(),
+            to_state: self.to_state.clone(),
+            sequence: self.sequence.clone(),
+            eo_pairs: self.eo_edges.keys().cloned().collect(),
+            oo_pairs: self.oo_edges.keys().cloned().collect(),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct PatternAccumulator {
+    key: PatternKey,
+    support: usize,
+    mass: usize,
+    object_types: BTreeSet<String>,
+    df_edges: BTreeMap<(String, String), usize>,
+    eo_edges: BTreeMap<(String, String), usize>,
+    oo_edges: BTreeMap<(String, String), usize>,
+}
+
+impl PatternAccumulator {
+    fn new(key: PatternKey) -> Self {
+        Self {
+            key,
+            support: 0,
+            mass: 0,
+            object_types: BTreeSet::new(),
+            df_edges: BTreeMap::new(),
+            eo_edges: BTreeMap::new(),
+            oo_edges: BTreeMap::new(),
+        }
+    }
+
+    fn add(&mut self, instance: PatternInstance) {
+        self.support += 1;
+        self.mass += instance.sequence.len().saturating_sub(1);
+        self.object_types.extend(instance.object_types);
+        merge_weighted_edges(&mut self.df_edges, instance.df_edges);
+        merge_weighted_edges(&mut self.eo_edges, instance.eo_edges);
+        merge_weighted_edges(&mut self.oo_edges, instance.oo_edges);
+    }
+
+    fn into_summary(self, index: usize) -> PatternSummary {
+        let family = self.key.family.as_str();
+        let label = match &self.key.to_state {
+            Some(to_state) => format!(
+                "{} -> {} on {}",
+                self.key.state, to_state, self.key.leading_object_type
+            ),
+            None => format!("{} on {}", self.key.state, self.key.leading_object_type),
+        };
+
+        PatternSummary {
+            id: format!("{family}-{index}"),
+            family,
+            label,
+            leading_object_type: self.key.leading_object_type,
+            state: (self.key.family == PatternFamily::Intra).then_some(self.key.state.clone()),
+            from_state: (self.key.family == PatternFamily::Inter).then_some(self.key.state),
+            to_state: self.key.to_state,
+            support: self.support,
+            mass: self.mass,
+            sequence: self.key.sequence,
+            object_types: self.object_types.into_iter().collect(),
+            df_edges: edge_map_to_vec(self.df_edges),
+            eo_edges: edge_map_to_vec(self.eo_edges),
+            oo_edges: edge_map_to_vec(self.oo_edges),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct StateEpisode {
+    state: String,
+    start: usize,
+    end: usize,
+}
+
+fn state_episodes(state_lifecycle: &[(usize, String)]) -> Vec<StateEpisode> {
+    if state_lifecycle.is_empty() {
+        return Vec::new();
+    }
+
+    let mut episodes = Vec::new();
+    let mut start = 0usize;
+    let mut current_state = state_lifecycle[0].1.clone();
+
+    for (index, (_, state)) in state_lifecycle.iter().enumerate().skip(1) {
+        if *state != current_state {
+            episodes.push(StateEpisode {
+                state: current_state,
+                start,
+                end: index - 1,
+            });
+            start = index;
+            current_state = state.clone();
+        }
+    }
+
+    episodes.push(StateEpisode {
+        state: current_state,
+        start,
+        end: state_lifecycle.len() - 1,
+    });
+    episodes
+}
+
+fn insert_pattern_instance(
+    patterns: &mut HashMap<PatternKey, PatternAccumulator>,
+    instance: PatternInstance,
+) {
+    let key = instance.key();
+    patterns
+        .entry(key.clone())
+        .or_insert_with(|| PatternAccumulator::new(key))
+        .add(instance);
+}
+
+fn summarize_patterns(mut accumulators: Vec<PatternAccumulator>) -> Vec<PatternSummary> {
+    accumulators.sort_by(|left, right| {
+        right
+            .support
+            .cmp(&left.support)
+            .then_with(|| right.mass.cmp(&left.mass))
+            .then_with(|| pattern_sort_label(&left.key).cmp(&pattern_sort_label(&right.key)))
+    });
+
+    accumulators
+        .into_iter()
+        .enumerate()
+        .map(|(index, accumulator)| accumulator.into_summary(index + 1))
+        .collect()
+}
+
+fn pattern_sort_label(key: &PatternKey) -> String {
+    match &key.to_state {
+        Some(to_state) => format!("{} -> {} {}", key.state, to_state, key.leading_object_type),
+        None => format!("{} {}", key.state, key.leading_object_type),
+    }
+}
+
+fn merge_weighted_edges(
+    target: &mut BTreeMap<(String, String), usize>,
+    source: BTreeMap<(String, String), usize>,
+) {
+    for (edge, weight) in source {
+        *target.entry(edge).or_default() += weight;
+    }
+}
+
+fn edge_map_to_vec(edges: BTreeMap<(String, String), usize>) -> Vec<PatternEdge> {
+    edges
+        .into_iter()
+        .map(|((source, target), weight)| PatternEdge {
+            source,
+            target,
+            weight,
+        })
+        .collect()
+}
+
 /// Parsed OCEL document exposed to JavaScript.
 ///
 /// Constructing this type imports and validates the OCEL text once. Subsequent
@@ -898,6 +1354,12 @@ impl OcelDocument {
     #[wasm_bindgen(js_name = applyStateQuery)]
     pub fn apply_state_query(&mut self, query: &str) -> Result<String, JsValue> {
         self.log.apply_state_query(query).map_err(JsValue::from)
+    }
+
+    /// Detects ranked intra-state and inter-state behavioral patterns.
+    #[wasm_bindgen(js_name = statePatternsJson)]
+    pub fn state_patterns_json(&self) -> Result<String, JsValue> {
+        self.log.state_patterns_json().map_err(JsValue::from)
     }
 }
 
@@ -2504,6 +2966,100 @@ mod tests {
     }
 
     #[test]
+    fn state_pattern_detection_requires_applied_states() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let error = log.detect_state_patterns().unwrap_err();
+
+        assert!(error.to_string().contains("apply a state query first"));
+    }
+
+    #[test]
+    fn detects_ranked_state_patterns_after_state_enrichment() {
+        let mut log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        log.apply_state_query(
+            r#"
+            STATE state AS CASE
+              WHEN object.is_blocked = 'Yes' THEN 'Invoice Blocked'
+              WHEN event.type LIKE '%Payment%' THEN 'Payment Execution'
+              WHEN event.type LIKE '%Invoice%' THEN 'Invoice Handling'
+              ELSE 'Procurement'
+            END
+            "#,
+        )
+        .unwrap();
+
+        let patterns = log.detect_state_patterns().unwrap();
+        assert!(!patterns.intra.is_empty());
+        assert!(!patterns.inter.is_empty());
+        assert_patterns_sorted(&patterns.intra);
+        assert_patterns_sorted(&patterns.inter);
+
+        let first_intra = &patterns.intra[0];
+        assert_eq!(first_intra.family, "intra");
+        assert!(first_intra.sequence[0].starts_with("START "));
+        assert!(first_intra
+            .sequence
+            .iter()
+            .any(|label| label.contains(" [")));
+        assert!(!first_intra.df_edges.is_empty());
+        assert!(!first_intra.object_types.is_empty());
+
+        assert!(patterns.inter.iter().any(|pattern| {
+            pattern.family == "inter"
+                && pattern.from_state.is_some()
+                && pattern.to_state.is_some()
+                && pattern
+                    .sequence
+                    .iter()
+                    .any(|label| label.starts_with("CHANGE "))
+        }));
+
+        let json = log.state_patterns_json().unwrap();
+        let exported: Value = serde_json::from_str(&json).unwrap();
+        assert!(exported["intra"]
+            .as_array()
+            .is_some_and(|items| !items.is_empty()));
+        assert!(exported["inter"]
+            .as_array()
+            .is_some_and(|items| !items.is_empty()));
+    }
+
+    #[test]
+    fn detects_state_patterns_for_inventory_fixture() {
+        let fixture_path = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../files/ocel2/inventory_management_simulated.json");
+        let input = fs::read_to_string(&fixture_path)
+            .unwrap_or_else(|err| panic!("failed to read {}: {err}", fixture_path.display()));
+        let mut log = CompactOcelLog::from_input(&input, Some("json")).unwrap();
+        log.apply_state_query(
+            r#"STATE state AS CASE
+  WHEN event."Current Status" = 'Understock' THEN 'Understock'
+  WHEN event."Current Status" = 'Overstock' THEN 'Overstock'
+  WHEN event."Current Status" = 'Normal' THEN 'Normal'
+  ELSE 'Unknown Stock Status'
+END"#,
+        )
+        .unwrap();
+
+        let patterns = log.detect_state_patterns().unwrap();
+        assert!(!patterns.intra.is_empty());
+        assert!(!patterns.inter.is_empty());
+        assert_patterns_sorted(&patterns.intra);
+        assert_patterns_sorted(&patterns.inter);
+        assert!(patterns
+            .intra
+            .iter()
+            .any(|pattern| pattern.state.as_deref() == Some("Understock")));
+        assert!(patterns
+            .inter
+            .iter()
+            .any(
+                |pattern| pattern.from_state.as_deref() == Some("Understock")
+                    || pattern.to_state.as_deref() == Some("Understock")
+            ));
+    }
+
+    #[test]
     fn preset_state_queries_apply_to_fixture_logs() {
         for (fixture, queries) in fixture_state_queries() {
             let fixture_path = Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -2632,6 +3188,18 @@ mod tests {
             actual.objects_with_lifecycle, expected.objects_with_lifecycle,
             "{context}"
         );
+    }
+
+    fn assert_patterns_sorted(patterns: &[PatternSummary]) {
+        for pair in patterns.windows(2) {
+            let left = &pair[0];
+            let right = &pair[1];
+            assert!(
+                left.support > right.support
+                    || (left.support == right.support && left.mass >= right.mass),
+                "patterns should be sorted by descending support and mass: {left:?} before {right:?}"
+            );
+        }
     }
 
     fn ocel_fixture_paths() -> Vec<PathBuf> {

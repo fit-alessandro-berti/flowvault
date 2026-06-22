@@ -81,6 +81,29 @@ The UI opens the state query editor as an overlay after import. For the bundled 
 
 Selecting a preset writes its query into the editor on the right. `OK` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
 
+## State Pattern Detection
+
+After a state query has been applied, Flowvault runs the pattern detection core in Rust/WebAssembly. It follows the state-determined segmentation described by Kretzschmann, Berti, and van der Aalst:
+
+- each object lifecycle is treated as a candidate leading object lifecycle;
+- consecutive lifecycle events with the same event `state` form an intra-state episode;
+- neighboring episodes with different states form an inter-state transition segment;
+- each segment is represented as a small graph with directly-follows control-flow edges, event-to-object-type edges, and leading-object-type context edges;
+- structurally equal segment graphs are grouped and ranked by descending support, then by control-flow mass.
+
+The browser UI shows separate intra-state and inter-state sections after state enrichment. Each section has a frequency-sorted pattern dropdown and a `Text`/`Graph` view switch. The graphical view uses deterministic native SVG layout instead of a graph dependency, because the WASM API already returns the compact graph model needed by the page.
+
+The WASM-facing method is `statePatternsJson()`, which returns:
+
+```json
+{
+  "intra": [{ "support": 5, "sequence": ["START Normal", "..."] }],
+  "inter": [{ "support": 3, "from_state": "Normal", "to_state": "Understock" }]
+}
+```
+
+Calling pattern detection before applying a state query returns an error.
+
 ## Commands
 
 Install JavaScript dependencies:
@@ -119,8 +142,8 @@ The npm scripts set `CARGO_HOME=$PWD/.cargo-home` so Cargo does not need to writ
 
 `npm test` runs:
 
-- Rust unit tests in `rust/ocel_wasm`, including JSON/XML imports, relationship counts, object lifecycles, timestamp conversion, validation errors, and JSON/XML round trips;
-- Angular unit tests for the app shell and file helper behavior.
+- Rust unit tests in `rust/ocel_wasm`, including JSON/XML imports, relationship counts, object lifecycles, timestamp conversion, validation errors, state enrichment, state pattern detection, and JSON/XML round trips;
+- Angular unit tests for the app shell, file helper behavior, state preset dialog, and state pattern text/graph rendering.
 
 The bundled examples in `files/ocel2/` are used by the Rust tests.
 

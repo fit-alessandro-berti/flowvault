@@ -89,6 +89,354 @@
     </section>
   }
 
+  @if (patternAnalysis(); as patterns) {
+    <section class="patterns" aria-label="State pattern analysis">
+      <header class="pattern-section-header">
+        <h2>State Patterns</h2>
+        <div>
+          <span>{{ patterns.intra.length }} intra-state</span>
+          <span>{{ patterns.inter.length }} inter-state</span>
+        </div>
+      </header>
+
+      <div class="pattern-columns">
+        <section class="pattern-panel" aria-label="Intra-state patterns">
+          <header class="pattern-panel-header">
+            <h2>Intra-State</h2>
+            <div class="view-toggle" aria-label="Intra-state visualization">
+              <button
+                type="button"
+                class="mode-button"
+                [class.is-selected]="intraVisualization() === 'text'"
+                (click)="setIntraVisualization('text')"
+              >
+                Text
+              </button>
+              <button
+                type="button"
+                class="mode-button"
+                [class.is-selected]="intraVisualization() === 'graph'"
+                (click)="setIntraVisualization('graph')"
+              >
+                Graph
+              </button>
+            </div>
+          </header>
+
+          @if (intraPatterns().length > 0) {
+            <label class="pattern-control">
+              <span>Pattern</span>
+              <select
+                class="pattern-select"
+                [value]="selectedIntraPattern()?.id ?? ''"
+                (change)="selectIntraPattern($event)"
+              >
+                @for (pattern of intraPatterns(); track pattern.id) {
+                  <option [value]="pattern.id">{{ patternOptionLabel(pattern) }}</option>
+                }
+              </select>
+            </label>
+
+            @if (selectedIntraPattern(); as pattern) {
+              @if (intraVisualization() === 'text') {
+                <section class="pattern-text-view" aria-label="Selected intra-state pattern">
+                  <dl class="pattern-stats">
+                    <div>
+                      <dt>Support</dt>
+                      <dd>{{ pattern.support }}</dd>
+                    </div>
+                    <div>
+                      <dt>Mass</dt>
+                      <dd>{{ pattern.mass }}</dd>
+                    </div>
+                    <div>
+                      <dt>Leading type</dt>
+                      <dd>{{ pattern.leading_object_type }}</dd>
+                    </div>
+                    <div>
+                      <dt>State</dt>
+                      <dd>{{ pattern.state }}</dd>
+                    </div>
+                  </dl>
+
+                  <h3>Control Sequence</h3>
+                  <ol class="pattern-sequence">
+                    @for (step of pattern.sequence; track $index) {
+                      <li>{{ step }}</li>
+                    }
+                  </ol>
+
+                  <div class="edge-columns">
+                    <section class="edge-list">
+                      <h3>Directly Follows</h3>
+                      @for (edge of topEdges(pattern.df_edges); track edge.source + edge.target) {
+                        <p>
+                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                        </p>
+                      }
+                      @if (hiddenEdgeCount(pattern.df_edges) > 0) {
+                        <small>+{{ hiddenEdgeCount(pattern.df_edges) }} more</small>
+                      }
+                    </section>
+                    <section class="edge-list">
+                      <h3>Event to Object Type</h3>
+                      @for (edge of topEdges(pattern.eo_edges); track edge.source + edge.target) {
+                        <p>
+                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                        </p>
+                      }
+                      @if (pattern.eo_edges.length === 0) {
+                        <p class="muted">None</p>
+                      }
+                      @if (hiddenEdgeCount(pattern.eo_edges) > 0) {
+                        <small>+{{ hiddenEdgeCount(pattern.eo_edges) }} more</small>
+                      }
+                    </section>
+                    <section class="edge-list">
+                      <h3>Object Type Context</h3>
+                      @for (edge of topEdges(pattern.oo_edges); track edge.source + edge.target) {
+                        <p>
+                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                        </p>
+                      }
+                      @if (pattern.oo_edges.length === 0) {
+                        <p class="muted">None</p>
+                      }
+                      @if (hiddenEdgeCount(pattern.oo_edges) > 0) {
+                        <small>+{{ hiddenEdgeCount(pattern.oo_edges) }} more</small>
+                      }
+                    </section>
+                  </div>
+                </section>
+              } @else {
+                @if (patternGraph(pattern); as graph) {
+                  <div class="graph-scroll" aria-label="Selected intra-state pattern graph">
+                    <svg
+                      class="pattern-graph"
+                      [attr.viewBox]="'0 0 ' + graph.width + ' ' + graph.height"
+                      [attr.width]="graph.width"
+                      [attr.height]="graph.height"
+                      role="img"
+                    >
+                      <defs>
+                        <marker
+                          [attr.id]="pattern.id + '-arrowhead'"
+                          viewBox="0 0 10 10"
+                          refX="8"
+                          refY="5"
+                          markerWidth="7"
+                          markerHeight="7"
+                          orient="auto-start-reverse"
+                        >
+                          <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                        </marker>
+                      </defs>
+                      @for (edge of graph.edges; track edge.id) {
+                        <line
+                          [attr.class]="'graph-edge graph-edge-' + edge.kind"
+                          [attr.x1]="edge.x1"
+                          [attr.y1]="edge.y1"
+                          [attr.x2]="edge.x2"
+                          [attr.y2]="edge.y2"
+                          [attr.marker-end]="'url(#' + pattern.id + '-arrowhead)'"
+                        ></line>
+                        <text
+                          class="graph-edge-label"
+                          [attr.x]="(edge.x1 + edge.x2) / 2"
+                          [attr.y]="(edge.y1 + edge.y2) / 2 - 5"
+                        >
+                          {{ edge.label }}
+                        </text>
+                      }
+                      @for (node of graph.nodes; track node.id) {
+                        <g [attr.class]="'graph-node graph-node-' + node.kind">
+                          <title>{{ node.title }}</title>
+                          <rect [attr.x]="node.x" [attr.y]="node.y" width="132" height="46"></rect>
+                          <text [attr.x]="node.x + 66" [attr.y]="node.y + 27">
+                            {{ node.label }}
+                          </text>
+                        </g>
+                      }
+                    </svg>
+                  </div>
+                }
+              }
+            }
+          } @else {
+            <p class="empty-patterns">No intra-state patterns found.</p>
+          }
+        </section>
+
+        <section class="pattern-panel" aria-label="Inter-state patterns">
+          <header class="pattern-panel-header">
+            <h2>Inter-State</h2>
+            <div class="view-toggle" aria-label="Inter-state visualization">
+              <button
+                type="button"
+                class="mode-button"
+                [class.is-selected]="interVisualization() === 'text'"
+                (click)="setInterVisualization('text')"
+              >
+                Text
+              </button>
+              <button
+                type="button"
+                class="mode-button"
+                [class.is-selected]="interVisualization() === 'graph'"
+                (click)="setInterVisualization('graph')"
+              >
+                Graph
+              </button>
+            </div>
+          </header>
+
+          @if (interPatterns().length > 0) {
+            <label class="pattern-control">
+              <span>Pattern</span>
+              <select
+                class="pattern-select"
+                [value]="selectedInterPattern()?.id ?? ''"
+                (change)="selectInterPattern($event)"
+              >
+                @for (pattern of interPatterns(); track pattern.id) {
+                  <option [value]="pattern.id">{{ patternOptionLabel(pattern) }}</option>
+                }
+              </select>
+            </label>
+
+            @if (selectedInterPattern(); as pattern) {
+              @if (interVisualization() === 'text') {
+                <section class="pattern-text-view" aria-label="Selected inter-state pattern">
+                  <dl class="pattern-stats">
+                    <div>
+                      <dt>Support</dt>
+                      <dd>{{ pattern.support }}</dd>
+                    </div>
+                    <div>
+                      <dt>Mass</dt>
+                      <dd>{{ pattern.mass }}</dd>
+                    </div>
+                    <div>
+                      <dt>Leading type</dt>
+                      <dd>{{ pattern.leading_object_type }}</dd>
+                    </div>
+                    <div>
+                      <dt>Transition</dt>
+                      <dd>{{ pattern.from_state }} -> {{ pattern.to_state }}</dd>
+                    </div>
+                  </dl>
+
+                  <h3>Control Sequence</h3>
+                  <ol class="pattern-sequence">
+                    @for (step of pattern.sequence; track $index) {
+                      <li>{{ step }}</li>
+                    }
+                  </ol>
+
+                  <div class="edge-columns">
+                    <section class="edge-list">
+                      <h3>Directly Follows</h3>
+                      @for (edge of topEdges(pattern.df_edges); track edge.source + edge.target) {
+                        <p>
+                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                        </p>
+                      }
+                      @if (hiddenEdgeCount(pattern.df_edges) > 0) {
+                        <small>+{{ hiddenEdgeCount(pattern.df_edges) }} more</small>
+                      }
+                    </section>
+                    <section class="edge-list">
+                      <h3>Event to Object Type</h3>
+                      @for (edge of topEdges(pattern.eo_edges); track edge.source + edge.target) {
+                        <p>
+                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                        </p>
+                      }
+                      @if (pattern.eo_edges.length === 0) {
+                        <p class="muted">None</p>
+                      }
+                      @if (hiddenEdgeCount(pattern.eo_edges) > 0) {
+                        <small>+{{ hiddenEdgeCount(pattern.eo_edges) }} more</small>
+                      }
+                    </section>
+                    <section class="edge-list">
+                      <h3>Object Type Context</h3>
+                      @for (edge of topEdges(pattern.oo_edges); track edge.source + edge.target) {
+                        <p>
+                          {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                        </p>
+                      }
+                      @if (pattern.oo_edges.length === 0) {
+                        <p class="muted">None</p>
+                      }
+                      @if (hiddenEdgeCount(pattern.oo_edges) > 0) {
+                        <small>+{{ hiddenEdgeCount(pattern.oo_edges) }} more</small>
+                      }
+                    </section>
+                  </div>
+                </section>
+              } @else {
+                @if (patternGraph(pattern); as graph) {
+                  <div class="graph-scroll" aria-label="Selected inter-state pattern graph">
+                    <svg
+                      class="pattern-graph"
+                      [attr.viewBox]="'0 0 ' + graph.width + ' ' + graph.height"
+                      [attr.width]="graph.width"
+                      [attr.height]="graph.height"
+                      role="img"
+                    >
+                      <defs>
+                        <marker
+                          [attr.id]="pattern.id + '-arrowhead'"
+                          viewBox="0 0 10 10"
+                          refX="8"
+                          refY="5"
+                          markerWidth="7"
+                          markerHeight="7"
+                          orient="auto-start-reverse"
+                        >
+                          <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                        </marker>
+                      </defs>
+                      @for (edge of graph.edges; track edge.id) {
+                        <line
+                          [attr.class]="'graph-edge graph-edge-' + edge.kind"
+                          [attr.x1]="edge.x1"
+                          [attr.y1]="edge.y1"
+                          [attr.x2]="edge.x2"
+                          [attr.y2]="edge.y2"
+                          [attr.marker-end]="'url(#' + pattern.id + '-arrowhead)'"
+                        ></line>
+                        <text
+                          class="graph-edge-label"
+                          [attr.x]="(edge.x1 + edge.x2) / 2"
+                          [attr.y]="(edge.y1 + edge.y2) / 2 - 5"
+                        >
+                          {{ edge.label }}
+                        </text>
+                      }
+                      @for (node of graph.nodes; track node.id) {
+                        <g [attr.class]="'graph-node graph-node-' + node.kind">
+                          <title>{{ node.title }}</title>
+                          <rect [attr.x]="node.x" [attr.y]="node.y" width="132" height="46"></rect>
+                          <text [attr.x]="node.x + 66" [attr.y]="node.y + 27">
+                            {{ node.label }}
+                          </text>
+                        </g>
+                      }
+                    </svg>
+                  </div>
+                }
+              }
+            }
+          } @else {
+            <p class="empty-patterns">No inter-state patterns found.</p>
+          }
+        </section>
+      </div>
+    </section>
+  }
+
   @if (isStateDialogOpen()) {
     <div class="modal-backdrop" role="presentation" (click)="closeStateDialog()">
       <section

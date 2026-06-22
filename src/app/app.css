@@ -342,6 +342,222 @@ textarea:focus {
   font-size: 1.45rem;
 }
 
+.patterns {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.pattern-section-header,
+.pattern-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pattern-section-header div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.pattern-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.pattern-panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+}
+
+.view-toggle {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #f4f8f6;
+}
+
+.mode-button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #36534d;
+  padding: 0 12px;
+  font-size: 0.88rem;
+}
+
+.mode-button.is-selected {
+  background: #1d4f49;
+  color: #ffffff;
+}
+
+.pattern-control {
+  display: grid;
+  gap: 7px;
+}
+
+.pattern-select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #fbfdfc;
+  color: #17221f;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.pattern-select:focus {
+  outline: 2px solid #2f6f68;
+  outline-offset: 2px;
+}
+
+.pattern-text-view {
+  display: grid;
+  gap: 14px;
+}
+
+.pattern-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #d7dfdd;
+}
+
+.pattern-stats div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  background: #fbfdfc;
+  padding: 12px;
+}
+
+.pattern-stats dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.pattern-sequence {
+  display: grid;
+  gap: 6px;
+  max-height: 220px;
+  margin: 0;
+  overflow: auto;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  padding: 10px 10px 10px 34px;
+  background: #f9fbfa;
+}
+
+.edge-columns {
+  display: grid;
+  gap: 12px;
+}
+
+.edge-list {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border-top: 1px solid #d7dfdd;
+  padding-top: 12px;
+}
+
+.edge-list p {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  margin: 0;
+  color: #263632;
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.edge-list small,
+.muted,
+.empty-patterns {
+  color: #6a7975;
+  font-weight: 700;
+}
+
+.empty-patterns {
+  margin: 0;
+}
+
+.graph-scroll {
+  overflow: auto;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #fbfdfc;
+}
+
+.pattern-graph {
+  display: block;
+  min-width: 100%;
+}
+
+.pattern-graph marker path {
+  fill: #31544e;
+}
+
+.graph-edge {
+  stroke: #31544e;
+  stroke-width: 2;
+}
+
+.graph-edge-eo {
+  stroke: #4678a0;
+  stroke-dasharray: 7 5;
+}
+
+.graph-edge-oo {
+  stroke: #a36a25;
+  stroke-dasharray: 4 5;
+}
+
+.graph-edge-label {
+  fill: #263632;
+  text-anchor: middle;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.graph-node rect {
+  stroke: #9cafaa;
+  stroke-width: 1;
+  rx: 8;
+}
+
+.graph-node-control rect {
+  fill: #e9f5f1;
+}
+
+.graph-node-object rect {
+  fill: #fff6e8;
+}
+
+.graph-node text {
+  fill: #17221f;
+  text-anchor: middle;
+  font-size: 11px;
+  font-weight: 800;
+}
+
 @media (max-width: 780px) {
   .app-shell {
     width: min(100vw - 24px, 560px);
@@ -350,7 +566,8 @@ textarea:focus {
 
   .topbar,
   .workspace,
-  .details {
+  .details,
+  .pattern-columns {
     grid-template-columns: 1fr;
   }
 
@@ -385,6 +602,21 @@ textarea:focus {
   .state-modal textarea {
     min-height: 320px;
   }
+
+  .pattern-section-header,
+  .pattern-panel-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pattern-section-header div,
+  .view-toggle {
+    justify-content: stretch;
+  }
+
+  .mode-button {
+    flex: 1 1 50%;
+  }
 }
 
 @media (max-width: 430px) {
@@ -394,5 +626,9 @@ textarea:focus {
 
   .summary-card {
     min-height: 96px;
+  }
+
+  .pattern-stats {
+    grid-template-columns: 1fr;
   }
 }

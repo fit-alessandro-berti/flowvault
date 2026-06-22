@@ -3,6 +3,9 @@ import { exportBaseName, formatHintForFile } from './ocel-file';
 import { presetsForFile, StateQueryPreset } from './state-query-presets';
 import {
   OcelDocumentHandle,
+  StatePattern,
+  StatePatternAnalysis,
+  StatePatternEdge,
   OcelSummary,
   OcelWasmService,
   StateQueryResult,
@@ -11,6 +14,34 @@ import {
 interface SummaryCard {
   label: string;
   value: number;
+}
+
+type PatternVisualization = 'text' | 'graph';
+
+interface PatternGraphNode {
+  id: string;
+  label: string;
+  title: string;
+  x: number;
+  y: number;
+  kind: 'control' | 'object';
+}
+
+interface PatternGraphEdge {
+  id: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  label: string;
+  kind: 'df' | 'eo' | 'oo';
+}
+
+interface PatternGraph {
+  width: number;
+  height: number;
+  nodes: PatternGraphNode[];
+  edges: PatternGraphEdge[];
 }
 
 @Component({
@@ -32,8 +63,21 @@ export class App {
   protected readonly selectedPresetId = signal('');
   protected readonly stateQueryDraft = signal('');
   protected readonly summary = signal<OcelSummary | null>(null);
+  protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
+  protected readonly selectedIntraPatternId = signal('');
+  protected readonly selectedInterPatternId = signal('');
+  protected readonly intraVisualization = signal<PatternVisualization>('text');
+  protected readonly interVisualization = signal<PatternVisualization>('text');
   protected readonly hasDocument = computed(() => this.summary() !== null);
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
+  protected readonly intraPatterns = computed(() => this.patternAnalysis()?.intra ?? []);
+  protected readonly interPatterns = computed(() => this.patternAnalysis()?.inter ?? []);
+  protected readonly selectedIntraPattern = computed(() =>
+    selectedPattern(this.intraPatterns(), this.selectedIntraPatternId()),
+  );
+  protected readonly selectedInterPattern = computed(() =>
+    selectedPattern(this.interPatterns(), this.selectedInterPatternId()),
+  );
   protected readonly summaryCards = computed<SummaryCard[]>(() => {
     const summary = this.summary();
 
@@ -128,6 +172,7 @@ export class App {
         this.documentHandle.applyStateQuery(this.stateQueryDraft()),
       ) as StateQueryResult;
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
+      this.loadStatePatterns();
       this.stateMessage.set(
         `Added ${result.attribute} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
       );
@@ -150,6 +195,9 @@ export class App {
       this.fileName.set(file.name);
       this.summary.set(imported.summary);
       this.stateMessage.set('');
+      this.patternAnalysis.set(null);
+      this.selectedIntraPatternId.set('');
+      this.selectedInterPatternId.set('');
       this.isStateDialogOpen.set(false);
       this.initializeStatePresetForFile(file.name);
     } catch (error) {
@@ -159,6 +207,9 @@ export class App {
       this.documentHandle?.free();
       this.documentHandle = undefined;
       this.stateMessage.set('');
+      this.patternAnalysis.set(null);
+      this.selectedIntraPatternId.set('');
+      this.selectedInterPatternId.set('');
       this.isStateDialogOpen.set(false);
     } finally {
       this.isLoading.set(false);
@@ -196,6 +247,145 @@ export class App {
     this.selectedPresetId.set(preset.id);
     this.stateQueryDraft.set(preset.query);
   }
+
+  protected selectIntraPattern(event: Event): void {
+    this.selectedIntraPatternId.set((event.target as HTMLSelectElement).value);
+  }
+
+  protected selectInterPattern(event: Event): void {
+    this.selectedInterPatternId.set((event.target as HTMLSelectElement).value);
+  }
+
+  protected setIntraVisualization(visualization: PatternVisualization): void {
+    this.intraVisualization.set(visualization);
+  }
+
+  protected setInterVisualization(visualization: PatternVisualization): void {
+    this.interVisualization.set(visualization);
+  }
+
+  protected patternOptionLabel(pattern: StatePattern): string {
+    return `${pattern.support.toLocaleString()}x | ${pattern.label}`;
+  }
+
+  protected topEdges(edges: StatePatternEdge[], limit = 12): StatePatternEdge[] {
+    return [...edges]
+      .sort((left, right) => right.weight - left.weight || left.source.localeCompare(right.source))
+      .slice(0, limit);
+  }
+
+  protected hiddenEdgeCount(edges: StatePatternEdge[], limit = 12): number {
+    return Math.max(edges.length - limit, 0);
+  }
+
+  protected patternGraph(pattern: StatePattern): PatternGraph {
+    const controlGap = 148;
+    const controlWidth = 132;
+    const controlStartX = 72;
+    const objectStartY = 218;
+    const width = Math.max(
+      760,
+      controlStartX * 2 + Math.max(pattern.sequence.length - 1, 0) * controlGap + controlWidth,
+    );
+    const objectColumns = Math.max(1, Math.floor((width - 96) / 174));
+    const objectRows = Math.max(1, Math.ceil(pattern.object_types.length / objectColumns));
+    const height = objectStartY + objectRows * 76 + 42;
+
+    const controlNodes = pattern.sequence.map((label, index) => ({
+      id: `control-${index}`,
+      label: compactGraphLabel(label),
+      title: label,
+      x: controlStartX + index * controlGap,
+      y: 52,
+      kind: 'control' as const,
+    }));
+    const objectNodes = pattern.object_types.map((objectType, index) => ({
+      id: `object-${index}`,
+      label: compactGraphLabel(objectType),
+      title: objectType,
+      x: 72 + (index % objectColumns) * 174,
+      y: objectStartY + Math.floor(index / objectColumns) * 76,
+      kind: 'object' as const,
+    }));
+    const nodes = [...controlNodes, ...objectNodes];
+    const firstControlByLabel = new Map<string, PatternGraphNode>();
+    const objectByType = new Map<string, PatternGraphNode>();
+
+    for (const [index, node] of controlNodes.entries()) {
+      firstControlByLabel.set(pattern.sequence[index], node);
+    }
+    for (const [index, objectType] of pattern.object_types.entries()) {
+      objectByType.set(objectType, objectNodes[index]);
+    }
+
+    const edges: PatternGraphEdge[] = [];
+    for (let index = 0; index < controlNodes.length - 1; index += 1) {
+      const source = controlNodes[index];
+      const target = controlNodes[index + 1];
+      const weight =
+        pattern.df_edges.find(
+          (edge) =>
+            edge.source === pattern.sequence[index] && edge.target === pattern.sequence[index + 1],
+        )?.weight ?? 1;
+      edges.push({
+        id: `df-${index}`,
+        x1: source.x + controlWidth,
+        y1: source.y + 23,
+        x2: target.x,
+        y2: target.y + 23,
+        label: weight.toLocaleString(),
+        kind: 'df',
+      });
+    }
+
+    for (const [index, edge] of pattern.eo_edges.entries()) {
+      const source = firstControlByLabel.get(edge.source);
+      const target = objectByType.get(edge.target);
+      if (!source || !target) {
+        continue;
+      }
+      edges.push({
+        id: `eo-${index}`,
+        x1: source.x + controlWidth / 2,
+        y1: source.y + 46,
+        x2: target.x + controlWidth / 2,
+        y2: target.y,
+        label: edge.weight.toLocaleString(),
+        kind: 'eo',
+      });
+    }
+
+    for (const [index, edge] of pattern.oo_edges.entries()) {
+      const source = objectByType.get(edge.source);
+      const target = objectByType.get(edge.target);
+      if (!source || !target || source === target) {
+        continue;
+      }
+      edges.push({
+        id: `oo-${index}`,
+        x1: source.x + controlWidth,
+        y1: source.y + 23,
+        x2: target.x,
+        y2: target.y + 23,
+        label: edge.weight.toLocaleString(),
+        kind: 'oo',
+      });
+    }
+
+    return { width, height, nodes, edges };
+  }
+
+  private loadStatePatterns(): void {
+    if (!this.documentHandle) {
+      this.patternAnalysis.set(null);
+      return;
+    }
+
+    const analysis = JSON.parse(this.documentHandle.statePatternsJson()) as StatePatternAnalysis;
+    this.patternAnalysis.set(analysis);
+    this.selectedIntraPatternId.set(analysis.intra[0]?.id ?? '');
+    this.selectedInterPatternId.set(analysis.inter[0]?.id ?? '');
+  }
 }
 
 function errorToMessage(error: unknown): string {
@@ -208,4 +398,16 @@ function errorToMessage(error: unknown): string {
   }
 
   return 'Could not process the OCEL file.';
+}
+
+function selectedPattern(patterns: StatePattern[], selectedId: string): StatePattern | null {
+  return patterns.find((pattern) => pattern.id === selectedId) ?? patterns[0] ?? null;
+}
+
+function compactGraphLabel(label: string): string {
+  if (label.length <= 28) {
+    return label;
+  }
+
+  return `${label.slice(0, 25)}...`;
 }
