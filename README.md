@@ -77,7 +77,7 @@ The UI opens the state query editor as an overlay after import. For the bundled 
 - `ocel20_example`: Payment Block Status, Purchase Size, Actor and Automation
 - `container_logistics`: Shipment Status, Load Planning, Process Phase
 - `order-management`: Fulfillment Stage, Value and Weight, Exception Risk
-- `inventory_management_simulated`: Stock Status, Activity Phase, Inventory Risk Band
+- `inventory_management_simulated`: Stock Status, Activity Phase, Stock Movement
 
 Selecting a preset writes its query into the editor on the right. `OK` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
 

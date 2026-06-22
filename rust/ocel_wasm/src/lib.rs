@@ -3040,10 +3040,10 @@ mod tests {
         let mut log = CompactOcelLog::from_input(&input, Some("json")).unwrap();
         log.apply_state_query(
             r#"STATE state AS CASE
-  WHEN event."Current Status" = 'Understock' THEN 'Understock'
-  WHEN event."Current Status" = 'Overstock' THEN 'Overstock'
-  WHEN event."Current Status" = 'Normal' THEN 'Normal'
-  ELSE 'Unknown Stock Status'
+  WHEN event."Stock After" = 0 THEN 'Zero Stock'
+  WHEN event."Stock After" < 30 THEN 'Low Stock'
+  WHEN event."Stock After" >= 100 THEN 'High Stock'
+  ELSE 'Available Stock'
 END"#,
         )
         .unwrap();
@@ -3056,13 +3056,13 @@ END"#,
         assert!(patterns
             .intra
             .iter()
-            .any(|pattern| pattern.state.as_deref() == Some("Understock")));
+            .any(|pattern| pattern.state.as_deref() == Some("Zero Stock")));
         assert!(patterns
             .inter
             .iter()
             .any(
-                |pattern| pattern.from_state.as_deref() == Some("Understock")
-                    || pattern.to_state.as_deref() == Some("Understock")
+                |pattern| pattern.from_state.as_deref() == Some("Zero Stock")
+                    || pattern.to_state.as_deref() == Some("Zero Stock")
             ));
     }
 
@@ -3112,11 +3112,11 @@ END"#,
                 .unwrap_or_else(|err| panic!("failed to import {fixture}: {err}"))
                 .summary();
 
-            assert_eq!(summary.event_types, 30);
+            assert_eq!(summary.event_types, 5);
             assert_eq!(summary.object_types, 7);
-            assert_eq!(summary.events, 2301);
+            assert_eq!(summary.events, 1210);
             assert_eq!(summary.objects, 1701);
-            assert_eq!(summary.e2o_relationships, 10956);
+            assert_eq!(summary.e2o_relationships, 5767);
             assert_eq!(summary.o2o_relationships, 0);
         }
     }
@@ -3415,48 +3415,44 @@ END"#,
                     (
                         "Stock Status",
                         r#"STATE state AS CASE
-  WHEN event."Current Status" = 'Understock' THEN 'Understock'
-  WHEN event."Current Status" = 'Overstock' THEN 'Overstock'
-  WHEN event."Current Status" = 'Normal' THEN 'Normal'
-  ELSE 'Unknown Stock Status'
+  WHEN event."Stock After" = 0 THEN 'Zero Stock'
+  WHEN event."Stock After" < 30 THEN 'Low Stock'
+  WHEN event."Stock After" >= 100 THEN 'High Stock'
+  ELSE 'Available Stock'
 END"#,
-                        &["Understock", "Overstock", "Normal"],
+                        &["Zero Stock", "Low Stock", "High Stock", "Available Stock"],
                     ),
                     (
                         "Activity Phase",
                         r#"STATE state AS CASE
-  WHEN event.type LIKE 'START%' THEN 'Status Start'
-  WHEN event.type LIKE 'END%' THEN 'Status End'
-  WHEN event.type LIKE 'ST CHANGE%' THEN 'Status Transition'
-  WHEN event.type LIKE '%Goods Receipt%' THEN 'Replenishment'
-  WHEN event.type LIKE '%Goods Issue%' THEN 'Consumption'
-  WHEN event.type LIKE '%Purchase%' THEN 'Procurement'
-  WHEN event.type LIKE '%Sales%' THEN 'Sales Demand'
+  WHEN event.type = 'Goods Receipt' THEN 'Goods Receipt'
+  WHEN event.type = 'Goods Issue' THEN 'Goods Issue'
+  WHEN event.type = 'Create Purchase Order Item' THEN 'Purchase Order'
+  WHEN event.type = 'Create Purchase Suggestion Item' THEN 'Purchase Suggestion'
+  WHEN event.type = 'Create Sales Order Item' THEN 'Sales Order'
   ELSE 'Inventory Activity'
 END"#,
                         &[
-                            "Status Start",
-                            "Status End",
-                            "Status Transition",
-                            "Replenishment",
-                            "Consumption",
-                            "Procurement",
-                            "Sales Demand",
+                            "Goods Receipt",
+                            "Goods Issue",
+                            "Purchase Order",
+                            "Purchase Suggestion",
+                            "Sales Order",
                         ],
                     ),
                     (
-                        "Inventory Risk Band",
+                        "Stock Movement",
                         r#"STATE state AS CASE
-  WHEN event."Stock After" = 0 THEN 'Zero Stock'
-  WHEN event."Current Status" = 'Understock' THEN 'Understock Risk'
-  WHEN event."Stock After" > event."Reorder Point (ROP)" AND event."Current Status" = 'Overstock' THEN 'Overstock Risk'
-  ELSE 'Balanced'
+  WHEN event."Stock After" > event."Stock Before" THEN 'Stock Increase'
+  WHEN event."Stock After" < event."Stock Before" THEN 'Stock Decrease'
+  WHEN event."Stock After" = 0 THEN 'Zero Stable'
+  ELSE 'No Stock Change'
 END"#,
                         &[
-                            "Zero Stock",
-                            "Understock Risk",
-                            "Overstock Risk",
-                            "Balanced",
+                            "Stock Increase",
+                            "Stock Decrease",
+                            "Zero Stable",
+                            "No Stock Change",
                         ],
                     ),
                 ],

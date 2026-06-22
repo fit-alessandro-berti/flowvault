@@ -113,10 +113,10 @@ END`,
     logKey: 'inventory_management_simulated',
     name: 'Stock Status',
     query: `STATE state AS CASE
-  WHEN event."Current Status" = 'Understock' THEN 'Understock'
-  WHEN event."Current Status" = 'Overstock' THEN 'Overstock'
-  WHEN event."Current Status" = 'Normal' THEN 'Normal'
-  ELSE 'Unknown Stock Status'
+  WHEN event."Stock After" = 0 THEN 'Zero Stock'
+  WHEN event."Stock After" < 30 THEN 'Low Stock'
+  WHEN event."Stock After" >= 100 THEN 'High Stock'
+  ELSE 'Available Stock'
 END`,
   },
   {
@@ -124,25 +124,23 @@ END`,
     logKey: 'inventory_management_simulated',
     name: 'Activity Phase',
     query: `STATE state AS CASE
-  WHEN event.type LIKE 'START%' THEN 'Status Start'
-  WHEN event.type LIKE 'END%' THEN 'Status End'
-  WHEN event.type LIKE 'ST CHANGE%' THEN 'Status Transition'
-  WHEN event.type LIKE '%Goods Receipt%' THEN 'Replenishment'
-  WHEN event.type LIKE '%Goods Issue%' THEN 'Consumption'
-  WHEN event.type LIKE '%Purchase%' THEN 'Procurement'
-  WHEN event.type LIKE '%Sales%' THEN 'Sales Demand'
+  WHEN event.type = 'Goods Receipt' THEN 'Goods Receipt'
+  WHEN event.type = 'Goods Issue' THEN 'Goods Issue'
+  WHEN event.type = 'Create Purchase Order Item' THEN 'Purchase Order'
+  WHEN event.type = 'Create Purchase Suggestion Item' THEN 'Purchase Suggestion'
+  WHEN event.type = 'Create Sales Order Item' THEN 'Sales Order'
   ELSE 'Inventory Activity'
 END`,
   },
   {
-    id: 'inventory-risk-band',
+    id: 'inventory-stock-movement',
     logKey: 'inventory_management_simulated',
-    name: 'Inventory Risk Band',
+    name: 'Stock Movement',
     query: `STATE state AS CASE
-  WHEN event."Stock After" = 0 THEN 'Zero Stock'
-  WHEN event."Current Status" = 'Understock' THEN 'Understock Risk'
-  WHEN event."Stock After" > event."Reorder Point (ROP)" AND event."Current Status" = 'Overstock' THEN 'Overstock Risk'
-  ELSE 'Balanced'
+  WHEN event."Stock After" > event."Stock Before" THEN 'Stock Increase'
+  WHEN event."Stock After" < event."Stock Before" THEN 'Stock Decrease'
+  WHEN event."Stock After" = 0 THEN 'Zero Stable'
+  ELSE 'No Stock Change'
 END`,
   },
 ];
