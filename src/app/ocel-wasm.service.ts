@@ -15,6 +15,9 @@ export interface OcelSummary {
 
 export interface OcelDocumentHandle {
   summaryJson(): string;
+  originalSummaryJson(): string;
+  filterOptionsJson(): string;
+  applyFilter(filterJson: string): string;
   exportJson(): string;
   exportXml(): string;
   objectLifecycleJson(objectId: string): string;
@@ -60,6 +63,13 @@ export interface StatePatternAnalysis {
 export interface ImportedOcelDocument {
   document: OcelDocumentHandle;
   summary: OcelSummary;
+  originalSummary: OcelSummary;
+  filterOptions: OcelFilterOptions;
+}
+
+export interface OcelFilterOptions {
+  event_types: string[];
+  object_types: string[];
 }
 
 interface OcelWasmModule {
@@ -79,8 +89,10 @@ export class OcelWasmService {
     const wasm = await this.loadModule();
     const document = new wasm.OcelDocument(input, formatHint);
     const summary = JSON.parse(document.summaryJson()) as OcelSummary;
+    const originalSummary = JSON.parse(document.originalSummaryJson()) as OcelSummary;
+    const filterOptions = JSON.parse(document.filterOptionsJson()) as OcelFilterOptions;
 
-    return { document, summary };
+    return { document, summary, originalSummary, filterOptions };
   }
 
   private loadModule(): Promise<OcelWasmModule> {

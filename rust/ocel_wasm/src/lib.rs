@@ -61,7 +61,7 @@ impl OcelFormat {
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 struct Symbol(u32);
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 struct StringPool {
     values: Vec<String>,
     index: HashMap<String, Symbol>,
@@ -138,13 +138,13 @@ impl AttrType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct AttributeDef {
     name: Symbol,
     attr_type: AttrType,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct TypeDef {
     name: Symbol,
     attributes: Vec<AttributeDef>,
@@ -159,26 +159,26 @@ enum AttrValue {
     Boolean(bool),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Attribute {
     name: Symbol,
     value: AttrValue,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct TimedAttribute {
     name: Symbol,
     time_ms: i64,
     value: AttrValue,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Relationship {
     object_id: Symbol,
     qualifier: Symbol,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Event {
     id: Symbol,
     type_name: Symbol,
@@ -187,7 +187,7 @@ struct Event {
     relationships: Vec<Relationship>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Object {
     id: Symbol,
     type_name: Symbol,
@@ -196,7 +196,7 @@ struct Object {
     lifecycle: Vec<usize>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct CompactOcelLog {
     format: OcelFormat,
     pool: StringPool,
@@ -220,6 +220,18 @@ struct OcelSummary {
     interned_strings: usize,
     objects_with_lifecycle: usize,
     stateful_events: usize,
+}
+
+#[derive(Deserialize)]
+struct OcelFilterRequest {
+    event_types: Vec<String>,
+    object_types: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct FilterOptions {
+    event_types: Vec<String>,
+    object_types: Vec<String>,
 }
 
 impl CompactOcelLog {
@@ -422,6 +434,149 @@ impl CompactOcelLog {
 
     fn summary_json(&self) -> String {
         serde_json::to_string(&self.summary()).expect("summary serialization cannot fail")
+    }
+
+    fn filter(&self, filter: &OcelFilterRequest) -> Self {
+        let event_type_selection = filter
+            .event_types
+            .iter()
+            .map(String::as_str)
+            .collect::<HashSet<_>>();
+        let object_type_selection = filter
+            .object_types
+            .iter()
+            .map(String::as_str)
+            .collect::<HashSet<_>>();
+        let all_event_types_selected = event_type_selection.len() >= self.event_types.len();
+        let all_object_types_selected = object_type_selection.len() >= self.object_types.len();
+
+        if all_event_types_selected && all_object_types_selected {
+            return self.clone();
+        }
+
+        let selected_object_ids = self
+            .objects
+            .iter()
+            .filter(|object| object_type_selection.contains(self.pool.resolve(object.type_name)))
+            .map(|object| object.id)
+            .collect::<HashSet<_>>();
+
+        let mut retained_events = Vec::new();
+        let mut retained_object_ids = HashSet::new();
+
+        for event in &self.events {
+            if !event_type_selection.contains(self.pool.resolve(event.type_name)) {
+                continue;
+            }
+
+            let relationships = event
+                .relationships
+                .iter()
+                .filter(|relationship| selected_object_ids.contains(&relationship.object_id))
+                .cloned()
+                .collect::<Vec<_>>();
+
+            if !all_object_types_selected && relationships.is_empty() {
+                continue;
+            }
+
+            retained_object_ids.extend(
+                relationships
+                    .iter()
+                    .map(|relationship| relationship.object_id),
+            );
+            retained_events.push(Event {
+                id: event.id,
+                type_name: event.type_name,
+                time_ms: event.time_ms,
+                attributes: event.attributes.clone(),
+                relationships,
+            });
+        }
+
+        let mut objects = self
+            .objects
+            .iter()
+            .filter(|object| retained_object_ids.contains(&object.id))
+            .map(|object| Object {
+                id: object.id,
+                type_name: object.type_name,
+                attributes: object.attributes.clone(),
+                relationships: object
+                    .relationships
+                    .iter()
+                    .filter(|relationship| retained_object_ids.contains(&relationship.object_id))
+                    .cloned()
+                    .collect(),
+                lifecycle: Vec::new(),
+            })
+            .collect::<Vec<_>>();
+        let object_index = objects
+            .iter()
+            .enumerate()
+            .map(|(index, object)| (object.id, index))
+            .collect::<HashMap<_, _>>();
+
+        for (event_index, event) in retained_events.iter().enumerate() {
+            for relationship in &event.relationships {
+                if let Some(object_pos) = object_index.get(&relationship.object_id) {
+                    objects[*object_pos].lifecycle.push(event_index);
+                }
+            }
+        }
+
+        for object in &mut objects {
+            object
+                .lifecycle
+                .sort_by_key(|event_index| (retained_events[*event_index].time_ms, *event_index));
+        }
+
+        let retained_event_types = retained_events
+            .iter()
+            .map(|event| event.type_name)
+            .collect::<HashSet<_>>();
+        let retained_object_types = objects
+            .iter()
+            .map(|object| object.type_name)
+            .collect::<HashSet<_>>();
+
+        Self {
+            format: self.format,
+            pool: self.pool.clone(),
+            event_types: self
+                .event_types
+                .iter()
+                .filter(|type_def| retained_event_types.contains(&type_def.name))
+                .cloned()
+                .collect(),
+            object_types: self
+                .object_types
+                .iter()
+                .filter(|type_def| retained_object_types.contains(&type_def.name))
+                .cloned()
+                .collect(),
+            events: retained_events,
+            objects,
+            object_index,
+        }
+    }
+
+    fn filter_options(&self) -> FilterOptions {
+        let event_types = self
+            .event_types
+            .iter()
+            .map(|type_def| self.pool.resolve(type_def.name).to_owned())
+            .collect();
+        let object_types = self
+            .object_types
+            .iter()
+            .map(|type_def| self.pool.resolve(type_def.name).to_owned())
+            .collect();
+
+        FilterOptions {
+            event_types,
+            object_types,
+        }
     }
 
     fn lifecycle_json(&self, object_id: &str) -> OcelResult<String> {
@@ -1317,6 +1472,7 @@ fn unordered_pair(left: &str, right: &str) -> (String, String) {
 /// summary/export calls reuse the compact in-memory representation.
 #[wasm_bindgen]
 pub struct OcelDocument {
+    original_log: CompactOcelLog,
     log: CompactOcelLog,
 }
 
@@ -1330,13 +1486,41 @@ impl OcelDocument {
     #[wasm_bindgen(constructor)]
     pub fn new(input: &str, format_hint: Option<String>) -> Result<OcelDocument, JsValue> {
         let log = CompactOcelLog::from_input(input, format_hint.as_deref())?;
-        Ok(Self { log })
+        Ok(Self {
+            original_log: log.clone(),
+            log,
+        })
     }
 
     /// Returns summary counts as a JSON string.
     #[wasm_bindgen(js_name = summaryJson)]
     pub fn summary_json(&self) -> String {
         self.log.summary_json()
+    }
+
+    /// Returns summary counts for the unfiltered imported document as a JSON string.
+    #[wasm_bindgen(js_name = originalSummaryJson)]
+    pub fn original_summary_json(&self) -> String {
+        self.original_log.summary_json()
+    }
+
+    /// Returns available event and object types for filtering as a JSON string.
+    #[wasm_bindgen(js_name = filterOptionsJson)]
+    pub fn filter_options_json(&self) -> String {
+        serde_json::to_string(&self.original_log.filter_options())
+            .expect("filter option serialization cannot fail")
+    }
+
+    /// Rebuilds the active log from the original log using selected types.
+    ///
+    /// This intentionally drops derived state attributes and pattern results from
+    /// the active log because it starts from the original imported OCEL again.
+    #[wasm_bindgen(js_name = applyFilter)]
+    pub fn apply_filter(&mut self, filter_json: &str) -> Result<String, JsValue> {
+        let filter = serde_json::from_str::<OcelFilterRequest>(filter_json)
+            .map_err(|err| JsValue::from_str(&format!("could not parse filter request: {err}")))?;
+        self.log = self.original_log.filter(&filter);
+        Ok(self.log.summary_json())
     }
 
     /// Exports the document as OCEL 2.0 JSON.
@@ -2970,6 +3154,64 @@ mod tests {
 
         assert_eq!(event_state(&log, "e5"), Some("Insert Invoice".to_owned()));
         assert_eq!(event_state(&log, "e1"), Some("Other".to_owned()));
+    }
+
+    #[test]
+    fn filters_active_log_by_event_and_object_types() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let filtered = log.filter(&OcelFilterRequest {
+            event_types: vec![
+                "Create Purchase Order".to_owned(),
+                "Insert Invoice".to_owned(),
+            ],
+            object_types: vec!["Purchase Order".to_owned(), "Invoice".to_owned()],
+        });
+        let summary = filtered.summary();
+
+        assert!(summary.events > 0);
+        assert!(summary.events < log.summary().events);
+        assert!(summary.objects > 0);
+        assert!(summary.objects < log.summary().objects);
+        assert_eq!(summary.event_types, 2);
+        assert!(filtered.events.iter().all(|event| matches!(
+            filtered.pool.resolve(event.type_name),
+            "Create Purchase Order" | "Insert Invoice"
+        )));
+        assert!(filtered.objects.iter().all(|object| matches!(
+            filtered.pool.resolve(object.type_name),
+            "Purchase Order" | "Invoice"
+        )));
+    }
+
+    #[test]
+    fn wasm_filter_resets_active_state_from_original_log() {
+        let mut document = OcelDocument::new(JSON_EXAMPLE, Some("json".to_owned())).unwrap();
+        document
+            .apply_state_query(
+                r#"
+                STATE state AS CASE
+                  WHEN event.type LIKE '%Invoice%' THEN 'Invoice'
+                  ELSE 'Other'
+                END
+                "#,
+            )
+            .unwrap();
+        assert_eq!(
+            serde_json::from_str::<Value>(&document.summary_json()).unwrap()["stateful_events"],
+            Value::from(13)
+        );
+
+        document
+            .apply_filter(
+                r#"{"event_types":["Create Purchase Order"],"object_types":["Purchase Order"]}"#,
+            )
+            .unwrap();
+        let summary = serde_json::from_str::<Value>(&document.summary_json()).unwrap();
+        let original = serde_json::from_str::<Value>(&document.original_summary_json()).unwrap();
+
+        assert_eq!(summary["stateful_events"], Value::from(0));
+        assert_eq!(original["stateful_events"], Value::from(0));
+        assert!(summary["events"].as_u64().unwrap() < original["events"].as_u64().unwrap());
     }
 
     #[test]

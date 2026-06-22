@@ -50,7 +50,15 @@
       @for (card of summaryCards(); track card.label) {
         <article class="summary-card">
           <span>{{ card.label }}</span>
-          <strong>{{ card.value }}</strong>
+          <strong class="stat-value" [class.is-fraction]="card.value.filtered">
+            @if (card.value.filtered) {
+              <span>{{ card.value.current }}</span>
+              <span class="stat-separator">/</span>
+              <span>{{ card.value.original }}</span>
+            } @else {
+              {{ card.value.current }}
+            }
+          </strong>
         </article>
       }
     </section>
@@ -64,27 +72,125 @@
     <p class="message success">{{ stateMessage() }}</p>
   }
 
-  @if (summary(); as summaryValue) {
+  @if (summary(); as summarySnapshot) {
     <section class="details" aria-label="OCEL import details">
       <div>
         <span>Event types</span>
-        <strong>{{ summaryValue.event_types }}</strong>
+        @if (summaryDisplayValue('event_types'); as value) {
+          <strong class="stat-value" [class.is-fraction]="value.filtered">
+            @if (value.filtered) {
+              <span>{{ value.current }}</span
+              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+            } @else {
+              {{ value.current }}
+            }
+          </strong>
+        }
       </div>
       <div>
         <span>Object types</span>
-        <strong>{{ summaryValue.object_types }}</strong>
+        @if (summaryDisplayValue('object_types'); as value) {
+          <strong class="stat-value" [class.is-fraction]="value.filtered">
+            @if (value.filtered) {
+              <span>{{ value.current }}</span
+              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+            } @else {
+              {{ value.current }}
+            }
+          </strong>
+        }
       </div>
       <div>
         <span>Interned strings</span>
-        <strong>{{ summaryValue.interned_strings }}</strong>
+        @if (summaryDisplayValue('interned_strings'); as value) {
+          <strong class="stat-value" [class.is-fraction]="value.filtered">
+            @if (value.filtered) {
+              <span>{{ value.current }}</span
+              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+            } @else {
+              {{ value.current }}
+            }
+          </strong>
+        }
       </div>
       <div>
         <span>Lifecycle indexes</span>
-        <strong>{{ summaryValue.objects_with_lifecycle }}</strong>
+        @if (summaryDisplayValue('objects_with_lifecycle'); as value) {
+          <strong class="stat-value" [class.is-fraction]="value.filtered">
+            @if (value.filtered) {
+              <span>{{ value.current }}</span
+              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+            } @else {
+              {{ value.current }}
+            }
+          </strong>
+        }
       </div>
       <div>
         <span>Stateful events</span>
-        <strong>{{ summaryValue.stateful_events }}</strong>
+        @if (summaryDisplayValue('stateful_events'); as value) {
+          <strong class="stat-value" [class.is-fraction]="value.filtered">
+            @if (value.filtered) {
+              <span>{{ value.current }}</span
+              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+            } @else {
+              {{ value.current }}
+            }
+          </strong>
+        }
+      </div>
+    </section>
+  }
+
+  @if (filterOptions().event_types.length > 0 || filterOptions().object_types.length > 0) {
+    <section class="filter-section" aria-label="OCEL filter controls">
+      <header class="pattern-section-header">
+        <h2>Filter Log</h2>
+        @if (isFilterApplied()) {
+          <span>Filtered</span>
+        }
+      </header>
+
+      <div class="filter-columns">
+        <fieldset>
+          <legend>Activities</legend>
+          <div class="filter-actions">
+            <button type="button" class="ghost-button" (click)="selectAllEventTypes()">All</button>
+            <button type="button" class="ghost-button" (click)="clearEventTypes()">None</button>
+          </div>
+          <div class="filter-options">
+            @for (eventType of filterOptions().event_types; track eventType) {
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="selectedEventTypes().includes(eventType)"
+                  (change)="toggleEventType(eventType, $event)"
+                />
+                <span>{{ eventType }}</span>
+              </label>
+            }
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Object Types</legend>
+          <div class="filter-actions">
+            <button type="button" class="ghost-button" (click)="selectAllObjectTypes()">All</button>
+            <button type="button" class="ghost-button" (click)="clearObjectTypes()">None</button>
+          </div>
+          <div class="filter-options">
+            @for (objectType of filterOptions().object_types; track objectType) {
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="selectedObjectTypes().includes(objectType)"
+                  (change)="toggleObjectType(objectType, $event)"
+                />
+                <span>{{ objectType }}</span>
+              </label>
+            }
+          </div>
+        </fieldset>
       </div>
     </section>
   }

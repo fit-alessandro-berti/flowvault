@@ -158,6 +158,64 @@ describe('App', () => {
     expect(native.querySelectorAll('.pattern-select').length).toBe(2);
   });
 
+  it('applies filters, renders fractions, and resets states and patterns', () => {
+    const fixture = TestBed.createComponent(App);
+    const filteredSummary = {
+      ...importedSummary,
+      event_types: 1,
+      object_types: 1,
+      events: 1,
+      objects: 1,
+      e2o_relationships: 1,
+      o2o_relationships: 0,
+      stateful_events: 0,
+    };
+    let filterRequest = '';
+    const component = fixture.componentInstance as unknown as {
+      documentHandle: unknown;
+      summary: { set(value: unknown): void };
+      originalSummary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedEventTypes: { set(value: string[]): void };
+      selectedObjectTypes: { set(value: string[]): void };
+      patternAnalysis: { set(value: unknown): void };
+      stateMessage: { set(value: string): void };
+    };
+
+    component.documentHandle = {
+      applyFilter: (request: string) => {
+        filterRequest = request;
+        return JSON.stringify(filteredSummary);
+      },
+    };
+    component.summary.set(statefulSummary);
+    component.originalSummary.set(importedSummary);
+    component.filterOptions.set({
+      event_types: ['Create Order', 'Close Order'],
+      object_types: ['Order', 'Item'],
+    });
+    component.selectedEventTypes.set(['Create Order', 'Close Order']);
+    component.selectedObjectTypes.set(['Order', 'Item']);
+    component.patternAnalysis.set(patternAnalysis);
+    component.stateMessage.set('Added state to 2 of 2 events.');
+    fixture.detectChanges();
+
+    const native = fixture.nativeElement as HTMLElement;
+    const closeOrderCheckbox = Array.from(
+      native.querySelectorAll<HTMLInputElement>('.filter-options input'),
+    )[1];
+    closeOrderCheckbox.click();
+    fixture.detectChanges();
+
+    expect(JSON.parse(filterRequest)).toEqual({
+      event_types: ['Create Order'],
+      object_types: ['Order', 'Item'],
+    });
+    expect(native.textContent).toContain('1/2');
+    expect(native.textContent).not.toContain('Added state');
+    expect(native.textContent).not.toContain('State Patterns');
+  });
+
   it('renders the graphical pattern view', () => {
     const fixture = TestBed.createComponent(App);
     const component = fixture.componentInstance as unknown as {

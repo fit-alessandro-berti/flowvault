@@ -3,6 +3,7 @@ import { exportBaseName, formatHintForFile } from './ocel-file';
 import { presetsForFile, StateQueryPreset } from './state-query-presets';
 import {
   OcelDocumentHandle,
+  OcelFilterOptions,
   StatePattern,
   StatePatternAnalysis,
   StatePatternEdge,
@@ -13,7 +14,31 @@ import {
 
 interface SummaryCard {
   label: string;
-  value: number;
+  value: SummaryDisplayValue;
+}
+
+interface SummaryDisplayValue {
+  current: string;
+  original?: string;
+  filtered: boolean;
+}
+
+type SummaryMetric = keyof Pick<
+  OcelSummary,
+  | 'event_types'
+  | 'object_types'
+  | 'events'
+  | 'objects'
+  | 'e2o_relationships'
+  | 'o2o_relationships'
+  | 'interned_strings'
+  | 'objects_with_lifecycle'
+  | 'stateful_events'
+>;
+
+interface FilterRequest {
+  event_types: string[];
+  object_types: string[];
 }
 
 type PatternVisualization = 'text' | 'graph';
@@ -65,6 +90,13 @@ export class App {
   protected readonly selectedPresetId = signal('');
   protected readonly stateQueryDraft = signal('');
   protected readonly summary = signal<OcelSummary | null>(null);
+  protected readonly originalSummary = signal<OcelSummary | null>(null);
+  protected readonly filterOptions = signal<OcelFilterOptions>({
+    event_types: [],
+    object_types: [],
+  });
+  protected readonly selectedEventTypes = signal<string[]>([]);
+  protected readonly selectedObjectTypes = signal<string[]>([]);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly selectedIntraPatternId = signal('');
   protected readonly selectedInterPatternId = signal('');
@@ -72,6 +104,11 @@ export class App {
   protected readonly interVisualization = signal<PatternVisualization>('text');
   protected readonly fullScreenPattern = signal<StatePattern | null>(null);
   protected readonly hasDocument = computed(() => this.summary() !== null);
+  protected readonly isFilterApplied = computed(
+    () =>
+      this.selectedEventTypes().length !== this.filterOptions().event_types.length ||
+      this.selectedObjectTypes().length !== this.filterOptions().object_types.length,
+  );
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
   protected readonly intraPatterns = computed(() => this.patternAnalysis()?.intra ?? []);
   protected readonly interPatterns = computed(() => this.patternAnalysis()?.inter ?? []);
@@ -85,10 +122,22 @@ export class App {
     const summary = this.summary();
 
     return [
-      { label: 'Events', value: summary?.events ?? 0 },
-      { label: 'Objects', value: summary?.objects ?? 0 },
-      { label: 'E2O', value: summary?.e2o_relationships ?? 0 },
-      { label: 'O2O', value: summary?.o2o_relationships ?? 0 },
+      {
+        label: 'Events',
+        value: summary ? this.summaryDisplayValue('events') : emptySummaryValue(),
+      },
+      {
+        label: 'Objects',
+        value: summary ? this.summaryDisplayValue('objects') : emptySummaryValue(),
+      },
+      {
+        label: 'E2O',
+        value: summary ? this.summaryDisplayValue('e2o_relationships') : emptySummaryValue(),
+      },
+      {
+        label: 'O2O',
+        value: summary ? this.summaryDisplayValue('o2o_relationships') : emptySummaryValue(),
+      },
     ];
   });
 
@@ -197,6 +246,10 @@ export class App {
       this.documentHandle = imported.document;
       this.fileName.set(file.name);
       this.summary.set(imported.summary);
+      this.originalSummary.set(imported.originalSummary);
+      this.filterOptions.set(imported.filterOptions);
+      this.selectedEventTypes.set(imported.filterOptions.event_types);
+      this.selectedObjectTypes.set(imported.filterOptions.object_types);
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.selectedIntraPatternId.set('');
@@ -207,6 +260,10 @@ export class App {
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
       this.summary.set(null);
+      this.originalSummary.set(null);
+      this.filterOptions.set({ event_types: [], object_types: [] });
+      this.selectedEventTypes.set([]);
+      this.selectedObjectTypes.set([]);
       this.fileName.set(file.name);
       this.documentHandle?.free();
       this.documentHandle = undefined;
@@ -259,6 +316,68 @@ export class App {
 
   protected selectInterPattern(event: Event): void {
     this.selectedInterPatternId.set((event.target as HTMLSelectElement).value);
+  }
+
+  protected toggleEventType(eventType: string, event: Event): void {
+    this.selectedEventTypes.set(
+      toggleSelection(
+        this.selectedEventTypes(),
+        eventType,
+        (event.target as HTMLInputElement).checked,
+      ),
+    );
+    this.applyActiveFilter();
+  }
+
+  protected toggleObjectType(objectType: string, event: Event): void {
+    this.selectedObjectTypes.set(
+      toggleSelection(
+        this.selectedObjectTypes(),
+        objectType,
+        (event.target as HTMLInputElement).checked,
+      ),
+    );
+    this.applyActiveFilter();
+  }
+
+  protected selectAllEventTypes(): void {
+    this.selectedEventTypes.set(this.filterOptions().event_types);
+    this.applyActiveFilter();
+  }
+
+  protected clearEventTypes(): void {
+    this.selectedEventTypes.set([]);
+    this.applyActiveFilter();
+  }
+
+  protected selectAllObjectTypes(): void {
+    this.selectedObjectTypes.set(this.filterOptions().object_types);
+    this.applyActiveFilter();
+  }
+
+  protected clearObjectTypes(): void {
+    this.selectedObjectTypes.set([]);
+    this.applyActiveFilter();
+  }
+
+  protected summaryDisplayValue(metric: SummaryMetric): SummaryDisplayValue {
+    const summary = this.summary();
+    const originalSummary = this.originalSummary();
+    const current = summary?.[metric] ?? 0;
+    const original = originalSummary?.[metric] ?? current;
+
+    if (!this.isFilterApplied()) {
+      return {
+        current: current.toLocaleString(),
+        filtered: false,
+      };
+    }
+
+    return {
+      current: current.toLocaleString(),
+      original: original.toLocaleString(),
+      filtered: true,
+    };
   }
 
   protected setIntraVisualization(visualization: PatternVisualization): void {
@@ -402,6 +521,31 @@ export class App {
     this.selectedIntraPatternId.set(analysis.intra[0]?.id ?? '');
     this.selectedInterPatternId.set(analysis.inter[0]?.id ?? '');
   }
+
+  private applyActiveFilter(): void {
+    if (!this.documentHandle) {
+      return;
+    }
+
+    const filter: FilterRequest = {
+      event_types: this.selectedEventTypes(),
+      object_types: this.selectedObjectTypes(),
+    };
+
+    try {
+      this.summary.set(
+        JSON.parse(this.documentHandle.applyFilter(JSON.stringify(filter))) as OcelSummary,
+      );
+      this.stateMessage.set('');
+      this.patternAnalysis.set(null);
+      this.selectedIntraPatternId.set('');
+      this.selectedInterPatternId.set('');
+      this.fullScreenPattern.set(null);
+      this.isStateDialogOpen.set(false);
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
 }
 
 function errorToMessage(error: unknown): string {
@@ -418,6 +562,21 @@ function errorToMessage(error: unknown): string {
 
 function selectedPattern(patterns: StatePattern[], selectedId: string): StatePattern | null {
   return patterns.find((pattern) => pattern.id === selectedId) ?? patterns[0] ?? null;
+}
+
+function emptySummaryValue(): SummaryDisplayValue {
+  return {
+    current: '0',
+    filtered: false,
+  };
+}
+
+function toggleSelection(values: string[], value: string, checked: boolean): string[] {
+  if (checked) {
+    return values.includes(value) ? values : [...values, value];
+  }
+
+  return values.filter((candidate) => candidate !== value);
 }
 
 function wrapGraphLabel(label: string, maxLineLength: number, maxLines: number): string[] {

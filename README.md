@@ -28,6 +28,8 @@ The Rust core parses standard OCEL 2.0 files into a memory-oriented representati
 
 This keeps large logs more compact in memory while preserving standard JSON/XML export.
 
+The WebAssembly document keeps two compact logs in memory after import: the original log and the active log. Activity and object-type filters rebuild the active log from the original log, so changing a filter also clears derived event states and state-pattern results.
+
 ## Supported Import/Export
 
 - JSON extensions: `.json`, `.jsonocel`
@@ -39,6 +41,12 @@ This keeps large logs more compact in memory while preserving standard JSON/XML 
 - XML relationships accept `qualifier` and the older/example `relationship` attribute name on import; export uses `qualifier`
 
 The importer validates duplicate IDs/types, declared attribute types, unknown event/object types, unknown relationship targets, scalar JSON attributes, and timestamp parsing.
+
+## Activity and Object-Type Filtering
+
+After importing a log, the UI shows activity and object-type checkboxes. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. Summary cards and detail counters show plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
+
+Filtered exports use the active filtered log. Changing any filter resets derived state enrichment and pattern analysis because those results belong to the previous active log.
 
 ## State-Aware Event Enrichment
 
