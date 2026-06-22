@@ -1,0 +1,35 @@
+{
+  "name": "flowvault",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "npm run build:wasm && ng serve",
+    "build": "npm run build:wasm && ng build",
+    "watch": "npm run build:wasm && ng build --watch --configuration development",
+    "test": "npm run test:rust && npm run test:angular",
+    "test:angular": "ng test",
+    "test:rust": "CARGO_HOME=$PWD/.cargo-home cargo test --manifest-path rust/ocel_wasm/Cargo.toml",
+    "build:wasm": "CARGO_HOME=$PWD/.cargo-home wasm-pack build rust/ocel_wasm --target web --release --out-dir ../../public/wasm && rm -f public/wasm/.gitignore"
+  },
+  "private": true,
+  "packageManager": "npm@10.9.8",
+  "dependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.3",
+    "@angular/cli": "^22.0.3",
+    "@angular/compiler-cli": "^22.0.0",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8"
+  }
+}
