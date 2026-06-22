@@ -195,6 +195,7 @@ struct CompactOcelLog {
 }
 
 #[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
 struct OcelSummary {
     source_format: &'static str,
     event_types: usize,
@@ -1437,6 +1438,8 @@ fn escape_xml(value: &str, attribute: bool) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
+    use std::path::{Path, PathBuf};
 
     const JSON_EXAMPLE: &str = include_str!("../../../files/ocel2/ocel20_example.json");
     const XML_EXAMPLE: &str = include_str!("../../../files/ocel2/ocel20_example.xml");
@@ -1536,5 +1539,101 @@ mod tests {
 
         let error = CompactOcelLog::from_input(input, Some("json")).unwrap_err();
         assert!(error.to_string().contains("unknown object 'missing'"));
+    }
+
+    #[test]
+    fn imports_and_exports_all_ocel_fixtures() {
+        for fixture_path in ocel_fixture_paths() {
+            let fixture_name = fixture_path.display().to_string();
+            let input = fs::read_to_string(&fixture_path)
+                .unwrap_or_else(|err| panic!("failed to read {fixture_name}: {err}"));
+            let format_hint = fixture_path
+                .extension()
+                .and_then(|extension| extension.to_str())
+                .expect("fixture path should have an extension");
+            let log = CompactOcelLog::from_input(&input, Some(format_hint))
+                .unwrap_or_else(|err| panic!("failed to import {fixture_name}: {err}"));
+            let summary = log.summary();
+
+            assert!(
+                summary.event_types > 0,
+                "{fixture_name} should declare event types"
+            );
+            assert!(
+                summary.object_types > 0,
+                "{fixture_name} should declare object types"
+            );
+            assert!(summary.events > 0, "{fixture_name} should contain events");
+            assert!(summary.objects > 0, "{fixture_name} should contain objects");
+            assert!(
+                summary.e2o_relationships >= summary.objects_with_lifecycle,
+                "{fixture_name} should not have more lifecycle indexes than E2O relationships"
+            );
+
+            let exported_json = log
+                .export_json()
+                .unwrap_or_else(|err| panic!("failed to export {fixture_name} as JSON: {err}"));
+            let reparsed_json = CompactOcelLog::from_input(&exported_json, Some("json"))
+                .unwrap_or_else(|err| {
+                    panic!("failed to reimport JSON export of {fixture_name}: {err}")
+                });
+            assert_same_structural_summary(
+                &reparsed_json.summary(),
+                &summary,
+                &format!("JSON export changed summary counts for {fixture_name}"),
+            );
+
+            let exported_xml = log
+                .export_xml()
+                .unwrap_or_else(|err| panic!("failed to export {fixture_name} as XML: {err}"));
+            let reparsed_xml = CompactOcelLog::from_input(&exported_xml, Some("xml"))
+                .unwrap_or_else(|err| {
+                    panic!("failed to reimport XML export of {fixture_name}: {err}")
+                });
+            assert_same_structural_summary(
+                &reparsed_xml.summary(),
+                &summary,
+                &format!("XML export changed summary counts for {fixture_name}"),
+            );
+        }
+    }
+
+    fn assert_same_structural_summary(actual: &OcelSummary, expected: &OcelSummary, context: &str) {
+        assert_eq!(actual.event_types, expected.event_types, "{context}");
+        assert_eq!(actual.object_types, expected.object_types, "{context}");
+        assert_eq!(actual.events, expected.events, "{context}");
+        assert_eq!(actual.objects, expected.objects, "{context}");
+        assert_eq!(
+            actual.e2o_relationships, expected.e2o_relationships,
+            "{context}"
+        );
+        assert_eq!(
+            actual.o2o_relationships, expected.o2o_relationships,
+            "{context}"
+        );
+        assert_eq!(
+            actual.objects_with_lifecycle, expected.objects_with_lifecycle,
+            "{context}"
+        );
+    }
+
+    fn ocel_fixture_paths() -> Vec<PathBuf> {
+        let fixture_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../files/ocel2");
+        let mut paths = fs::read_dir(&fixture_dir)
+            .unwrap_or_else(|err| panic!("failed to read {}: {err}", fixture_dir.display()))
+            .map(|entry| {
+                entry
+                    .expect("failed to read fixture directory entry")
+                    .path()
+            })
+            .filter(|path| {
+                path.extension()
+                    .and_then(|extension| extension.to_str())
+                    .map(|extension| matches!(extension, "json" | "xml" | "jsonocel" | "xmlocel"))
+                    .unwrap_or(false)
+            })
+            .collect::<Vec<_>>();
+        paths.sort();
+        paths
     }
 }
