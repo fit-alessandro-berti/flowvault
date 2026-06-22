@@ -37,4 +37,39 @@ describe('App', () => {
 
     expect(values).toEqual(['0', '0', '0', '0']);
   });
+
+  it('opens state preset dialog after import', () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance as unknown as {
+      documentHandle: unknown;
+      fileName: { set(value: string): void };
+      summary: { set(value: unknown): void };
+      openStateDialog(): void;
+    };
+
+    component.documentHandle = {};
+    component.fileName.set('order-management.json');
+    component.summary.set({
+      source_format: 'json',
+      event_types: 1,
+      object_types: 1,
+      events: 1,
+      objects: 1,
+      e2o_relationships: 1,
+      o2o_relationships: 0,
+      interned_strings: 1,
+      objects_with_lifecycle: 1,
+      stateful_events: 0,
+    });
+    component.openStateDialog();
+    fixture.detectChanges();
+
+    const native = fixture.nativeElement as HTMLElement;
+    expect(native.querySelector('[role="dialog"]')).toBeTruthy();
+    expect(native.textContent).toContain('Fulfillment Stage');
+    expect(native.textContent).toContain('Value and Weight');
+    expect((native.querySelector('textarea') as HTMLTextAreaElement).value).toContain(
+      "event.type = 'failed delivery'",
+    );
+  });
 });

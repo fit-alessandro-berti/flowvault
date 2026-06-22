@@ -198,23 +198,6 @@ button:disabled {
   color: #1f5a3b;
 }
 
-.state-query {
-  display: grid;
-  gap: 12px;
-  margin-top: 18px;
-  border: 1px solid #d7dfdd;
-  border-radius: 8px;
-  background: #ffffff;
-  padding: 16px;
-}
-
-.state-query-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
 h2 {
   margin: 0;
   font-size: 1.05rem;
@@ -240,6 +223,93 @@ textarea {
 textarea:focus {
   outline: 2px solid #2f6f68;
   outline-offset: 2px;
+}
+
+.ghost-button {
+  border-color: #b9c7c3;
+  background: #ffffff;
+  color: #1d4f49;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: rgba(17, 31, 28, 0.48);
+  padding: 24px;
+}
+
+.state-modal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(980px, 100%);
+  max-height: min(760px, calc(100vh - 48px));
+  overflow: hidden;
+  border: 1px solid #cdd8d5;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 22px 60px rgba(13, 26, 23, 0.22);
+}
+
+.state-modal-header,
+.state-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+}
+
+.state-modal-header {
+  border-bottom: 1px solid #d7dfdd;
+}
+
+.state-modal-footer {
+  border-top: 1px solid #d7dfdd;
+  justify-content: flex-end;
+}
+
+.state-modal-body {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.34fr) minmax(360px, 1fr);
+  min-height: 420px;
+  overflow: hidden;
+}
+
+.preset-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  overflow: auto;
+  border-right: 1px solid #d7dfdd;
+  background: #f7faf9;
+  padding: 14px;
+}
+
+.preset-option {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 44px;
+  border-color: transparent;
+  background: transparent;
+  color: #263632;
+  text-align: left;
+}
+
+.preset-option.is-selected {
+  border-color: #1d4f49;
+  background: #e6f3ef;
+  color: #123c36;
+}
+
+.state-modal textarea {
+  height: 100%;
+  min-height: 420px;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
 }
 
 .details {
@@ -300,9 +370,20 @@ textarea:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .state-query-header {
-    align-items: stretch;
-    flex-direction: column;
+  .state-modal-body {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  .preset-list {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(170px, 1fr);
+    border-right: 0;
+    border-bottom: 1px solid #d7dfdd;
+  }
+
+  .state-modal textarea {
+    min-height: 320px;
   }
 }
 

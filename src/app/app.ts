@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { exportBaseName, formatHintForFile } from './ocel-file';
+import { presetsForFile, StateQueryPreset } from './state-query-presets';
 import {
   OcelDocumentHandle,
   OcelSummary,
@@ -27,9 +28,12 @@ export class App {
   protected readonly fileName = signal('');
   protected readonly errorMessage = signal('');
   protected readonly stateMessage = signal('');
-  protected readonly stateQuery = signal(DEFAULT_STATE_QUERY);
+  protected readonly isStateDialogOpen = signal(false);
+  protected readonly selectedPresetId = signal('');
+  protected readonly stateQueryDraft = signal('');
   protected readonly summary = signal<OcelSummary | null>(null);
   protected readonly hasDocument = computed(() => this.summary() !== null);
+  protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
   protected readonly summaryCards = computed<SummaryCard[]>(() => {
     const summary = this.summary();
 
@@ -80,8 +84,35 @@ export class App {
     this.exportDocument('xml');
   }
 
-  onStateQueryChange(event: Event): void {
-    this.stateQuery.set((event.target as HTMLTextAreaElement).value);
+  openStateDialog(): void {
+    if (!this.documentHandle) {
+      return;
+    }
+
+    const presets = this.stateQueryPresets();
+    const selectedPreset =
+      presets.find((preset) => preset.id === this.selectedPresetId()) ?? presets[0];
+
+    if (selectedPreset) {
+      this.selectedPresetId.set(selectedPreset.id);
+      this.stateQueryDraft.set(selectedPreset.query);
+    }
+
+    this.errorMessage.set('');
+    this.isStateDialogOpen.set(true);
+  }
+
+  closeStateDialog(): void {
+    this.isStateDialogOpen.set(false);
+  }
+
+  selectStatePreset(preset: StateQueryPreset): void {
+    this.selectedPresetId.set(preset.id);
+    this.stateQueryDraft.set(preset.query);
+  }
+
+  onStateQueryDraftChange(event: Event): void {
+    this.stateQueryDraft.set((event.target as HTMLTextAreaElement).value);
   }
 
   applyStateQuery(): void {
@@ -94,12 +125,13 @@ export class App {
 
     try {
       const result = JSON.parse(
-        this.documentHandle.applyStateQuery(this.stateQuery()),
+        this.documentHandle.applyStateQuery(this.stateQueryDraft()),
       ) as StateQueryResult;
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
       this.stateMessage.set(
         `Added ${result.attribute} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
       );
+      this.isStateDialogOpen.set(false);
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
     }
@@ -118,6 +150,8 @@ export class App {
       this.fileName.set(file.name);
       this.summary.set(imported.summary);
       this.stateMessage.set('');
+      this.isStateDialogOpen.set(false);
+      this.initializeStatePresetForFile(file.name);
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
       this.summary.set(null);
@@ -125,6 +159,7 @@ export class App {
       this.documentHandle?.free();
       this.documentHandle = undefined;
       this.stateMessage.set('');
+      this.isStateDialogOpen.set(false);
     } finally {
       this.isLoading.set(false);
     }
@@ -155,15 +190,13 @@ export class App {
     anchor.click();
     URL.revokeObjectURL(url);
   }
-}
 
-const DEFAULT_STATE_QUERY = `STATE state AS CASE
-  WHEN object.status IS NOT NULL THEN object.status
-  WHEN object.state IS NOT NULL THEN object.state
-  WHEN object.is_blocked = 'Yes' THEN 'Blocked'
-  WHEN event.type LIKE '%cancel%' THEN 'Exception'
-  ELSE 'Normal'
-END`;
+  private initializeStatePresetForFile(fileName: string): void {
+    const preset = presetsForFile(fileName)[0];
+    this.selectedPresetId.set(preset.id);
+    this.stateQueryDraft.set(preset.query);
+  }
+}
 
 function errorToMessage(error: unknown): string {
   if (error instanceof Error) {

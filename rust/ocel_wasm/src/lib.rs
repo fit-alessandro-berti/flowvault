@@ -2484,6 +2484,29 @@ mod tests {
     }
 
     #[test]
+    fn preset_state_queries_apply_to_fixture_logs() {
+        for (fixture, queries) in fixture_state_queries() {
+            let fixture_path = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../files/ocel2")
+                .join(fixture);
+            let input = fs::read_to_string(&fixture_path)
+                .unwrap_or_else(|err| panic!("failed to read {}: {err}", fixture_path.display()));
+            let mut log = CompactOcelLog::from_input(&input, Some("json"))
+                .unwrap_or_else(|err| panic!("failed to import {fixture}: {err}"));
+
+            for (name, query) in queries {
+                log.apply_state_query(query)
+                    .unwrap_or_else(|err| panic!("preset '{name}' failed on {fixture}: {err}"));
+                assert_eq!(
+                    log.summary().stateful_events,
+                    log.summary().events,
+                    "preset '{name}' should assign all events in {fixture}"
+                );
+            }
+        }
+    }
+
+    #[test]
     fn imports_and_exports_all_ocel_fixtures() {
         for fixture_path in ocel_fixture_paths() {
             let fixture_name = fixture_path.display().to_string();
@@ -2594,5 +2617,109 @@ mod tests {
                 None
             }
         })
+    }
+
+    fn fixture_state_queries() -> Vec<(&'static str, Vec<(&'static str, &'static str)>)> {
+        vec![
+            (
+                "ocel20_example.json",
+                vec![
+                    (
+                        "Payment Block Status",
+                        r#"STATE state AS CASE
+  WHEN object.is_blocked = 'Yes' THEN 'Invoice Blocked'
+  WHEN event.type LIKE '%Payment%' THEN 'Payment Execution'
+  WHEN event.type LIKE '%Invoice%' THEN 'Invoice Handling'
+  ELSE 'Procurement'
+END"#,
+                    ),
+                    (
+                        "Purchase Size",
+                        r#"STATE state AS CASE
+  WHEN object.po_quantity > 500 THEN 'Large PO'
+  WHEN object.pr_quantity > 500 THEN 'Large Requisition'
+  WHEN object.po_product = 'Notebooks' THEN 'Maverick Buying'
+  ELSE 'Standard Purchase'
+END"#,
+                    ),
+                    (
+                        "Actor and Automation",
+                        r#"STATE state AS CASE
+  WHEN event.invoice_blocker IS NOT NULL OR event.invoice_block_rem IS NOT NULL THEN 'Manual Block Control'
+  WHEN event.payment_inserter = 'Robot' THEN 'Automated Payment'
+  WHEN event.po_creator = 'Mario' OR event.invoice_inserter = 'Mario' THEN 'Maverick Flow'
+  ELSE 'Regular Work'
+END"#,
+                    ),
+                ],
+            ),
+            (
+                "container_logistics.json",
+                vec![
+                    (
+                        "Shipment Status",
+                        r#"STATE state AS CASE
+  WHEN object.Status = 'shipped' THEN 'Shipped'
+  WHEN object.Status = 'in transit' THEN 'In Transit'
+  WHEN object.Status = 'full' THEN 'Loaded'
+  WHEN object.Status = 'empty' THEN 'Empty'
+  ELSE 'Planning'
+END"#,
+                    ),
+                    (
+                        "Load Size",
+                        r#"STATE state AS CASE
+  WHEN object.AmountofContainers >= 6 THEN 'Large Transport'
+  WHEN object.AmountofHandlingUnits >= 8 THEN 'Dense Container'
+  WHEN object.AmountofGoods >= 900 THEN 'Large Order'
+  ELSE 'Standard Load'
+END"#,
+                    ),
+                    (
+                        "Process Phase",
+                        r#"STATE state AS CASE
+  WHEN event.type LIKE '%Depart%' OR event.type LIKE '%Drive%' THEN 'Outbound'
+  WHEN event.type LIKE '%Load%' OR event.type LIKE '%Weigh%' THEN 'Loading'
+  WHEN event.type LIKE '%Order%' OR event.type LIKE '%Create%' OR event.type LIKE '%Book%' THEN 'Planning'
+  ELSE 'Warehouse Handling'
+END"#,
+                    ),
+                ],
+            ),
+            (
+                "order-management.json",
+                vec![
+                    (
+                        "Fulfillment Stage",
+                        r#"STATE state AS CASE
+  WHEN event.type = 'failed delivery' THEN 'Delivery Failure'
+  WHEN event.type = 'package delivered' THEN 'Delivered'
+  WHEN event.type LIKE '%package%' OR event.type = 'send package' THEN 'Packaging'
+  WHEN event.type LIKE '%pay%' OR event.type = 'payment reminder' THEN 'Payment'
+  ELSE 'Order Handling'
+END"#,
+                    ),
+                    (
+                        "Value and Weight",
+                        r#"STATE state AS CASE
+  WHEN object.price >= 1000 THEN 'High Value'
+  WHEN object.price >= 250 THEN 'Medium Value'
+  WHEN object.weight >= 10 THEN 'Heavy'
+  ELSE 'Standard'
+END"#,
+                    ),
+                    (
+                        "Exception Risk",
+                        r#"STATE state AS CASE
+  WHEN event.type = 'item out of stock' THEN 'Stock Exception'
+  WHEN event.type = 'reorder item' THEN 'Replenishment'
+  WHEN event.type = 'payment reminder' THEN 'Payment Risk'
+  WHEN event.type = 'failed delivery' THEN 'Delivery Risk'
+  ELSE 'Nominal'
+END"#,
+                    ),
+                ],
+            ),
+        ]
     }
 }

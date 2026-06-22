@@ -72,6 +72,14 @@ Supported predicates:
 
 Reapplying a query replaces the existing `state` attribute on every assigned event. The exporter also adds the `state` attribute definition to every event type so the generated JSON/XML remains self-describing.
 
+The UI opens the state query editor as an overlay after import. For the bundled fixture logs it proposes three named presets on the left:
+
+- `ocel20_example`: Payment Block Status, Purchase Size, Actor and Automation
+- `container_logistics`: Shipment Status, Load Size, Process Phase
+- `order-management`: Fulfillment Stage, Value and Weight, Exception Risk
+
+Selecting a preset writes its query into the editor on the right. `OK` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
+
 ## Commands
 
 Install JavaScript dependencies:

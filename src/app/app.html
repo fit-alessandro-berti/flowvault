@@ -14,7 +14,7 @@
         <span aria-hidden="true">XML</span>
         Export
       </button>
-      <button type="button" (click)="applyStateQuery()" [disabled]="!hasDocument()">
+      <button type="button" (click)="openStateDialog()" [disabled]="!hasDocument()">
         <span aria-hidden="true">STATE</span>
         Add State
       </button>
@@ -60,24 +60,6 @@
     <p class="message error">{{ errorMessage() }}</p>
   }
 
-  @if (hasDocument()) {
-    <section class="state-query" aria-label="State query">
-      <div class="state-query-header">
-        <div>
-          <h2>State Query</h2>
-        </div>
-        <button type="button" (click)="applyStateQuery()">Apply</button>
-      </div>
-
-      <textarea
-        spellcheck="false"
-        [value]="stateQuery()"
-        (input)="onStateQueryChange($event)"
-        aria-label="SQL-like state query"
-      ></textarea>
-    </section>
-  }
-
   @if (stateMessage()) {
     <p class="message success">{{ stateMessage() }}</p>
   }
@@ -105,5 +87,49 @@
         <strong>{{ summaryValue.stateful_events }}</strong>
       </div>
     </section>
+  }
+
+  @if (isStateDialogOpen()) {
+    <div class="modal-backdrop" role="presentation" (click)="closeStateDialog()">
+      <section
+        class="state-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="state-dialog-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header class="state-modal-header">
+          <h2 id="state-dialog-title">Add Event State</h2>
+          <button type="button" class="ghost-button" (click)="closeStateDialog()">Cancel</button>
+        </header>
+
+        <div class="state-modal-body">
+          <nav class="preset-list" aria-label="State query presets">
+            @for (preset of stateQueryPresets(); track preset.id) {
+              <button
+                type="button"
+                class="preset-option"
+                [class.is-selected]="selectedPresetId() === preset.id"
+                (click)="selectStatePreset(preset)"
+              >
+                {{ preset.name }}
+              </button>
+            }
+          </nav>
+
+          <textarea
+            spellcheck="false"
+            [value]="stateQueryDraft()"
+            (input)="onStateQueryDraftChange($event)"
+            aria-label="SQL-like state query"
+          ></textarea>
+        </div>
+
+        <footer class="state-modal-footer">
+          <button type="button" class="ghost-button" (click)="closeStateDialog()">Cancel</button>
+          <button type="button" (click)="applyStateQuery()">OK</button>
+        </footer>
+      </section>
+    </div>
   }
 </main>
