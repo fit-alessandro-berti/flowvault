@@ -204,6 +204,21 @@
           </svg>
           <span>State-Aware OC-DFG</span>
         </button>
+        <button
+          type="button"
+          class="feature-button"
+          [class.is-selected]="activeFeature() === 'correlation'"
+          [disabled]="!hasAppliedState()"
+          (click)="setActiveFeature('correlation')"
+        >
+          <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 18l5-6 4 3 7-9" />
+            <path d="M4 6h4m8 12h4" />
+            <circle cx="9" cy="12" r="2" />
+            <circle cx="13" cy="15" r="2" />
+          </svg>
+          <span>Correlation</span>
+        </button>
       </section>
     </aside>
   }
@@ -1523,6 +1538,84 @@
             <p class="empty-patterns">No inter-state patterns found.</p>
           }
         </section>
+      }
+    </section>
+  }
+
+  @if (activeFeature() === 'correlation') {
+    <section class="correlation-page feature-panel" aria-label="State correlation analysis">
+      <header class="feature-header correlation-header">
+        <div>
+          <h1>Correlation</h1>
+          <p>{{ fileName() }}</p>
+        </div>
+        <button type="button" class="ghost-button" (click)="reloadStateCorrelation()">
+          Refresh
+        </button>
+      </header>
+
+      @if (stateCorrelation(); as analysis) {
+        <section class="correlation-summary" aria-label="Correlation summary">
+          <article>
+            <span>Leading type</span>
+            <strong>{{ analysis.object_type }}</strong>
+          </article>
+          <article>
+            <span>Stateful objects</span>
+            <strong>{{ analysis.stateful_object_count }} / {{ analysis.object_count }}</strong>
+          </article>
+          <article>
+            <span>States</span>
+            <strong>{{ analysis.state_count }}</strong>
+          </article>
+          <article>
+            <span>Features</span>
+            <strong>{{ analysis.feature_count }}</strong>
+          </article>
+        </section>
+
+        <section class="correlation-table-panel">
+          <header>
+            <div>
+              <h2>Feature-State Correlation</h2>
+              <span [attr.title]="stateDistributionLabel(analysis)">
+                {{ correlationRows(analysis).length }} features
+              </span>
+            </div>
+          </header>
+          <div class="correlation-table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>State contrast</th>
+                  <th>Correlation</th>
+                  <th>Strength</th>
+                  <th>State mean</th>
+                  <th>Other mean</th>
+                  <th>Objects</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of correlationRows(analysis); track row.feature) {
+                  <tr>
+                    <th>{{ row.feature }}</th>
+                    <td>{{ row.state }}</td>
+                    <td class="correlation-value" [attr.style]="correlationCellStyle(row)">
+                      {{ formatCorrelation(row.correlation) }}
+                    </td>
+                    <td>{{ strengthLabel(row.strength) }}</td>
+                    <td>{{ formatFeatureNumber(row.mean_in_state) }}</td>
+                    <td>{{ formatFeatureNumber(row.mean_outside_state) }}</td>
+                    <td>{{ row.state_count }} / {{ row.sample_count }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      } @else {
+        <p class="muted">No state correlation table is available for the active log.</p>
       }
     </section>
   }

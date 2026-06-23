@@ -1127,6 +1127,12 @@ impl CompactOcelLog {
         Ok(feature_table_to_csv(&table))
     }
 
+    fn state_correlations_json(&self) -> OcelResult<String> {
+        let analysis = self.state_correlations()?;
+        serde_json::to_string(&analysis)
+            .map_err(|err| OcelError::new(format!("could not serialize state correlations: {err}")))
+    }
+
     fn causal_feature_table_json(&self, request: &CausalFeatureTableRequest) -> OcelResult<String> {
         let table = self.state_feature_table(&request.object_type)?;
         let result = CausalFeatureTableResult {
@@ -1146,6 +1152,84 @@ impl CompactOcelLog {
         };
         serde_json::to_string(&result)
             .map_err(|err| OcelError::new(format!("could not serialize causal features: {err}")))
+    }
+
+    fn state_correlations(&self) -> OcelResult<StateCorrelationResult> {
+        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+            OcelError::new("event state attribute is missing; apply a state query first")
+        })?;
+        let leading_type_symbol = self.state_leading_object_type.ok_or_else(|| {
+            OcelError::new(
+                "state leading object type is unknown; apply a state query or state detection first",
+            )
+        })?;
+        let object_type = self.pool.resolve(leading_type_symbol).to_owned();
+        let feature_table = self.state_feature_table(&object_type)?;
+        let state_by_object = self
+            .objects
+            .iter()
+            .filter(|object| object.type_name == leading_type_symbol)
+            .filter_map(|object| {
+                self.dominant_object_state(object, state_attribute)
+                    .map(|state| (self.pool.resolve(object.id).to_owned(), state))
+            })
+            .collect::<HashMap<_, _>>();
+
+        if state_by_object.is_empty() {
+            return Err(OcelError::new(format!(
+                "no active '{object_type}' objects have stateful events"
+            )));
+        }
+
+        let mut state_distribution = BTreeMap::<String, usize>::new();
+        let row_states = feature_table
+            .rows
+            .iter()
+            .map(|row| {
+                let state = state_by_object.get(&row.object_id).cloned();
+                if let Some(state) = &state {
+                    *state_distribution.entry(state.clone()).or_default() += 1;
+                }
+                state
+            })
+            .collect::<Vec<_>>();
+
+        let stateful_object_count = row_states.iter().filter(|state| state.is_some()).count();
+        if stateful_object_count == 0 {
+            return Err(OcelError::new(format!(
+                "no active '{object_type}' feature rows can be matched to stateful objects"
+            )));
+        }
+
+        let mut rows = Vec::with_capacity(feature_table.columns.len());
+        for (column_index, feature) in feature_table.columns.iter().enumerate() {
+            rows.push(state_feature_correlation_row(
+                feature,
+                column_index,
+                &feature_table.rows,
+                &row_states,
+            ));
+        }
+        rows.sort_by(|left, right| {
+            right
+                .strength
+                .partial_cmp(&left.strength)
+                .unwrap_or(std::cmp::Ordering::Equal)
+                .then_with(|| left.feature.cmp(&right.feature))
+        });
+
+        Ok(StateCorrelationResult {
+            object_type,
+            object_count: feature_table.rows.len(),
+            stateful_object_count,
+            state_count: state_distribution.len(),
+            feature_count: feature_table.columns.len(),
+            state_distribution: state_distribution
+                .into_iter()
+                .map(|(state, count)| StateCorrelationStateCount { state, count })
+                .collect(),
+            rows,
+        })
     }
 
     fn fit_causal_model_json(&self, request: &CausalModelFitRequest) -> OcelResult<String> {
@@ -2574,6 +2658,31 @@ impl CompactOcelLog {
         )
     }
 
+    fn dominant_object_state(&self, object: &Object, state_attribute: Symbol) -> Option<String> {
+        let mut counts = BTreeMap::<String, (usize, usize)>::new();
+        for (position, event_index) in object.lifecycle.iter().enumerate() {
+            let Some(state) = self.event_state(&self.events[*event_index], state_attribute) else {
+                continue;
+            };
+            let entry = counts.entry(state.to_owned()).or_default();
+            entry.0 += 1;
+            entry.1 = position;
+        }
+
+        counts
+            .into_iter()
+            .max_by(
+                |(left_state, (left_count, left_position)),
+                 (right_state, (right_count, right_position))| {
+                    left_count
+                        .cmp(right_count)
+                        .then_with(|| left_position.cmp(right_position))
+                        .then_with(|| right_state.cmp(left_state))
+                },
+            )
+            .map(|(state, _)| state)
+    }
+
     fn intra_sequence(
         &self,
         state_lifecycle: &[(usize, String)],
@@ -3167,6 +3276,38 @@ struct CausalFeatureTableResult {
     feature_count: usize,
     feature_columns: Vec<String>,
     table_preview: Vec<FeaturePreviewRow>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateCorrelationResult {
+    object_type: String,
+    object_count: usize,
+    stateful_object_count: usize,
+    state_count: usize,
+    feature_count: usize,
+    state_distribution: Vec<StateCorrelationStateCount>,
+    rows: Vec<StateCorrelationRow>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateCorrelationStateCount {
+    state: String,
+    count: usize,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateCorrelationRow {
+    feature: String,
+    state: String,
+    correlation: f64,
+    strength: f64,
+    sample_count: usize,
+    state_count: usize,
+    mean_in_state: f64,
+    mean_outside_state: f64,
 }
 
 #[derive(Serialize)]
@@ -4148,6 +4289,106 @@ fn transform_causal_value(value: f64, operation: &str) -> f64 {
     }
 }
 
+#[derive(Default)]
+struct StateFeatureGroup {
+    count: usize,
+    sum: f64,
+}
+
+fn state_feature_correlation_row(
+    feature: &str,
+    column_index: usize,
+    rows: &[FeatureRow],
+    row_states: &[Option<String>],
+) -> StateCorrelationRow {
+    let mut total_count = 0usize;
+    let mut total_sum = 0.0;
+    let mut total_sum_squares = 0.0;
+    let mut by_state = BTreeMap::<String, StateFeatureGroup>::new();
+
+    for (row, state) in rows.iter().zip(row_states.iter()) {
+        let Some(state) = state else {
+            continue;
+        };
+        let Some(value) = row.values.get(column_index).copied() else {
+            continue;
+        };
+        if !value.is_finite() {
+            continue;
+        }
+
+        total_count += 1;
+        total_sum += value;
+        total_sum_squares += value * value;
+        let group = by_state.entry(state.clone()).or_default();
+        group.count += 1;
+        group.sum += value;
+    }
+
+    if total_count == 0 {
+        return StateCorrelationRow {
+            feature: feature.to_owned(),
+            state: String::new(),
+            correlation: 0.0,
+            strength: 0.0,
+            sample_count: 0,
+            state_count: 0,
+            mean_in_state: 0.0,
+            mean_outside_state: 0.0,
+        };
+    }
+
+    let total_mean = total_sum / total_count as f64;
+    let variance = (total_sum_squares / total_count as f64 - total_mean * total_mean).max(0.0);
+    let std_dev = variance.sqrt();
+    let mut best_state = String::new();
+    let mut best_correlation = 0.0;
+    let mut best_strength = 0.0;
+    let mut best_state_count = 0usize;
+    let mut best_mean_in_state = total_mean;
+    let mut best_mean_outside_state = 0.0;
+
+    for (state, group) in &by_state {
+        let outside_count = total_count.saturating_sub(group.count);
+        let mean_in_state = group.sum / group.count as f64;
+        let mean_outside_state = if outside_count > 0 {
+            (total_sum - group.sum) / outside_count as f64
+        } else {
+            0.0
+        };
+        let correlation = if total_count >= 2 && outside_count > 0 && std_dev > f64::EPSILON {
+            let p = group.count as f64 / total_count as f64;
+            let q = outside_count as f64 / total_count as f64;
+            ((mean_in_state - mean_outside_state) * (p * q).sqrt() / std_dev).clamp(-1.0, 1.0)
+        } else {
+            0.0
+        };
+        let strength = correlation.abs();
+        if best_state.is_empty()
+            || strength > best_strength
+            || ((strength - best_strength).abs() <= f64::EPSILON && state < &best_state)
+        {
+            best_state = state.clone();
+            best_correlation = correlation;
+            best_strength = strength;
+            best_state_count = group.count;
+            best_mean_in_state = mean_in_state;
+            best_mean_outside_state = mean_outside_state;
+        }
+    }
+
+    StateCorrelationRow {
+        feature: feature.to_owned(),
+        state: best_state,
+        correlation: round_f64(best_correlation),
+        strength: round_f64(best_strength),
+        sample_count: total_count,
+        state_count: best_state_count,
+        mean_in_state: round_f64(best_mean_in_state),
+        mean_outside_state: round_f64(best_mean_outside_state),
+    }
+}
+
 fn average_vectors(vectors: &[Vec<f64>], row_count: usize) -> Vec<f64> {
     if vectors.is_empty() {
         return vec![0.0; row_count];
@@ -5001,6 +5242,12 @@ impl OcelDocument {
         self.log
             .state_feature_table_csv(&request)
             .map_err(JsValue::from)
+    }
+
+    /// Correlates object-level features with the currently applied event state.
+    #[wasm_bindgen(js_name = stateCorrelationsJson)]
+    pub fn state_correlations_json(&self) -> Result<String, JsValue> {
+        self.log.state_correlations_json().map_err(JsValue::from)
     }
 
     /// Returns object-level feature table metadata and a preview for causal-model editing.
@@ -7132,6 +7379,95 @@ mod tests {
         assert!(csv.starts_with("object_id,"));
         assert!(csv.contains("activity.Create Purchase Order"));
         assert!(csv.contains("PO1"));
+    }
+
+    #[test]
+    fn correlates_feature_table_columns_with_applied_state() {
+        let input = r#"{
+          "eventTypes": [
+            {"name": "Boost", "attributes": []},
+            {"name": "Other", "attributes": []}
+          ],
+          "objectTypes": [{"name": "Case", "attributes": []}],
+          "events": [
+            {
+              "id": "e1",
+              "type": "Boost",
+              "time": "1970-01-01T00:00:00Z",
+              "relationships": [{"objectId": "c1", "qualifier": "case"}]
+            },
+            {
+              "id": "e2",
+              "type": "Boost",
+              "time": "1970-01-01T00:01:00Z",
+              "relationships": [{"objectId": "c1", "qualifier": "case"}]
+            },
+            {
+              "id": "e3",
+              "type": "Boost",
+              "time": "1970-01-01T00:02:00Z",
+              "relationships": [{"objectId": "c1", "qualifier": "case"}]
+            },
+            {
+              "id": "e4",
+              "type": "Other",
+              "time": "1970-01-01T00:03:00Z",
+              "relationships": [{"objectId": "c2", "qualifier": "case"}]
+            },
+            {
+              "id": "e5",
+              "type": "Other",
+              "time": "1970-01-01T00:04:00Z",
+              "relationships": [{"objectId": "c3", "qualifier": "case"}]
+            }
+          ],
+          "objects": [
+            {"id": "c1", "type": "Case"},
+            {"id": "c2", "type": "Case"},
+            {"id": "c3", "type": "Case"}
+          ]
+        }"#;
+        let mut log = CompactOcelLog::from_input(input, Some("json")).unwrap();
+        log.apply_state_query(
+            r#"
+            STATE state FOR LEADING OBJECT TYPE 'Case' AS CASE
+              WHEN event.type = 'Boost' THEN 'High'
+              ELSE 'Low'
+            END
+            "#,
+        )
+        .unwrap();
+
+        let analysis: Value =
+            serde_json::from_str(&log.state_correlations_json().unwrap()).unwrap();
+        assert_eq!(analysis["object_type"], Value::from("Case"));
+        assert_eq!(analysis["stateful_object_count"], Value::from(3));
+        assert_eq!(analysis["state_count"], Value::from(2));
+        assert_eq!(
+            analysis["state_distribution"],
+            json!([
+                {"state": "High", "count": 1},
+                {"state": "Low", "count": 2}
+            ])
+        );
+
+        let rows = analysis["rows"].as_array().unwrap();
+        let boost = rows
+            .iter()
+            .find(|row| row["feature"] == Value::from("activity.Boost"))
+            .unwrap();
+        assert_eq!(boost["state"], Value::from("High"));
+        assert_eq!(boost["correlation"], Value::from(1.0));
+        assert_eq!(boost["strength"], Value::from(1.0));
+        assert_eq!(boost["sample_count"], Value::from(3));
+
+        let other = rows
+            .iter()
+            .find(|row| row["feature"] == Value::from("activity.Other"))
+            .unwrap();
+        assert_eq!(other["state"], Value::from("High"));
+        assert_eq!(other["correlation"], Value::from(-1.0));
+        assert_eq!(other["strength"], Value::from(1.0));
     }
 
     #[test]

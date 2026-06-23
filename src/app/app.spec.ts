@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 import { App } from './app';
 import {
   ProcessGraph,
+  StateCorrelationResult,
   StateDetectionCellDetail,
   StateDetectionResult,
   StatePatternAnalysis,
@@ -144,6 +145,40 @@ const processGraph: ProcessGraph = {
       label_x: 260,
       label_y: 86,
       object_types: [{ object_type: 'Order', weight: 2 }],
+    },
+  ],
+};
+
+const stateCorrelationAnalysis: StateCorrelationResult = {
+  object_type: 'Order',
+  object_count: 10,
+  stateful_object_count: 8,
+  state_count: 2,
+  feature_count: 2,
+  state_distribution: [
+    { state: 'Open', count: 5 },
+    { state: 'Closed', count: 3 },
+  ],
+  rows: [
+    {
+      feature: 'activity.Create Order',
+      state: 'Open',
+      correlation: 0.82,
+      strength: 0.82,
+      sample_count: 8,
+      state_count: 5,
+      mean_in_state: 1.4,
+      mean_outside_state: 0.3,
+    },
+    {
+      feature: 'activity.Close Order',
+      state: 'Closed',
+      correlation: -0.64,
+      strength: 0.64,
+      sample_count: 8,
+      state_count: 3,
+      mean_in_state: 0.2,
+      mean_outside_state: 1.1,
     },
   ],
 };
@@ -1041,6 +1076,65 @@ describe('App', () => {
     expect((native.querySelector('textarea[aria-label="SQL-like state query"]') as HTMLTextAreaElement).value).toContain(
       "STATE state FOR LEADING OBJECT TYPE 'Order'",
     );
+  });
+
+  it('renders feature correlations for the currently applied state', () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance as unknown as {
+      documentHandle: unknown;
+      fileName: { set(value: string): void };
+      summary: { set(value: unknown): void };
+      originalSummary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedObjectTypes: { set(value: string[]): void };
+      selectedEventTypes: { set(value: string[]): void };
+    };
+    let correlationRequests = 0;
+
+    component.documentHandle = {
+      stateCorrelationsJson: () => {
+        correlationRequests += 1;
+        return JSON.stringify(stateCorrelationAnalysis);
+      },
+    };
+    component.fileName.set('orders.json');
+    component.summary.set(statefulSummary);
+    component.originalSummary.set(statefulSummary);
+    component.filterOptions.set({
+      event_types: ['Create Order', 'Close Order'],
+      object_types: ['Order', 'Item'],
+      text_attributes: [{ scope: 'event', name: 'state', values: ['Open', 'Closed'] }],
+    });
+    component.selectedEventTypes.set(['Create Order', 'Close Order']);
+    component.selectedObjectTypes.set(['Order', 'Item']);
+    fixture.detectChanges();
+
+    const native = fixture.nativeElement as HTMLElement;
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.feature-button'))
+      .find((button) => button.textContent?.includes('Correlation'))
+      ?.click();
+    fixture.detectChanges();
+
+    expect(correlationRequests).toBe(1);
+    expect(native.textContent).toContain('Correlation');
+    expect(native.textContent).toContain('Feature-State Correlation');
+    expect(native.textContent).toContain('activity.Create Order');
+    expect(native.textContent).toContain('activity.Close Order');
+    expect(native.textContent).toContain('+0.820');
+    expect(native.textContent).toContain('-0.640');
+    expect(native.textContent).toContain('82%');
+    expect(native.textContent).toContain('5 / 8');
+    expect(native.querySelector('.correlation-table-scroll')).toBeTruthy();
+    expect(
+      native.querySelector<HTMLElement>('.correlation-value')?.getAttribute('style'),
+    ).toContain('hsl');
+    expect(native.querySelector('.correlation-table-panel header span')?.getAttribute('title')).toBe(
+      'Open: 5, Closed: 3',
+    );
+
+    native.querySelector<HTMLButtonElement>('.correlation-header .ghost-button')?.click();
+    fixture.detectChanges();
+    expect(correlationRequests).toBe(2);
   });
 
   it('saves and tests LLM configuration', async () => {

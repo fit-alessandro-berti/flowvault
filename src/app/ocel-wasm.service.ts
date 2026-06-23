@@ -27,6 +27,7 @@ export interface OcelDocumentHandle {
   stateDetectionJson(requestJson: string): string;
   stateDetectionCellJson(requestJson: string): string;
   stateFeatureTableCsv(requestJson: string): string;
+  stateCorrelationsJson(): string;
   causalFeatureTableJson(requestJson: string): string;
   fitCausalModelJson(requestJson: string): string;
   directlyFollowsGraphJson(objectType: string): string;
@@ -95,6 +96,32 @@ export interface CausalFeatureTableResult {
   feature_count: number;
   feature_columns: string[];
   table_preview: StateDetectionPreviewRow[];
+}
+
+export interface StateCorrelationResult {
+  object_type: string;
+  object_count: number;
+  stateful_object_count: number;
+  state_count: number;
+  feature_count: number;
+  state_distribution: StateCorrelationStateCount[];
+  rows: StateCorrelationRow[];
+}
+
+export interface StateCorrelationStateCount {
+  state: string;
+  count: number;
+}
+
+export interface StateCorrelationRow {
+  feature: string;
+  state: string;
+  correlation: number;
+  strength: number;
+  sample_count: number;
+  state_count: number;
+  mean_in_state: number;
+  mean_outside_state: number;
 }
 
 export interface CausalFitResult {

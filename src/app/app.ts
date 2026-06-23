@@ -29,6 +29,8 @@ import {
   StateDetectionCellDetail,
   StateDetectionColorOption,
   CausalFeatureTableResult,
+  StateCorrelationResult,
+  StateCorrelationRow,
   CausalFitResult,
   CausalFitNode,
   CausalFitEdge,
@@ -118,6 +120,7 @@ type FeaturePage =
   | 'causalModel'
   | 'ocdfg'
   | 'patterns'
+  | 'correlation'
   | 'stateAwareOcdfg';
 type CausalNodeRole = 'observable' | 'latent' | 'outcome';
 type CausalOperation = 'identity' | 'log10' | 'log_e' | 'sqrt';
@@ -286,6 +289,7 @@ export class App {
   protected readonly causalMessage = signal('');
   protected readonly isGeneratingCausalModel = signal(false);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
+  protected readonly stateCorrelation = signal<StateCorrelationResult | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
   protected readonly stateAwareOcdfgSettings = signal<ProcessGraphSettings>(emptyGraphSettings());
@@ -577,7 +581,10 @@ export class App {
   }
 
   protected setActiveFeature(feature: FeaturePage): void {
-    if ((feature === 'patterns' || feature === 'stateAwareOcdfg') && !this.hasAppliedState()) {
+    if (
+      (feature === 'patterns' || feature === 'correlation' || feature === 'stateAwareOcdfg') &&
+      !this.hasAppliedState()
+    ) {
       return;
     }
 
@@ -588,6 +595,9 @@ export class App {
     }
     if (feature === 'causalModel' && !this.causalFeatureTable()) {
       this.loadCausalFeatureTable();
+    }
+    if (feature === 'correlation' && !this.stateCorrelation()) {
+      this.loadStateCorrelation();
     }
   }
 
@@ -717,6 +727,7 @@ export class App {
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
+      this.stateCorrelation.set(null);
       this.loadStatePatterns();
       this.activeFeature.set('patterns');
       this.stateMessage.set(
@@ -812,6 +823,7 @@ export class App {
       this.graphFilterMenu.set(null);
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
+      this.stateCorrelation.set(null);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
       this.stateDetectionAnalysis.set(null);
@@ -868,6 +880,7 @@ export class App {
       this.documentHandle = undefined;
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
+      this.stateCorrelation.set(null);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
       this.stateDetectionAnalysis.set(null);
@@ -1236,6 +1249,7 @@ export class App {
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
+      this.stateCorrelation.set(null);
       this.loadStatePatterns();
       this.loadStateAwareOcdfg();
       this.stateDetectionCellDetail.set(null);
@@ -1310,6 +1324,46 @@ export class App {
 
   protected percent(value: number): string {
     return `${Math.round(value * 1000) / 10}%`;
+  }
+
+  protected reloadStateCorrelation(): void {
+    this.loadStateCorrelation();
+  }
+
+  protected correlationRows(analysis: StateCorrelationResult): StateCorrelationRow[] {
+    return analysis.rows;
+  }
+
+  protected formatCorrelation(value: number): string {
+    const rounded = Math.round(value * 1000) / 1000;
+    const formatted = rounded.toFixed(3);
+    return rounded > 0 ? `+${formatted}` : formatted;
+  }
+
+  protected formatFeatureNumber(value: number): string {
+    if (!Number.isFinite(value)) {
+      return '0';
+    }
+    if (Math.abs(value - Math.round(value)) < 0.000_000_1) {
+      return Math.round(value).toLocaleString();
+    }
+    return value.toLocaleString(undefined, {
+      maximumFractionDigits: 3,
+    });
+  }
+
+  protected strengthLabel(value: number): string {
+    return `${Math.round(value * 100)}%`;
+  }
+
+  protected correlationCellStyle(row: StateCorrelationRow): string {
+    return correlationHeatStyle(row.correlation);
+  }
+
+  protected stateDistributionLabel(analysis: StateCorrelationResult): string {
+    return analysis.state_distribution
+      .map((entry) => `${entry.state}: ${entry.count.toLocaleString()}`)
+      .join(', ');
   }
 
   protected openStateDetectionCell(cell: StateDetectionSomCell): void {
@@ -2028,6 +2082,23 @@ Rules:
     }
   }
 
+  private loadStateCorrelation(): void {
+    if (!this.documentHandle) {
+      this.stateCorrelation.set(null);
+      return;
+    }
+
+    try {
+      this.stateCorrelation.set(
+        JSON.parse(this.documentHandle.stateCorrelationsJson()) as StateCorrelationResult,
+      );
+      this.errorMessage.set('');
+    } catch (error) {
+      this.stateCorrelation.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
   private loadStateAwareOcdfg(): void {
     if (!this.documentHandle) {
       this.stateAwareOcdfg.set(null);
@@ -2117,10 +2188,15 @@ Rules:
         this.loadCausalFeatureTable();
       }
 
+      this.stateCorrelation.set(null);
       if (nextSummary.stateful_events > 0) {
         this.loadStatePatterns(true);
+        if (this.activeFeature() === 'correlation') {
+          this.loadStateCorrelation();
+        }
       } else {
         this.patternAnalysis.set(null);
+        this.stateCorrelation.set(null);
         this.stateAwareOcdfg.set(null);
         this.selectedIntraPatternId.set('');
         this.selectedInterPatternId.set('');
@@ -2181,6 +2257,20 @@ function emptyGraphSettings(): ProcessGraphSettings {
     min_activity_frequency: 1,
     min_path_frequency: 1,
   };
+}
+
+function correlationHeatStyle(correlation: number): string {
+  const value = Number.isFinite(correlation) ? Math.max(-1, Math.min(1, correlation)) : 0;
+  const strength = Math.abs(value);
+  if (strength < 0.05) {
+    return 'background: #f4f7f6; color: #263632;';
+  }
+
+  const hue = value >= 0 ? 166 : 22;
+  const saturation = value >= 0 ? 48 : 68;
+  const lightness = Math.round(96 - strength * 45);
+  const color = strength >= 0.68 ? '#ffffff' : '#17221f';
+  return `background: hsl(${hue} ${saturation}% ${lightness}%); color: ${color};`;
 }
 
 const LLM_CONFIG_STORAGE_KEY = 'flowvault.llmConfig';
