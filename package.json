@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "npm run build:wasm && ng serve",
     "build": "npm run build:wasm && ng build",
+    "postbuild": "node tools/copy-landing.mjs",
     "watch": "npm run build:wasm && ng build --watch --configuration development",
     "test": "npm run test:rust && npm run test:angular",
     "test:angular": "ng test",

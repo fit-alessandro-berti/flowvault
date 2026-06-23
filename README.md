@@ -9,6 +9,7 @@ The implementation follows the official OCEL 2.0 JSON and XML format shape: top-
 ```text
 src/                    Angular application
 src/app/ocel-wasm...    Runtime WebAssembly loader and TypeScript API
+src/landing/            Static root redirect page copied after production builds
 rust/ocel_wasm/         Rust OCEL parser/exporter compiled with wasm-pack
 files/ocel2/            Example OCEL 2.0 JSON/XML files
 public/wasm/            Generated wasm-pack output during builds
@@ -174,10 +175,10 @@ The bundled examples in `files/ocel2/` are used by the Rust tests.
 After `npm run build`, serve the contents of:
 
 ```text
-dist/flowvault/browser/
+dist/flowvault/
 ```
 
-with Apache or any static web server. The build uses a relative `<base href="./">`, so it can be served from a root path or a subdirectory.
+with Apache or any static web server. The build writes a small `dist/flowvault/index.html` landing page for State-Aware Object-Centric Process Mining with an `EXPLORE` button that opens `browser/index.html`, where the Angular application lives. The Angular build uses a relative `<base href="./">`, so it can be served from a root path or a subdirectory.
 
 Apache should serve WebAssembly with the correct MIME type:
 
