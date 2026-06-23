@@ -845,8 +845,8 @@
 
             @if (selectedIntraPattern(); as pattern) {
               <div class="graph-toolbar">
-                <button type="button" class="ghost-button" (click)="applyPatternStateFilter(pattern)">
-                  Filter globally by state
+                <button type="button" class="ghost-button" (click)="applyPatternFilter(pattern)">
+                  Filter by this pattern
                 </button>
               </div>
               @if (intraVisualization() === 'text') {
@@ -1045,8 +1045,8 @@
 
             @if (selectedInterPattern(); as pattern) {
               <div class="graph-toolbar">
-                <button type="button" class="ghost-button" (click)="applyPatternStateFilter(pattern)">
-                  Filter globally by transition states
+                <button type="button" class="ghost-button" (click)="applyPatternFilter(pattern)">
+                  Filter by this pattern
                 </button>
               </div>
               @if (interVisualization() === 'text') {
@@ -1227,7 +1227,34 @@
         [objectTypes]="selectedObjectTypes()"
         [settings]="traditionalOcdfgSettings()"
         (applySettings)="applyTraditionalGraphSettings($event)"
+        (filterNode)="openGraphNodeFilterMenu($event)"
+        (filterEdge)="openGraphEdgeFilterMenu($event)"
       ></app-process-graph>
+    </section>
+  }
+
+  @if (graphFilterMenu(); as menu) {
+    <section
+      class="graph-filter-dropdown"
+      role="menu"
+      aria-label="OC-DFG filter action"
+      [style.left.px]="menu.x"
+      [style.top.px]="menu.y"
+    >
+      @if (menu.kind === 'node') {
+        <span>Activity</span>
+        <strong>{{ menu.activity }}</strong>
+        <button type="button" (click)="applyGraphNodeFilter(menu.activity)">
+          Filter objects containing this activity
+        </button>
+      } @else {
+        <span>Directly-follows edge</span>
+        <strong>{{ menu.source }} -> {{ menu.target }}</strong>
+        <button type="button" (click)="applyGraphEdgeFilter({ source: menu.source, target: menu.target })">
+          Filter objects containing this edge
+        </button>
+      }
+      <button type="button" class="ghost-button" (click)="closeGraphFilterMenu()">Cancel</button>
     </section>
   }
 

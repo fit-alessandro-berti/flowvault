@@ -1,7 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { exportBaseName, formatHintForFile } from './ocel-file';
 import { presetsForFile, StateQueryPreset } from './state-query-presets';
-import { ProcessGraphComponent } from './process-graph.component';
+import {
+  ProcessGraphComponent,
+  ProcessGraphEdgeFilterEvent,
+  ProcessGraphNodeFilterEvent,
+} from './process-graph.component';
 import {
   DEFAULT_LLM_PROVIDER,
   LLM_PROVIDERS,
@@ -60,6 +64,7 @@ interface FilterRequest {
   df_nodes?: string[];
   df_edges?: DfEdgeFilterRequest[];
   text_attributes?: TextAttributeFilterRequest[];
+  patterns?: PatternFilterRequest[];
 }
 
 interface DfEdgeFilterRequest {
@@ -73,15 +78,41 @@ interface TextAttributeFilterRequest {
   values: string[];
 }
 
+interface PatternFilterRequest {
+  family: PatternTab;
+  leading_object_type: string;
+  state?: string;
+  from_state?: string;
+  to_state?: string;
+  sequence: string[];
+  eo_edges: PatternEdgeFilterRequest[];
+  oo_edges: PatternEdgeFilterRequest[];
+}
+
+interface PatternEdgeFilterRequest {
+  source: string;
+  target: string;
+}
+
 interface DfEdgeOption extends DfEdgeFilterRequest {
   label: string;
 }
 
-type FilterDialogKind = 'activities' | 'objectTypes' | 'dfNodes' | 'dfEdges' | 'textAttributes';
+type FilterDialogKind =
+  | 'activities'
+  | 'objectTypes'
+  | 'dfNodes'
+  | 'dfEdges'
+  | 'textAttributes'
+  | 'patterns';
 type PatternTab = 'intra' | 'inter';
 type StateDetectionCellTab = 'dfg' | 'entering' | 'exiting';
 type PatternVisualization = 'text' | 'graph';
 type FeaturePage = 'statistics' | 'stateDetection' | 'ocdfg' | 'patterns' | 'stateAwareOcdfg';
+
+type GraphFilterMenu =
+  | { kind: 'node'; activity: string; x: number; y: number }
+  | { kind: 'edge'; source: string; target: string; x: number; y: number };
 
 const SAVED_STATE_PRESET_ID = '__saved_state_expression';
 const LLM_STATE_PRESET_ID = '__llm_state_expression';
@@ -170,6 +201,7 @@ export class App {
   protected readonly selectedDfNodes = signal<string[]>([]);
   protected readonly selectedDfEdges = signal<DfEdgeFilterRequest[]>([]);
   protected readonly selectedTextAttribute = signal<TextAttributeFilterRequest | null>(null);
+  protected readonly selectedPatternFilters = signal<PatternFilterRequest[]>([]);
   protected readonly draftEventTypes = signal<string[]>([]);
   protected readonly draftObjectTypes = signal<string[]>([]);
   protected readonly draftDfNodes = signal<string[]>([]);
@@ -179,6 +211,7 @@ export class App {
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
   protected readonly isFilterMenuOpen = signal(false);
   protected readonly isFilterChainOpen = signal(false);
+  protected readonly graphFilterMenu = signal<GraphFilterMenu | null>(null);
   protected readonly stateDetectionObjectType = signal('');
   protected readonly stateDetectionWindowSize = signal(4);
   protected readonly stateDetectionSomWidth = signal(3);
@@ -208,7 +241,11 @@ export class App {
   protected readonly isFilterApplied = computed(
     () =>
       this.selectedEventTypes().length !== this.filterOptions().event_types.length ||
-      this.selectedObjectTypes().length !== this.filterOptions().object_types.length,
+      this.selectedObjectTypes().length !== this.filterOptions().object_types.length ||
+      this.selectedDfNodes().length > 0 ||
+      this.selectedDfEdges().length > 0 ||
+      this.selectedTextAttribute() !== null ||
+      this.selectedPatternFilters().length > 0,
   );
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
   protected readonly isLlmStateMode = computed(() => this.selectedPresetId() === LLM_STATE_PRESET_ID);
@@ -267,6 +304,18 @@ export class App {
           textAttribute.values,
         ),
         removeLabel: 'Remove text attribute filter',
+      });
+    }
+
+    if (this.selectedPatternFilters().length > 0) {
+      chips.push({
+        kind: 'patterns',
+        label: `Patterns ${this.selectedPatternFilters().length}`,
+        description: filterDescription(
+          'Objects matching selected state patterns',
+          this.selectedPatternFilters().map(patternFilterLabel),
+        ),
+        removeLabel: 'Remove pattern filter',
       });
     }
 
@@ -444,6 +493,7 @@ export class App {
     }
 
     this.activeFeature.set(feature);
+    this.graphFilterMenu.set(null);
     if (feature === 'stateDetection' && !this.stateDetectionAnalysis()) {
       this.loadStateDetection();
     }
@@ -456,6 +506,7 @@ export class App {
 
     this.isFilterMenuOpen.update((isOpen) => !isOpen);
     this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
   }
 
   protected toggleFilterChain(): void {
@@ -465,6 +516,7 @@ export class App {
 
     this.isFilterChainOpen.update((isOpen) => !isOpen);
     this.isFilterMenuOpen.set(false);
+    this.graphFilterMenu.set(null);
   }
 
   openStateDialog(): void {
@@ -637,6 +689,7 @@ export class App {
       this.selectedDfNodes.set([]);
       this.selectedDfEdges.set([]);
       this.selectedTextAttribute.set(null);
+      this.selectedPatternFilters.set([]);
       this.draftEventTypes.set(imported.filterOptions.event_types);
       this.draftObjectTypes.set(imported.filterOptions.object_types);
       this.draftDfNodes.set([]);
@@ -646,6 +699,7 @@ export class App {
       this.filterDialog.set(null);
       this.isFilterMenuOpen.set(false);
       this.isFilterChainOpen.set(false);
+      this.graphFilterMenu.set(null);
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.stateAwareOcdfg.set(null);
@@ -678,6 +732,7 @@ export class App {
       this.selectedDfNodes.set([]);
       this.selectedDfEdges.set([]);
       this.selectedTextAttribute.set(null);
+      this.selectedPatternFilters.set([]);
       this.draftEventTypes.set([]);
       this.draftObjectTypes.set([]);
       this.draftDfNodes.set([]);
@@ -687,6 +742,7 @@ export class App {
       this.filterDialog.set(null);
       this.isFilterMenuOpen.set(false);
       this.isFilterChainOpen.set(false);
+      this.graphFilterMenu.set(null);
       this.selectedLeadingObjectType.set('');
       this.fileName.set(fileName);
       this.documentHandle?.free();
@@ -777,6 +833,7 @@ export class App {
     this.draftEventTypes.set([...this.selectedEventTypes()]);
     this.isFilterMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
     this.filterDialog.set('activities');
   }
 
@@ -784,6 +841,7 @@ export class App {
     this.draftObjectTypes.set([...this.selectedObjectTypes()]);
     this.isFilterMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
     this.filterDialog.set('objectTypes');
   }
 
@@ -791,6 +849,7 @@ export class App {
     this.draftDfNodes.set([...this.selectedDfNodes()]);
     this.isFilterMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
     this.filterDialog.set('dfNodes');
   }
 
@@ -798,6 +857,7 @@ export class App {
     this.draftDfEdges.set([...this.selectedDfEdges()]);
     this.isFilterMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
     this.filterDialog.set('dfEdges');
   }
 
@@ -808,6 +868,7 @@ export class App {
     this.draftTextAttributeValues.set(first?.values ?? []);
     this.isFilterMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
     this.filterDialog.set('textAttributes');
   }
 
@@ -983,13 +1044,17 @@ export class App {
     } else if (kind === 'dfEdges') {
       this.selectedDfEdges.set([]);
       this.draftDfEdges.set([]);
-    } else {
+    } else if (kind === 'textAttributes') {
       this.selectedTextAttribute.set(null);
       this.draftTextAttributeKey.set('');
       this.draftTextAttributeValues.set([]);
+    } else {
+      this.selectedPatternFilters.set([]);
     }
 
     this.filterDialog.set(null);
+    this.graphFilterMenu.set(null);
+    this.isFilterChainOpen.set(false);
     this.applyActiveFilter();
   }
 
@@ -1205,19 +1270,45 @@ export class App {
     this.fullScreenPattern.set(null);
   }
 
-  protected applyPatternStateFilter(pattern: StatePattern): void {
-    const values = [pattern.state, pattern.from_state, pattern.to_state].filter(
-      (value): value is string => Boolean(value),
-    );
-    if (values.length === 0) {
-      return;
-    }
+  protected applyPatternFilter(pattern: StatePattern): void {
+    this.selectedPatternFilters.set([patternFilterRequest(pattern)]);
+    this.applyActiveFilter();
+  }
 
-    this.selectedTextAttribute.set({
-      scope: 'event',
-      name: 'state',
-      values: [...new Set(values)],
+  protected openGraphNodeFilterMenu(event: ProcessGraphNodeFilterEvent): void {
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set({
+      kind: 'node',
+      activity: event.activity,
+      ...graphMenuPosition(event.clientX, event.clientY),
     });
+  }
+
+  protected openGraphEdgeFilterMenu(event: ProcessGraphEdgeFilterEvent): void {
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set({
+      kind: 'edge',
+      source: event.source,
+      target: event.target,
+      ...graphMenuPosition(event.clientX, event.clientY),
+    });
+  }
+
+  protected closeGraphFilterMenu(): void {
+    this.graphFilterMenu.set(null);
+  }
+
+  protected applyGraphNodeFilter(activity: string): void {
+    this.selectedDfNodes.set([...new Set([...this.selectedDfNodes(), activity])]);
+    this.graphFilterMenu.set(null);
+    this.applyActiveFilter();
+  }
+
+  protected applyGraphEdgeFilter(edge: DfEdgeFilterRequest): void {
+    this.selectedDfEdges.set([...this.selectedDfEdges(), edge].filter(uniqueEdges));
+    this.graphFilterMenu.set(null);
     this.applyActiveFilter();
   }
 
@@ -1549,6 +1640,9 @@ Return only one valid Flowvault state expression.`;
     if (textAttribute && textAttribute.values.length > 0) {
       filter.text_attributes = [textAttribute];
     }
+    if (this.selectedPatternFilters().length > 0) {
+      filter.patterns = this.selectedPatternFilters();
+    }
 
     try {
       const nextSummary = JSON.parse(
@@ -1564,6 +1658,7 @@ Return only one valid Flowvault state expression.`;
         this.sanitizeGraphSettings(this.traditionalOcdfgSettings()),
       );
       this.loadTraditionalOcdfg();
+      this.graphFilterMenu.set(null);
       this.updateStateMessageAfterFilter(nextSummary);
       this.ensureStateDetectionObjectType();
       this.stateDetectionCellDetail.set(null);
@@ -1850,6 +1945,35 @@ function sameEdge(left: DfEdgeFilterRequest, right: DfEdgeFilterRequest): boolea
 
 function uniqueEdges(edge: DfEdgeFilterRequest, index: number, edges: DfEdgeFilterRequest[]): boolean {
   return edges.findIndex((candidate) => sameEdge(candidate, edge)) === index;
+}
+
+function patternFilterRequest(pattern: StatePattern): PatternFilterRequest {
+  return {
+    family: pattern.family as PatternTab,
+    leading_object_type: pattern.leading_object_type,
+    state: pattern.state ?? undefined,
+    from_state: pattern.from_state ?? undefined,
+    to_state: pattern.to_state ?? undefined,
+    sequence: [...pattern.sequence],
+    eo_edges: pattern.eo_edges.map(({ source, target }) => ({ source, target })),
+    oo_edges: pattern.oo_edges.map(({ source, target }) => ({ source, target })),
+  };
+}
+
+function patternFilterLabel(pattern: PatternFilterRequest): string {
+  if (pattern.family === 'inter') {
+    return `${pattern.from_state ?? '?'} -> ${pattern.to_state ?? '?'} on ${pattern.leading_object_type}`;
+  }
+  return `${pattern.state ?? '?'} on ${pattern.leading_object_type}`;
+}
+
+function graphMenuPosition(clientX: number, clientY: number): { x: number; y: number } {
+  const width = typeof window === 'undefined' ? 1280 : window.innerWidth;
+  const height = typeof window === 'undefined' ? 800 : window.innerHeight;
+  return {
+    x: Math.min(Math.max(clientX, 12), Math.max(12, width - 280)),
+    y: Math.min(Math.max(clientY, 12), Math.max(12, height - 180)),
+  };
 }
 
 function textAttributeKey(attribute: Pick<TextAttributeOption, 'scope' | 'name'>): string {

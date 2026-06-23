@@ -87,6 +87,13 @@
 
           @for (edge of graph.edges; track edge.id) {
             <path
+              [attr.class]="'process-edge-hitbox' + (isFilterableEdge(edge) ? ' is-filterable' : '')"
+              [attr.d]="edge.path"
+              (click)="emitEdgeFilter($event, edge)"
+            >
+              <title>{{ edge.title || edge.label }}</title>
+            </path>
+            <path
               [attr.class]="'process-edge process-edge-' + edge.kind"
               [attr.d]="edge.path"
               [attr.stroke]="edgeColor(edge)"
@@ -101,7 +108,10 @@
           }
 
           @for (node of graph.nodes; track node.id) {
-            <g [attr.class]="'process-node process-node-' + node.kind">
+            <g
+              [attr.class]="'process-node process-node-' + node.kind + (isFilterableNode(node) ? ' is-filterable' : '')"
+              (click)="emitNodeFilter($event, node)"
+            >
               <title>{{ node.label }} ({{ node.count }})</title>
               @if (node.shape === 'ellipse') {
                 <ellipse

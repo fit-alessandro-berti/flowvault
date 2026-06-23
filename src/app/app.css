@@ -131,6 +131,39 @@
   min-width: 280px;
 }
 
+.graph-filter-dropdown {
+  position: fixed;
+  z-index: 30;
+  display: grid;
+  gap: 8px;
+  width: min(270px, calc(100vw - 24px));
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #17221f;
+  padding: 12px;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22);
+}
+
+.graph-filter-dropdown span {
+  color: #5c6c68;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.graph-filter-dropdown strong {
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+}
+
+.graph-filter-dropdown button {
+  min-height: 34px;
+  justify-content: flex-start;
+  padding: 0 10px;
+  font-size: 0.82rem;
+}
+
 .app-shell.has-document {
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr);

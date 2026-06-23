@@ -237,6 +237,8 @@ struct OcelFilterRequest {
     df_edges: Vec<DfEdgeFilter>,
     #[serde(default)]
     text_attributes: Vec<TextAttributeFilter>,
+    #[serde(default)]
+    patterns: Vec<PatternFilter>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -252,6 +254,32 @@ struct TextAttributeFilter {
     name: String,
     #[serde(default)]
     values: Vec<String>,
+}
+
+#[derive(Clone, Deserialize)]
+struct PatternFilter {
+    #[serde(default)]
+    family: String,
+    #[serde(default)]
+    leading_object_type: String,
+    #[serde(default)]
+    state: Option<String>,
+    #[serde(default)]
+    from_state: Option<String>,
+    #[serde(default)]
+    to_state: Option<String>,
+    #[serde(default)]
+    sequence: Vec<String>,
+    #[serde(default)]
+    eo_edges: Vec<PatternEdgeFilter>,
+    #[serde(default)]
+    oo_edges: Vec<PatternEdgeFilter>,
+}
+
+#[derive(Clone, Deserialize)]
+struct PatternEdgeFilter {
+    source: String,
+    target: String,
 }
 
 #[derive(Serialize)]
@@ -312,6 +340,7 @@ impl OcelFilterRequest {
             df_nodes: Vec::new(),
             df_edges: Vec::new(),
             text_attributes: Vec::new(),
+            patterns: Vec::new(),
         }
     }
 
@@ -322,6 +351,7 @@ impl OcelFilterRequest {
                 .text_attributes
                 .iter()
                 .any(|attribute| !attribute.values.is_empty())
+            || !self.patterns.is_empty()
     }
 }
 
@@ -582,11 +612,12 @@ impl CompactOcelLog {
         let selected_object_ids = self
             .objects
             .iter()
-            .filter(|object| {
+            .enumerate()
+            .filter(|(object_index, object)| {
                 object_type_selection.contains(self.pool.resolve(object.type_name))
-                    && self.object_satisfies_filter(object, filter)
+                    && self.object_satisfies_filter(*object_index, object, filter)
             })
-            .map(|object| object.id)
+            .map(|(_, object)| object.id)
             .collect::<HashSet<_>>();
 
         let mut retained_events = Vec::new();
@@ -754,7 +785,12 @@ impl CompactOcelLog {
             .collect()
     }
 
-    fn object_satisfies_filter(&self, object: &Object, filter: &OcelFilterRequest) -> bool {
+    fn object_satisfies_filter(
+        &self,
+        object_index: usize,
+        object: &Object,
+        filter: &OcelFilterRequest,
+    ) -> bool {
         filter.df_nodes.iter().all(|activity| {
             object.lifecycle.iter().any(|event_index| {
                 self.pool.resolve(self.events[*event_index].type_name) == activity
@@ -771,6 +807,9 @@ impl CompactOcelLog {
             .text_attributes
             .iter()
             .all(|attribute_filter| self.object_matches_text_attribute(object, attribute_filter))
+            && filter.patterns.iter().all(|pattern_filter| {
+                self.object_matches_pattern_filter(object_index, object, pattern_filter)
+            })
     }
 
     fn object_matches_text_attribute(
@@ -803,6 +842,71 @@ impl CompactOcelLog {
                         && values.contains(self.attr_value_label(&attribute.value).as_str())
                 })
         })
+    }
+
+    fn object_matches_pattern_filter(
+        &self,
+        object_index: usize,
+        object: &Object,
+        pattern_filter: &PatternFilter,
+    ) -> bool {
+        if pattern_filter.leading_object_type.is_empty()
+            || self.pool.resolve(object.type_name) != pattern_filter.leading_object_type
+        {
+            return false;
+        }
+
+        let Some(state_attribute) = self.symbol_for_value("state") else {
+            return false;
+        };
+        let state_lifecycle = object
+            .lifecycle
+            .iter()
+            .filter_map(|event_index| {
+                self.event_state(&self.events[*event_index], state_attribute)
+                    .map(|state| (*event_index, state.to_owned()))
+            })
+            .collect::<Vec<_>>();
+        if state_lifecycle.is_empty() {
+            return false;
+        }
+
+        let episodes = state_episodes(&state_lifecycle);
+        match pattern_filter.family.as_str() {
+            "intra" => episodes.iter().any(|episode| {
+                let instance = self.pattern_instance(
+                    PatternFamily::Intra,
+                    object_index,
+                    episode.state.clone(),
+                    None,
+                    self.intra_sequence(&state_lifecycle, episode),
+                    &state_lifecycle[episode.start..=episode.end],
+                );
+                pattern_filter_matches_instance(pattern_filter, &instance)
+            }),
+            "inter" => episodes.windows(2).any(|episode_pair| {
+                let [left, right] = episode_pair else {
+                    return false;
+                };
+                if left.state == right.state {
+                    return false;
+                }
+
+                let mut segment_events = Vec::with_capacity(right.end - left.start + 1);
+                segment_events.extend_from_slice(&state_lifecycle[left.start..=left.end]);
+                segment_events.extend_from_slice(&state_lifecycle[right.start..=right.end]);
+                let instance = self.pattern_instance(
+                    PatternFamily::Inter,
+                    object_index,
+                    left.state.clone(),
+                    Some(right.state.clone()),
+                    self.inter_sequence(&state_lifecycle, left, right),
+                    &segment_events,
+                );
+                pattern_filter_matches_instance(pattern_filter, &instance)
+            }),
+            _ => false,
+        }
     }
 
     fn object_type_symbol(&self, object_type: &str) -> Option<Symbol> {
@@ -4149,6 +4253,53 @@ fn pattern_sort_label(key: &PatternKey) -> String {
     }
 }
 
+fn pattern_filter_matches_instance(filter: &PatternFilter, instance: &PatternInstance) -> bool {
+    let expected_family = match filter.family.as_str() {
+        "intra" => PatternFamily::Intra,
+        "inter" => PatternFamily::Inter,
+        _ => return false,
+    };
+    if instance.family != expected_family
+        || instance.leading_object_type != filter.leading_object_type
+        || instance.sequence != filter.sequence
+    {
+        return false;
+    }
+
+    let state_matches = match expected_family {
+        PatternFamily::Intra => filter
+            .state
+            .as_deref()
+            .is_some_and(|state| state == instance.state.as_str()),
+        PatternFamily::Inter => {
+            let from_state = filter.from_state.as_deref().or(filter.state.as_deref());
+            from_state.is_some_and(|state| state == instance.state.as_str())
+                && filter.to_state.as_deref() == instance.to_state.as_deref()
+        }
+    };
+    if !state_matches {
+        return false;
+    }
+
+    pattern_edge_filter_pairs(&filter.eo_edges) == pattern_instance_edge_pairs(&instance.eo_edges)
+        && pattern_edge_filter_pairs(&filter.oo_edges)
+            == pattern_instance_edge_pairs(&instance.oo_edges)
+}
+
+fn pattern_edge_filter_pairs(edges: &[PatternEdgeFilter]) -> Vec<(String, String)> {
+    let mut pairs = edges
+        .iter()
+        .map(|edge| (edge.source.clone(), edge.target.clone()))
+        .collect::<Vec<_>>();
+    pairs.sort();
+    pairs.dedup();
+    pairs
+}
+
+fn pattern_instance_edge_pairs(edges: &BTreeMap<(String, String), usize>) -> Vec<(String, String)> {
+    edges.keys().cloned().collect()
+}
+
 fn merge_weighted_edges(
     target: &mut BTreeMap<(String, String), usize>,
     source: BTreeMap<(String, String), usize>,
@@ -6067,6 +6218,7 @@ mod tests {
             df_nodes: Vec::new(),
             df_edges: Vec::new(),
             text_attributes: Vec::new(),
+            patterns: Vec::new(),
         });
         let summary = filtered.summary();
 
@@ -6104,6 +6256,7 @@ mod tests {
             df_nodes: vec!["Create Purchase Order".to_owned()],
             df_edges: Vec::new(),
             text_attributes: Vec::new(),
+            patterns: Vec::new(),
         });
         assert!(filtered_by_node.summary().events > 0);
         assert!(filtered_by_node.summary().events < log.summary().events);
@@ -6125,6 +6278,7 @@ mod tests {
                 target: "Change PO Quantity".to_owned(),
             }],
             text_attributes: Vec::new(),
+            patterns: Vec::new(),
         });
         assert!(filtered_by_edge.summary().events > 0);
         assert!(filtered_by_edge.summary().events <= filtered_by_node.summary().events);
@@ -6139,6 +6293,7 @@ mod tests {
                 name: "state".to_owned(),
                 values: vec!["Opening".to_owned()],
             }],
+            patterns: Vec::new(),
         });
         assert!(filtered_by_state.summary().events > 0);
         assert!(filtered_by_state.summary().events < log.summary().events);
@@ -6154,6 +6309,73 @@ mod tests {
             attribute.scope == "event"
                 && attribute.name == "state"
                 && attribute.values.iter().any(|value| value == "Opening")
+        }));
+    }
+
+    #[test]
+    fn filters_active_log_by_selected_state_pattern() {
+        let mut log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        log.apply_state_query(
+            r#"
+            STATE state FOR LEADING OBJECT TYPE 'Purchase Order' AS CASE
+              WHEN event.type = 'Create Purchase Order' THEN 'Opening'
+              WHEN event.type = 'Pay Invoice' THEN 'Closing'
+              ELSE 'Processing'
+            END
+            "#,
+        )
+        .unwrap();
+
+        let patterns = log.detect_state_patterns().unwrap();
+        let pattern = patterns
+            .intra
+            .iter()
+            .find(|pattern| pattern.state.as_deref() == Some("Opening"))
+            .expect("opening pattern should be present");
+        let filtered = log.filter(&OcelFilterRequest {
+            event_types: Vec::new(),
+            object_types: Vec::new(),
+            df_nodes: Vec::new(),
+            df_edges: Vec::new(),
+            text_attributes: Vec::new(),
+            patterns: vec![PatternFilter {
+                family: pattern.family.to_owned(),
+                leading_object_type: pattern.leading_object_type.clone(),
+                state: pattern.state.clone(),
+                from_state: pattern.from_state.clone(),
+                to_state: pattern.to_state.clone(),
+                sequence: pattern.sequence.clone(),
+                eo_edges: pattern
+                    .eo_edges
+                    .iter()
+                    .map(|edge| PatternEdgeFilter {
+                        source: edge.source.clone(),
+                        target: edge.target.clone(),
+                    })
+                    .collect(),
+                oo_edges: pattern
+                    .oo_edges
+                    .iter()
+                    .map(|edge| PatternEdgeFilter {
+                        source: edge.source.clone(),
+                        target: edge.target.clone(),
+                    })
+                    .collect(),
+            }],
+        });
+
+        assert!(filtered.summary().events > 0);
+        assert!(filtered.summary().events < log.summary().events);
+        assert!(filtered.objects.iter().all(|object| {
+            filtered.pool.resolve(object.type_name) == pattern.leading_object_type
+        }));
+        assert!(filtered.objects.iter().all(|object| {
+            object.lifecycle.iter().any(|event_index| {
+                filtered
+                    .pool
+                    .resolve(filtered.events[*event_index].type_name)
+                    == "Create Purchase Order"
+            })
         }));
     }
 

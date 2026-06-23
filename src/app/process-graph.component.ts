@@ -6,6 +6,19 @@ import {
   ProcessGraphSettings,
 } from './ocel-wasm.service';
 
+export interface ProcessGraphNodeFilterEvent {
+  activity: string;
+  clientX: number;
+  clientY: number;
+}
+
+export interface ProcessGraphEdgeFilterEvent {
+  source: string;
+  target: string;
+  clientX: number;
+  clientY: number;
+}
+
 @Component({
   selector: 'app-process-graph',
   imports: [],
@@ -17,6 +30,8 @@ export class ProcessGraphComponent implements OnChanges {
   @Input() objectTypes: string[] = [];
   @Input() settings: ProcessGraphSettings = defaultGraphSettings();
   @Output() applySettings = new EventEmitter<ProcessGraphSettings>();
+  @Output() filterNode = new EventEmitter<ProcessGraphNodeFilterEvent>();
+  @Output() filterEdge = new EventEmitter<ProcessGraphEdgeFilterEvent>();
 
   protected draftObjectTypes: string[] = [];
   protected draftActivityFrequency = 1;
@@ -99,6 +114,45 @@ export class ProcessGraphComponent implements OnChanges {
     });
   }
 
+  protected isFilterableNode(node: ProcessGraphNode): boolean {
+    return node.kind === 'activity';
+  }
+
+  protected isFilterableEdge(edge: ProcessGraphEdge): boolean {
+    const source = this.nodeById(edge.source);
+    const target = this.nodeById(edge.target);
+    return source?.kind === 'activity' && target?.kind === 'activity';
+  }
+
+  protected emitNodeFilter(event: MouseEvent, node: ProcessGraphNode): void {
+    if (!this.isFilterableNode(node)) {
+      return;
+    }
+
+    event.stopPropagation();
+    this.filterNode.emit({
+      activity: node.label,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+  }
+
+  protected emitEdgeFilter(event: MouseEvent, edge: ProcessGraphEdge): void {
+    const source = this.nodeById(edge.source);
+    const target = this.nodeById(edge.target);
+    if (!source || !target || !this.isFilterableEdge(edge)) {
+      return;
+    }
+
+    event.stopPropagation();
+    this.filterEdge.emit({
+      source: source.label,
+      target: target.label,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+  }
+
   protected edgeStrokeWidth(edge: ProcessGraphEdge): number {
     return Math.min(5.5, 1.25 + Math.log2(edge.weight + 1));
   }
@@ -141,6 +195,10 @@ export class ProcessGraphComponent implements OnChanges {
 
   protected nodeStrokeWidth(node: ProcessGraphNode): number {
     return node.kind === 'state-change' || node.shape === 'ellipse' ? 2 : 1;
+  }
+
+  private nodeById(nodeId: string): ProcessGraphNode | undefined {
+    return this.graph?.nodes.find((node) => node.id === nodeId);
   }
 }
 
