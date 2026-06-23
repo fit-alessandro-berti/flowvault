@@ -17,7 +17,8 @@ header {
 }
 
 h3,
-p {
+p,
+h4 {
   margin: 0;
 }
 
@@ -28,7 +29,109 @@ header span {
   font-weight: 700;
 }
 
+.process-graph-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+}
+
+.process-graph-controls {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.process-graph-controls section {
+  display: grid;
+  gap: 10px;
+}
+
+.process-graph-controls header {
+  align-items: center;
+}
+
+h4 {
+  color: #263632;
+  font-size: 0.86rem;
+}
+
+.mini-actions {
+  display: flex;
+  gap: 6px;
+}
+
+button {
+  min-height: 34px;
+  border: 1px solid #1d4f49;
+  border-radius: 8px;
+  background: #1d4f49;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mini-button {
+  min-height: 28px;
+  border-color: #b9c7c3;
+  background: #ffffff;
+  color: #1d4f49;
+  padding: 0 8px;
+  font-size: 0.75rem;
+}
+
+.apply-button {
+  width: 100%;
+}
+
+.object-type-options {
+  display: grid;
+  gap: 7px;
+  max-height: 190px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.object-type-options label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  color: #263632;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.object-type-options span {
+  overflow-wrap: anywhere;
+}
+
+.frequency-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  color: #263632;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.frequency-control input {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.frequency-control strong {
+  color: #1d4f49;
+}
+
 .process-graph-scroll {
+  min-width: 0;
   overflow: auto;
   border: 1px solid #d7dfdd;
   border-radius: 8px;
@@ -71,9 +174,23 @@ header span {
   fill: #7a3710;
 }
 
+.process-node-count {
+  fill: #50615c;
+  font-size: 10px;
+  font-weight: 700;
+}
+
 @media (max-width: 780px) {
   header {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .process-graph-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .object-type-options {
+    max-height: 150px;
   }
 }

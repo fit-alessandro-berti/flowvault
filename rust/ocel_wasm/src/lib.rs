@@ -235,12 +235,34 @@ struct FilterOptions {
     object_types: Vec<String>,
 }
 
+#[derive(Default, Deserialize)]
+struct GraphFilterRequest {
+    object_types: Option<Vec<String>>,
+    min_activity_frequency: Option<usize>,
+    min_path_frequency: Option<usize>,
+}
+
+#[derive(Default)]
+struct GraphLayoutFilter {
+    min_activity_frequency: usize,
+    min_path_frequency: usize,
+}
+
 impl OcelFilterRequest {
     fn all_for(log: &CompactOcelLog) -> Self {
         let options = log.filter_options();
         Self {
             event_types: options.event_types,
             object_types: options.object_types,
+        }
+    }
+}
+
+impl GraphFilterRequest {
+    fn layout_filter(&self) -> GraphLayoutFilter {
+        GraphLayoutFilter {
+            min_activity_frequency: self.min_activity_frequency.unwrap_or_default(),
+            min_path_frequency: self.min_path_frequency.unwrap_or_default(),
         }
     }
 }
@@ -690,18 +712,44 @@ impl CompactOcelLog {
     }
 
     fn object_centric_directly_follows_graph_json(&self) -> OcelResult<String> {
+        self.object_centric_directly_follows_graph_json_with_filter(&GraphFilterRequest::default())
+    }
+
+    fn object_centric_directly_follows_graph_json_with_filter(
+        &self,
+        request: &GraphFilterRequest,
+    ) -> OcelResult<String> {
         let mut graph = GraphAccumulator::new(
             "Object-Centric Directly-Follows Graph".to_owned(),
-            "Flattened over every object type and collated by activity pair".to_owned(),
+            "Flattened over selected object types with typed lifecycle edges".to_owned(),
         );
+        let selected_object_types = request.object_types.as_ref().map(|object_types| {
+            object_types
+                .iter()
+                .map(String::as_str)
+                .collect::<BTreeSet<_>>()
+        });
         for object in &self.objects {
             let object_type = self.pool.resolve(object.type_name);
+            if selected_object_types
+                .as_ref()
+                .is_some_and(|selected| !selected.contains(object_type))
+            {
+                continue;
+            }
             self.accumulate_directly_follows_for_object(&mut graph, object, object_type);
         }
-        graph.into_layout()
+        graph.into_filtered_layout(request.layout_filter())
     }
 
     fn state_aware_ocdfg_json(&self) -> OcelResult<String> {
+        self.state_aware_ocdfg_json_with_filter(&GraphFilterRequest::default())
+    }
+
+    fn state_aware_ocdfg_json_with_filter(
+        &self,
+        request: &GraphFilterRequest,
+    ) -> OcelResult<String> {
         let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
         })?;
@@ -709,9 +757,21 @@ impl CompactOcelLog {
             "State-Aware Object-Centric Directly-Follows Graph".to_owned(),
             "State-enriched lifecycles collated across object types".to_owned(),
         );
+        let selected_object_types = request.object_types.as_ref().map(|object_types| {
+            object_types
+                .iter()
+                .map(String::as_str)
+                .collect::<BTreeSet<_>>()
+        });
 
         for object in &self.objects {
             let object_type = self.pool.resolve(object.type_name);
+            if selected_object_types
+                .as_ref()
+                .is_some_and(|selected| !selected.contains(object_type))
+            {
+                continue;
+            }
             self.accumulate_state_aware_directly_follows_for_object(
                 &mut graph,
                 object,
@@ -720,7 +780,7 @@ impl CompactOcelLog {
             );
         }
 
-        graph.into_layout()
+        graph.into_filtered_layout(request.layout_filter())
     }
 
     fn accumulate_directly_follows_for_object(
@@ -1652,9 +1712,44 @@ impl GraphAccumulator {
     }
 
     fn into_layout(self) -> OcelResult<String> {
+        self.into_filtered_layout(GraphLayoutFilter::default())
+    }
+
+    fn into_filtered_layout(mut self, filter: GraphLayoutFilter) -> OcelResult<String> {
+        self.apply_layout_filter(filter);
         let graph = layout_accumulated_graph(self);
         serde_json::to_string(&graph)
             .map_err(|err| OcelError::new(format!("could not serialize graph layout: {err}")))
+    }
+
+    fn apply_layout_filter(&mut self, filter: GraphLayoutFilter) {
+        if filter.min_activity_frequency > 0 {
+            self.nodes.retain(|_, node| {
+                node.kind == "object-start"
+                    || node.kind == "object-end"
+                    || node.count >= filter.min_activity_frequency
+            });
+        }
+
+        self.edges.retain(|_, edge| {
+            edge.weight >= filter.min_path_frequency
+                && self.nodes.contains_key(&edge.source)
+                && self.nodes.contains_key(&edge.target)
+        });
+
+        let mut connected_boundary_nodes = BTreeSet::<String>::new();
+        for edge in self.edges.values() {
+            connected_boundary_nodes.insert(edge.source.clone());
+            connected_boundary_nodes.insert(edge.target.clone());
+        }
+
+        self.nodes.retain(|_, node| {
+            if node.kind == "object-start" || node.kind == "object-end" {
+                connected_boundary_nodes.contains(&node.label)
+            } else {
+                true
+            }
+        });
     }
 }
 
@@ -2360,10 +2455,35 @@ impl OcelDocument {
             .map_err(JsValue::from)
     }
 
+    /// Computes an object-centric directly-follows graph for selected object types and frequencies.
+    #[wasm_bindgen(js_name = filteredObjectCentricDirectlyFollowsGraphJson)]
+    pub fn filtered_object_centric_directly_follows_graph_json(
+        &self,
+        request_json: &str,
+    ) -> Result<String, JsValue> {
+        let request = serde_json::from_str::<GraphFilterRequest>(request_json).map_err(|err| {
+            JsValue::from_str(&format!("could not parse graph filter request: {err}"))
+        })?;
+        self.log
+            .object_centric_directly_follows_graph_json_with_filter(&request)
+            .map_err(JsValue::from)
+    }
+
     /// Computes a state-aware object-centric directly-follows graph.
     #[wasm_bindgen(js_name = stateAwareObjectCentricDirectlyFollowsGraphJson)]
     pub fn state_aware_ocdfg_json(&self) -> Result<String, JsValue> {
         self.log.state_aware_ocdfg_json().map_err(JsValue::from)
+    }
+
+    /// Computes a state-aware OCDFG for selected object types and frequencies.
+    #[wasm_bindgen(js_name = filteredStateAwareObjectCentricDirectlyFollowsGraphJson)]
+    pub fn filtered_state_aware_ocdfg_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request = serde_json::from_str::<GraphFilterRequest>(request_json).map_err(|err| {
+            JsValue::from_str(&format!("could not parse graph filter request: {err}"))
+        })?;
+        self.log
+            .state_aware_ocdfg_json_with_filter(&request)
+            .map_err(JsValue::from)
     }
 }
 
@@ -4077,6 +4197,29 @@ mod tests {
                             && types[0]["weight"] == edge["weight"]
                     })
             })
+        }));
+
+        let filtered: Value = serde_json::from_str(
+            &log.object_centric_directly_follows_graph_json_with_filter(&GraphFilterRequest {
+                object_types: Some(vec!["Invoice".to_owned()]),
+                min_activity_frequency: Some(2),
+                min_path_frequency: Some(2),
+            })
+            .unwrap(),
+        )
+        .unwrap();
+        assert!(filtered["nodes"].as_array().is_some_and(|nodes| {
+            nodes.iter().all(|node| {
+                matches!(node["kind"].as_str(), Some("object-start" | "object-end"))
+                    || node["count"].as_u64().is_some_and(|count| count >= 2)
+            })
+        }));
+        assert!(filtered["edges"].as_array().is_some_and(|edges| {
+            !edges.is_empty()
+                && edges.iter().all(|edge| {
+                    edge["object_type"] == Value::from("Invoice")
+                        && edge["weight"].as_u64().is_some_and(|weight| weight >= 2)
+                })
         }));
     }
 

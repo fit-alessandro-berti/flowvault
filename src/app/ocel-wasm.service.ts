@@ -25,7 +25,9 @@ export interface OcelDocumentHandle {
   statePatternsJson(): string;
   directlyFollowsGraphJson(objectType: string): string;
   objectCentricDirectlyFollowsGraphJson(): string;
+  filteredObjectCentricDirectlyFollowsGraphJson(requestJson: string): string;
   stateAwareObjectCentricDirectlyFollowsGraphJson(): string;
+  filteredStateAwareObjectCentricDirectlyFollowsGraphJson(requestJson: string): string;
   free(): void;
 }
 
@@ -109,6 +111,12 @@ export interface ProcessGraph {
   height: number;
   nodes: ProcessGraphNode[];
   edges: ProcessGraphEdge[];
+}
+
+export interface ProcessGraphSettings {
+  object_types: string[];
+  min_activity_frequency: number;
+  min_path_frequency: number;
 }
 
 export interface ImportedOcelDocument {

@@ -682,7 +682,23 @@
 
   @if (stateAwareOcdfg(); as graph) {
     <section class="process-graph-section" aria-label="State-aware object-centric graph">
-      <app-process-graph [graph]="graph"></app-process-graph>
+      <app-process-graph
+        [graph]="graph"
+        [objectTypes]="selectedObjectTypes()"
+        [settings]="stateAwareOcdfgSettings()"
+        (applySettings)="applyStateAwareGraphSettings($event)"
+      ></app-process-graph>
+    </section>
+  }
+
+  @if (traditionalOcdfg(); as graph) {
+    <section class="process-graph-section" aria-label="Traditional object-centric graph">
+      <app-process-graph
+        [graph]="graph"
+        [objectTypes]="selectedObjectTypes()"
+        [settings]="traditionalOcdfgSettings()"
+        (applySettings)="applyTraditionalGraphSettings($event)"
+      ></app-process-graph>
     </section>
   }
 

@@ -142,6 +142,32 @@ const processGraph: ProcessGraph = {
   ],
 };
 
+const traditionalProcessGraph: ProcessGraph = {
+  ...processGraph,
+  title: 'Object-Centric Directly-Follows Graph',
+  subtitle: 'Flattened over selected object types with typed lifecycle edges',
+  nodes: [
+    processGraph.nodes[0],
+    {
+      ...processGraph.nodes[1],
+      label: 'Create Order',
+      kind: 'activity',
+      count: 5,
+      lines: ['Create Order'],
+    },
+  ],
+  edges: [
+    {
+      ...processGraph.edges[0],
+      source: 'n0',
+      target: 'n1',
+      weight: 5,
+      label: '5',
+      title: 'Order: 5',
+    },
+  ],
+};
+
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -234,6 +260,7 @@ describe('App', () => {
       originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
       stateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
+      filteredStateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
     };
     component.summary.set(importedSummary);
     component.filterOptions.set({ event_types: [], object_types: ['Order'] });
@@ -291,6 +318,8 @@ describe('App', () => {
     };
     let filterRequest = '';
     let patternCalls = 0;
+    const traditionalGraphRequests: string[] = [];
+    const stateAwareGraphRequests: string[] = [];
     const component = fixture.componentInstance as unknown as {
       documentHandle: unknown;
       summary: { set(value: unknown): void };
@@ -313,6 +342,14 @@ describe('App', () => {
         return JSON.stringify(patternAnalysis);
       },
       stateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
+      filteredStateAwareObjectCentricDirectlyFollowsGraphJson: (request: string) => {
+        stateAwareGraphRequests.push(request);
+        return JSON.stringify(processGraph);
+      },
+      filteredObjectCentricDirectlyFollowsGraphJson: (request: string) => {
+        traditionalGraphRequests.push(request);
+        return JSON.stringify(traditionalProcessGraph);
+      },
     };
     component.summary.set(statefulSummary);
     component.originalSummary.set(statefulSummary);
@@ -350,6 +387,35 @@ describe('App', () => {
     expect(native.textContent).toContain('State retained on 1 of 1 active events.');
     expect(native.textContent).toContain('State Patterns');
     expect(patternCalls).toBe(1);
+    expect(native.querySelectorAll('app-process-graph').length).toBe(2);
+    expect(native.textContent).toContain('Object-Centric Directly-Follows Graph');
+    expect(native.textContent).toContain('Activity Frequency');
+    expect(native.querySelector('.process-node-count')?.textContent?.trim()).toMatch(/\d+/);
+    expect(traditionalGraphRequests.length).toBe(1);
+    expect(stateAwareGraphRequests.length).toBe(1);
+
+    const stateAwareGraph = native.querySelector('app-process-graph');
+    const activityFrequency = stateAwareGraph?.querySelector<HTMLInputElement>(
+      '.frequency-control input[type="range"]',
+    );
+    if (!activityFrequency) {
+      throw new Error('missing activity frequency slider');
+    }
+    activityFrequency.value = '2';
+    activityFrequency.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(stateAwareGraphRequests.length).toBe(1);
+
+    stateAwareGraph?.querySelector<HTMLButtonElement>('.apply-button')?.click();
+    fixture.detectChanges();
+
+    expect(stateAwareGraphRequests.length).toBe(2);
+    expect(JSON.parse(stateAwareGraphRequests[stateAwareGraphRequests.length - 1])).toEqual({
+      object_types: ['Order', 'Item'],
+      min_activity_frequency: 2,
+      min_path_frequency: 1,
+    });
 
     native.querySelector<HTMLButtonElement>('.filter-chip-remove')?.click();
     fixture.detectChanges();
@@ -385,6 +451,7 @@ describe('App', () => {
       originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
       stateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
+      filteredStateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
     };
     component.summary.set(importedSummary);
     component.filterOptions.set({ event_types: [], object_types: ['Order'] });

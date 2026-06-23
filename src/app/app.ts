@@ -6,6 +6,7 @@ import {
   OcelDocumentHandle,
   OcelFilterOptions,
   ProcessGraph,
+  ProcessGraphSettings,
   StatePattern,
   StatePatternAnalysis,
   StatePatternEdge,
@@ -114,6 +115,9 @@ export class App {
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
+  protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
+  protected readonly stateAwareOcdfgSettings = signal<ProcessGraphSettings>(emptyGraphSettings());
+  protected readonly traditionalOcdfgSettings = signal<ProcessGraphSettings>(emptyGraphSettings());
   protected readonly selectedIntraPatternId = signal('');
   protected readonly selectedInterPatternId = signal('');
   protected readonly activePatternTab = signal<PatternTab>('intra');
@@ -319,6 +323,9 @@ export class App {
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.stateAwareOcdfg.set(null);
+      this.traditionalOcdfg.set(null);
+      this.resetGraphSettings(imported.filterOptions.object_types);
+      this.loadTraditionalOcdfg();
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
       this.activePatternTab.set('intra');
@@ -342,6 +349,8 @@ export class App {
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.stateAwareOcdfg.set(null);
+      this.traditionalOcdfg.set(null);
+      this.resetGraphSettings([]);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
       this.activePatternTab.set('intra');
@@ -522,6 +531,16 @@ export class App {
     this.fullScreenPattern.set(null);
   }
 
+  protected applyStateAwareGraphSettings(settings: ProcessGraphSettings): void {
+    this.stateAwareOcdfgSettings.set(this.sanitizeGraphSettings(settings));
+    this.loadStateAwareOcdfg();
+  }
+
+  protected applyTraditionalGraphSettings(settings: ProcessGraphSettings): void {
+    this.traditionalOcdfgSettings.set(this.sanitizeGraphSettings(settings));
+    this.loadTraditionalOcdfg();
+  }
+
   protected patternOptionLabel(pattern: StatePattern): string {
     return `${pattern.support.toLocaleString()}x | ${pattern.label}`;
   }
@@ -681,11 +700,33 @@ export class App {
     try {
       this.stateAwareOcdfg.set(
         JSON.parse(
-          this.documentHandle.stateAwareObjectCentricDirectlyFollowsGraphJson(),
+          this.documentHandle.filteredStateAwareObjectCentricDirectlyFollowsGraphJson(
+            graphRequestJson(this.stateAwareOcdfgSettings()),
+          ),
         ) as ProcessGraph,
       );
     } catch (error) {
       this.stateAwareOcdfg.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  private loadTraditionalOcdfg(): void {
+    if (!this.documentHandle) {
+      this.traditionalOcdfg.set(null);
+      return;
+    }
+
+    try {
+      this.traditionalOcdfg.set(
+        JSON.parse(
+          this.documentHandle.filteredObjectCentricDirectlyFollowsGraphJson(
+            graphRequestJson(this.traditionalOcdfgSettings()),
+          ),
+        ) as ProcessGraph,
+      );
+    } catch (error) {
+      this.traditionalOcdfg.set(null);
       this.errorMessage.set(errorToMessage(error));
     }
   }
@@ -709,6 +750,11 @@ export class App {
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
+      this.stateAwareOcdfgSettings.set(this.sanitizeGraphSettings(this.stateAwareOcdfgSettings()));
+      this.traditionalOcdfgSettings.set(
+        this.sanitizeGraphSettings(this.traditionalOcdfgSettings()),
+      );
+      this.loadTraditionalOcdfg();
       this.updateStateMessageAfterFilter(nextSummary);
 
       if (nextSummary.stateful_events > 0) {
@@ -744,6 +790,41 @@ export class App {
 
     this.stateMessage.set('State is retained in the original log, but no active events match it.');
   }
+
+  private resetGraphSettings(objectTypes: string[]): void {
+    const settings = {
+      object_types: [...objectTypes],
+      min_activity_frequency: 1,
+      min_path_frequency: 1,
+    };
+    this.stateAwareOcdfgSettings.set(settings);
+    this.traditionalOcdfgSettings.set(settings);
+  }
+
+  private sanitizeGraphSettings(settings: ProcessGraphSettings): ProcessGraphSettings {
+    const availableObjectTypes = new Set(this.selectedObjectTypes());
+    const objectTypes = settings.object_types.filter((objectType) =>
+      availableObjectTypes.has(objectType),
+    );
+
+    return {
+      object_types: objectTypes,
+      min_activity_frequency: Math.max(1, Math.round(settings.min_activity_frequency || 1)),
+      min_path_frequency: Math.max(1, Math.round(settings.min_path_frequency || 1)),
+    };
+  }
+}
+
+function emptyGraphSettings(): ProcessGraphSettings {
+  return {
+    object_types: [],
+    min_activity_frequency: 1,
+    min_path_frequency: 1,
+  };
+}
+
+function graphRequestJson(settings: ProcessGraphSettings): string {
+  return JSON.stringify(settings);
 }
 
 function errorToMessage(error: unknown): string {

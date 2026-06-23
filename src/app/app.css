@@ -14,7 +14,7 @@
 }
 
 .app-shell {
-  width: min(1120px, calc(100vw - 32px));
+  width: 97vw;
   margin: 0 auto;
   padding: 32px 0;
 }
@@ -353,7 +353,7 @@ textarea:focus {
   border: 1px solid #d7dfdd;
   border-radius: 8px;
   background: #ffffff;
-  padding: 16px;
+  padding: 12px;
 }
 
 .pattern-section-header,
