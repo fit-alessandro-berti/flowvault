@@ -124,7 +124,9 @@ The `General > State Detection` page implements an unsupervised execution-state 
 - numerical object attributes using the latest value available for the object;
 - one-hot columns for categorical object attributes with fewer than 50 distinct latest values.
 
-The full feature table can be downloaded as CSV from the page. For state abstraction, Flowvault encodes sliding lifecycle windows with the same numerical feature space, applies a deterministic two-component PCA implementation, trains a deterministic self-organizing map over the PCA coordinates, and treats SOM cells as discovered execution states. Consecutive windows of the same object that move to a different cell are shown as state transitions; nearby transitions are highlighted in the transition list, and SOM cells are colored by assigned-window density.
+The feature table preview shows the first 15 objects, and the full feature table can be downloaded as CSV from the table header. For state abstraction, Flowvault encodes sliding lifecycle windows with the same numerical feature space, applies a deterministic two-component PCA implementation, trains a deterministic self-organizing map over the PCA coordinates, and treats SOM cells as discovered execution states. Consecutive windows of the same object that move to a different cell are shown as state transitions; nearby transitions are highlighted in the transition list.
+
+SOM cells can be colored by assigned-window density or by a selected object attribute. Numerical attributes color cells by average value; categorical attributes color cells by dominant category count. Clicking a SOM cell opens a full-screen detail overlay with a directly-follows graph for the selected object type and two boundary-condition tabs: windows entering the cell and windows exiting the cell.
 
 ## Directly-Follows Graphs
 

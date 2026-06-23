@@ -24,6 +24,7 @@ export interface OcelDocumentHandle {
   applyStateQuery(query: string): string;
   statePatternsJson(): string;
   stateDetectionJson(requestJson: string): string;
+  stateDetectionCellJson(requestJson: string): string;
   stateFeatureTableCsv(requestJson: string): string;
   directlyFollowsGraphJson(objectType: string): string;
   objectCentricDirectlyFollowsGraphJson(): string;
@@ -76,11 +77,19 @@ export interface StateDetectionResult {
   object_count: number;
   feature_count: number;
   window_count: number;
+  color_attribute: string;
+  color_attributes: StateDetectionColorOption[];
   feature_columns: string[];
   table_preview: StateDetectionPreviewRow[];
   pca: StateDetectionPca;
   som: StateDetectionSom;
   windows: StateDetectionWindow[];
+}
+
+export interface StateDetectionColorOption {
+  id: string;
+  label: string;
+  kind: 'count' | 'numeric' | 'categorical';
 }
 
 export interface StateDetectionPreviewRow {
@@ -106,6 +115,8 @@ export interface StateDetectionSomCell {
   label: string;
   count: number;
   color_value: number;
+  color_label: string;
+  color_kind: string;
   avg_pc1: number;
   avg_pc2: number;
   dominant_activity?: string;
@@ -129,6 +140,24 @@ export interface StateDetectionWindow {
   pc2: number;
   cell_x: number;
   cell_y: number;
+}
+
+export interface StateDetectionCellDetail {
+  cell: StateDetectionSomCell;
+  dfg: ProcessGraph;
+  entering_windows: StateDetectionBoundaryWindow[];
+  exiting_windows: StateDetectionBoundaryWindow[];
+}
+
+export interface StateDetectionBoundaryWindow {
+  object_id: string;
+  start_event: string;
+  end_event: string;
+  source_cell: string;
+  target_cell: string;
+  pc1: number;
+  pc2: number;
+  activities: string[];
 }
 
 export interface ProcessGraphPoint {

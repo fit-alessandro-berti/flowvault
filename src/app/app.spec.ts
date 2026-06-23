@@ -1,7 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { App } from './app';
-import { ProcessGraph, StateDetectionResult, StatePatternAnalysis } from './ocel-wasm.service';
+import {
+  ProcessGraph,
+  StateDetectionCellDetail,
+  StateDetectionResult,
+  StatePatternAnalysis,
+} from './ocel-wasm.service';
 
 const importedSummary = {
   source_format: 'json' as const,
@@ -174,6 +179,11 @@ const stateDetectionAnalysis: StateDetectionResult = {
   window_size: 2,
   som_width: 2,
   som_height: 2,
+  color_attribute: 'attribute::priority',
+  color_attributes: [
+    { id: '__window_count', label: 'Assigned windows', kind: 'count' },
+    { id: 'attribute::priority', label: 'priority', kind: 'categorical' },
+  ],
   object_count: 2,
   feature_count: 4,
   window_count: 3,
@@ -207,6 +217,8 @@ const stateDetectionAnalysis: StateDetectionResult = {
         label: 'S1-1',
         count: 2,
         color_value: 1,
+        color_label: 'priority: High (2)',
+        color_kind: 'categorical',
         avg_pc1: -0.4,
         avg_pc2: 0.1,
         dominant_activity: 'Create Order',
@@ -217,6 +229,8 @@ const stateDetectionAnalysis: StateDetectionResult = {
         label: 'S2-1',
         count: 0,
         color_value: 0,
+        color_label: 'priority: n/a',
+        color_kind: 'categorical',
         avg_pc1: 0.2,
         avg_pc2: 0.2,
       },
@@ -226,6 +240,8 @@ const stateDetectionAnalysis: StateDetectionResult = {
         label: 'S1-2',
         count: 1,
         color_value: 0.5,
+        color_label: 'priority: Low (1)',
+        color_kind: 'categorical',
         avg_pc1: 0.8,
         avg_pc2: -0.1,
         dominant_activity: 'Close Order',
@@ -236,6 +252,8 @@ const stateDetectionAnalysis: StateDetectionResult = {
         label: 'S2-2',
         count: 0,
         color_value: 0,
+        color_label: 'priority: n/a',
+        color_kind: 'categorical',
         avg_pc1: 0.6,
         avg_pc2: 0.5,
       },
@@ -270,6 +288,35 @@ const stateDetectionAnalysis: StateDetectionResult = {
       pc2: -0.1,
       cell_x: 0,
       cell_y: 1,
+    },
+  ],
+};
+
+const stateDetectionCellDetail: StateDetectionCellDetail = {
+  cell: stateDetectionAnalysis.som.cells[0],
+  dfg: traditionalProcessGraph,
+  entering_windows: [
+    {
+      object_id: 'O1',
+      start_event: 'e1',
+      end_event: 'e2',
+      source_cell: 'S1-2',
+      target_cell: 'S1-1',
+      pc1: -0.4,
+      pc2: 0.1,
+      activities: ['Create Order', 'Close Order'],
+    },
+  ],
+  exiting_windows: [
+    {
+      object_id: 'O1',
+      start_event: 'e2',
+      end_event: 'e3',
+      source_cell: 'S1-1',
+      target_cell: 'S1-2',
+      pc1: 0.8,
+      pc2: -0.1,
+      activities: ['Close Order', 'Archive Order'],
     },
   ],
 };
@@ -387,6 +434,7 @@ describe('App', () => {
       selectedEventTypes: { set(value: string[]): void };
     };
     let stateDetectionRequest = '';
+    let stateDetectionCellRequest = '';
     let csvRequest = '';
     const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:features');
     const revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
@@ -396,6 +444,10 @@ describe('App', () => {
       stateDetectionJson: (request: string) => {
         stateDetectionRequest = request;
         return JSON.stringify(stateDetectionAnalysis);
+      },
+      stateDetectionCellJson: (request: string) => {
+        stateDetectionCellRequest = request;
+        return JSON.stringify(stateDetectionCellDetail);
       },
       stateFeatureTableCsv: (request: string) => {
         csvRequest = request;
@@ -424,21 +476,51 @@ describe('App', () => {
       window_size: 4,
       som_width: 5,
       som_height: 5,
+      color_attribute: '__window_count',
     });
     expect(native.textContent).toContain('State Detection');
     expect(native.textContent).toContain('Feature Table');
     expect(native.textContent).toContain('Self-Organizing Map');
     expect(native.textContent).toContain('State Transitions');
     expect(native.textContent).toContain('85%');
+    expect(native.textContent).not.toContain('PCA Windows');
+    expect(native.textContent).toContain('priority: High (2)');
     expect(native.querySelectorAll('.som-cell').length).toBe(4);
     expect(native.querySelector('.som-cell')?.getAttribute('title')).toContain('Create Order');
     expect(native.querySelector('.transition-list .is-nearby')).toBeTruthy();
 
-    native.querySelector<HTMLButtonElement>('.state-detection-controls .ghost-button')?.click();
+    native.querySelector<HTMLButtonElement>('.feature-table-preview .ghost-button')?.click();
 
     expect(JSON.parse(csvRequest).object_type).toBe('Order');
     expect(createObjectUrl).toHaveBeenCalled();
     expect(clickSpy).toHaveBeenCalled();
+
+    native.querySelector<HTMLButtonElement>('.som-cell')?.click();
+    fixture.detectChanges();
+
+    expect(JSON.parse(stateDetectionCellRequest)).toEqual({
+      object_type: 'Order',
+      window_size: 4,
+      som_width: 5,
+      som_height: 5,
+      color_attribute: 'attribute::priority',
+      cell_x: 0,
+      cell_y: 0,
+    });
+    expect(native.querySelector('.state-detection-cell-modal')).toBeTruthy();
+    expect(native.textContent).toContain('Entering windows');
+    expect(native.textContent).toContain('Exiting windows');
+    expect(native.textContent).toContain('Object-Centric Directly-Follows Graph');
+
+    native.querySelectorAll<HTMLButtonElement>('.state-detection-cell-tabs button')[1].click();
+    fixture.detectChanges();
+    expect(native.textContent).toContain('S1-2 -> S1-1');
+    expect(native.textContent).toContain('Create Order -> Close Order');
+
+    native.querySelectorAll<HTMLButtonElement>('.state-detection-cell-tabs button')[2].click();
+    fixture.detectChanges();
+    expect(native.textContent).toContain('S1-1 -> S1-2');
+    expect(native.textContent).toContain('Archive Order');
 
     createObjectUrl.mockRestore();
     revokeObjectUrl.mockRestore();

@@ -14,6 +14,9 @@ import {
   StateDetectionPreviewRow,
   StateDetectionSomCell,
   StateDetectionSomTransition,
+  StateDetectionCellDetail,
+  StateDetectionBoundaryWindow,
+  StateDetectionColorOption,
   OcelSummary,
   OcelWasmService,
   StateQueryResult,
@@ -50,6 +53,7 @@ interface FilterRequest {
 
 type FilterDialogKind = 'activities' | 'objectTypes';
 type PatternTab = 'intra' | 'inter';
+type StateDetectionCellTab = 'dfg' | 'entering' | 'exiting';
 type PatternVisualization = 'text' | 'graph';
 type FeaturePage = 'statistics' | 'stateDetection' | 'ocdfg' | 'patterns' | 'stateAwareOcdfg';
 
@@ -132,7 +136,12 @@ export class App {
   protected readonly stateDetectionWindowSize = signal(4);
   protected readonly stateDetectionSomWidth = signal(5);
   protected readonly stateDetectionSomHeight = signal(5);
+  protected readonly stateDetectionColorAttribute = signal('__window_count');
+  protected readonly stateDetectionColorOptions =
+    signal<StateDetectionColorOption[]>(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
   protected readonly stateDetectionAnalysis = signal<StateDetectionResult | null>(null);
+  protected readonly stateDetectionCellDetail = signal<StateDetectionCellDetail | null>(null);
+  protected readonly stateDetectionCellTab = signal<StateDetectionCellTab>('dfg');
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
@@ -402,6 +411,10 @@ export class App {
       this.stateDetectionWindowSize.set(4);
       this.stateDetectionSomWidth.set(5);
       this.stateDetectionSomHeight.set(5);
+      this.stateDetectionColorAttribute.set('__window_count');
+      this.stateDetectionColorOptions.set(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
+      this.stateDetectionCellDetail.set(null);
+      this.stateDetectionCellTab.set('dfg');
       this.resetGraphSettings(imported.filterOptions.object_types);
       this.loadTraditionalOcdfg();
       this.selectedIntraPatternId.set('');
@@ -433,6 +446,10 @@ export class App {
       this.traditionalOcdfg.set(null);
       this.stateDetectionAnalysis.set(null);
       this.stateDetectionObjectType.set('');
+      this.stateDetectionColorAttribute.set('__window_count');
+      this.stateDetectionColorOptions.set(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
+      this.stateDetectionCellDetail.set(null);
+      this.stateDetectionCellTab.set('dfg');
       this.resetGraphSettings([]);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
@@ -602,6 +619,11 @@ export class App {
     this.stateDetectionAnalysis.set(null);
   }
 
+  protected onStateDetectionColorAttributeChange(event: Event): void {
+    this.stateDetectionColorAttribute.set((event.target as HTMLSelectElement).value);
+    this.stateDetectionAnalysis.set(null);
+  }
+
   protected runStateDetection(): void {
     this.loadStateDetection();
   }
@@ -628,6 +650,10 @@ export class App {
     return analysis.feature_columns.slice(0, limit);
   }
 
+  protected previewRows(analysis: StateDetectionResult): StateDetectionPreviewRow[] {
+    return analysis.table_preview.slice(0, 15);
+  }
+
   protected previewValues(row: StateDetectionPreviewRow, limit = 10): number[] {
     return row.values.slice(0, limit);
   }
@@ -647,7 +673,7 @@ export class App {
 
   protected somCellTitle(cell: StateDetectionSomCell): string {
     const activity = cell.dominant_activity ? ` | ${cell.dominant_activity}` : '';
-    return `${cell.label}: ${cell.count.toLocaleString()} windows${activity}`;
+    return `${cell.label}: ${cell.count.toLocaleString()} windows | ${cell.color_label}${activity}`;
   }
 
   protected topSomTransitions(
@@ -663,6 +689,60 @@ export class App {
 
   protected percent(value: number): string {
     return `${Math.round(value * 1000) / 10}%`;
+  }
+
+  protected openStateDetectionCell(cell: StateDetectionSomCell): void {
+    if (!this.documentHandle || !this.stateDetectionAnalysis()) {
+      return;
+    }
+
+    try {
+      const request = {
+        ...JSON.parse(this.stateDetectionRequestJson()),
+        cell_x: cell.x,
+        cell_y: cell.y,
+      };
+      const detail = JSON.parse(
+        this.documentHandle.stateDetectionCellJson(JSON.stringify(request)),
+      ) as StateDetectionCellDetail;
+      this.stateDetectionCellDetail.set(detail);
+      this.stateDetectionCellTab.set('dfg');
+      this.errorMessage.set('');
+    } catch (error) {
+      this.stateDetectionCellDetail.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  protected closeStateDetectionCell(): void {
+    this.stateDetectionCellDetail.set(null);
+    this.stateDetectionCellTab.set('dfg');
+  }
+
+  protected setStateDetectionCellTab(tab: StateDetectionCellTab): void {
+    this.stateDetectionCellTab.set(tab);
+  }
+
+  protected stateDetectionCellGraphSettings(): ProcessGraphSettings {
+    const objectType = this.stateDetectionAnalysis()?.object_type ?? this.stateDetectionObjectType();
+    return {
+      object_types: objectType ? [objectType] : [],
+      min_activity_frequency: 1,
+      min_path_frequency: 1,
+    };
+  }
+
+  protected stateDetectionCellObjectTypes(): string[] {
+    const objectType = this.stateDetectionAnalysis()?.object_type ?? this.stateDetectionObjectType();
+    return objectType ? [objectType] : [];
+  }
+
+  protected ignoreStateDetectionCellGraphSettings(_settings: ProcessGraphSettings): void {
+    return;
+  }
+
+  protected boundaryWindowRoute(window: StateDetectionBoundaryWindow): string {
+    return `${window.source_cell} -> ${window.target_cell}`;
   }
 
   protected summaryDisplayValue(metric: SummaryMetric): SummaryDisplayValue {
@@ -845,6 +925,9 @@ export class App {
         this.documentHandle.stateDetectionJson(this.stateDetectionRequestJson()),
       ) as StateDetectionResult;
       this.stateDetectionAnalysis.set(analysis);
+      this.stateDetectionColorOptions.set(analysis.color_attributes);
+      this.stateDetectionColorAttribute.set(analysis.color_attribute);
+      this.stateDetectionCellDetail.set(null);
       this.errorMessage.set('');
     } catch (error) {
       this.stateDetectionAnalysis.set(null);
@@ -858,6 +941,7 @@ export class App {
       window_size: this.stateDetectionWindowSize(),
       som_width: this.stateDetectionSomWidth(),
       som_height: this.stateDetectionSomHeight(),
+      color_attribute: this.stateDetectionColorAttribute(),
     });
   }
 
@@ -972,6 +1056,7 @@ export class App {
       this.loadTraditionalOcdfg();
       this.updateStateMessageAfterFilter(nextSummary);
       this.ensureStateDetectionObjectType();
+      this.stateDetectionCellDetail.set(null);
       if (this.activeFeature() === 'stateDetection' || this.stateDetectionAnalysis()) {
         this.loadStateDetection();
       }
@@ -1041,6 +1126,14 @@ function emptyGraphSettings(): ProcessGraphSettings {
     min_path_frequency: 1,
   };
 }
+
+const DEFAULT_STATE_DETECTION_COLOR_OPTIONS: StateDetectionColorOption[] = [
+  {
+    id: '__window_count',
+    label: 'Assigned windows',
+    kind: 'count',
+  },
+];
 
 const STATIC_SAMPLE_LOGS: StaticSampleLog[] = [
   {

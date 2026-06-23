@@ -587,7 +587,9 @@ textarea:focus {
 
 .state-detection-controls {
   display: grid;
-  grid-template-columns: minmax(190px, 1.4fr) repeat(3, minmax(96px, 0.55fr)) auto auto;
+  grid-template-columns:
+    minmax(180px, 1.2fr) repeat(3, minmax(92px, 0.45fr)) minmax(190px, 1fr)
+    auto;
   gap: 10px;
   align-items: end;
   border: 1px solid #d7dfdd;
@@ -605,8 +607,7 @@ textarea:focus {
 .state-detection-summary span,
 .feature-table-preview header span,
 .som-panel header span,
-.som-transitions header span,
-.window-preview header span {
+.som-transitions header span {
   color: #5c6c68;
   font-size: 0.78rem;
   font-weight: 800;
@@ -634,8 +635,7 @@ textarea:focus {
 .state-detection-summary article,
 .feature-table-preview,
 .som-panel,
-.som-transitions,
-.window-preview {
+.som-transitions {
   border: 1px solid #d7dfdd;
   border-radius: 8px;
   background: #ffffff;
@@ -663,8 +663,7 @@ textarea:focus {
 
 .feature-table-preview,
 .som-panel,
-.som-transitions,
-.window-preview {
+.som-transitions {
   display: grid;
   gap: 12px;
   padding: 14px;
@@ -676,12 +675,16 @@ textarea:focus {
 
 .feature-table-preview header,
 .som-panel header,
-.som-transitions header,
-.window-preview header {
+.som-transitions header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.feature-table-preview header > div {
+  display: grid;
+  gap: 4px;
 }
 
 .table-scroll {
@@ -735,6 +738,7 @@ textarea:focus {
   color: #0f2b27;
   padding: 8px;
   text-align: center;
+  cursor: pointer;
 }
 
 .som-cell.is-empty {
@@ -752,6 +756,15 @@ textarea:focus {
   line-height: 1;
 }
 
+.som-cell em {
+  max-width: 100%;
+  color: currentColor;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
 .som-cell small {
   max-width: 100%;
   color: currentColor;
@@ -760,14 +773,12 @@ textarea:focus {
   overflow-wrap: anywhere;
 }
 
-.transition-list,
-.window-list {
+.transition-list {
   display: grid;
   gap: 8px;
 }
 
-.transition-list p,
-.window-list p {
+.transition-list p {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 10px;
@@ -783,8 +794,7 @@ textarea:focus {
   background: #edf8f5;
 }
 
-.transition-list span,
-.window-list span {
+.transition-list span {
   overflow-wrap: anywhere;
 }
 
@@ -799,16 +809,77 @@ textarea:focus {
   color: #ffffff;
 }
 
-.transition-list small,
-.window-list small {
+.transition-list small {
   color: #5c6c68;
   font-size: 0.76rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 
-.window-list p {
-  grid-template-columns: minmax(86px, auto) minmax(0, 1fr) auto;
+.state-detection-cell-modal {
+  width: min(1380px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+}
+
+.state-detection-cell-modal .state-modal-header p {
+  margin: 0;
+  color: #5c6c68;
+  font-weight: 800;
+}
+
+.state-detection-cell-tabs {
+  border-bottom: 1px solid #d7dfdd;
+  padding: 12px 16px;
+}
+
+.state-detection-cell-body {
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+}
+
+.boundary-window-list {
+  display: grid;
+  gap: 10px;
+}
+
+.boundary-window-list article {
+  display: grid;
+  gap: 8px;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.boundary-window-list header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.boundary-window-list header span {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border-radius: 6px;
+  background: #edf8f5;
+  color: #1d4f49;
+  padding: 0 8px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.boundary-window-list p,
+.boundary-window-list small {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.boundary-window-list small {
+  color: #5c6c68;
+  font-weight: 800;
 }
 
 .patterns {
@@ -1108,8 +1179,7 @@ textarea:focus {
   }
 
   .som-panel,
-  .som-transitions,
-  .window-preview {
+  .som-transitions {
     min-width: 0;
   }
 
@@ -1166,8 +1236,7 @@ textarea:focus {
     min-height: 74px;
   }
 
-  .transition-list p,
-  .window-list p {
+  .transition-list p {
     grid-template-columns: 1fr;
     justify-items: start;
   }

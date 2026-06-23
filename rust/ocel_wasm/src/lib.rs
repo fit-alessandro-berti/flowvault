@@ -251,6 +251,19 @@ struct StateDetectionRequest {
     som_width: Option<usize>,
     som_height: Option<usize>,
     epochs: Option<usize>,
+    color_attribute: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct StateDetectionCellRequest {
+    object_type: String,
+    window_size: Option<usize>,
+    som_width: Option<usize>,
+    som_height: Option<usize>,
+    epochs: Option<usize>,
+    color_attribute: Option<String>,
+    cell_x: usize,
+    cell_y: usize,
 }
 
 #[derive(Default)]
@@ -716,6 +729,22 @@ impl CompactOcelLog {
             .map_err(|err| OcelError::new(format!("could not serialize state detection: {err}")))
     }
 
+    fn state_detection_cell_json(&self, request: &StateDetectionCellRequest) -> OcelResult<String> {
+        let state_request = StateDetectionRequest {
+            object_type: request.object_type.clone(),
+            window_size: request.window_size,
+            som_width: request.som_width,
+            som_height: request.som_height,
+            epochs: request.epochs,
+            color_attribute: request.color_attribute.clone(),
+        };
+        let run = self.compute_state_detection_run(&state_request)?;
+        let detail = self.state_detection_cell_detail(&run, request.cell_x, request.cell_y)?;
+        serde_json::to_string(&detail).map_err(|err| {
+            OcelError::new(format!("could not serialize state detection cell: {err}"))
+        })
+    }
+
     fn state_feature_table_csv(&self, request: &StateDetectionRequest) -> OcelResult<String> {
         let table = self.state_feature_table(&request.object_type)?;
         Ok(feature_table_to_csv(&table))
@@ -758,6 +787,57 @@ impl CompactOcelLog {
         &self,
         request: &StateDetectionRequest,
     ) -> OcelResult<StateDetectionResult> {
+        let run = self.compute_state_detection_run(request)?;
+        let window_size = request.window_size.unwrap_or(4).clamp(1, 30);
+        let som_width = run.som.width;
+        let som_height = run.som.weights.len() / som_width;
+        let som_summary =
+            self.summarize_som(&run.windows, &run.pca.points, &run.som, &run.color_metric);
+        let feature_columns = run
+            .encoder
+            .columns
+            .iter()
+            .map(FeatureColumn::label)
+            .collect::<Vec<_>>();
+        let table_preview = run
+            .feature_table
+            .rows
+            .iter()
+            .take(15)
+            .map(|row| FeaturePreviewRow {
+                object_id: row.object_id.clone(),
+                values: row.values.clone(),
+            })
+            .collect();
+        let projected_windows = self.projected_windows(&run, 500);
+
+        Ok(StateDetectionResult {
+            object_type: request.object_type.clone(),
+            window_size,
+            som_width,
+            som_height,
+            color_attribute: run.color_metric.id(),
+            color_attributes: run.color_options,
+            object_count: run.object_indices.len(),
+            feature_count: feature_columns.len(),
+            window_count: run.windows.len(),
+            feature_columns,
+            table_preview,
+            pca: PcaSummary {
+                pc1_variance: round_f64(run.pca.pc1_variance),
+                pc2_variance: round_f64(run.pca.pc2_variance),
+                pc1_explained_ratio: round_f64(run.pca.pc1_explained_ratio),
+                pc2_explained_ratio: round_f64(run.pca.pc2_explained_ratio),
+            },
+            som: som_summary,
+            windows: projected_windows,
+        })
+    }
+
+    fn compute_state_detection_run(
+        &self,
+        request: &StateDetectionRequest,
+    ) -> OcelResult<StateDetectionRun> {
         let object_type_symbol =
             self.object_type_symbol(&request.object_type)
                 .ok_or_else(|| {
@@ -809,27 +889,103 @@ impl CompactOcelLog {
             som_height,
             request.epochs.unwrap_or(120).clamp(10, 500),
         );
-        let som_summary = self.summarize_som(&windows, &pca.points, &som);
         let feature_table = self.state_feature_table(&request.object_type)?;
-        let feature_columns = encoder
-            .columns
+        let color_options = self.state_detection_color_options(&object_indices);
+        let color_metric =
+            self.resolve_color_metric(request.color_attribute.as_deref(), &color_options);
+
+        Ok(StateDetectionRun {
+            object_indices,
+            encoder,
+            feature_table,
+            windows,
+            pca,
+            som,
+            color_metric,
+            color_options,
+        })
+    }
+
+    fn state_detection_color_options(
+        &self,
+        object_indices: &[usize],
+    ) -> Vec<StateDetectionColorOption> {
+        let mut attributes = BTreeMap::<String, AttributeFeatureCollector>::new();
+        for object_index in object_indices {
+            let object = &self.objects[*object_index];
+            for attribute in &object.attributes {
+                let entry = attributes
+                    .entry(self.pool.resolve(attribute.name).to_owned())
+                    .or_default();
+                if attr_value_to_f64(&attribute.value).is_some() {
+                    entry.has_numeric = true;
+                } else {
+                    entry
+                        .categories
+                        .insert(self.attr_value_label(&attribute.value));
+                }
+            }
+        }
+
+        let mut options = vec![StateDetectionColorOption {
+            id: "__window_count".to_owned(),
+            label: "Assigned windows".to_owned(),
+            kind: "count",
+        }];
+        for (name, collector) in attributes {
+            if collector.has_numeric && collector.categories.is_empty() {
+                options.push(StateDetectionColorOption {
+                    id: format!("attribute::{name}"),
+                    label: name,
+                    kind: "numeric",
+                });
+            } else if !collector.categories.is_empty() && collector.categories.len() < 50 {
+                options.push(StateDetectionColorOption {
+                    id: format!("attribute::{name}"),
+                    label: name,
+                    kind: "categorical",
+                });
+            }
+        }
+        options
+    }
+
+    fn resolve_color_metric(
+        &self,
+        requested: Option<&str>,
+        options: &[StateDetectionColorOption],
+    ) -> ColorMetric {
+        let Some(requested) = requested else {
+            return ColorMetric::WindowCount;
+        };
+        if requested == "__window_count" {
+            return ColorMetric::WindowCount;
+        }
+        let Some(option) = options.iter().find(|option| option.id == requested) else {
+            return ColorMetric::WindowCount;
+        };
+        let attribute_name = option
+            .id
+            .strip_prefix("attribute::")
+            .unwrap_or(&option.label)
+            .to_owned();
+        match option.kind {
+            "numeric" => ColorMetric::NumericAttribute(attribute_name),
+            "categorical" => ColorMetric::CategoricalAttribute(attribute_name),
+            _ => ColorMetric::WindowCount,
+        }
+    }
+
+    fn projected_windows(
+        &self,
+        run: &StateDetectionRun,
+        limit: usize,
+    ) -> Vec<StateWindowProjection> {
+        run.windows
             .iter()
-            .map(FeatureColumn::label)
-            .collect::<Vec<_>>();
-        let table_preview = feature_table
-            .rows
-            .iter()
-            .take(10)
-            .map(|row| FeaturePreviewRow {
-                object_id: row.object_id.clone(),
-                values: row.values.clone(),
-            })
-            .collect();
-        let projected_windows = windows
-            .iter()
-            .zip(pca.points.iter())
-            .zip(som.assignments.iter())
-            .take(500)
+            .zip(run.pca.points.iter())
+            .zip(run.som.assignments.iter())
+            .take(limit)
             .map(|((window, (pc1, pc2)), (cell_x, cell_y))| {
                 let object = &self.objects[window.object_index];
                 let first_event = window
@@ -852,27 +1008,202 @@ impl CompactOcelLog {
                     cell_y: *cell_y,
                 }
             })
-            .collect();
+            .collect()
+    }
 
-        Ok(StateDetectionResult {
-            object_type: request.object_type.clone(),
-            window_size,
-            som_width,
-            som_height,
-            object_count: object_indices.len(),
-            feature_count: feature_columns.len(),
-            window_count: windows.len(),
-            feature_columns,
-            table_preview,
-            pca: PcaSummary {
-                pc1_variance: round_f64(pca.pc1_variance),
-                pc2_variance: round_f64(pca.pc2_variance),
-                pc1_explained_ratio: round_f64(pca.pc1_explained_ratio),
-                pc2_explained_ratio: round_f64(pca.pc2_explained_ratio),
-            },
-            som: som_summary,
-            windows: projected_windows,
+    fn state_detection_cell_detail(
+        &self,
+        run: &StateDetectionRun,
+        cell_x: usize,
+        cell_y: usize,
+    ) -> OcelResult<StateDetectionCellDetail> {
+        let height = run.som.weights.len() / run.som.width;
+        if cell_x >= run.som.width || cell_y >= height {
+            return Err(OcelError::new(format!(
+                "SOM cell {},{} is outside the {}x{} grid",
+                cell_x, cell_y, run.som.width, height
+            )));
+        }
+
+        let som_summary =
+            self.summarize_som(&run.windows, &run.pca.points, &run.som, &run.color_metric);
+        let cell = som_summary
+            .cells
+            .into_iter()
+            .find(|cell| cell.x == cell_x && cell.y == cell_y)
+            .expect("validated SOM cell must exist");
+        let dfg = self.state_detection_cell_dfg(run, cell_x, cell_y);
+        let (entering_windows, exiting_windows) =
+            self.state_detection_boundary_windows(run, cell_x, cell_y);
+
+        Ok(StateDetectionCellDetail {
+            cell,
+            dfg,
+            entering_windows,
+            exiting_windows,
         })
+    }
+
+    fn state_detection_cell_dfg(
+        &self,
+        run: &StateDetectionRun,
+        cell_x: usize,
+        cell_y: usize,
+    ) -> LayoutGraph {
+        let mut graph = GraphAccumulator::new(
+            format!("State Detection Cell S{}-{}", cell_x + 1, cell_y + 1),
+            "Directly-follows graph over windows assigned to the selected SOM cell".to_owned(),
+        );
+        let object_type = self
+            .pool
+            .resolve(self.objects[run.windows[0].object_index].type_name);
+
+        for (window, (assigned_x, assigned_y)) in run.windows.iter().zip(run.som.assignments.iter())
+        {
+            if *assigned_x != cell_x || *assigned_y != cell_y || window.event_indices.is_empty() {
+                continue;
+            }
+            self.accumulate_window_directly_follows(&mut graph, window, object_type);
+        }
+
+        layout_accumulated_graph(graph)
+    }
+
+    fn accumulate_window_directly_follows(
+        &self,
+        graph: &mut GraphAccumulator,
+        window: &WindowEncoding,
+        object_type: &str,
+    ) {
+        let start = object_boundary_label("START", object_type);
+        let end = object_boundary_label("END", object_type);
+        graph.add_object_boundary_node(&start, "object-start", object_type, 0.0, 1);
+        graph.add_object_boundary_node(
+            &end,
+            "object-end",
+            object_type,
+            window.event_indices.len() as f64 + 1.0,
+            1,
+        );
+
+        for (position, event_index) in window.event_indices.iter().enumerate() {
+            let event_type = self.pool.resolve(self.events[*event_index].type_name);
+            graph.add_node(event_type, "activity", position as f64 + 1.0, 1);
+        }
+
+        if let Some(first_index) = window.event_indices.first() {
+            let first = self.pool.resolve(self.events[*first_index].type_name);
+            graph.add_edge(&start, first, object_type, 1);
+        }
+        for pair in window.event_indices.windows(2) {
+            let [source_index, target_index] = pair else {
+                continue;
+            };
+            let source = self.pool.resolve(self.events[*source_index].type_name);
+            let target = self.pool.resolve(self.events[*target_index].type_name);
+            graph.add_edge(source, target, object_type, 1);
+        }
+        if let Some(last_index) = window.event_indices.last() {
+            let last = self.pool.resolve(self.events[*last_index].type_name);
+            graph.add_edge(last, &end, object_type, 1);
+        }
+    }
+
+    fn state_detection_boundary_windows(
+        &self,
+        run: &StateDetectionRun,
+        cell_x: usize,
+        cell_y: usize,
+    ) -> (
+        Vec<StateDetectionBoundaryWindow>,
+        Vec<StateDetectionBoundaryWindow>,
+    ) {
+        let mut entering = Vec::new();
+        let mut exiting = Vec::new();
+
+        for index in 1..run.windows.len() {
+            let previous = &run.windows[index - 1];
+            let current = &run.windows[index];
+            if previous.object_index != current.object_index {
+                continue;
+            }
+            let source = run.som.assignments[index - 1];
+            let target = run.som.assignments[index];
+            if source == target {
+                continue;
+            }
+            if target == (cell_x, cell_y) {
+                entering.push(self.boundary_window_summary(run, index, source, target));
+            }
+            if source == (cell_x, cell_y) {
+                exiting.push(self.boundary_window_summary(run, index - 1, source, target));
+            }
+        }
+
+        entering.truncate(100);
+        exiting.truncate(100);
+        (entering, exiting)
+    }
+
+    fn boundary_window_summary(
+        &self,
+        run: &StateDetectionRun,
+        window_index: usize,
+        source: (usize, usize),
+        target: (usize, usize),
+    ) -> StateDetectionBoundaryWindow {
+        let window = &run.windows[window_index];
+        let projection = self.projected_window(window, run.pca.points[window_index], target);
+        StateDetectionBoundaryWindow {
+            object_id: projection.object_id,
+            start_event: projection.start_event,
+            end_event: projection.end_event,
+            source_cell: cell_label(source.0, source.1),
+            target_cell: cell_label(target.0, target.1),
+            pc1: projection.pc1,
+            pc2: projection.pc2,
+            activities: self.window_activity_sequence(window),
+        }
+    }
+
+    fn projected_window(
+        &self,
+        window: &WindowEncoding,
+        point: (f64, f64),
+        cell: (usize, usize),
+    ) -> StateWindowProjection {
+        let object = &self.objects[window.object_index];
+        let first_event = window
+            .event_indices
+            .first()
+            .map(|event_index| self.pool.resolve(self.events[*event_index].id))
+            .unwrap_or("");
+        let last_event = window
+            .event_indices
+            .last()
+            .map(|event_index| self.pool.resolve(self.events[*event_index].id))
+            .unwrap_or("");
+        StateWindowProjection {
+            object_id: self.pool.resolve(object.id).to_owned(),
+            start_event: first_event.to_owned(),
+            end_event: last_event.to_owned(),
+            pc1: round_f64(point.0),
+            pc2: round_f64(point.1),
+            cell_x: cell.0,
+            cell_y: cell.1,
+        }
+    }
+
+    fn window_activity_sequence(&self, window: &WindowEncoding) -> Vec<String> {
+        window
+            .event_indices
+            .iter()
+            .map(|event_index| {
+                self.pool
+                    .resolve(self.events[*event_index].type_name)
+                    .to_owned()
+            })
+            .collect()
     }
 
     fn build_feature_encoder(&self, object_indices: &[usize]) -> FeatureEncoder {
@@ -1117,10 +1448,14 @@ impl CompactOcelLog {
         windows: &[WindowEncoding],
         points: &[(f64, f64)],
         som: &SomModel,
+        color_metric: &ColorMetric,
     ) -> SomSummary {
         let mut cell_counts = vec![0usize; som.width * som.weights.len() / som.width];
         let mut pc_sums = vec![(0.0, 0.0); cell_counts.len()];
         let mut activity_counts = vec![BTreeMap::<String, usize>::new(); cell_counts.len()];
+        let mut numeric_color_sums = vec![(0.0, 0usize); cell_counts.len()];
+        let mut categorical_color_counts =
+            vec![BTreeMap::<String, usize>::new(); cell_counts.len()];
         let mut transitions = BTreeMap::<(usize, usize, usize, usize), usize>::new();
 
         for ((window, (pc1, pc2)), (cell_x, cell_y)) in windows
@@ -1134,6 +1469,24 @@ impl CompactOcelLog {
             pc_sums[cell_index].1 += *pc2;
             if let Some(activity) = self.dominant_window_activity(window) {
                 *activity_counts[cell_index].entry(activity).or_default() += 1;
+            }
+            match color_metric {
+                ColorMetric::WindowCount => {}
+                ColorMetric::NumericAttribute(name) => {
+                    if let Some(value) = self.window_attribute_value(window, name) {
+                        if let Some(number) = attr_value_to_f64(value) {
+                            numeric_color_sums[cell_index].0 += number;
+                            numeric_color_sums[cell_index].1 += 1;
+                        }
+                    }
+                }
+                ColorMetric::CategoricalAttribute(name) => {
+                    if let Some(value) = self.window_attribute_value(window, name) {
+                        *categorical_color_counts[cell_index]
+                            .entry(self.attr_value_label(value))
+                            .or_default() += 1;
+                    }
+                }
             }
         }
 
@@ -1157,6 +1510,24 @@ impl CompactOcelLog {
         }
 
         let max_count = cell_counts.iter().copied().max().unwrap_or(0).max(1);
+        let numeric_averages = numeric_color_sums
+            .iter()
+            .map(|(sum, count)| (*count > 0).then_some(sum / *count as f64))
+            .collect::<Vec<_>>();
+        let numeric_min = numeric_averages
+            .iter()
+            .filter_map(|value| *value)
+            .fold(f64::INFINITY, f64::min);
+        let numeric_max = numeric_averages
+            .iter()
+            .filter_map(|value| *value)
+            .fold(f64::NEG_INFINITY, f64::max);
+        let categorical_max = categorical_color_counts
+            .iter()
+            .filter_map(|counts| counts.values().max().copied())
+            .max()
+            .unwrap_or(1)
+            .max(1);
         let height = som.weights.len() / som.width;
         let mut cells = Vec::with_capacity(som.weights.len());
         for y in 0..height {
@@ -1167,12 +1538,54 @@ impl CompactOcelLog {
                     .iter()
                     .max_by(|left, right| left.1.cmp(right.1).then_with(|| right.0.cmp(left.0)))
                     .map(|(activity, _)| activity.clone());
+                let (color_value, color_label, color_kind) = match color_metric {
+                    ColorMetric::WindowCount => (
+                        count as f64 / max_count as f64,
+                        format!("{} windows", count),
+                        "count".to_owned(),
+                    ),
+                    ColorMetric::NumericAttribute(name) => {
+                        if let Some(average) = numeric_averages[index] {
+                            let normalized = if (numeric_max - numeric_min).abs() <= f64::EPSILON {
+                                1.0
+                            } else {
+                                (average - numeric_min) / (numeric_max - numeric_min)
+                            };
+                            (
+                                normalized,
+                                format!("avg {name}: {}", format_numeric_feature(average)),
+                                "numeric".to_owned(),
+                            )
+                        } else {
+                            (0.0, format!("avg {name}: n/a"), "numeric".to_owned())
+                        }
+                    }
+                    ColorMetric::CategoricalAttribute(name) => {
+                        let dominant_category =
+                            categorical_color_counts[index]
+                                .iter()
+                                .max_by(|left, right| {
+                                    left.1.cmp(right.1).then_with(|| right.0.cmp(left.0))
+                                });
+                        if let Some((category, category_count)) = dominant_category {
+                            (
+                                *category_count as f64 / categorical_max as f64,
+                                format!("{name}: {category} ({category_count})"),
+                                "categorical".to_owned(),
+                            )
+                        } else {
+                            (0.0, format!("{name}: n/a"), "categorical".to_owned())
+                        }
+                    }
+                };
                 cells.push(SomCellSummary {
                     x,
                     y,
                     label: format!("S{}-{}", x + 1, y + 1),
                     count,
-                    color_value: round_f64(count as f64 / max_count as f64),
+                    color_value: round_f64(color_value),
+                    color_label,
+                    color_kind,
                     avg_pc1: round_f64(if count == 0 {
                         som.weights[index].0
                     } else {
@@ -1213,6 +1626,21 @@ impl CompactOcelLog {
         });
 
         SomSummary { cells, transitions }
+    }
+
+    fn window_attribute_value<'a>(
+        &'a self,
+        window: &WindowEncoding,
+        attribute_name: &str,
+    ) -> Option<&'a AttrValue> {
+        let object = &self.objects[window.object_index];
+        let event_time = window
+            .event_indices
+            .last()
+            .map(|event_index| self.events[*event_index].time_ms)
+            .unwrap_or(i64::MAX);
+        self.latest_attribute_values_at(object, event_time)
+            .remove(attribute_name)
     }
 
     fn dominant_window_activity(&self, window: &WindowEncoding) -> Option<String> {
@@ -2070,6 +2498,8 @@ struct StateDetectionResult {
     window_size: usize,
     som_width: usize,
     som_height: usize,
+    color_attribute: String,
+    color_attributes: Vec<StateDetectionColorOption>,
     object_count: usize,
     feature_count: usize,
     window_count: usize,
@@ -2078,6 +2508,14 @@ struct StateDetectionResult {
     pca: PcaSummary,
     som: SomSummary,
     windows: Vec<StateWindowProjection>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateDetectionColorOption {
+    id: String,
+    label: String,
+    kind: &'static str,
 }
 
 #[derive(Serialize)]
@@ -2111,6 +2549,8 @@ struct SomCellSummary {
     label: String,
     count: usize,
     color_value: f64,
+    color_label: String,
+    color_kind: String,
     avg_pc1: f64,
     avg_pc2: f64,
     dominant_activity: Option<String>,
@@ -2138,6 +2578,28 @@ struct StateWindowProjection {
     pc2: f64,
     cell_x: usize,
     cell_y: usize,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateDetectionCellDetail {
+    cell: SomCellSummary,
+    dfg: LayoutGraph,
+    entering_windows: Vec<StateDetectionBoundaryWindow>,
+    exiting_windows: Vec<StateDetectionBoundaryWindow>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateDetectionBoundaryWindow {
+    object_id: String,
+    start_event: String,
+    end_event: String,
+    source_cell: String,
+    target_cell: String,
+    pc1: f64,
+    pc2: f64,
+    activities: Vec<String>,
 }
 
 struct FeatureTableData {
@@ -2199,6 +2661,35 @@ struct SomModel {
     width: usize,
     assignments: Vec<(usize, usize)>,
     weights: Vec<(f64, f64)>,
+}
+
+struct StateDetectionRun {
+    object_indices: Vec<usize>,
+    encoder: FeatureEncoder,
+    feature_table: FeatureTableData,
+    windows: Vec<WindowEncoding>,
+    pca: PcaProjection,
+    som: SomModel,
+    color_metric: ColorMetric,
+    color_options: Vec<StateDetectionColorOption>,
+}
+
+#[derive(Clone)]
+enum ColorMetric {
+    WindowCount,
+    NumericAttribute(String),
+    CategoricalAttribute(String),
+}
+
+impl ColorMetric {
+    fn id(&self) -> String {
+        match self {
+            Self::WindowCount => "__window_count".to_owned(),
+            Self::NumericAttribute(name) | Self::CategoricalAttribute(name) => {
+                format!("attribute::{name}")
+            }
+        }
+    }
 }
 
 #[derive(Serialize)]
@@ -2832,6 +3323,10 @@ fn format_numeric_feature(value: f64) -> String {
     } else {
         round_f64(value).to_string()
     }
+}
+
+fn cell_label(x: usize, y: usize) -> String {
+    format!("S{}-{}", x + 1, y + 1)
 }
 
 fn attr_value_to_f64(value: &AttrValue) -> Option<f64> {
@@ -3474,6 +3969,20 @@ impl OcelDocument {
             })?;
         self.log
             .state_detection_json(&request)
+            .map_err(JsValue::from)
+    }
+
+    /// Returns details for one SOM cell, including a DFG and entering/exiting windows.
+    #[wasm_bindgen(js_name = stateDetectionCellJson)]
+    pub fn state_detection_cell_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<StateDetectionCellRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!(
+                    "could not parse state detection cell request: {err}"
+                ))
+            })?;
+        self.log
+            .state_detection_cell_json(&request)
             .map_err(JsValue::from)
     }
 
@@ -5429,6 +5938,7 @@ mod tests {
             som_width: Some(3),
             som_height: Some(3),
             epochs: Some(20),
+            color_attribute: None,
         };
 
         let table = log.state_feature_table("Purchase Order").unwrap();
@@ -5458,6 +5968,7 @@ mod tests {
             som_width: Some(3),
             som_height: Some(2),
             epochs: Some(25),
+            color_attribute: None,
         };
 
         let json = log.state_detection_json(&request).unwrap();
@@ -5475,6 +5986,61 @@ mod tests {
         assert!(analysis["windows"]
             .as_array()
             .is_some_and(|windows| !windows.is_empty()));
+    }
+
+    #[test]
+    fn colors_state_detection_cells_and_explains_selected_cell() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let request = StateDetectionRequest {
+            object_type: "Purchase Order".to_owned(),
+            window_size: Some(2),
+            som_width: Some(3),
+            som_height: Some(2),
+            epochs: Some(25),
+            color_attribute: Some("attribute::po_product".to_owned()),
+        };
+
+        let analysis: Value =
+            serde_json::from_str(&log.state_detection_json(&request).unwrap()).unwrap();
+        assert_eq!(
+            analysis["color_attribute"],
+            Value::from("attribute::po_product")
+        );
+        assert!(analysis["color_attributes"]
+            .as_array()
+            .is_some_and(|options| {
+                options.iter().any(|option| {
+                    option["id"] == Value::from("attribute::po_product")
+                        && option["kind"] == Value::from("categorical")
+                })
+            }));
+        assert!(analysis["som"]["cells"].as_array().is_some_and(|cells| {
+            cells.iter().any(|cell| {
+                cell["color_kind"] == Value::from("categorical")
+                    && cell["color_label"]
+                        .as_str()
+                        .is_some_and(|label| label.contains("po_product"))
+            })
+        }));
+
+        let detail_request = StateDetectionCellRequest {
+            object_type: "Purchase Order".to_owned(),
+            window_size: Some(2),
+            som_width: Some(3),
+            som_height: Some(2),
+            epochs: Some(25),
+            color_attribute: Some("attribute::po_product".to_owned()),
+            cell_x: 0,
+            cell_y: 0,
+        };
+        let detail: Value =
+            serde_json::from_str(&log.state_detection_cell_json(&detail_request).unwrap()).unwrap();
+        assert_eq!(detail["cell"]["label"], Value::from("S1-1"));
+        assert!(detail["dfg"]["title"]
+            .as_str()
+            .is_some_and(|title| title.contains("State Detection Cell")));
+        assert!(detail["entering_windows"].as_array().is_some());
+        assert!(detail["exiting_windows"].as_array().is_some());
     }
 
     #[test]

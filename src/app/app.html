@@ -332,10 +332,18 @@
             (input)="onStateDetectionSomHeightChange($event)"
           />
         </label>
+        <label>
+          <span>Cell color</span>
+          <select
+            [value]="stateDetectionColorAttribute()"
+            (change)="onStateDetectionColorAttributeChange($event)"
+          >
+            @for (option of stateDetectionColorOptions(); track option.id) {
+              <option [value]="option.id">{{ option.label }} ({{ option.kind }})</option>
+            }
+          </select>
+        </label>
         <button type="button" (click)="runStateDetection()">Run</button>
-        <button type="button" class="ghost-button" (click)="downloadStateFeatureTable()">
-          Download CSV
-        </button>
       </section>
 
       @if (stateDetectionAnalysis(); as analysis) {
@@ -361,10 +369,18 @@
         <section class="state-detection-grid">
           <article class="feature-table-preview">
             <header>
-              <h2>Feature Table</h2>
-              @if (hiddenFeatureColumnCount(analysis) > 0) {
-                <span>+{{ hiddenFeatureColumnCount(analysis) }} columns</span>
-              }
+              <div>
+                <h2>Feature Table</h2>
+                <span>
+                  {{ previewRows(analysis).length }} rows
+                  @if (hiddenFeatureColumnCount(analysis) > 0) {
+                    / +{{ hiddenFeatureColumnCount(analysis) }} columns
+                  }
+                </span>
+              </div>
+              <button type="button" class="ghost-button" (click)="downloadStateFeatureTable()">
+                Download CSV
+              </button>
             </header>
             <div class="table-scroll">
               <table>
@@ -377,7 +393,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @for (row of analysis.table_preview; track row.object_id) {
+                  @for (row of previewRows(analysis); track row.object_id) {
                     <tr>
                       <th>{{ row.object_id }}</th>
                       @for (value of previewValues(row); track $index) {
@@ -402,18 +418,21 @@
               aria-label="SOM cells colored by assigned lifecycle windows"
             >
               @for (cell of analysis.som.cells; track cell.label) {
-                <div
+                <button
+                  type="button"
                   class="som-cell"
                   [class.is-empty]="cell.count === 0"
                   [style.background]="somCellStyle(cell)"
                   [attr.title]="somCellTitle(cell)"
+                  (click)="openStateDetectionCell(cell)"
                 >
                   <strong>{{ cell.label }}</strong>
                   <span>{{ cell.count }}</span>
+                  <em>{{ cell.color_label }}</em>
                   @if (cell.dominant_activity) {
                     <small>{{ cell.dominant_activity }}</small>
                   }
-                </div>
+                </button>
               }
             </div>
           </article>
@@ -437,25 +456,109 @@
               <p class="muted">No cross-cell transitions.</p>
             }
           </article>
-
-          <article class="window-preview">
-            <header>
-              <h2>PCA Windows</h2>
-              <span>{{ analysis.windows.length }}/{{ analysis.window_count }}</span>
-            </header>
-            <div class="window-list">
-              @for (window of analysis.windows.slice(0, 8); track $index) {
-                <p>
-                  <strong>{{ window.object_id }}</strong>
-                  <span>{{ window.start_event }} -> {{ window.end_event }}</span>
-                  <small>S{{ window.cell_x + 1 }}-{{ window.cell_y + 1 }}</small>
-                </p>
-              }
-            </div>
-          </article>
         </section>
       }
     </section>
+  }
+
+  @if (stateDetectionCellDetail(); as detail) {
+    <div
+      class="modal-backdrop graph-modal-backdrop"
+      role="presentation"
+      (click)="closeStateDetectionCell()"
+    >
+      <section
+        class="state-modal state-detection-cell-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="state-detection-cell-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header class="state-modal-header">
+          <div>
+            <h2 id="state-detection-cell-title">{{ detail.cell.label }}</h2>
+            <p>{{ detail.cell.count }} windows / {{ detail.cell.color_label }}</p>
+          </div>
+          <button type="button" class="ghost-button" (click)="closeStateDetectionCell()">Close</button>
+        </header>
+
+        <div class="pattern-tabs state-detection-cell-tabs" role="tablist" aria-label="SOM cell detail">
+          <button
+            type="button"
+            class="pattern-tab-button"
+            role="tab"
+            [attr.aria-selected]="stateDetectionCellTab() === 'dfg'"
+            [class.is-selected]="stateDetectionCellTab() === 'dfg'"
+            (click)="setStateDetectionCellTab('dfg')"
+          >
+            DFG
+          </button>
+          <button
+            type="button"
+            class="pattern-tab-button"
+            role="tab"
+            [attr.aria-selected]="stateDetectionCellTab() === 'entering'"
+            [class.is-selected]="stateDetectionCellTab() === 'entering'"
+            (click)="setStateDetectionCellTab('entering')"
+          >
+            Entering windows <span>{{ detail.entering_windows.length }}</span>
+          </button>
+          <button
+            type="button"
+            class="pattern-tab-button"
+            role="tab"
+            [attr.aria-selected]="stateDetectionCellTab() === 'exiting'"
+            [class.is-selected]="stateDetectionCellTab() === 'exiting'"
+            (click)="setStateDetectionCellTab('exiting')"
+          >
+            Exiting windows <span>{{ detail.exiting_windows.length }}</span>
+          </button>
+        </div>
+
+        <div class="state-detection-cell-body">
+          @if (stateDetectionCellTab() === 'dfg') {
+            <app-process-graph
+              [graph]="detail.dfg"
+              [objectTypes]="stateDetectionCellObjectTypes()"
+              [settings]="stateDetectionCellGraphSettings()"
+              (applySettings)="ignoreStateDetectionCellGraphSettings($event)"
+            ></app-process-graph>
+          } @else if (stateDetectionCellTab() === 'entering') {
+            <section class="boundary-window-list" aria-label="Entering windows">
+              @for (window of detail.entering_windows; track $index) {
+                <article>
+                  <header>
+                    <strong>{{ window.object_id }}</strong>
+                    <span>{{ boundaryWindowRoute(window) }}</span>
+                  </header>
+                  <p>{{ window.start_event }} -> {{ window.end_event }}</p>
+                  <small>{{ window.activities.join(' -> ') }}</small>
+                </article>
+              }
+              @if (detail.entering_windows.length === 0) {
+                <p class="muted">No entering windows for this cell.</p>
+              }
+            </section>
+          } @else {
+            <section class="boundary-window-list" aria-label="Exiting windows">
+              @for (window of detail.exiting_windows; track $index) {
+                <article>
+                  <header>
+                    <strong>{{ window.object_id }}</strong>
+                    <span>{{ boundaryWindowRoute(window) }}</span>
+                  </header>
+                  <p>{{ window.start_event }} -> {{ window.end_event }}</p>
+                  <small>{{ window.activities.join(' -> ') }}</small>
+                </article>
+              }
+              @if (detail.exiting_windows.length === 0) {
+                <p class="muted">No exiting windows for this cell.</p>
+              }
+            </section>
+          }
+        </div>
+      </section>
+    </div>
   }
 
   @if (filterDialog(); as dialog) {
