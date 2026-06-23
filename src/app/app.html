@@ -29,14 +29,16 @@
 
   <div class="toolbar-actions">
     <button type="button" class="toolbar-button" (click)="openLlmConfig()">LLM Config</button>
-    <label class="toolbar-button">
-      <input
-        type="file"
-        accept=".json,.jsonocel,.xml,.xmlocel,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,application/gzip,application/x-gzip"
-        (change)="onFileSelected($event)"
-      />
-      Import
-    </label>
+    @if (!hasDocument()) {
+      <label class="toolbar-button">
+        <input
+          type="file"
+          accept=".json,.jsonocel,.xml,.xmlocel,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,application/gzip,application/x-gzip"
+          (change)="onFileSelected($event)"
+        />
+        Import
+      </label>
+    }
     @if (hasDocument()) {
       <div class="toolbar-popover-anchor">
         <button type="button" class="toolbar-button" (click)="toggleExportMenu()">Export</button>

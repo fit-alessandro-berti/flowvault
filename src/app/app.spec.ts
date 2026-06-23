@@ -394,6 +394,7 @@ describe('App', () => {
     expect(topbarButtons).toContain('Export');
     expect(topbarButtons).not.toContain('Export JSON');
     expect(topbarButtons).not.toContain('Export XML');
+    expect(native.querySelector('.toolbar-actions input[type="file"]')).toBeFalsy();
 
     Array.from(native.querySelectorAll<HTMLButtonElement>('.toolbar-actions button'))
       .find((button) => button.textContent?.trim() === 'Export')
