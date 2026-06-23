@@ -97,6 +97,7 @@ export class App {
   protected readonly stateMessage = signal('');
   protected readonly isStateDialogOpen = signal(false);
   protected readonly selectedPresetId = signal('');
+  protected readonly selectedLeadingObjectType = signal('');
   protected readonly stateQueryDraft = signal('');
   protected readonly summary = signal<OcelSummary | null>(null);
   protected readonly originalSummary = signal<OcelSummary | null>(null);
@@ -123,6 +124,10 @@ export class App {
       this.selectedObjectTypes().length !== this.filterOptions().object_types.length,
   );
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
+  protected readonly leadingObjectTypeOptions = computed(() => {
+    const selected = this.selectedObjectTypes();
+    return selected.length > 0 ? selected : this.filterOptions().object_types;
+  });
   protected readonly appliedFilters = computed<AppliedFilterChip[]>(() => {
     const options = this.filterOptions();
     const chips: AppliedFilterChip[] = [];
@@ -227,8 +232,9 @@ export class App {
       presets.find((preset) => preset.id === this.selectedPresetId()) ?? presets[0];
 
     if (selectedPreset) {
-      this.selectedPresetId.set(selectedPreset.id);
-      this.stateQueryDraft.set(selectedPreset.query);
+      this.selectStatePreset(selectedPreset);
+    } else {
+      this.ensureLeadingObjectTypeSelection();
     }
 
     this.errorMessage.set('');
@@ -240,12 +246,22 @@ export class App {
   }
 
   selectStatePreset(preset: StateQueryPreset): void {
+    const leadingObjectType = this.validLeadingObjectType(preset.leadingObjectType);
     this.selectedPresetId.set(preset.id);
-    this.stateQueryDraft.set(preset.query);
+    this.selectedLeadingObjectType.set(leadingObjectType);
+    this.stateQueryDraft.set(withLeadingObjectTypeClause(preset.query, leadingObjectType));
   }
 
   onStateQueryDraftChange(event: Event): void {
     this.stateQueryDraft.set((event.target as HTMLTextAreaElement).value);
+  }
+
+  onLeadingObjectTypeChange(event: Event): void {
+    const leadingObjectType = (event.target as HTMLSelectElement).value;
+    this.selectedLeadingObjectType.set(leadingObjectType);
+    this.stateQueryDraft.set(
+      withLeadingObjectTypeClause(this.stateQueryDraft(), leadingObjectType),
+    );
   }
 
   applyStateQuery(): void {
@@ -255,18 +271,22 @@ export class App {
 
     this.errorMessage.set('');
     this.stateMessage.set('');
+    this.ensureLeadingObjectTypeSelection();
+    const query = withLeadingObjectTypeClause(
+      this.stateQueryDraft(),
+      this.selectedLeadingObjectType(),
+    );
+    this.stateQueryDraft.set(query);
 
     try {
-      const result = JSON.parse(
-        this.documentHandle.applyStateQuery(this.stateQueryDraft()),
-      ) as StateQueryResult;
+      const result = JSON.parse(this.documentHandle.applyStateQuery(query)) as StateQueryResult;
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
       this.loadStatePatterns();
       this.stateMessage.set(
-        `Added ${result.attribute} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
+        `Added ${result.attribute} for ${result.leading_object_type} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
       );
       this.isStateDialogOpen.set(false);
     } catch (error) {
@@ -311,6 +331,7 @@ export class App {
       this.draftEventTypes.set([]);
       this.draftObjectTypes.set([]);
       this.filterDialog.set(null);
+      this.selectedLeadingObjectType.set('');
       this.fileName.set(file.name);
       this.documentHandle?.free();
       this.documentHandle = undefined;
@@ -354,8 +375,21 @@ export class App {
 
   private initializeStatePresetForFile(fileName: string): void {
     const preset = presetsForFile(fileName)[0];
-    this.selectedPresetId.set(preset.id);
-    this.stateQueryDraft.set(preset.query);
+    this.selectStatePreset(preset);
+  }
+
+  private ensureLeadingObjectTypeSelection(): void {
+    this.selectedLeadingObjectType.set(
+      this.validLeadingObjectType(this.selectedLeadingObjectType()),
+    );
+  }
+
+  private validLeadingObjectType(candidate: string): string {
+    const options = this.leadingObjectTypeOptions();
+    if (candidate && options.includes(candidate)) {
+      return candidate;
+    }
+    return options[0] ?? this.filterOptions().object_types[0] ?? candidate;
   }
 
   protected selectIntraPattern(event: Event): void {
@@ -719,6 +753,25 @@ function toggleSelection(values: string[], value: string, checked: boolean): str
 
 function filterDescription(prefix: string, values: string[]): string {
   return values.length > 0 ? `${prefix}: ${values.join(', ')}` : `${prefix}: none`;
+}
+
+function withLeadingObjectTypeClause(query: string, leadingObjectType: string): string {
+  const clause = `FOR LEADING OBJECT TYPE '${escapeSqlString(leadingObjectType)}'`;
+  const stateHeader =
+    /^\s*STATE\s+([A-Za-z_][A-Za-z0-9_-]*)(?:\s+FOR\s+LEADING\s+OBJECT\s+TYPE\s+(?:"(?:[^"]|"")*"|'(?:[^']|'')*'|[A-Za-z_][A-Za-z0-9_-]*))?\s+AS\s+CASE/im;
+
+  if (stateHeader.test(query)) {
+    return query.replace(stateHeader, (_match, attribute: string) => {
+      const leadingWhitespace = query.match(/^\s*/)?.[0] ?? '';
+      return `${leadingWhitespace}STATE ${attribute} ${clause} AS CASE`;
+    });
+  }
+
+  return `STATE state ${clause} AS CASE\n  WHEN event.type IS NOT NULL THEN 'State'\nEND`;
+}
+
+function escapeSqlString(value: string): string {
+  return value.replace(/'/g, "''");
 }
 
 function wrapGraphLabel(label: string, maxLineLength: number, maxLines: number): string[] {

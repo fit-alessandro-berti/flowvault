@@ -113,12 +113,16 @@ describe('App', () => {
       documentHandle: unknown;
       fileName: { set(value: string): void };
       summary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedObjectTypes: { set(value: string[]): void };
       openStateDialog(): void;
     };
 
     component.documentHandle = {};
     component.fileName.set('order-management.json');
     component.summary.set(importedSummary);
+    component.filterOptions.set({ event_types: [], object_types: ['orders', 'items'] });
+    component.selectedObjectTypes.set(['orders', 'items']);
     component.openStateDialog();
     fixture.detectChanges();
 
@@ -126,8 +130,12 @@ describe('App', () => {
     expect(native.querySelector('[role="dialog"]')).toBeTruthy();
     expect(native.textContent).toContain('Fulfillment Stage');
     expect(native.textContent).toContain('Value and Weight');
+    expect(native.textContent).toContain('Leading object type');
+    expect((native.querySelector('.state-leading-control select') as HTMLSelectElement).value).toBe(
+      'orders',
+    );
     expect((native.querySelector('textarea') as HTMLTextAreaElement).value).toContain(
-      "event.type = 'failed delivery'",
+      "FOR LEADING OBJECT TYPE 'orders'",
     );
   });
 
@@ -136,19 +144,30 @@ describe('App', () => {
     const component = fixture.componentInstance as unknown as {
       documentHandle: unknown;
       summary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedObjectTypes: { set(value: string[]): void };
       stateQueryDraft: { set(value: string): void };
       applyStateQuery(): void;
     };
 
     component.documentHandle = {
       applyStateQuery: () =>
-        JSON.stringify({ attribute: 'state', assigned_events: 2, total_events: 2 }),
+        JSON.stringify({
+          attribute: 'state',
+          leading_object_type: 'Order',
+          assigned_events: 2,
+          total_events: 2,
+        }),
       summaryJson: () => JSON.stringify(statefulSummary),
       originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
     };
     component.summary.set(importedSummary);
-    component.stateQueryDraft.set("STATE state AS CASE WHEN event.type = 'x' THEN 'Open' END");
+    component.filterOptions.set({ event_types: [], object_types: ['Order'] });
+    component.selectedObjectTypes.set(['Order']);
+    component.stateQueryDraft.set(
+      "STATE state FOR LEADING OBJECT TYPE 'Order' AS CASE WHEN event.type = 'x' THEN 'Open' END",
+    );
     component.applyStateQuery();
     fixture.detectChanges();
 
@@ -258,6 +277,8 @@ describe('App', () => {
     const component = fixture.componentInstance as unknown as {
       documentHandle: unknown;
       summary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedObjectTypes: { set(value: string[]): void };
       stateQueryDraft: { set(value: string): void };
       intraVisualization: { set(value: string): void };
       interVisualization: { set(value: string): void };
@@ -266,13 +287,22 @@ describe('App', () => {
 
     component.documentHandle = {
       applyStateQuery: () =>
-        JSON.stringify({ attribute: 'state', assigned_events: 2, total_events: 2 }),
+        JSON.stringify({
+          attribute: 'state',
+          leading_object_type: 'Order',
+          assigned_events: 2,
+          total_events: 2,
+        }),
       summaryJson: () => JSON.stringify(statefulSummary),
       originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
     };
     component.summary.set(importedSummary);
-    component.stateQueryDraft.set("STATE state AS CASE WHEN event.type = 'x' THEN 'Open' END");
+    component.filterOptions.set({ event_types: [], object_types: ['Order'] });
+    component.selectedObjectTypes.set(['Order']);
+    component.stateQueryDraft.set(
+      "STATE state FOR LEADING OBJECT TYPE 'Order' AS CASE WHEN event.type = 'x' THEN 'Open' END",
+    );
     component.applyStateQuery();
     component.intraVisualization.set('graph');
     component.interVisualization.set('graph');

@@ -55,7 +55,7 @@ Flowvault implements the state-aware OCEL idea from Kretzschmann, Berti, and van
 The state query syntax is:
 
 ```sql
-STATE state AS CASE
+STATE state FOR LEADING OBJECT TYPE 'Order' AS CASE
   WHEN object.status IS NOT NULL THEN object.status
   WHEN object.state IS NOT NULL THEN object.state
   WHEN object.is_blocked = 'Yes' THEN 'Blocked'
@@ -69,7 +69,7 @@ Supported fields:
 - `event.id`, `event.type`, `event.time`, and `event.<attribute>`
 - `object.id`, `object.type`, and `object.<attribute>` for objects related to the event
 
-Object attributes are resolved at the event timestamp using the latest object attribute value at or before that time. A condition containing object fields is true if any related object satisfies the full condition. The result after `THEN` or `ELSE` can be a string/number/boolean literal or a field reference such as `object.status`.
+The `FOR LEADING OBJECT TYPE` clause selects the object lifecycle basis for the state notion. Only events related to at least one object of that type receive the derived state, and `object.*` fields are evaluated only against related objects of that leading type. Object attributes are resolved at the event timestamp using the latest object attribute value at or before that time. A condition containing object fields is true if any related leading object satisfies the full condition. The result after `THEN` or `ELSE` can be a string/number/boolean literal or a field reference such as `object.status`.
 
 Supported predicates:
 
@@ -87,19 +87,19 @@ The UI opens the state query editor as an overlay after import. For the bundled 
 - `order-management`: Fulfillment Stage, Value and Weight, Exception Risk
 - `inventory_management_simulated`: Stock Status, Activity Phase, Stock Movement
 
-Selecting a preset writes its query into the editor on the right. `OK` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
+Selecting a preset writes its query into the editor on the right and selects its leading object type. The leading object type can be changed from the dropdown above the editor; the query header is updated accordingly. `OK` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
 
 ## State Pattern Detection
 
 After a state query has been applied, Flowvault runs the pattern detection core in Rust/WebAssembly. It follows the state-determined segmentation described by Kretzschmann, Berti, and van der Aalst:
 
-- each object lifecycle is treated as a candidate leading object lifecycle;
+- each object of the selected leading object type is treated as a candidate leading object lifecycle;
 - consecutive lifecycle events with the same event `state` form an intra-state episode;
 - neighboring episodes with different states form an inter-state transition segment;
 - each segment is represented as a small graph with directly-follows control-flow edges, event-to-object-type edges, and leading-object-type context edges;
 - structurally equal segment graphs are grouped and ranked by descending support, then by control-flow mass.
 
-The browser UI shows separate intra-state and inter-state sections after state enrichment. Each section has a frequency-sorted pattern dropdown and a `Text`/`Graph` view switch. The graphical view uses deterministic native SVG layout instead of a graph dependency, because the WASM API already returns the compact graph model needed by the page.
+The browser UI shows intra-state and inter-state tabs after state enrichment. Each tab has a frequency-sorted pattern dropdown and a `Text`/`Graph` view switch. The graphical view uses deterministic native SVG layout instead of a graph dependency, because the WASM API already returns the compact graph model needed by the page.
 
 In the graph view, directly-follows and event-to-object-type edges are drawn with direction. Object-object context edges are drawn as undirected type links because they summarize co-participating object types in the segment, not a causal order.
 

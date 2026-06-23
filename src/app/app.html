@@ -795,12 +795,26 @@
             }
           </nav>
 
-          <textarea
-            spellcheck="false"
-            [value]="stateQueryDraft()"
-            (input)="onStateQueryDraftChange($event)"
-            aria-label="SQL-like state query"
-          ></textarea>
+          <div class="state-editor">
+            <label class="state-leading-control">
+              <span>Leading object type</span>
+              <select
+                [value]="selectedLeadingObjectType()"
+                (change)="onLeadingObjectTypeChange($event)"
+              >
+                @for (objectType of leadingObjectTypeOptions(); track objectType) {
+                  <option [value]="objectType">{{ objectType }}</option>
+                }
+              </select>
+            </label>
+
+            <textarea
+              spellcheck="false"
+              [value]="stateQueryDraft()"
+              (input)="onStateQueryDraftChange($event)"
+              aria-label="SQL-like state query"
+            ></textarea>
+          </div>
         </div>
 
         <footer class="state-modal-footer">

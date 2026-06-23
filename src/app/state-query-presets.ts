@@ -2,6 +2,7 @@ export interface StateQueryPreset {
   id: string;
   logKey: string;
   name: string;
+  leadingObjectType: string;
   query: string;
 }
 
@@ -10,7 +11,8 @@ export const STATE_QUERY_PRESETS: StateQueryPreset[] = [
     id: 'p2p-payment-block',
     logKey: 'ocel20_example',
     name: 'Payment Block Status',
-    query: `STATE state AS CASE
+    leadingObjectType: 'Invoice',
+    query: `STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
   WHEN object.is_blocked = 'Yes' THEN 'Invoice Blocked'
   WHEN event.type LIKE '%Payment%' THEN 'Payment Execution'
   WHEN event.type LIKE '%Invoice%' THEN 'Invoice Handling'
@@ -21,9 +23,9 @@ END`,
     id: 'p2p-purchase-size',
     logKey: 'ocel20_example',
     name: 'Purchase Size',
-    query: `STATE state AS CASE
+    leadingObjectType: 'Purchase Order',
+    query: `STATE state FOR LEADING OBJECT TYPE 'Purchase Order' AS CASE
   WHEN object.po_quantity > 500 THEN 'Large PO'
-  WHEN object.pr_quantity >= 500 THEN 'Large Requisition'
   WHEN object.po_product = 'Notebooks' THEN 'Maverick Buying'
   ELSE 'Standard Purchase'
 END`,
@@ -32,7 +34,8 @@ END`,
     id: 'p2p-actor-risk',
     logKey: 'ocel20_example',
     name: 'Actor and Automation',
-    query: `STATE state AS CASE
+    leadingObjectType: 'Invoice',
+    query: `STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
   WHEN event.invoice_blocker IS NOT NULL OR event.invoice_block_rem IS NOT NULL THEN 'Manual Block Control'
   WHEN event.payment_inserter = 'Robot' THEN 'Automated Payment'
   WHEN event.po_creator = 'Mario' OR event.invoice_inserter = 'Mario' THEN 'Maverick Flow'
@@ -43,7 +46,8 @@ END`,
     id: 'container-shipment-status',
     logKey: 'container_logistics',
     name: 'Shipment Status',
-    query: `STATE state AS CASE
+    leadingObjectType: 'Container',
+    query: `STATE state FOR LEADING OBJECT TYPE 'Container' AS CASE
   WHEN object.Status = 'shipped' THEN 'Shipped'
   WHEN object.Status = 'in transit' THEN 'In Transit'
   WHEN object.Status = 'full' THEN 'Loaded'
@@ -55,7 +59,8 @@ END`,
     id: 'container-load-size',
     logKey: 'container_logistics',
     name: 'Load Planning',
-    query: `STATE state AS CASE
+    leadingObjectType: 'Customer Order',
+    query: `STATE state FOR LEADING OBJECT TYPE 'Customer Order' AS CASE
   WHEN event.type = 'Book Vehicles' THEN 'Vehicle Booking'
   WHEN event.type LIKE '%Load%' THEN 'Transport Loading'
   WHEN object.AmountofGoods >= 900 THEN 'Large Order'
@@ -66,7 +71,8 @@ END`,
     id: 'container-process-phase',
     logKey: 'container_logistics',
     name: 'Process Phase',
-    query: `STATE state AS CASE
+    leadingObjectType: 'Container',
+    query: `STATE state FOR LEADING OBJECT TYPE 'Container' AS CASE
   WHEN event.type LIKE '%Depart%' OR event.type LIKE '%Drive%' THEN 'Outbound'
   WHEN event.type LIKE '%Load%' OR event.type LIKE '%Weigh%' THEN 'Loading'
   WHEN event.type LIKE '%Order%' OR event.type LIKE '%Create%' OR event.type LIKE '%Book%' THEN 'Planning'
@@ -77,7 +83,8 @@ END`,
     id: 'orders-fulfillment',
     logKey: 'order-management',
     name: 'Fulfillment Stage',
-    query: `STATE state AS CASE
+    leadingObjectType: 'packages',
+    query: `STATE state FOR LEADING OBJECT TYPE 'packages' AS CASE
   WHEN event.type = 'failed delivery' THEN 'Delivery Failure'
   WHEN event.type = 'package delivered' THEN 'Delivered'
   WHEN event.type LIKE '%package%' OR event.type = 'send package' THEN 'Packaging'
@@ -89,7 +96,8 @@ END`,
     id: 'orders-value-weight',
     logKey: 'order-management',
     name: 'Value and Weight',
-    query: `STATE state AS CASE
+    leadingObjectType: 'items',
+    query: `STATE state FOR LEADING OBJECT TYPE 'items' AS CASE
   WHEN object.weight >= 10 THEN 'Heavy'
   WHEN object.price >= 1000 THEN 'High Value'
   WHEN object.price >= 250 THEN 'Medium Value'
@@ -100,7 +108,8 @@ END`,
     id: 'orders-exception-risk',
     logKey: 'order-management',
     name: 'Exception Risk',
-    query: `STATE state AS CASE
+    leadingObjectType: 'orders',
+    query: `STATE state FOR LEADING OBJECT TYPE 'orders' AS CASE
   WHEN event.type = 'item out of stock' THEN 'Stock Exception'
   WHEN event.type = 'reorder item' THEN 'Replenishment'
   WHEN event.type = 'payment reminder' THEN 'Payment Risk'
@@ -112,7 +121,8 @@ END`,
     id: 'inventory-stock-status',
     logKey: 'inventory_management_simulated',
     name: 'Stock Status',
-    query: `STATE state AS CASE
+    leadingObjectType: 'MAT',
+    query: `STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
   WHEN event."Stock After" = 0 THEN 'Zero Stock'
   WHEN event."Stock After" < 30 THEN 'Low Stock'
   WHEN event."Stock After" >= 100 THEN 'High Stock'
@@ -123,7 +133,8 @@ END`,
     id: 'inventory-activity-phase',
     logKey: 'inventory_management_simulated',
     name: 'Activity Phase',
-    query: `STATE state AS CASE
+    leadingObjectType: 'MAT',
+    query: `STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
   WHEN event.type = 'Goods Receipt' THEN 'Goods Receipt'
   WHEN event.type = 'Goods Issue' THEN 'Goods Issue'
   WHEN event.type = 'Create Purchase Order Item' THEN 'Purchase Order'
@@ -136,7 +147,8 @@ END`,
     id: 'inventory-stock-movement',
     logKey: 'inventory_management_simulated',
     name: 'Stock Movement',
-    query: `STATE state AS CASE
+    leadingObjectType: 'MAT',
+    query: `STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
   WHEN event."Stock After" > event."Stock Before" THEN 'Stock Increase'
   WHEN event."Stock After" < event."Stock Before" THEN 'Stock Decrease'
   WHEN event."Stock After" = 0 THEN 'Zero Stable'

@@ -28,6 +28,7 @@ export interface OcelDocumentHandle {
 
 export interface StateQueryResult {
   attribute: string;
+  leading_object_type: string;
   assigned_events: number;
   total_events: number;
 }

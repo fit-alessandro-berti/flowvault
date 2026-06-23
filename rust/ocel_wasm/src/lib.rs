@@ -205,6 +205,7 @@ struct CompactOcelLog {
     events: Vec<Event>,
     objects: Vec<Object>,
     object_index: HashMap<Symbol, usize>,
+    state_leading_object_type: Option<Symbol>,
 }
 
 #[derive(Serialize)]
@@ -400,6 +401,7 @@ impl CompactOcelLog {
             events,
             objects,
             object_index,
+            state_leading_object_type: None,
         })
     }
 
@@ -568,6 +570,7 @@ impl CompactOcelLog {
             events: retained_events,
             objects,
             object_index,
+            state_leading_object_type: self.state_leading_object_type,
         }
     }
 
@@ -587,6 +590,13 @@ impl CompactOcelLog {
             event_types,
             object_types,
         }
+    }
+
+    fn object_type_symbol(&self, object_type: &str) -> Option<Symbol> {
+        self.object_types
+            .iter()
+            .find(|type_def| self.pool.resolve(type_def.name) == object_type)
+            .map(|type_def| type_def.name)
     }
 
     fn lifecycle_json(&self, object_id: &str) -> OcelResult<String> {
@@ -613,18 +623,30 @@ impl CompactOcelLog {
 
     fn apply_state_query(&mut self, query: &str) -> OcelResult<String> {
         let state_query = StateQuery::parse(query)?;
+        let leading_type_symbol = self
+            .object_type_symbol(&state_query.leading_object_type)
+            .ok_or_else(|| {
+                OcelError::new(format!(
+                    "unknown leading object type '{}'",
+                    state_query.leading_object_type
+                ))
+            })?;
         let eval_index = StateEvalIndex::build(self, &state_query);
         let attribute_symbol = self.pool.intern(&state_query.attribute_name);
         self.ensure_event_attribute(attribute_symbol, AttrType::String);
+        self.state_leading_object_type = Some(leading_type_symbol);
+
+        for event in &mut self.events {
+            event
+                .attributes
+                .retain(|attribute| attribute.name != attribute_symbol);
+        }
 
         let mut assigned = 0usize;
         for event_index in 0..self.events.len() {
             if let Some(state) = self.evaluate_state_query(&state_query, &eval_index, event_index) {
                 let state_symbol = self.pool.intern(&state);
                 let event = &mut self.events[event_index];
-                event
-                    .attributes
-                    .retain(|attribute| attribute.name != attribute_symbol);
                 event.attributes.push(Attribute {
                     name: attribute_symbol,
                     value: AttrValue::String(state_symbol),
@@ -635,6 +657,7 @@ impl CompactOcelLog {
 
         let result = StateQueryResult {
             attribute: state_query.attribute_name,
+            leading_object_type: state_query.leading_object_type,
             assigned_events: assigned,
             total_events: self.events.len(),
         };
@@ -668,6 +691,13 @@ impl CompactOcelLog {
         let mut inter = HashMap::<PatternKey, PatternAccumulator>::new();
 
         for (object_index, object) in self.objects.iter().enumerate() {
+            if self
+                .state_leading_object_type
+                .is_some_and(|leading_type| object.type_name != leading_type)
+            {
+                continue;
+            }
+
             let state_lifecycle = object
                 .lifecycle
                 .iter()
@@ -880,11 +910,16 @@ impl CompactOcelLog {
         event_index: usize,
     ) -> Option<String> {
         let event = &self.events[event_index];
+        let leading_type_symbol = self.object_type_symbol(&query.leading_object_type)?;
         let related_objects = event
             .relationships
             .iter()
             .filter_map(|relationship| self.object_index.get(&relationship.object_id).copied())
+            .filter(|object_index| self.objects[*object_index].type_name == leading_type_symbol)
             .collect::<Vec<_>>();
+        if related_objects.is_empty() {
+            return None;
+        }
 
         for branch in &query.branches {
             if branch.condition.references_object() {
@@ -1555,9 +1590,9 @@ impl OcelDocument {
     /// Applies a SQL-like CASE query and writes a string state attribute to events.
     #[wasm_bindgen(js_name = applyStateQuery)]
     pub fn apply_state_query(&mut self, query: &str) -> Result<String, JsValue> {
-        let attribute = StateQuery::parse(query)
-            .map_err(JsValue::from)?
-            .attribute_name;
+        let parsed_query = StateQuery::parse(query).map_err(JsValue::from)?;
+        let attribute = parsed_query.attribute_name;
+        let leading_object_type = parsed_query.leading_object_type;
         self.original_log
             .apply_state_query(query)
             .map_err(JsValue::from)?;
@@ -1567,6 +1602,7 @@ impl OcelDocument {
 
         let result = StateQueryResult {
             attribute,
+            leading_object_type,
             assigned_events,
             total_events,
         };
@@ -1584,6 +1620,7 @@ impl OcelDocument {
 #[derive(Serialize)]
 struct StateQueryResult {
     attribute: String,
+    leading_object_type: String,
     assigned_events: usize,
     total_events: usize,
 }
@@ -1591,6 +1628,7 @@ struct StateQueryResult {
 #[derive(Debug)]
 struct StateQuery {
     attribute_name: String,
+    leading_object_type: String,
     branches: Vec<StateBranch>,
     else_value: Option<ValueExpr>,
 }
@@ -2140,6 +2178,11 @@ impl QueryParser {
     fn parse_state_query(&mut self) -> OcelResult<StateQuery> {
         self.expect_keyword("STATE")?;
         let attribute_name = self.parse_identifier()?;
+        self.expect_keyword("FOR")?;
+        self.expect_keyword("LEADING")?;
+        self.expect_keyword("OBJECT")?;
+        self.expect_keyword("TYPE")?;
+        let leading_object_type = self.parse_type_name()?;
         self.expect_keyword("AS")?;
         self.expect_keyword("CASE")?;
 
@@ -2171,6 +2214,7 @@ impl QueryParser {
 
         Ok(StateQuery {
             attribute_name,
+            leading_object_type,
             branches,
             else_value,
         })
@@ -2301,6 +2345,15 @@ impl QueryParser {
             Some(Token::Identifier(identifier)) => Ok(identifier),
             other => Err(OcelError::new(format!(
                 "expected identifier in state query, found {other:?}"
+            ))),
+        }
+    }
+
+    fn parse_type_name(&mut self) -> OcelResult<String> {
+        match self.next().cloned() {
+            Some(Token::Identifier(identifier)) | Some(Token::String(identifier)) => Ok(identifier),
+            other => Err(OcelError::new(format!(
+                "expected leading object type name in state query, found {other:?}"
             ))),
         }
     }
@@ -3145,7 +3198,7 @@ mod tests {
         let result = log
             .apply_state_query(
                 r#"
-                STATE state AS CASE
+                STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
                   WHEN object.is_blocked = 'Yes' THEN 'Blocked'
                   WHEN event.type LIKE '%Payment%' THEN 'Payment'
                   ELSE 'Normal'
@@ -3154,15 +3207,23 @@ mod tests {
             )
             .unwrap();
 
-        assert!(result.contains(r#""assigned_events":13"#));
-        assert_eq!(log.summary().stateful_events, 13);
+        let result: Value = serde_json::from_str(&result).unwrap();
+        assert_eq!(result["leading_object_type"], Value::from("Invoice"));
+        assert!(result["assigned_events"].as_u64().unwrap() > 0);
+        assert_eq!(
+            log.summary().stateful_events,
+            result["assigned_events"].as_u64().unwrap() as usize
+        );
         assert_eq!(event_state(&log, "e11"), Some("Blocked".to_owned()));
         assert_eq!(event_state(&log, "e9"), Some("Normal".to_owned()));
         assert_eq!(event_state(&log, "e13"), Some("Payment".to_owned()));
 
         let exported = log.export_json().unwrap();
         let reparsed = CompactOcelLog::from_input(&exported, Some("json")).unwrap();
-        assert_eq!(reparsed.summary().stateful_events, 13);
+        assert_eq!(
+            reparsed.summary().stateful_events,
+            log.summary().stateful_events
+        );
         assert_eq!(event_state(&reparsed, "e11"), Some("Blocked".to_owned()));
     }
 
@@ -3171,7 +3232,7 @@ mod tests {
         let mut log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
         log.apply_state_query(
             r#"
-            STATE state AS CASE
+            STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
               WHEN event.type = 'Insert Invoice' THEN event.type
               ELSE 'Other'
             END
@@ -3180,7 +3241,7 @@ mod tests {
         .unwrap();
 
         assert_eq!(event_state(&log, "e5"), Some("Insert Invoice".to_owned()));
-        assert_eq!(event_state(&log, "e1"), Some("Other".to_owned()));
+        assert_eq!(event_state(&log, "e1"), None);
     }
 
     #[test]
@@ -3216,7 +3277,7 @@ mod tests {
         document
             .apply_state_query(
                 r#"
-                STATE state AS CASE
+                STATE state FOR LEADING OBJECT TYPE 'Purchase Order' AS CASE
                   WHEN event.type LIKE '%Invoice%' THEN 'Invoice'
                   ELSE 'Other'
                 END
@@ -3225,7 +3286,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             serde_json::from_str::<Value>(&document.summary_json()).unwrap()["stateful_events"],
-            Value::from(13)
+            Value::from(5)
         );
 
         document
@@ -3237,7 +3298,7 @@ mod tests {
         let original = serde_json::from_str::<Value>(&document.original_summary_json()).unwrap();
 
         assert_eq!(summary["stateful_events"], summary["events"]);
-        assert_eq!(original["stateful_events"], Value::from(13));
+        assert_eq!(original["stateful_events"], Value::from(5));
         assert!(summary["events"].as_u64().unwrap() < original["events"].as_u64().unwrap());
         assert!(!document.state_patterns_json().unwrap().is_empty());
     }
@@ -3255,7 +3316,7 @@ mod tests {
         let mut log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
         log.apply_state_query(
             r#"
-            STATE state AS CASE
+            STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
               WHEN object.is_blocked = 'Yes' THEN 'Invoice Blocked'
               WHEN event.type LIKE '%Payment%' THEN 'Payment Execution'
               WHEN event.type LIKE '%Invoice%' THEN 'Invoice Handling'
@@ -3309,7 +3370,7 @@ mod tests {
             .unwrap_or_else(|err| panic!("failed to read {}: {err}", fixture_path.display()));
         let mut log = CompactOcelLog::from_input(&input, Some("json")).unwrap();
         log.apply_state_query(
-            r#"STATE state AS CASE
+            r#"STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
   WHEN event."Stock After" = 0 THEN 'Zero Stock'
   WHEN event."Stock After" < 30 THEN 'Low Stock'
   WHEN event."Stock After" >= 100 THEN 'High Stock'
@@ -3348,12 +3409,15 @@ END"#,
                 .unwrap_or_else(|err| panic!("failed to import {fixture}: {err}"));
 
             for (name, query, expected_states) in queries {
-                log.apply_state_query(query)
+                let result = log
+                    .apply_state_query(query)
                     .unwrap_or_else(|err| panic!("preset '{name}' failed on {fixture}: {err}"));
-                assert_eq!(
-                    log.summary().stateful_events,
-                    log.summary().events,
-                    "preset '{name}' should assign all events in {fixture}"
+                let result: Value = serde_json::from_str(&result).unwrap();
+                assert!(
+                    result["assigned_events"]
+                        .as_u64()
+                        .is_some_and(|count| count > 0),
+                    "preset '{name}' should assign at least one event in {fixture}"
                 );
                 assert_eq!(
                     event_states(&log),
@@ -3544,7 +3608,7 @@ END"#,
                 vec![
                     (
                         "Payment Block Status",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
   WHEN object.is_blocked = 'Yes' THEN 'Invoice Blocked'
   WHEN event.type LIKE '%Payment%' THEN 'Payment Execution'
   WHEN event.type LIKE '%Invoice%' THEN 'Invoice Handling'
@@ -3559,22 +3623,16 @@ END"#,
                     ),
                     (
                         "Purchase Size",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'Purchase Order' AS CASE
   WHEN object.po_quantity > 500 THEN 'Large PO'
-  WHEN object.pr_quantity >= 500 THEN 'Large Requisition'
   WHEN object.po_product = 'Notebooks' THEN 'Maverick Buying'
   ELSE 'Standard Purchase'
 END"#,
-                        &[
-                            "Large PO",
-                            "Large Requisition",
-                            "Maverick Buying",
-                            "Standard Purchase",
-                        ],
+                        &["Large PO", "Maverick Buying", "Standard Purchase"],
                     ),
                     (
                         "Actor and Automation",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
   WHEN event.invoice_blocker IS NOT NULL OR event.invoice_block_rem IS NOT NULL THEN 'Manual Block Control'
   WHEN event.payment_inserter = 'Robot' THEN 'Automated Payment'
   WHEN event.po_creator = 'Mario' OR event.invoice_inserter = 'Mario' THEN 'Maverick Flow'
@@ -3594,33 +3652,28 @@ END"#,
                 vec![
                     (
                         "Shipment Status",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'Container' AS CASE
   WHEN object.Status = 'shipped' THEN 'Shipped'
   WHEN object.Status = 'in transit' THEN 'In Transit'
   WHEN object.Status = 'full' THEN 'Loaded'
   WHEN object.Status = 'empty' THEN 'Empty'
   ELSE 'Planning'
 END"#,
-                        &["Shipped", "In Transit", "Loaded", "Empty", "Planning"],
+                        &["Loaded", "Empty", "Planning"],
                     ),
                     (
                         "Load Planning",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'Customer Order' AS CASE
   WHEN event.type = 'Book Vehicles' THEN 'Vehicle Booking'
   WHEN event.type LIKE '%Load%' THEN 'Transport Loading'
   WHEN object.AmountofGoods >= 900 THEN 'Large Order'
   ELSE 'Standard Load'
 END"#,
-                        &[
-                            "Vehicle Booking",
-                            "Transport Loading",
-                            "Large Order",
-                            "Standard Load",
-                        ],
+                        &["Large Order", "Standard Load"],
                     ),
                     (
                         "Process Phase",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'Container' AS CASE
   WHEN event.type LIKE '%Depart%' OR event.type LIKE '%Drive%' THEN 'Outbound'
   WHEN event.type LIKE '%Load%' OR event.type LIKE '%Weigh%' THEN 'Loading'
   WHEN event.type LIKE '%Order%' OR event.type LIKE '%Create%' OR event.type LIKE '%Book%' THEN 'Planning'
@@ -3635,47 +3688,35 @@ END"#,
                 vec![
                     (
                         "Fulfillment Stage",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'packages' AS CASE
   WHEN event.type = 'failed delivery' THEN 'Delivery Failure'
   WHEN event.type = 'package delivered' THEN 'Delivered'
   WHEN event.type LIKE '%package%' OR event.type = 'send package' THEN 'Packaging'
   WHEN event.type LIKE '%pay%' OR event.type = 'payment reminder' THEN 'Payment'
   ELSE 'Order Handling'
 END"#,
-                        &[
-                            "Delivery Failure",
-                            "Delivered",
-                            "Packaging",
-                            "Payment",
-                            "Order Handling",
-                        ],
+                        &["Delivery Failure", "Delivered", "Packaging"],
                     ),
                     (
                         "Value and Weight",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'items' AS CASE
   WHEN object.weight >= 10 THEN 'Heavy'
   WHEN object.price >= 1000 THEN 'High Value'
   WHEN object.price >= 250 THEN 'Medium Value'
   ELSE 'Standard'
 END"#,
-                        &["High Value", "Medium Value", "Heavy", "Standard"],
+                        &["High Value", "Medium Value", "Standard"],
                     ),
                     (
                         "Exception Risk",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'orders' AS CASE
   WHEN event.type = 'item out of stock' THEN 'Stock Exception'
   WHEN event.type = 'reorder item' THEN 'Replenishment'
   WHEN event.type = 'payment reminder' THEN 'Payment Risk'
   WHEN event.type = 'failed delivery' THEN 'Delivery Risk'
   ELSE 'Nominal'
 END"#,
-                        &[
-                            "Stock Exception",
-                            "Replenishment",
-                            "Payment Risk",
-                            "Delivery Risk",
-                            "Nominal",
-                        ],
+                        &["Payment Risk", "Nominal"],
                     ),
                 ],
             ),
@@ -3684,7 +3725,7 @@ END"#,
                 vec![
                     (
                         "Stock Status",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
   WHEN event."Stock After" = 0 THEN 'Zero Stock'
   WHEN event."Stock After" < 30 THEN 'Low Stock'
   WHEN event."Stock After" >= 100 THEN 'High Stock'
@@ -3694,7 +3735,7 @@ END"#,
                     ),
                     (
                         "Activity Phase",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
   WHEN event.type = 'Goods Receipt' THEN 'Goods Receipt'
   WHEN event.type = 'Goods Issue' THEN 'Goods Issue'
   WHEN event.type = 'Create Purchase Order Item' THEN 'Purchase Order'
@@ -3712,7 +3753,7 @@ END"#,
                     ),
                     (
                         "Stock Movement",
-                        r#"STATE state AS CASE
+                        r#"STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
   WHEN event."Stock After" > event."Stock Before" THEN 'Stock Increase'
   WHEN event."Stock After" < event."Stock Before" THEN 'Stock Decrease'
   WHEN event."Stock After" = 0 THEN 'Zero Stable'

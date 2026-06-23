@@ -11,7 +11,10 @@ describe('state query presets', () => {
   it('uses named SQL-like state queries', () => {
     for (const preset of STATE_QUERY_PRESETS) {
       expect(preset.name.length).toBeGreaterThan(4);
-      expect(preset.query).toContain('STATE state AS CASE');
+      expect(preset.leadingObjectType.length).toBeGreaterThan(0);
+      expect(preset.query).toContain(
+        `STATE state FOR LEADING OBJECT TYPE '${preset.leadingObjectType}' AS CASE`,
+      );
       expect(preset.query).toContain('END');
     }
   });
