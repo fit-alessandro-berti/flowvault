@@ -101,3 +101,35 @@ body {
   gap: 8px;
   align-items: center;
 }
+
+.pattern-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid #d7dfdd;
+}
+
+.pattern-tab-button {
+  min-height: 38px;
+  border-color: transparent;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: #36534d;
+}
+
+.pattern-tab-button.is-selected {
+  border-color: #b9c7c3;
+  border-bottom-color: #ffffff;
+  background: #ffffff;
+  color: #123c36;
+}
+
+@media (max-width: 780px) {
+  .pattern-tabs {
+    justify-content: stretch;
+  }
+
+  .pattern-tab-button {
+    flex: 1 1 50%;
+  }
+}

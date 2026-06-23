@@ -263,7 +263,30 @@
         </div>
       </header>
 
-      <div class="pattern-columns">
+      <div class="pattern-tabs" role="tablist" aria-label="State pattern family">
+        <button
+          type="button"
+          class="pattern-tab-button"
+          role="tab"
+          [attr.aria-selected]="activePatternTab() === 'intra'"
+          [class.is-selected]="activePatternTab() === 'intra'"
+          (click)="setPatternTab('intra')"
+        >
+          Intra-State <span>{{ patterns.intra.length }}</span>
+        </button>
+        <button
+          type="button"
+          class="pattern-tab-button"
+          role="tab"
+          [attr.aria-selected]="activePatternTab() === 'inter'"
+          [class.is-selected]="activePatternTab() === 'inter'"
+          (click)="setPatternTab('inter')"
+        >
+          Inter-State <span>{{ patterns.inter.length }}</span>
+        </button>
+      </div>
+
+      @if (activePatternTab() === 'intra') {
         <section class="pattern-panel" aria-label="Intra-state patterns">
           <header class="pattern-panel-header">
             <h2>Intra-State</h2>
@@ -458,7 +481,7 @@
             <p class="empty-patterns">No intra-state patterns found.</p>
           }
         </section>
-
+      } @else {
         <section class="pattern-panel" aria-label="Inter-state patterns">
           <header class="pattern-panel-header">
             <h2>Inter-State</h2>
@@ -653,7 +676,7 @@
             <p class="empty-patterns">No inter-state patterns found.</p>
           }
         </section>
-      </div>
+      }
     </section>
   }
 

@@ -42,6 +42,7 @@ interface FilterRequest {
 }
 
 type FilterDialogKind = 'activities' | 'objectTypes';
+type PatternTab = 'intra' | 'inter';
 type PatternVisualization = 'text' | 'graph';
 
 interface AppliedFilterChip {
@@ -111,6 +112,7 @@ export class App {
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly selectedIntraPatternId = signal('');
   protected readonly selectedInterPatternId = signal('');
+  protected readonly activePatternTab = signal<PatternTab>('intra');
   protected readonly intraVisualization = signal<PatternVisualization>('text');
   protected readonly interVisualization = signal<PatternVisualization>('text');
   protected readonly fullScreenPattern = signal<StatePattern | null>(null);
@@ -295,6 +297,7 @@ export class App {
       this.patternAnalysis.set(null);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
+      this.activePatternTab.set('intra');
       this.fullScreenPattern.set(null);
       this.isStateDialogOpen.set(false);
       this.initializeStatePresetForFile(file.name);
@@ -315,6 +318,7 @@ export class App {
       this.patternAnalysis.set(null);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
+      this.activePatternTab.set('intra');
       this.fullScreenPattern.set(null);
       this.isStateDialogOpen.set(false);
     } finally {
@@ -467,6 +471,10 @@ export class App {
     this.interVisualization.set(visualization);
   }
 
+  protected setPatternTab(tab: PatternTab): void {
+    this.activePatternTab.set(tab);
+  }
+
   protected openFullScreenGraph(pattern: StatePattern): void {
     this.fullScreenPattern.set(pattern);
   }
@@ -600,6 +608,9 @@ export class App {
     const previousFullScreenPatternId = this.fullScreenPattern()?.id;
     const analysis = JSON.parse(this.documentHandle.statePatternsJson()) as StatePatternAnalysis;
     this.patternAnalysis.set(analysis);
+    if (!preserveSelection) {
+      this.activePatternTab.set('intra');
+    }
     this.selectedIntraPatternId.set(
       preserveSelection
         ? (selectedPattern(analysis.intra, previousIntraId)?.id ?? '')
@@ -647,6 +658,7 @@ export class App {
         this.patternAnalysis.set(null);
         this.selectedIntraPatternId.set('');
         this.selectedInterPatternId.set('');
+        this.activePatternTab.set('intra');
         this.fullScreenPattern.set(null);
       }
       this.errorMessage.set('');
