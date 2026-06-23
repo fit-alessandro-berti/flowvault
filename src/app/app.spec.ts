@@ -366,6 +366,65 @@ describe('App', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Export JSON');
   });
 
+  it('exports JSON and XML from a single export menu', () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance as unknown as {
+      documentHandle: unknown;
+      fileName: { set(value: string): void };
+      summary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+    };
+    const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:export');
+    const revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
+
+    component.documentHandle = {
+      exportJson: () => '{"events":[]}',
+      exportXml: () => '<log />',
+    };
+    component.fileName.set('orders.json');
+    component.summary.set(importedSummary);
+    component.filterOptions.set({ event_types: [], object_types: [] });
+    fixture.detectChanges();
+
+    const native = fixture.nativeElement as HTMLElement;
+    const topbarButtons = Array.from(
+      native.querySelectorAll<HTMLButtonElement>('.toolbar-actions > button, .toolbar-actions > .toolbar-popover-anchor > button'),
+    ).map((button) => button.textContent?.trim());
+    expect(topbarButtons).toContain('Export');
+    expect(topbarButtons).not.toContain('Export JSON');
+    expect(topbarButtons).not.toContain('Export XML');
+
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.toolbar-actions button'))
+      .find((button) => button.textContent?.trim() === 'Export')
+      ?.click();
+    fixture.detectChanges();
+
+    expect(native.querySelectorAll('.export-menu button').length).toBe(2);
+    expect(native.textContent).toContain('JSON');
+    expect(native.textContent).toContain('XML');
+
+    native.querySelector<HTMLButtonElement>('.export-menu button')?.click();
+    fixture.detectChanges();
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(createObjectUrl).toHaveBeenCalledTimes(1);
+    expect(native.querySelector('.export-menu')).toBeFalsy();
+
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.toolbar-actions button'))
+      .find((button) => button.textContent?.trim() === 'Export')
+      ?.click();
+    fixture.detectChanges();
+    native.querySelectorAll<HTMLButtonElement>('.export-menu button')[1]?.click();
+    fixture.detectChanges();
+
+    expect(clickSpy).toHaveBeenCalledTimes(2);
+    expect(createObjectUrl).toHaveBeenCalledTimes(2);
+
+    createObjectUrl.mockRestore();
+    revokeObjectUrl.mockRestore();
+    clickSpy.mockRestore();
+  });
+
   it('shows only the upload area before import', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();

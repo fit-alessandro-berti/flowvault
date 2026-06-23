@@ -38,8 +38,15 @@
       Import
     </label>
     @if (hasDocument()) {
-      <button type="button" class="toolbar-button" (click)="exportJson()">Export JSON</button>
-      <button type="button" class="toolbar-button" (click)="exportXml()">Export XML</button>
+      <div class="toolbar-popover-anchor">
+        <button type="button" class="toolbar-button" (click)="toggleExportMenu()">Export</button>
+        @if (isExportMenuOpen()) {
+          <section class="toolbar-popover export-menu" aria-label="Export menu">
+            <button type="button" (click)="exportJson()">JSON</button>
+            <button type="button" (click)="exportXml()">XML</button>
+          </section>
+        }
+      </div>
       <button type="button" class="toolbar-button" (click)="openStateDialog()">State</button>
       <div class="toolbar-popover-anchor">
         <button type="button" class="toolbar-button" (click)="toggleFilterMenu()">Filter</button>

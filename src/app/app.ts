@@ -210,6 +210,7 @@ export class App {
   protected readonly draftTextAttributeValues = signal<string[]>([]);
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
   protected readonly isFilterMenuOpen = signal(false);
+  protected readonly isExportMenuOpen = signal(false);
   protected readonly isFilterChainOpen = signal(false);
   protected readonly graphFilterMenu = signal<GraphFilterMenu | null>(null);
   protected readonly stateDetectionObjectType = signal('');
@@ -422,15 +423,21 @@ export class App {
   }
 
   exportJson(): void {
+    this.isExportMenuOpen.set(false);
     this.exportDocument('json');
   }
 
   exportXml(): void {
+    this.isExportMenuOpen.set(false);
     this.exportDocument('xml');
   }
 
   protected openLlmConfig(): void {
     this.llmStatus.set('');
+    this.isExportMenuOpen.set(false);
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
     this.isLlmConfigOpen.set(true);
   }
 
@@ -505,6 +512,18 @@ export class App {
     }
 
     this.isFilterMenuOpen.update((isOpen) => !isOpen);
+    this.isExportMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
+  }
+
+  protected toggleExportMenu(): void {
+    if (!this.hasDocument()) {
+      return;
+    }
+
+    this.isExportMenuOpen.update((isOpen) => !isOpen);
+    this.isFilterMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set(null);
   }
@@ -516,6 +535,7 @@ export class App {
 
     this.isFilterChainOpen.update((isOpen) => !isOpen);
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.graphFilterMenu.set(null);
   }
 
@@ -535,6 +555,10 @@ export class App {
     }
 
     this.errorMessage.set('');
+    this.isExportMenuOpen.set(false);
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
     this.isStateDialogOpen.set(true);
   }
 
@@ -698,6 +722,7 @@ export class App {
       this.draftTextAttributeValues.set([]);
       this.filterDialog.set(null);
       this.isFilterMenuOpen.set(false);
+      this.isExportMenuOpen.set(false);
       this.isFilterChainOpen.set(false);
       this.graphFilterMenu.set(null);
       this.stateMessage.set('');
@@ -741,6 +766,7 @@ export class App {
       this.draftTextAttributeValues.set([]);
       this.filterDialog.set(null);
       this.isFilterMenuOpen.set(false);
+      this.isExportMenuOpen.set(false);
       this.isFilterChainOpen.set(false);
       this.graphFilterMenu.set(null);
       this.selectedLeadingObjectType.set('');
@@ -832,6 +858,7 @@ export class App {
   protected openActivityFilterDialog(): void {
     this.draftEventTypes.set([...this.selectedEventTypes()]);
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set(null);
     this.filterDialog.set('activities');
@@ -840,6 +867,7 @@ export class App {
   protected openObjectTypeFilterDialog(): void {
     this.draftObjectTypes.set([...this.selectedObjectTypes()]);
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set(null);
     this.filterDialog.set('objectTypes');
@@ -848,6 +876,7 @@ export class App {
   protected openDfNodeFilterDialog(): void {
     this.draftDfNodes.set([...this.selectedDfNodes()]);
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set(null);
     this.filterDialog.set('dfNodes');
@@ -856,6 +885,7 @@ export class App {
   protected openDfEdgeFilterDialog(): void {
     this.draftDfEdges.set([...this.selectedDfEdges()]);
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set(null);
     this.filterDialog.set('dfEdges');
@@ -867,6 +897,7 @@ export class App {
     this.draftTextAttributeKey.set(first ? textAttributeKey(first) : '');
     this.draftTextAttributeValues.set(first?.values ?? []);
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set(null);
     this.filterDialog.set('textAttributes');
@@ -1277,6 +1308,7 @@ export class App {
 
   protected openGraphNodeFilterMenu(event: ProcessGraphNodeFilterEvent): void {
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set({
       kind: 'node',
@@ -1287,6 +1319,7 @@ export class App {
 
   protected openGraphEdgeFilterMenu(event: ProcessGraphEdgeFilterEvent): void {
     this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
     this.isFilterChainOpen.set(false);
     this.graphFilterMenu.set({
       kind: 'edge',
