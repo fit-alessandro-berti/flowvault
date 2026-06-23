@@ -501,7 +501,7 @@
             [class.is-selected]="stateDetectionCellTab() === 'entering'"
             (click)="setStateDetectionCellTab('entering')"
           >
-            Entering windows <span>{{ detail.entering_windows.length }}</span>
+            Entering windows <span>{{ detail.entering_window_count }}</span>
           </button>
           <button
             type="button"
@@ -511,7 +511,7 @@
             [class.is-selected]="stateDetectionCellTab() === 'exiting'"
             (click)="setStateDetectionCellTab('exiting')"
           >
-            Exiting windows <span>{{ detail.exiting_windows.length }}</span>
+            Exiting windows <span>{{ detail.exiting_window_count }}</span>
           </button>
         </div>
 
@@ -524,37 +524,19 @@
               (applySettings)="ignoreStateDetectionCellGraphSettings($event)"
             ></app-process-graph>
           } @else if (stateDetectionCellTab() === 'entering') {
-            <section class="boundary-window-list" aria-label="Entering windows">
-              @for (window of detail.entering_windows; track $index) {
-                <article>
-                  <header>
-                    <strong>{{ window.object_id }}</strong>
-                    <span>{{ boundaryWindowRoute(window) }}</span>
-                  </header>
-                  <p>{{ window.start_event }} -> {{ window.end_event }}</p>
-                  <small>{{ window.activities.join(' -> ') }}</small>
-                </article>
-              }
-              @if (detail.entering_windows.length === 0) {
-                <p class="muted">No entering windows for this cell.</p>
-              }
-            </section>
+            <app-process-graph
+              [graph]="detail.entering_dfg"
+              [objectTypes]="stateDetectionCellObjectTypes()"
+              [settings]="stateDetectionCellGraphSettings()"
+              (applySettings)="ignoreStateDetectionCellGraphSettings($event)"
+            ></app-process-graph>
           } @else {
-            <section class="boundary-window-list" aria-label="Exiting windows">
-              @for (window of detail.exiting_windows; track $index) {
-                <article>
-                  <header>
-                    <strong>{{ window.object_id }}</strong>
-                    <span>{{ boundaryWindowRoute(window) }}</span>
-                  </header>
-                  <p>{{ window.start_event }} -> {{ window.end_event }}</p>
-                  <small>{{ window.activities.join(' -> ') }}</small>
-                </article>
-              }
-              @if (detail.exiting_windows.length === 0) {
-                <p class="muted">No exiting windows for this cell.</p>
-              }
-            </section>
+            <app-process-graph
+              [graph]="detail.exiting_dfg"
+              [objectTypes]="stateDetectionCellObjectTypes()"
+              [settings]="stateDetectionCellGraphSettings()"
+              (applySettings)="ignoreStateDetectionCellGraphSettings($event)"
+            ></app-process-graph>
           }
         </div>
       </section>

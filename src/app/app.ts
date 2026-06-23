@@ -15,7 +15,6 @@ import {
   StateDetectionSomCell,
   StateDetectionSomTransition,
   StateDetectionCellDetail,
-  StateDetectionBoundaryWindow,
   StateDetectionColorOption,
   OcelSummary,
   OcelWasmService,
@@ -739,10 +738,6 @@ export class App {
 
   protected ignoreStateDetectionCellGraphSettings(_settings: ProcessGraphSettings): void {
     return;
-  }
-
-  protected boundaryWindowRoute(window: StateDetectionBoundaryWindow): string {
-    return `${window.source_cell} -> ${window.target_cell}`;
   }
 
   protected summaryDisplayValue(metric: SummaryMetric): SummaryDisplayValue {

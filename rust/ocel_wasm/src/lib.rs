@@ -1033,12 +1033,28 @@ impl CompactOcelLog {
             .find(|cell| cell.x == cell_x && cell.y == cell_y)
             .expect("validated SOM cell must exist");
         let dfg = self.state_detection_cell_dfg(run, cell_x, cell_y);
-        let (entering_windows, exiting_windows) =
+        let (entering_windows, exiting_windows, entering_indices, exiting_indices) =
             self.state_detection_boundary_windows(run, cell_x, cell_y);
+        let entering_dfg = self.state_detection_windows_dfg(
+            run,
+            &entering_indices,
+            format!("Entering Windows: {}", cell.label),
+            "Directly-follows graph over windows entering the selected SOM cell".to_owned(),
+        );
+        let exiting_dfg = self.state_detection_windows_dfg(
+            run,
+            &exiting_indices,
+            format!("Exiting Windows: {}", cell.label),
+            "Directly-follows graph over windows exiting the selected SOM cell".to_owned(),
+        );
 
         Ok(StateDetectionCellDetail {
             cell,
             dfg,
+            entering_dfg,
+            exiting_dfg,
+            entering_window_count: entering_indices.len(),
+            exiting_window_count: exiting_indices.len(),
             entering_windows,
             exiting_windows,
         })
@@ -1064,6 +1080,27 @@ impl CompactOcelLog {
                 continue;
             }
             self.accumulate_window_directly_follows(&mut graph, window, object_type);
+        }
+
+        layout_accumulated_graph(graph)
+    }
+
+    fn state_detection_windows_dfg(
+        &self,
+        run: &StateDetectionRun,
+        window_indices: &[usize],
+        title: String,
+        subtitle: String,
+    ) -> LayoutGraph {
+        let mut graph = GraphAccumulator::new(title, subtitle);
+        let object_type = self
+            .pool
+            .resolve(self.objects[run.windows[0].object_index].type_name);
+
+        for window_index in window_indices {
+            if let Some(window) = run.windows.get(*window_index) {
+                self.accumulate_window_directly_follows(&mut graph, window, object_type);
+            }
         }
 
         layout_accumulated_graph(graph)
@@ -1117,9 +1154,13 @@ impl CompactOcelLog {
     ) -> (
         Vec<StateDetectionBoundaryWindow>,
         Vec<StateDetectionBoundaryWindow>,
+        Vec<usize>,
+        Vec<usize>,
     ) {
         let mut entering = Vec::new();
         let mut exiting = Vec::new();
+        let mut entering_indices = Vec::new();
+        let mut exiting_indices = Vec::new();
 
         for index in 1..run.windows.len() {
             let previous = &run.windows[index - 1];
@@ -1133,16 +1174,20 @@ impl CompactOcelLog {
                 continue;
             }
             if target == (cell_x, cell_y) {
-                entering.push(self.boundary_window_summary(run, index, source, target));
+                if entering.len() < 100 {
+                    entering.push(self.boundary_window_summary(run, index, source, target));
+                }
+                entering_indices.push(index);
             }
             if source == (cell_x, cell_y) {
-                exiting.push(self.boundary_window_summary(run, index - 1, source, target));
+                if exiting.len() < 100 {
+                    exiting.push(self.boundary_window_summary(run, index - 1, source, target));
+                }
+                exiting_indices.push(index - 1);
             }
         }
 
-        entering.truncate(100);
-        exiting.truncate(100);
-        (entering, exiting)
+        (entering, exiting, entering_indices, exiting_indices)
     }
 
     fn boundary_window_summary(
@@ -2585,6 +2630,10 @@ struct StateWindowProjection {
 struct StateDetectionCellDetail {
     cell: SomCellSummary,
     dfg: LayoutGraph,
+    entering_dfg: LayoutGraph,
+    exiting_dfg: LayoutGraph,
+    entering_window_count: usize,
+    exiting_window_count: usize,
     entering_windows: Vec<StateDetectionBoundaryWindow>,
     exiting_windows: Vec<StateDetectionBoundaryWindow>,
 }
@@ -6039,6 +6088,14 @@ mod tests {
         assert!(detail["dfg"]["title"]
             .as_str()
             .is_some_and(|title| title.contains("State Detection Cell")));
+        assert!(detail["entering_dfg"]["title"]
+            .as_str()
+            .is_some_and(|title| title.contains("Entering Windows")));
+        assert!(detail["exiting_dfg"]["title"]
+            .as_str()
+            .is_some_and(|title| title.contains("Exiting Windows")));
+        assert!(detail["entering_window_count"].as_u64().is_some());
+        assert!(detail["exiting_window_count"].as_u64().is_some());
         assert!(detail["entering_windows"].as_array().is_some());
         assert!(detail["exiting_windows"].as_array().is_some());
     }

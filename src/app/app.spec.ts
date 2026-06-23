@@ -295,6 +295,18 @@ const stateDetectionAnalysis: StateDetectionResult = {
 const stateDetectionCellDetail: StateDetectionCellDetail = {
   cell: stateDetectionAnalysis.som.cells[0],
   dfg: traditionalProcessGraph,
+  entering_dfg: {
+    ...traditionalProcessGraph,
+    title: 'Entering Windows: S1-1',
+    subtitle: 'Directly-follows graph over windows entering the selected SOM cell',
+  },
+  exiting_dfg: {
+    ...traditionalProcessGraph,
+    title: 'Exiting Windows: S1-1',
+    subtitle: 'Directly-follows graph over windows exiting the selected SOM cell',
+  },
+  entering_window_count: 1,
+  exiting_window_count: 1,
   entering_windows: [
     {
       object_id: 'O1',
@@ -511,16 +523,17 @@ describe('App', () => {
     expect(native.textContent).toContain('Entering windows');
     expect(native.textContent).toContain('Exiting windows');
     expect(native.textContent).toContain('Object-Centric Directly-Follows Graph');
+    expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
 
     native.querySelectorAll<HTMLButtonElement>('.state-detection-cell-tabs button')[1].click();
     fixture.detectChanges();
-    expect(native.textContent).toContain('S1-2 -> S1-1');
-    expect(native.textContent).toContain('Create Order -> Close Order');
+    expect(native.textContent).toContain('Entering Windows: S1-1');
+    expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
 
     native.querySelectorAll<HTMLButtonElement>('.state-detection-cell-tabs button')[2].click();
     fixture.detectChanges();
-    expect(native.textContent).toContain('S1-1 -> S1-2');
-    expect(native.textContent).toContain('Archive Order');
+    expect(native.textContent).toContain('Exiting Windows: S1-1');
+    expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
 
     createObjectUrl.mockRestore();
     revokeObjectUrl.mockRestore();

@@ -145,6 +145,10 @@ export interface StateDetectionWindow {
 export interface StateDetectionCellDetail {
   cell: StateDetectionSomCell;
   dfg: ProcessGraph;
+  entering_dfg: ProcessGraph;
+  exiting_dfg: ProcessGraph;
+  entering_window_count: number;
+  exiting_window_count: number;
   entering_windows: StateDetectionBoundaryWindow[];
   exiting_windows: StateDetectionBoundaryWindow[];
 }
