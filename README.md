@@ -115,6 +115,17 @@ The WASM-facing method is `statePatternsJson()`, which returns:
 
 Calling pattern detection before applying a state query returns an error.
 
+## State Detection
+
+The `General > State Detection` page implements an unsupervised execution-state abstraction for one selected object type. Flowvault first builds a numerical object-level feature table:
+
+- activity-count columns, such as how many times `Confirm Order` appears in each selected object's lifecycle;
+- distinct related-object counts per object type, based on lifecycle co-participation and object-object links;
+- numerical object attributes using the latest value available for the object;
+- one-hot columns for categorical object attributes with fewer than 50 distinct latest values.
+
+The full feature table can be downloaded as CSV from the page. For state abstraction, Flowvault encodes sliding lifecycle windows with the same numerical feature space, applies a deterministic two-component PCA implementation, trains a deterministic self-organizing map over the PCA coordinates, and treats SOM cells as discovered execution states. Consecutive windows of the same object that move to a different cell are shown as state transitions; nearby transitions are highlighted in the transition list, and SOM cells are colored by assigned-window density.
+
 ## Directly-Follows Graphs
 
 Flowvault exposes three layout-ready graph computations from the Rust/WebAssembly core:
@@ -165,8 +176,8 @@ The npm scripts set `CARGO_HOME=$PWD/.cargo-home` so Cargo does not need to writ
 
 `npm test` runs:
 
-- Rust unit tests in `rust/ocel_wasm`, including JSON/XML imports, relationship counts, object lifecycles, timestamp conversion, validation errors, state enrichment, state pattern detection, and JSON/XML round trips;
-- Angular unit tests for the app shell, file helper behavior, state preset dialog, and state pattern text/graph rendering.
+- Rust unit tests in `rust/ocel_wasm`, including JSON/XML imports, relationship counts, object lifecycles, timestamp conversion, validation errors, state enrichment, state pattern detection, execution-state detection, and JSON/XML round trips;
+- Angular unit tests for the app shell, file helper behavior, state preset dialog, state pattern text/graph rendering, and the State Detection page.
 
 The bundled examples in `files/ocel2/` are used by the Rust tests.
 

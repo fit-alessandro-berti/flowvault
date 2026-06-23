@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { App } from './app';
-import { ProcessGraph, StatePatternAnalysis } from './ocel-wasm.service';
+import { ProcessGraph, StateDetectionResult, StatePatternAnalysis } from './ocel-wasm.service';
 
 const importedSummary = {
   source_format: 'json' as const,
@@ -168,6 +169,111 @@ const traditionalProcessGraph: ProcessGraph = {
   ],
 };
 
+const stateDetectionAnalysis: StateDetectionResult = {
+  object_type: 'Order',
+  window_size: 2,
+  som_width: 2,
+  som_height: 2,
+  object_count: 2,
+  feature_count: 4,
+  window_count: 3,
+  feature_columns: [
+    'activity.Create Order',
+    'activity.Close Order',
+    'related_objects.Item',
+    'attribute.priority=High',
+  ],
+  table_preview: [
+    {
+      object_id: 'O1',
+      values: [1, 1, 2, 1],
+    },
+    {
+      object_id: 'O2',
+      values: [1, 0, 1, 0],
+    },
+  ],
+  pca: {
+    pc1_variance: 1.4,
+    pc2_variance: 0.3,
+    pc1_explained_ratio: 0.7,
+    pc2_explained_ratio: 0.15,
+  },
+  som: {
+    cells: [
+      {
+        x: 0,
+        y: 0,
+        label: 'S1-1',
+        count: 2,
+        color_value: 1,
+        avg_pc1: -0.4,
+        avg_pc2: 0.1,
+        dominant_activity: 'Create Order',
+      },
+      {
+        x: 1,
+        y: 0,
+        label: 'S2-1',
+        count: 0,
+        color_value: 0,
+        avg_pc1: 0.2,
+        avg_pc2: 0.2,
+      },
+      {
+        x: 0,
+        y: 1,
+        label: 'S1-2',
+        count: 1,
+        color_value: 0.5,
+        avg_pc1: 0.8,
+        avg_pc2: -0.1,
+        dominant_activity: 'Close Order',
+      },
+      {
+        x: 1,
+        y: 1,
+        label: 'S2-2',
+        count: 0,
+        color_value: 0,
+        avg_pc1: 0.6,
+        avg_pc2: 0.5,
+      },
+    ],
+    transitions: [
+      {
+        source_x: 0,
+        source_y: 0,
+        target_x: 0,
+        target_y: 1,
+        count: 1,
+        distance: 1,
+        nearby: true,
+      },
+    ],
+  },
+  windows: [
+    {
+      object_id: 'O1',
+      start_event: 'e1',
+      end_event: 'e2',
+      pc1: -0.4,
+      pc2: 0.1,
+      cell_x: 0,
+      cell_y: 0,
+    },
+    {
+      object_id: 'O1',
+      start_event: 'e2',
+      end_event: 'e3',
+      pc1: 0.8,
+      pc2: -0.1,
+      cell_x: 0,
+      cell_y: 1,
+    },
+  ],
+};
+
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -267,6 +373,76 @@ describe('App', () => {
     expect(importedByteLength).toBe(2);
     expect(native.textContent).toContain('ocel20_example.json.gz');
     expect(native.textContent).toContain('Statistics');
+  });
+
+  it('renders state detection analysis and downloads the feature table', () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance as unknown as {
+      documentHandle: unknown;
+      fileName: { set(value: string): void };
+      summary: { set(value: unknown): void };
+      originalSummary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedObjectTypes: { set(value: string[]): void };
+      selectedEventTypes: { set(value: string[]): void };
+    };
+    let stateDetectionRequest = '';
+    let csvRequest = '';
+    const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:features');
+    const revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
+
+    component.documentHandle = {
+      stateDetectionJson: (request: string) => {
+        stateDetectionRequest = request;
+        return JSON.stringify(stateDetectionAnalysis);
+      },
+      stateFeatureTableCsv: (request: string) => {
+        csvRequest = request;
+        return 'object_id,activity.Create Order\nO1,1\n';
+      },
+    };
+    component.fileName.set('orders.json');
+    component.summary.set(importedSummary);
+    component.originalSummary.set(importedSummary);
+    component.filterOptions.set({
+      event_types: ['Create Order', 'Close Order'],
+      object_types: ['Order', 'Item'],
+    });
+    component.selectedEventTypes.set(['Create Order', 'Close Order']);
+    component.selectedObjectTypes.set(['Order', 'Item']);
+    fixture.detectChanges();
+
+    const native = fixture.nativeElement as HTMLElement;
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.feature-button'))
+      .find((button) => button.textContent?.includes('State Detection'))
+      ?.click();
+    fixture.detectChanges();
+
+    expect(JSON.parse(stateDetectionRequest)).toEqual({
+      object_type: 'Order',
+      window_size: 4,
+      som_width: 5,
+      som_height: 5,
+    });
+    expect(native.textContent).toContain('State Detection');
+    expect(native.textContent).toContain('Feature Table');
+    expect(native.textContent).toContain('Self-Organizing Map');
+    expect(native.textContent).toContain('State Transitions');
+    expect(native.textContent).toContain('85%');
+    expect(native.querySelectorAll('.som-cell').length).toBe(4);
+    expect(native.querySelector('.som-cell')?.getAttribute('title')).toContain('Create Order');
+    expect(native.querySelector('.transition-list .is-nearby')).toBeTruthy();
+
+    native.querySelector<HTMLButtonElement>('.state-detection-controls .ghost-button')?.click();
+
+    expect(JSON.parse(csvRequest).object_type).toBe('Order');
+    expect(createObjectUrl).toHaveBeenCalled();
+    expect(clickSpy).toHaveBeenCalled();
+
+    createObjectUrl.mockRestore();
+    revokeObjectUrl.mockRestore();
+    clickSpy.mockRestore();
   });
 
   it('opens state preset dialog after import', () => {

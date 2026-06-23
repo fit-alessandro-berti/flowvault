@@ -23,6 +23,8 @@ export interface OcelDocumentHandle {
   objectLifecycleJson(objectId: string): string;
   applyStateQuery(query: string): string;
   statePatternsJson(): string;
+  stateDetectionJson(requestJson: string): string;
+  stateFeatureTableCsv(requestJson: string): string;
   directlyFollowsGraphJson(objectType: string): string;
   objectCentricDirectlyFollowsGraphJson(): string;
   filteredObjectCentricDirectlyFollowsGraphJson(requestJson: string): string;
@@ -64,6 +66,69 @@ export interface StatePattern {
 export interface StatePatternAnalysis {
   intra: StatePattern[];
   inter: StatePattern[];
+}
+
+export interface StateDetectionResult {
+  object_type: string;
+  window_size: number;
+  som_width: number;
+  som_height: number;
+  object_count: number;
+  feature_count: number;
+  window_count: number;
+  feature_columns: string[];
+  table_preview: StateDetectionPreviewRow[];
+  pca: StateDetectionPca;
+  som: StateDetectionSom;
+  windows: StateDetectionWindow[];
+}
+
+export interface StateDetectionPreviewRow {
+  object_id: string;
+  values: number[];
+}
+
+export interface StateDetectionPca {
+  pc1_variance: number;
+  pc2_variance: number;
+  pc1_explained_ratio: number;
+  pc2_explained_ratio: number;
+}
+
+export interface StateDetectionSom {
+  cells: StateDetectionSomCell[];
+  transitions: StateDetectionSomTransition[];
+}
+
+export interface StateDetectionSomCell {
+  x: number;
+  y: number;
+  label: string;
+  count: number;
+  color_value: number;
+  avg_pc1: number;
+  avg_pc2: number;
+  dominant_activity?: string;
+}
+
+export interface StateDetectionSomTransition {
+  source_x: number;
+  source_y: number;
+  target_x: number;
+  target_y: number;
+  count: number;
+  distance: number;
+  nearby: boolean;
+}
+
+export interface StateDetectionWindow {
+  object_id: string;
+  start_event: string;
+  end_event: string;
+  pc1: number;
+  pc2: number;
+  cell_x: number;
+  cell_y: number;
 }
 
 export interface ProcessGraphPoint {

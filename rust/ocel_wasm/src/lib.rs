@@ -60,7 +60,7 @@ impl OcelFormat {
     }
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 struct Symbol(u32);
 
 #[derive(Debug, Default, Clone)]
@@ -242,6 +242,15 @@ struct GraphFilterRequest {
     object_types: Option<Vec<String>>,
     min_activity_frequency: Option<usize>,
     min_path_frequency: Option<usize>,
+}
+
+#[derive(Deserialize)]
+struct StateDetectionRequest {
+    object_type: String,
+    window_size: Option<usize>,
+    som_width: Option<usize>,
+    som_height: Option<usize>,
+    epochs: Option<usize>,
 }
 
 #[derive(Default)]
@@ -699,6 +708,528 @@ impl CompactOcelLog {
         serde_json::to_string(&analysis).map_err(|err| {
             OcelError::new(format!("could not serialize state pattern analysis: {err}"))
         })
+    }
+
+    fn state_detection_json(&self, request: &StateDetectionRequest) -> OcelResult<String> {
+        let analysis = self.detect_execution_states(request)?;
+        serde_json::to_string(&analysis)
+            .map_err(|err| OcelError::new(format!("could not serialize state detection: {err}")))
+    }
+
+    fn state_feature_table_csv(&self, request: &StateDetectionRequest) -> OcelResult<String> {
+        let table = self.state_feature_table(&request.object_type)?;
+        Ok(feature_table_to_csv(&table))
+    }
+
+    fn state_feature_table(&self, object_type: &str) -> OcelResult<FeatureTableData> {
+        let object_type_symbol = self.object_type_symbol(object_type).ok_or_else(|| {
+            OcelError::new(format!(
+                "unknown object type '{object_type}' for state detection"
+            ))
+        })?;
+        let object_indices = self
+            .objects
+            .iter()
+            .enumerate()
+            .filter_map(|(index, object)| (object.type_name == object_type_symbol).then_some(index))
+            .collect::<Vec<_>>();
+        let encoder = self.build_feature_encoder(&object_indices);
+        let columns = encoder.columns.iter().map(FeatureColumn::label).collect();
+        let rows = object_indices
+            .iter()
+            .map(|object_index| {
+                let object = &self.objects[*object_index];
+                FeatureRow {
+                    object_id: self.pool.resolve(object.id).to_owned(),
+                    values: self.encode_feature_vector(
+                        *object_index,
+                        &object.lifecycle,
+                        i64::MAX,
+                        &encoder,
+                    ),
+                }
+            })
+            .collect();
+
+        Ok(FeatureTableData { columns, rows })
+    }
+
+    fn detect_execution_states(
+        &self,
+        request: &StateDetectionRequest,
+    ) -> OcelResult<StateDetectionResult> {
+        let object_type_symbol =
+            self.object_type_symbol(&request.object_type)
+                .ok_or_else(|| {
+                    OcelError::new(format!(
+                        "unknown object type '{}' for state detection",
+                        request.object_type
+                    ))
+                })?;
+        let object_indices = self
+            .objects
+            .iter()
+            .enumerate()
+            .filter_map(|(index, object)| (object.type_name == object_type_symbol).then_some(index))
+            .collect::<Vec<_>>();
+        if object_indices.is_empty() {
+            return Err(OcelError::new(format!(
+                "no objects of type '{}' are available in the active log",
+                request.object_type
+            )));
+        }
+
+        let encoder = self.build_feature_encoder(&object_indices);
+        if encoder.columns.is_empty() {
+            return Err(OcelError::new(format!(
+                "no numerical features could be extracted for '{}'",
+                request.object_type
+            )));
+        }
+
+        let window_size = request.window_size.unwrap_or(4).clamp(1, 30);
+        let windows = self.encode_lifecycle_windows(&object_indices, window_size, &encoder);
+        if windows.is_empty() {
+            return Err(OcelError::new(format!(
+                "no lifecycle windows could be extracted for '{}'",
+                request.object_type
+            )));
+        }
+
+        let values = windows
+            .iter()
+            .map(|window| window.values.clone())
+            .collect::<Vec<_>>();
+        let pca = pca_project(&values);
+        let (som_width, som_height) =
+            default_som_dimensions(pca.points.len(), request.som_width, request.som_height);
+        let som = train_som(
+            &pca.points,
+            som_width,
+            som_height,
+            request.epochs.unwrap_or(120).clamp(10, 500),
+        );
+        let som_summary = self.summarize_som(&windows, &pca.points, &som);
+        let feature_table = self.state_feature_table(&request.object_type)?;
+        let feature_columns = encoder
+            .columns
+            .iter()
+            .map(FeatureColumn::label)
+            .collect::<Vec<_>>();
+        let table_preview = feature_table
+            .rows
+            .iter()
+            .take(10)
+            .map(|row| FeaturePreviewRow {
+                object_id: row.object_id.clone(),
+                values: row.values.clone(),
+            })
+            .collect();
+        let projected_windows = windows
+            .iter()
+            .zip(pca.points.iter())
+            .zip(som.assignments.iter())
+            .take(500)
+            .map(|((window, (pc1, pc2)), (cell_x, cell_y))| {
+                let object = &self.objects[window.object_index];
+                let first_event = window
+                    .event_indices
+                    .first()
+                    .map(|event_index| self.pool.resolve(self.events[*event_index].id))
+                    .unwrap_or("");
+                let last_event = window
+                    .event_indices
+                    .last()
+                    .map(|event_index| self.pool.resolve(self.events[*event_index].id))
+                    .unwrap_or("");
+                StateWindowProjection {
+                    object_id: self.pool.resolve(object.id).to_owned(),
+                    start_event: first_event.to_owned(),
+                    end_event: last_event.to_owned(),
+                    pc1: round_f64(*pc1),
+                    pc2: round_f64(*pc2),
+                    cell_x: *cell_x,
+                    cell_y: *cell_y,
+                }
+            })
+            .collect();
+
+        Ok(StateDetectionResult {
+            object_type: request.object_type.clone(),
+            window_size,
+            som_width,
+            som_height,
+            object_count: object_indices.len(),
+            feature_count: feature_columns.len(),
+            window_count: windows.len(),
+            feature_columns,
+            table_preview,
+            pca: PcaSummary {
+                pc1_variance: round_f64(pca.pc1_variance),
+                pc2_variance: round_f64(pca.pc2_variance),
+                pc1_explained_ratio: round_f64(pca.pc1_explained_ratio),
+                pc2_explained_ratio: round_f64(pca.pc2_explained_ratio),
+            },
+            som: som_summary,
+            windows: projected_windows,
+        })
+    }
+
+    fn build_feature_encoder(&self, object_indices: &[usize]) -> FeatureEncoder {
+        let mut activity_types = BTreeSet::<String>::new();
+        let mut related_object_types = BTreeSet::<String>::new();
+        let mut attributes = BTreeMap::<String, AttributeFeatureCollector>::new();
+
+        for object_index in object_indices {
+            let object = &self.objects[*object_index];
+            for event_index in &object.lifecycle {
+                let event = &self.events[*event_index];
+                activity_types.insert(self.pool.resolve(event.type_name).to_owned());
+                for relationship in &event.relationships {
+                    if relationship.object_id == object.id {
+                        continue;
+                    }
+                    if let Some(related_index) = self.object_index.get(&relationship.object_id) {
+                        related_object_types.insert(
+                            self.pool
+                                .resolve(self.objects[*related_index].type_name)
+                                .to_owned(),
+                        );
+                    }
+                }
+            }
+
+            for relationship in &object.relationships {
+                if relationship.object_id == object.id {
+                    continue;
+                }
+                if let Some(related_index) = self.object_index.get(&relationship.object_id) {
+                    related_object_types.insert(
+                        self.pool
+                            .resolve(self.objects[*related_index].type_name)
+                            .to_owned(),
+                    );
+                }
+            }
+
+            for (name, value) in self.latest_attribute_values_at(object, i64::MAX) {
+                let entry = attributes.entry(name).or_default();
+                if attr_value_to_f64(value).is_some() {
+                    entry.has_numeric = true;
+                } else {
+                    entry.categories.insert(self.attr_value_label(value));
+                }
+            }
+        }
+
+        let mut columns = Vec::new();
+        columns.extend(
+            activity_types
+                .into_iter()
+                .map(|event_type| FeatureColumn::Activity { event_type }),
+        );
+        columns.extend(
+            related_object_types
+                .into_iter()
+                .map(|object_type| FeatureColumn::RelatedObjectType { object_type }),
+        );
+        for (name, collector) in attributes {
+            if !collector.categories.is_empty() {
+                if collector.categories.len() < 50 {
+                    columns.extend(collector.categories.into_iter().map(|value| {
+                        FeatureColumn::CategoricalAttribute {
+                            name: name.clone(),
+                            value,
+                        }
+                    }));
+                }
+            } else if collector.has_numeric {
+                columns.push(FeatureColumn::NumericAttribute { name });
+            }
+        }
+
+        FeatureEncoder { columns }
+    }
+
+    fn encode_lifecycle_windows(
+        &self,
+        object_indices: &[usize],
+        window_size: usize,
+        encoder: &FeatureEncoder,
+    ) -> Vec<WindowEncoding> {
+        let mut windows = Vec::new();
+        for object_index in object_indices {
+            let lifecycle = &self.objects[*object_index].lifecycle;
+            if lifecycle.is_empty() {
+                continue;
+            }
+
+            if lifecycle.len() <= window_size {
+                let event_indices = lifecycle.clone();
+                let end_time = event_indices
+                    .last()
+                    .map(|event_index| self.events[*event_index].time_ms)
+                    .unwrap_or(i64::MAX);
+                windows.push(WindowEncoding {
+                    object_index: *object_index,
+                    values: self.encode_feature_vector(
+                        *object_index,
+                        &event_indices,
+                        end_time,
+                        encoder,
+                    ),
+                    event_indices,
+                });
+                continue;
+            }
+
+            for start in 0..=lifecycle.len() - window_size {
+                let event_indices = lifecycle[start..start + window_size].to_vec();
+                let end_time = event_indices
+                    .last()
+                    .map(|event_index| self.events[*event_index].time_ms)
+                    .unwrap_or(i64::MAX);
+                windows.push(WindowEncoding {
+                    object_index: *object_index,
+                    values: self.encode_feature_vector(
+                        *object_index,
+                        &event_indices,
+                        end_time,
+                        encoder,
+                    ),
+                    event_indices,
+                });
+            }
+        }
+        windows
+    }
+
+    fn encode_feature_vector(
+        &self,
+        object_index: usize,
+        event_indices: &[usize],
+        attribute_time_ms: i64,
+        encoder: &FeatureEncoder,
+    ) -> Vec<f64> {
+        let object = &self.objects[object_index];
+        let mut activity_counts = BTreeMap::<String, f64>::new();
+        let mut related_objects = BTreeMap::<String, BTreeSet<Symbol>>::new();
+
+        for event_index in event_indices {
+            let event = &self.events[*event_index];
+            *activity_counts
+                .entry(self.pool.resolve(event.type_name).to_owned())
+                .or_default() += 1.0;
+            for relationship in &event.relationships {
+                if relationship.object_id == object.id {
+                    continue;
+                }
+                if let Some(related_index) = self.object_index.get(&relationship.object_id) {
+                    related_objects
+                        .entry(
+                            self.pool
+                                .resolve(self.objects[*related_index].type_name)
+                                .to_owned(),
+                        )
+                        .or_default()
+                        .insert(relationship.object_id);
+                }
+            }
+        }
+
+        for relationship in &object.relationships {
+            if relationship.object_id == object.id {
+                continue;
+            }
+            if let Some(related_index) = self.object_index.get(&relationship.object_id) {
+                related_objects
+                    .entry(
+                        self.pool
+                            .resolve(self.objects[*related_index].type_name)
+                            .to_owned(),
+                    )
+                    .or_default()
+                    .insert(relationship.object_id);
+            }
+        }
+
+        let attribute_values = self.latest_attribute_values_at(object, attribute_time_ms);
+        encoder
+            .columns
+            .iter()
+            .map(|column| match column {
+                FeatureColumn::Activity { event_type } => {
+                    *activity_counts.get(event_type).unwrap_or(&0.0)
+                }
+                FeatureColumn::RelatedObjectType { object_type } => related_objects
+                    .get(object_type)
+                    .map(|objects| objects.len() as f64)
+                    .unwrap_or(0.0),
+                FeatureColumn::NumericAttribute { name } => attribute_values
+                    .get(name)
+                    .and_then(|value| attr_value_to_f64(value))
+                    .unwrap_or(0.0),
+                FeatureColumn::CategoricalAttribute { name, value } => attribute_values
+                    .get(name)
+                    .is_some_and(|candidate| self.attr_value_label(candidate) == *value)
+                    .then_some(1.0)
+                    .unwrap_or(0.0),
+            })
+            .collect()
+    }
+
+    fn latest_attribute_values_at<'a>(
+        &'a self,
+        object: &'a Object,
+        time_ms: i64,
+    ) -> BTreeMap<String, &'a AttrValue> {
+        let mut latest = BTreeMap::<String, (i64, &'a AttrValue)>::new();
+        for attribute in &object.attributes {
+            if attribute.time_ms > time_ms {
+                continue;
+            }
+            let name = self.pool.resolve(attribute.name).to_owned();
+            if latest
+                .get(&name)
+                .is_none_or(|(existing_time, _)| attribute.time_ms >= *existing_time)
+            {
+                latest.insert(name, (attribute.time_ms, &attribute.value));
+            }
+        }
+        latest
+            .into_iter()
+            .map(|(name, (_time, value))| (name, value))
+            .collect()
+    }
+
+    fn attr_value_label(&self, value: &AttrValue) -> String {
+        match value {
+            AttrValue::String(symbol) => self.pool.resolve(*symbol).to_owned(),
+            AttrValue::Time(ms) => ms.to_string(),
+            AttrValue::Integer(value) => value.to_string(),
+            AttrValue::Float(value) => value.to_string(),
+            AttrValue::Boolean(value) => value.to_string(),
+        }
+    }
+
+    fn summarize_som(
+        &self,
+        windows: &[WindowEncoding],
+        points: &[(f64, f64)],
+        som: &SomModel,
+    ) -> SomSummary {
+        let mut cell_counts = vec![0usize; som.width * som.weights.len() / som.width];
+        let mut pc_sums = vec![(0.0, 0.0); cell_counts.len()];
+        let mut activity_counts = vec![BTreeMap::<String, usize>::new(); cell_counts.len()];
+        let mut transitions = BTreeMap::<(usize, usize, usize, usize), usize>::new();
+
+        for ((window, (pc1, pc2)), (cell_x, cell_y)) in windows
+            .iter()
+            .zip(points.iter())
+            .zip(som.assignments.iter())
+        {
+            let cell_index = cell_y * som.width + cell_x;
+            cell_counts[cell_index] += 1;
+            pc_sums[cell_index].0 += *pc1;
+            pc_sums[cell_index].1 += *pc2;
+            if let Some(activity) = self.dominant_window_activity(window) {
+                *activity_counts[cell_index].entry(activity).or_default() += 1;
+            }
+        }
+
+        for pair in windows.windows(2).zip(som.assignments.windows(2)) {
+            let (window_pair, cell_pair) = pair;
+            let [left_window, right_window] = window_pair else {
+                continue;
+            };
+            if left_window.object_index != right_window.object_index {
+                continue;
+            }
+            let [(source_x, source_y), (target_x, target_y)] = cell_pair else {
+                continue;
+            };
+            if source_x == target_x && source_y == target_y {
+                continue;
+            }
+            *transitions
+                .entry((*source_x, *source_y, *target_x, *target_y))
+                .or_default() += 1;
+        }
+
+        let max_count = cell_counts.iter().copied().max().unwrap_or(0).max(1);
+        let height = som.weights.len() / som.width;
+        let mut cells = Vec::with_capacity(som.weights.len());
+        for y in 0..height {
+            for x in 0..som.width {
+                let index = y * som.width + x;
+                let count = cell_counts[index];
+                let dominant_activity = activity_counts[index]
+                    .iter()
+                    .max_by(|left, right| left.1.cmp(right.1).then_with(|| right.0.cmp(left.0)))
+                    .map(|(activity, _)| activity.clone());
+                cells.push(SomCellSummary {
+                    x,
+                    y,
+                    label: format!("S{}-{}", x + 1, y + 1),
+                    count,
+                    color_value: round_f64(count as f64 / max_count as f64),
+                    avg_pc1: round_f64(if count == 0 {
+                        som.weights[index].0
+                    } else {
+                        pc_sums[index].0 / count as f64
+                    }),
+                    avg_pc2: round_f64(if count == 0 {
+                        som.weights[index].1
+                    } else {
+                        pc_sums[index].1 / count as f64
+                    }),
+                    dominant_activity,
+                });
+            }
+        }
+
+        let mut transitions = transitions
+            .into_iter()
+            .map(|((source_x, source_y, target_x, target_y), count)| {
+                let distance = source_x.abs_diff(target_x) + source_y.abs_diff(target_y);
+                SomTransitionSummary {
+                    source_x,
+                    source_y,
+                    target_x,
+                    target_y,
+                    count,
+                    distance,
+                    nearby: distance <= 1,
+                }
+            })
+            .collect::<Vec<_>>();
+        transitions.sort_by(|left, right| {
+            right
+                .count
+                .cmp(&left.count)
+                .then_with(|| left.distance.cmp(&right.distance))
+                .then_with(|| left.source_y.cmp(&right.source_y))
+                .then_with(|| left.source_x.cmp(&right.source_x))
+        });
+
+        SomSummary { cells, transitions }
+    }
+
+    fn dominant_window_activity(&self, window: &WindowEncoding) -> Option<String> {
+        let mut counts = BTreeMap::<String, usize>::new();
+        for event_index in &window.event_indices {
+            *counts
+                .entry(
+                    self.pool
+                        .resolve(self.events[*event_index].type_name)
+                        .to_owned(),
+                )
+                .or_default() += 1;
+        }
+        counts
+            .into_iter()
+            .max_by(|left, right| left.1.cmp(&right.1).then_with(|| right.0.cmp(&left.0)))
+            .map(|(activity, _)| activity)
     }
 
     fn directly_follows_graph_json(&self, object_type: &str) -> OcelResult<String> {
@@ -1534,6 +2065,144 @@ struct PatternEdge {
 
 #[derive(Serialize)]
 #[cfg_attr(test, derive(Debug))]
+struct StateDetectionResult {
+    object_type: String,
+    window_size: usize,
+    som_width: usize,
+    som_height: usize,
+    object_count: usize,
+    feature_count: usize,
+    window_count: usize,
+    feature_columns: Vec<String>,
+    table_preview: Vec<FeaturePreviewRow>,
+    pca: PcaSummary,
+    som: SomSummary,
+    windows: Vec<StateWindowProjection>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct FeaturePreviewRow {
+    object_id: String,
+    values: Vec<f64>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct PcaSummary {
+    pc1_variance: f64,
+    pc2_variance: f64,
+    pc1_explained_ratio: f64,
+    pc2_explained_ratio: f64,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct SomSummary {
+    cells: Vec<SomCellSummary>,
+    transitions: Vec<SomTransitionSummary>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct SomCellSummary {
+    x: usize,
+    y: usize,
+    label: String,
+    count: usize,
+    color_value: f64,
+    avg_pc1: f64,
+    avg_pc2: f64,
+    dominant_activity: Option<String>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct SomTransitionSummary {
+    source_x: usize,
+    source_y: usize,
+    target_x: usize,
+    target_y: usize,
+    count: usize,
+    distance: usize,
+    nearby: bool,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateWindowProjection {
+    object_id: String,
+    start_event: String,
+    end_event: String,
+    pc1: f64,
+    pc2: f64,
+    cell_x: usize,
+    cell_y: usize,
+}
+
+struct FeatureTableData {
+    columns: Vec<String>,
+    rows: Vec<FeatureRow>,
+}
+
+struct FeatureRow {
+    object_id: String,
+    values: Vec<f64>,
+}
+
+#[derive(Clone)]
+enum FeatureColumn {
+    Activity { event_type: String },
+    RelatedObjectType { object_type: String },
+    NumericAttribute { name: String },
+    CategoricalAttribute { name: String, value: String },
+}
+
+impl FeatureColumn {
+    fn label(&self) -> String {
+        match self {
+            Self::Activity { event_type } => format!("activity.{event_type}"),
+            Self::RelatedObjectType { object_type } => format!("related_objects.{object_type}"),
+            Self::NumericAttribute { name } => format!("attribute.{name}"),
+            Self::CategoricalAttribute { name, value } => {
+                format!("attribute.{name}={value}")
+            }
+        }
+    }
+}
+
+#[derive(Default)]
+struct AttributeFeatureCollector {
+    has_numeric: bool,
+    categories: BTreeSet<String>,
+}
+
+struct FeatureEncoder {
+    columns: Vec<FeatureColumn>,
+}
+
+struct WindowEncoding {
+    object_index: usize,
+    event_indices: Vec<usize>,
+    values: Vec<f64>,
+}
+
+struct PcaProjection {
+    points: Vec<(f64, f64)>,
+    pc1_variance: f64,
+    pc2_variance: f64,
+    pc1_explained_ratio: f64,
+    pc2_explained_ratio: f64,
+}
+
+struct SomModel {
+    width: usize,
+    assignments: Vec<(usize, usize)>,
+    weights: Vec<(f64, f64)>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
 struct LayoutGraph {
     title: String,
     subtitle: String,
@@ -2128,6 +2797,341 @@ fn split_label_word(word: &str, max_line_length: usize) -> Vec<String> {
     parts
 }
 
+fn feature_table_to_csv(table: &FeatureTableData) -> String {
+    let mut output = String::new();
+    output.push_str("object_id");
+    for column in &table.columns {
+        output.push(',');
+        output.push_str(&csv_escape(column));
+    }
+    output.push('\n');
+
+    for row in &table.rows {
+        output.push_str(&csv_escape(&row.object_id));
+        for value in &row.values {
+            output.push(',');
+            output.push_str(&format_numeric_feature(*value));
+        }
+        output.push('\n');
+    }
+
+    output
+}
+
+fn csv_escape(value: &str) -> String {
+    if value.contains(',') || value.contains('"') || value.contains('\n') || value.contains('\r') {
+        format!("\"{}\"", value.replace('"', "\"\""))
+    } else {
+        value.to_owned()
+    }
+}
+
+fn format_numeric_feature(value: f64) -> String {
+    if value.is_finite() && value.fract().abs() < 0.000_000_1 {
+        (value as i64).to_string()
+    } else {
+        round_f64(value).to_string()
+    }
+}
+
+fn attr_value_to_f64(value: &AttrValue) -> Option<f64> {
+    match value {
+        AttrValue::String(_) => None,
+        AttrValue::Time(value) => Some(*value as f64),
+        AttrValue::Integer(value) => Some(*value as f64),
+        AttrValue::Float(value) if value.is_finite() => Some(*value),
+        AttrValue::Float(_) => None,
+        AttrValue::Boolean(value) => Some(usize::from(*value) as f64),
+    }
+}
+
+fn pca_project(rows: &[Vec<f64>]) -> PcaProjection {
+    let row_count = rows.len();
+    let column_count = rows.first().map(Vec::len).unwrap_or_default();
+    if row_count == 0 || column_count == 0 {
+        return PcaProjection {
+            points: Vec::new(),
+            pc1_variance: 0.0,
+            pc2_variance: 0.0,
+            pc1_explained_ratio: 0.0,
+            pc2_explained_ratio: 0.0,
+        };
+    }
+
+    let mut means = vec![0.0; column_count];
+    for row in rows {
+        for (index, value) in row.iter().enumerate() {
+            means[index] += *value;
+        }
+    }
+    for mean in &mut means {
+        *mean /= row_count as f64;
+    }
+
+    let mut std_devs = vec![0.0; column_count];
+    for row in rows {
+        for (index, value) in row.iter().enumerate() {
+            let centered = value - means[index];
+            std_devs[index] += centered * centered;
+        }
+    }
+    for std_dev in &mut std_devs {
+        *std_dev = (*std_dev / row_count.max(1) as f64).sqrt();
+        if *std_dev <= f64::EPSILON {
+            *std_dev = 1.0;
+        }
+    }
+
+    let standardized = rows
+        .iter()
+        .map(|row| {
+            row.iter()
+                .enumerate()
+                .map(|(index, value)| (value - means[index]) / std_devs[index])
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
+
+    let divisor = row_count.saturating_sub(1).max(1) as f64;
+    let mut covariance = vec![vec![0.0; column_count]; column_count];
+    for row in &standardized {
+        for left in 0..column_count {
+            for right in left..column_count {
+                covariance[left][right] += row[left] * row[right] / divisor;
+            }
+        }
+    }
+    for left in 0..column_count {
+        for right in 0..left {
+            covariance[left][right] = covariance[right][left];
+        }
+    }
+
+    let total_variance = covariance
+        .iter()
+        .enumerate()
+        .map(|(index, row)| row[index])
+        .sum::<f64>()
+        .max(0.0);
+    let pc1 = power_iteration(&covariance, 80);
+    let pc1_variance = rayleigh_quotient(&covariance, &pc1).max(0.0);
+    let mut deflated = covariance.clone();
+    for row in 0..column_count {
+        for column in 0..column_count {
+            deflated[row][column] -= pc1_variance * pc1[row] * pc1[column];
+        }
+    }
+    let pc2 = if column_count > 1 {
+        power_iteration(&deflated, 80)
+    } else {
+        vec![0.0; column_count]
+    };
+    let pc2_variance = if column_count > 1 {
+        rayleigh_quotient(&covariance, &pc2).max(0.0)
+    } else {
+        0.0
+    };
+
+    let points = standardized
+        .iter()
+        .map(|row| (dot(row, &pc1), dot(row, &pc2)))
+        .collect();
+
+    PcaProjection {
+        points,
+        pc1_variance,
+        pc2_variance,
+        pc1_explained_ratio: if total_variance > f64::EPSILON {
+            pc1_variance / total_variance
+        } else {
+            0.0
+        },
+        pc2_explained_ratio: if total_variance > f64::EPSILON {
+            pc2_variance / total_variance
+        } else {
+            0.0
+        },
+    }
+}
+
+fn power_iteration(matrix: &[Vec<f64>], iterations: usize) -> Vec<f64> {
+    let size = matrix.len();
+    if size == 0 {
+        return Vec::new();
+    }
+
+    let mut vector = (0..size)
+        .map(|index| (index + 1) as f64 / size as f64)
+        .collect::<Vec<_>>();
+    normalize_vector(&mut vector);
+    for _ in 0..iterations {
+        let mut next = vec![0.0; size];
+        for row in 0..size {
+            for (column, value) in vector.iter().enumerate() {
+                next[row] += matrix[row][column] * value;
+            }
+        }
+        if vector_norm(&next) <= f64::EPSILON {
+            break;
+        }
+        normalize_vector(&mut next);
+        vector = next;
+    }
+    vector
+}
+
+fn rayleigh_quotient(matrix: &[Vec<f64>], vector: &[f64]) -> f64 {
+    if matrix.is_empty() || vector.is_empty() {
+        return 0.0;
+    }
+    let multiplied = matrix
+        .iter()
+        .map(|row| dot(row, vector))
+        .collect::<Vec<_>>();
+    dot(vector, &multiplied)
+}
+
+fn normalize_vector(vector: &mut [f64]) {
+    let norm = vector_norm(vector);
+    if norm <= f64::EPSILON {
+        return;
+    }
+    for value in vector {
+        *value /= norm;
+    }
+}
+
+fn vector_norm(vector: &[f64]) -> f64 {
+    vector.iter().map(|value| value * value).sum::<f64>().sqrt()
+}
+
+fn dot(left: &[f64], right: &[f64]) -> f64 {
+    left.iter()
+        .zip(right.iter())
+        .map(|(left, right)| left * right)
+        .sum()
+}
+
+fn default_som_dimensions(
+    point_count: usize,
+    requested_width: Option<usize>,
+    requested_height: Option<usize>,
+) -> (usize, usize) {
+    let fallback = ((point_count as f64).sqrt().ceil() as usize).clamp(3, 8);
+    (
+        requested_width.unwrap_or(fallback).clamp(2, 12),
+        requested_height.unwrap_or(fallback).clamp(2, 12),
+    )
+}
+
+fn train_som(points: &[(f64, f64)], width: usize, height: usize, epochs: usize) -> SomModel {
+    let (min_x, max_x, min_y, max_y) = point_bounds(points);
+    let mut weights = Vec::with_capacity(width * height);
+    for y in 0..height {
+        for x in 0..width {
+            let fx = if width <= 1 {
+                0.5
+            } else {
+                x as f64 / (width - 1) as f64
+            };
+            let fy = if height <= 1 {
+                0.5
+            } else {
+                y as f64 / (height - 1) as f64
+            };
+            weights.push((min_x + (max_x - min_x) * fx, min_y + (max_y - min_y) * fy));
+        }
+    }
+
+    let max_radius = (width.max(height) as f64 / 2.0).max(1.0);
+    for epoch in 0..epochs {
+        let progress = if epochs <= 1 {
+            1.0
+        } else {
+            epoch as f64 / (epochs - 1) as f64
+        };
+        let learning_rate = 0.5 * (1.0 - progress) + 0.05 * progress;
+        let radius = max_radius * (1.0 - progress) + 0.75 * progress;
+        let radius_sq = (radius * radius).max(0.01);
+        for point in points {
+            let (bmu_x, bmu_y) = best_matching_unit(point, &weights, width);
+            for y in 0..height {
+                for x in 0..width {
+                    let grid_distance_sq =
+                        (x.abs_diff(bmu_x).pow(2) + y.abs_diff(bmu_y).pow(2)) as f64;
+                    let influence = (-grid_distance_sq / (2.0 * radius_sq)).exp();
+                    let index = y * width + x;
+                    weights[index].0 += learning_rate * influence * (point.0 - weights[index].0);
+                    weights[index].1 += learning_rate * influence * (point.1 - weights[index].1);
+                }
+            }
+        }
+    }
+
+    let assignments = points
+        .iter()
+        .map(|point| best_matching_unit(point, &weights, width))
+        .collect();
+
+    SomModel {
+        width,
+        assignments,
+        weights,
+    }
+}
+
+fn point_bounds(points: &[(f64, f64)]) -> (f64, f64, f64, f64) {
+    let mut min_x = f64::INFINITY;
+    let mut max_x = f64::NEG_INFINITY;
+    let mut min_y = f64::INFINITY;
+    let mut max_y = f64::NEG_INFINITY;
+    for (x, y) in points {
+        min_x = min_x.min(*x);
+        max_x = max_x.max(*x);
+        min_y = min_y.min(*y);
+        max_y = max_y.max(*y);
+    }
+    if !min_x.is_finite() {
+        return (0.0, 0.0, 0.0, 0.0);
+    }
+    if (max_x - min_x).abs() <= f64::EPSILON {
+        min_x -= 0.5;
+        max_x += 0.5;
+    }
+    if (max_y - min_y).abs() <= f64::EPSILON {
+        min_y -= 0.5;
+        max_y += 0.5;
+    }
+    (min_x, max_x, min_y, max_y)
+}
+
+fn best_matching_unit(point: &(f64, f64), weights: &[(f64, f64)], width: usize) -> (usize, usize) {
+    let mut best_index = 0usize;
+    let mut best_distance = f64::INFINITY;
+    for (index, weight) in weights.iter().enumerate() {
+        let distance = squared_distance(*point, *weight);
+        if distance < best_distance {
+            best_distance = distance;
+            best_index = index;
+        }
+    }
+    (best_index % width, best_index / width)
+}
+
+fn squared_distance(left: (f64, f64), right: (f64, f64)) -> f64 {
+    let dx = left.0 - right.0;
+    let dy = left.1 - right.1;
+    dx * dx + dy * dy
+}
+
+fn round_f64(value: f64) -> f64 {
+    if value.is_finite() {
+        (value * 1_000_000.0).round() / 1_000_000.0
+    } else {
+        0.0
+    }
+}
+
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 enum PatternFamily {
     Intra,
@@ -2459,6 +3463,30 @@ impl OcelDocument {
     #[wasm_bindgen(js_name = statePatternsJson)]
     pub fn state_patterns_json(&self) -> Result<String, JsValue> {
         self.log.state_patterns_json().map_err(JsValue::from)
+    }
+
+    /// Extracts object-level features and detects execution-state cells with PCA and SOM.
+    #[wasm_bindgen(js_name = stateDetectionJson)]
+    pub fn state_detection_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<StateDetectionRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!("could not parse state detection request: {err}"))
+            })?;
+        self.log
+            .state_detection_json(&request)
+            .map_err(JsValue::from)
+    }
+
+    /// Returns the object-level numerical feature table as CSV.
+    #[wasm_bindgen(js_name = stateFeatureTableCsv)]
+    pub fn state_feature_table_csv(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<StateDetectionRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!("could not parse state detection request: {err}"))
+            })?;
+        self.log
+            .state_feature_table_csv(&request)
+            .map_err(JsValue::from)
     }
 
     /// Computes a flattened directly-follows graph for one object type.
@@ -4390,6 +5418,63 @@ mod tests {
         assert!(exported["inter"]
             .as_array()
             .is_some_and(|items| !items.is_empty()));
+    }
+
+    #[test]
+    fn extracts_state_detection_feature_table_and_csv() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let request = StateDetectionRequest {
+            object_type: "Purchase Order".to_owned(),
+            window_size: Some(2),
+            som_width: Some(3),
+            som_height: Some(3),
+            epochs: Some(20),
+        };
+
+        let table = log.state_feature_table("Purchase Order").unwrap();
+        assert!(!table.rows.is_empty());
+        assert!(table
+            .columns
+            .iter()
+            .any(|column| column == "activity.Create Purchase Order"));
+        assert!(table
+            .columns
+            .iter()
+            .any(|column| column == "related_objects.Invoice"));
+        assert_eq!(table.rows[0].values.len(), table.columns.len());
+
+        let csv = log.state_feature_table_csv(&request).unwrap();
+        assert!(csv.starts_with("object_id,"));
+        assert!(csv.contains("activity.Create Purchase Order"));
+        assert!(csv.contains("PO1"));
+    }
+
+    #[test]
+    fn detects_execution_states_with_pca_and_som() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let request = StateDetectionRequest {
+            object_type: "Purchase Order".to_owned(),
+            window_size: Some(2),
+            som_width: Some(3),
+            som_height: Some(2),
+            epochs: Some(25),
+        };
+
+        let json = log.state_detection_json(&request).unwrap();
+        let analysis: Value = serde_json::from_str(&json).unwrap();
+
+        assert_eq!(analysis["object_type"], Value::from("Purchase Order"));
+        assert_eq!(analysis["som_width"], Value::from(3));
+        assert_eq!(analysis["som_height"], Value::from(2));
+        assert!(analysis["feature_count"].as_u64().unwrap() > 0);
+        assert!(analysis["window_count"].as_u64().unwrap() > 0);
+        assert!(analysis["pca"]["pc1_explained_ratio"]
+            .as_f64()
+            .is_some_and(|value| value >= 0.0));
+        assert_eq!(analysis["som"]["cells"].as_array().unwrap().len(), 6);
+        assert!(analysis["windows"]
+            .as_array()
+            .is_some_and(|windows| !windows.is_empty()));
     }
 
     #[test]

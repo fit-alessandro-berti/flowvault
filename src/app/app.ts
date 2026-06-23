@@ -10,6 +10,10 @@ import {
   StatePattern,
   StatePatternAnalysis,
   StatePatternEdge,
+  StateDetectionResult,
+  StateDetectionPreviewRow,
+  StateDetectionSomCell,
+  StateDetectionSomTransition,
   OcelSummary,
   OcelWasmService,
   StateQueryResult,
@@ -47,7 +51,7 @@ interface FilterRequest {
 type FilterDialogKind = 'activities' | 'objectTypes';
 type PatternTab = 'intra' | 'inter';
 type PatternVisualization = 'text' | 'graph';
-type FeaturePage = 'statistics' | 'ocdfg' | 'patterns' | 'stateAwareOcdfg';
+type FeaturePage = 'statistics' | 'stateDetection' | 'ocdfg' | 'patterns' | 'stateAwareOcdfg';
 
 interface AppliedFilterChip {
   kind: FilterDialogKind;
@@ -124,6 +128,11 @@ export class App {
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
   protected readonly isFilterMenuOpen = signal(false);
   protected readonly isFilterChainOpen = signal(false);
+  protected readonly stateDetectionObjectType = signal('');
+  protected readonly stateDetectionWindowSize = signal(4);
+  protected readonly stateDetectionSomWidth = signal(5);
+  protected readonly stateDetectionSomHeight = signal(5);
+  protected readonly stateDetectionAnalysis = signal<StateDetectionResult | null>(null);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
@@ -260,6 +269,9 @@ export class App {
     }
 
     this.activeFeature.set(feature);
+    if (feature === 'stateDetection' && !this.stateDetectionAnalysis()) {
+      this.loadStateDetection();
+    }
   }
 
   protected toggleFilterMenu(): void {
@@ -385,6 +397,11 @@ export class App {
       this.patternAnalysis.set(null);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
+      this.stateDetectionAnalysis.set(null);
+      this.stateDetectionObjectType.set(imported.filterOptions.object_types[0] ?? '');
+      this.stateDetectionWindowSize.set(4);
+      this.stateDetectionSomWidth.set(5);
+      this.stateDetectionSomHeight.set(5);
       this.resetGraphSettings(imported.filterOptions.object_types);
       this.loadTraditionalOcdfg();
       this.selectedIntraPatternId.set('');
@@ -414,6 +431,8 @@ export class App {
       this.patternAnalysis.set(null);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
+      this.stateDetectionAnalysis.set(null);
+      this.stateDetectionObjectType.set('');
       this.resetGraphSettings([]);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
@@ -435,19 +454,19 @@ export class App {
       const content =
         format === 'json' ? this.documentHandle.exportJson() : this.documentHandle.exportXml();
       const mimeType = format === 'json' ? 'application/json' : 'application/xml';
-      this.download(content, mimeType, format);
+      this.downloadNamed(content, mimeType, `${exportBaseName(this.fileName())}.${format}`);
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
     }
   }
 
-  private download(content: string, mimeType: string, extension: 'json' | 'xml'): void {
+  private downloadNamed(content: string, mimeType: string, fileName: string): void {
     const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
 
     anchor.href = url;
-    anchor.download = `${exportBaseName(this.fileName())}.${extension}`;
+    anchor.download = fileName;
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -559,6 +578,91 @@ export class App {
 
     this.filterDialog.set(null);
     this.applyActiveFilter();
+  }
+
+  protected onStateDetectionObjectTypeChange(event: Event): void {
+    this.stateDetectionObjectType.set((event.target as HTMLSelectElement).value);
+    this.stateDetectionAnalysis.set(null);
+  }
+
+  protected onStateDetectionWindowSizeChange(event: Event): void {
+    this.stateDetectionWindowSize.set(clampInteger((event.target as HTMLInputElement).value, 1, 30));
+    this.stateDetectionAnalysis.set(null);
+  }
+
+  protected onStateDetectionSomWidthChange(event: Event): void {
+    this.stateDetectionSomWidth.set(clampInteger((event.target as HTMLInputElement).value, 2, 12));
+    this.stateDetectionAnalysis.set(null);
+  }
+
+  protected onStateDetectionSomHeightChange(event: Event): void {
+    this.stateDetectionSomHeight.set(
+      clampInteger((event.target as HTMLInputElement).value, 2, 12),
+    );
+    this.stateDetectionAnalysis.set(null);
+  }
+
+  protected runStateDetection(): void {
+    this.loadStateDetection();
+  }
+
+  protected downloadStateFeatureTable(): void {
+    if (!this.documentHandle) {
+      return;
+    }
+
+    try {
+      this.ensureStateDetectionObjectType();
+      const csv = this.documentHandle.stateFeatureTableCsv(this.stateDetectionRequestJson());
+      this.downloadNamed(
+        csv,
+        'text/csv',
+        `${exportBaseName(this.fileName())}-${safeFilePart(this.stateDetectionObjectType())}-features.csv`,
+      );
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  protected previewColumns(analysis: StateDetectionResult, limit = 10): string[] {
+    return analysis.feature_columns.slice(0, limit);
+  }
+
+  protected previewValues(row: StateDetectionPreviewRow, limit = 10): number[] {
+    return row.values.slice(0, limit);
+  }
+
+  protected hiddenFeatureColumnCount(analysis: StateDetectionResult, limit = 10): number {
+    return Math.max(analysis.feature_columns.length - limit, 0);
+  }
+
+  protected somGridColumns(analysis: StateDetectionResult): string {
+    return `repeat(${analysis.som_width}, minmax(0, 1fr))`;
+  }
+
+  protected somCellStyle(cell: StateDetectionSomCell): string {
+    const lightness = Math.round(94 - cell.color_value * 44);
+    return `hsl(186 58% ${lightness}%)`;
+  }
+
+  protected somCellTitle(cell: StateDetectionSomCell): string {
+    const activity = cell.dominant_activity ? ` | ${cell.dominant_activity}` : '';
+    return `${cell.label}: ${cell.count.toLocaleString()} windows${activity}`;
+  }
+
+  protected topSomTransitions(
+    transitions: StateDetectionSomTransition[],
+    limit = 12,
+  ): StateDetectionSomTransition[] {
+    return transitions.slice(0, limit);
+  }
+
+  protected transitionLabel(transition: StateDetectionSomTransition): string {
+    return `S${transition.source_x + 1}-${transition.source_y + 1} -> S${transition.target_x + 1}-${transition.target_y + 1}`;
+  }
+
+  protected percent(value: number): string {
+    return `${Math.round(value * 1000) / 10}%`;
   }
 
   protected summaryDisplayValue(metric: SummaryMetric): SummaryDisplayValue {
@@ -725,6 +829,47 @@ export class App {
     return { width, height, nodeWidth, nodeHeight, nodes, edges };
   }
 
+  private loadStateDetection(): void {
+    if (!this.documentHandle) {
+      this.stateDetectionAnalysis.set(null);
+      return;
+    }
+
+    try {
+      this.ensureStateDetectionObjectType();
+      if (!this.stateDetectionObjectType()) {
+        this.stateDetectionAnalysis.set(null);
+        return;
+      }
+      const analysis = JSON.parse(
+        this.documentHandle.stateDetectionJson(this.stateDetectionRequestJson()),
+      ) as StateDetectionResult;
+      this.stateDetectionAnalysis.set(analysis);
+      this.errorMessage.set('');
+    } catch (error) {
+      this.stateDetectionAnalysis.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  private stateDetectionRequestJson(): string {
+    return JSON.stringify({
+      object_type: this.stateDetectionObjectType(),
+      window_size: this.stateDetectionWindowSize(),
+      som_width: this.stateDetectionSomWidth(),
+      som_height: this.stateDetectionSomHeight(),
+    });
+  }
+
+  private ensureStateDetectionObjectType(): void {
+    const selected = this.selectedObjectTypes();
+    const current = this.stateDetectionObjectType();
+    if (current && selected.includes(current)) {
+      return;
+    }
+    this.stateDetectionObjectType.set(selected[0] ?? this.filterOptions().object_types[0] ?? '');
+  }
+
   private loadStatePatterns(preserveSelection = false): void {
     if (!this.documentHandle) {
       this.patternAnalysis.set(null);
@@ -826,6 +971,10 @@ export class App {
       );
       this.loadTraditionalOcdfg();
       this.updateStateMessageAfterFilter(nextSummary);
+      this.ensureStateDetectionObjectType();
+      if (this.activeFeature() === 'stateDetection' || this.stateDetectionAnalysis()) {
+        this.loadStateDetection();
+      }
 
       if (nextSummary.stateful_events > 0) {
         this.loadStatePatterns(true);
@@ -981,6 +1130,18 @@ function toggleSelection(values: string[], value: string, checked: boolean): str
 
 function filterDescription(prefix: string, values: string[]): string {
   return values.length > 0 ? `${prefix}: ${values.join(', ')}` : `${prefix}: none`;
+}
+
+function clampInteger(value: string, min: number, max: number): number {
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed)) {
+    return min;
+  }
+  return Math.min(max, Math.max(min, parsed));
+}
+
+function safeFilePart(value: string): string {
+  return value.trim().replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-|-$/g, '') || 'objects';
 }
 
 function withLeadingObjectTypeClause(query: string, leadingObjectType: string): string {

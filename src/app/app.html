@@ -118,6 +118,21 @@
         <button
           type="button"
           class="feature-button"
+          [class.is-selected]="activeFeature() === 'stateDetection'"
+          (click)="setActiveFeature('stateDetection')"
+        >
+          <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 18l4-5 4 3 6-9" />
+            <circle cx="5" cy="18" r="2" />
+            <circle cx="9" cy="13" r="2" />
+            <circle cx="13" cy="16" r="2" />
+            <circle cx="19" cy="7" r="2" />
+          </svg>
+          <span>State Detection</span>
+        </button>
+        <button
+          type="button"
+          class="feature-button"
           [class.is-selected]="activeFeature() === 'ocdfg'"
           (click)="setActiveFeature('ocdfg')"
         >
@@ -265,6 +280,181 @@
         }
       </div>
     </section>
+    </section>
+  }
+
+  @if (activeFeature() === 'stateDetection') {
+    <section class="state-detection-page feature-panel" aria-label="State detection">
+      <header class="feature-header">
+        <h1>State Detection</h1>
+        <p>{{ fileName() }}</p>
+      </header>
+
+      <section class="state-detection-controls" aria-label="State detection controls">
+        <label>
+          <span>Object type</span>
+          <select
+            [value]="stateDetectionObjectType()"
+            (change)="onStateDetectionObjectTypeChange($event)"
+          >
+            @for (objectType of selectedObjectTypes(); track objectType) {
+              <option [value]="objectType">{{ objectType }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Window</span>
+          <input
+            type="number"
+            min="1"
+            max="30"
+            [value]="stateDetectionWindowSize()"
+            (input)="onStateDetectionWindowSizeChange($event)"
+          />
+        </label>
+        <label>
+          <span>SOM width</span>
+          <input
+            type="number"
+            min="2"
+            max="12"
+            [value]="stateDetectionSomWidth()"
+            (input)="onStateDetectionSomWidthChange($event)"
+          />
+        </label>
+        <label>
+          <span>SOM height</span>
+          <input
+            type="number"
+            min="2"
+            max="12"
+            [value]="stateDetectionSomHeight()"
+            (input)="onStateDetectionSomHeightChange($event)"
+          />
+        </label>
+        <button type="button" (click)="runStateDetection()">Run</button>
+        <button type="button" class="ghost-button" (click)="downloadStateFeatureTable()">
+          Download CSV
+        </button>
+      </section>
+
+      @if (stateDetectionAnalysis(); as analysis) {
+        <section class="state-detection-summary" aria-label="State detection summary">
+          <article>
+            <span>Objects</span>
+            <strong>{{ analysis.object_count }}</strong>
+          </article>
+          <article>
+            <span>Features</span>
+            <strong>{{ analysis.feature_count }}</strong>
+          </article>
+          <article>
+            <span>Windows</span>
+            <strong>{{ analysis.window_count }}</strong>
+          </article>
+          <article>
+            <span>PCA variance</span>
+            <strong>{{ percent(analysis.pca.pc1_explained_ratio + analysis.pca.pc2_explained_ratio) }}</strong>
+          </article>
+        </section>
+
+        <section class="state-detection-grid">
+          <article class="feature-table-preview">
+            <header>
+              <h2>Feature Table</h2>
+              @if (hiddenFeatureColumnCount(analysis) > 0) {
+                <span>+{{ hiddenFeatureColumnCount(analysis) }} columns</span>
+              }
+            </header>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Object</th>
+                    @for (column of previewColumns(analysis); track column) {
+                      <th>{{ column }}</th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of analysis.table_preview; track row.object_id) {
+                    <tr>
+                      <th>{{ row.object_id }}</th>
+                      @for (value of previewValues(row); track $index) {
+                        <td>{{ value }}</td>
+                      }
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="som-panel">
+            <header>
+              <h2>Self-Organizing Map</h2>
+              <span>{{ analysis.som_width }} x {{ analysis.som_height }}</span>
+            </header>
+            <div
+              class="som-grid"
+              [style.grid-template-columns]="somGridColumns(analysis)"
+              role="img"
+              aria-label="SOM cells colored by assigned lifecycle windows"
+            >
+              @for (cell of analysis.som.cells; track cell.label) {
+                <div
+                  class="som-cell"
+                  [class.is-empty]="cell.count === 0"
+                  [style.background]="somCellStyle(cell)"
+                  [attr.title]="somCellTitle(cell)"
+                >
+                  <strong>{{ cell.label }}</strong>
+                  <span>{{ cell.count }}</span>
+                  @if (cell.dominant_activity) {
+                    <small>{{ cell.dominant_activity }}</small>
+                  }
+                </div>
+              }
+            </div>
+          </article>
+
+          <article class="som-transitions">
+            <header>
+              <h2>State Transitions</h2>
+              <span>{{ analysis.som.transitions.length }}</span>
+            </header>
+            @if (analysis.som.transitions.length > 0) {
+              <div class="transition-list">
+                @for (transition of topSomTransitions(analysis.som.transitions); track $index) {
+                  <p [class.is-nearby]="transition.nearby">
+                    <span>{{ transitionLabel(transition) }}</span>
+                    <strong>{{ transition.count }}</strong>
+                    <small>distance {{ transition.distance }}</small>
+                  </p>
+                }
+              </div>
+            } @else {
+              <p class="muted">No cross-cell transitions.</p>
+            }
+          </article>
+
+          <article class="window-preview">
+            <header>
+              <h2>PCA Windows</h2>
+              <span>{{ analysis.windows.length }}/{{ analysis.window_count }}</span>
+            </header>
+            <div class="window-list">
+              @for (window of analysis.windows.slice(0, 8); track $index) {
+                <p>
+                  <strong>{{ window.object_id }}</strong>
+                  <span>{{ window.start_event }} -> {{ window.end_event }}</span>
+                  <small>S{{ window.cell_x + 1 }}-{{ window.cell_y + 1 }}</small>
+                </p>
+              }
+            </div>
+          </article>
+        </section>
+      }
     </section>
   }
 
