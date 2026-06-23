@@ -284,6 +284,7 @@ export class App {
   protected readonly causalLatentDraft = signal('');
   protected readonly causalFit = signal<CausalFitResult | null>(null);
   protected readonly causalMessage = signal('');
+  protected readonly isGeneratingCausalModel = signal(false);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
@@ -829,6 +830,7 @@ export class App {
       this.causalLatentDraft.set('');
       this.causalFit.set(null);
       this.causalMessage.set('');
+      this.isGeneratingCausalModel.set(false);
       this.resetGraphSettings(imported.filterOptions.object_types);
       this.loadTraditionalOcdfg();
       this.selectedIntraPatternId.set('');
@@ -881,6 +883,7 @@ export class App {
       this.causalLatentDraft.set('');
       this.causalFit.set(null);
       this.causalMessage.set('');
+      this.isGeneratingCausalModel.set(false);
       this.resetGraphSettings([]);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
@@ -1369,20 +1372,16 @@ export class App {
     this.loadCausalFeatureTable();
   }
 
-  protected causalPreviewColumns(table: CausalFeatureTableResult, limit = 10): string[] {
-    return table.feature_columns.slice(0, limit);
+  protected causalPreviewColumns(table: CausalFeatureTableResult): string[] {
+    return table.feature_columns;
   }
 
   protected causalPreviewRows(table: CausalFeatureTableResult): StateDetectionPreviewRow[] {
     return table.table_preview.slice(0, 10);
   }
 
-  protected causalPreviewValues(row: StateDetectionPreviewRow, limit = 10): number[] {
-    return row.values.slice(0, limit);
-  }
-
-  protected hiddenCausalFeatureColumnCount(table: CausalFeatureTableResult, limit = 10): number {
-    return Math.max(table.feature_columns.length - limit, 0);
+  protected causalPreviewValues(row: StateDetectionPreviewRow): number[] {
+    return row.values;
   }
 
   protected onCausalFeatureDragStart(event: DragEvent, feature: string): void {
@@ -1518,6 +1517,56 @@ export class App {
     } catch (error) {
       this.causalFit.set(null);
       this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  protected async generateCausalModelWithLlm(): Promise<void> {
+    if (!this.documentHandle) {
+      return;
+    }
+
+    const config = this.currentLlmConfig();
+    if (!config.apiKey.trim()) {
+      this.errorMessage.set('Configure and save an LLM API key first.');
+      this.openLlmConfig();
+      return;
+    }
+
+    if (!this.causalFeatureTable()) {
+      this.loadCausalFeatureTable();
+    }
+    const table = this.causalFeatureTable();
+    if (!table || table.feature_columns.length === 0) {
+      this.errorMessage.set('Load causal features before asking the LLM.');
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.causalMessage.set('');
+    this.isGeneratingCausalModel.set(true);
+    try {
+      const response = await requestChatCompletion(config, [
+        {
+          role: 'system',
+          content:
+            'You generate Flowvault causal model JSON. Return only valid JSON and no markdown.',
+        },
+        {
+          role: 'user',
+          content: this.buildLlmCausalPrompt(table),
+        },
+      ]);
+      const suggestion = parseCausalModelSuggestion(response, table.feature_columns);
+      this.causalNodes.set(suggestion.nodes);
+      this.causalEdges.set(pruneCausalEdges(suggestion.nodes, suggestion.edges));
+      this.causalFit.set(null);
+      this.causalMessage.set(
+        `LLM suggested ${suggestion.nodes.length.toLocaleString()} nodes and ${this.causalEdges().length.toLocaleString()} DAG edges.`,
+      );
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    } finally {
+      this.isGeneratingCausalModel.set(false);
     }
   }
 
@@ -1898,6 +1947,49 @@ Few-shot examples:
 ${examples}
 
 Return only one valid Flowvault state expression.`;
+  }
+
+  private buildLlmCausalPrompt(table: CausalFeatureTableResult): string {
+    const summary = this.summary();
+    const features = table.feature_columns.slice(0, 160).map((feature) => `- ${feature}`).join('\n');
+    const omitted = Math.max(table.feature_columns.length - 160, 0);
+
+    return `Create a small DAG causal model for Flowvault.
+
+OCEL metadata:
+- File: ${this.fileName() || 'unknown'}
+- Active events: ${summary?.events ?? 0}
+- Active objects: ${summary?.objects ?? 0}
+- Causal object type: ${table.object_type}
+- Rows in feature table: ${table.object_count}
+- Feature columns: ${table.feature_count}
+
+Available feature columns:
+${features}
+${omitted > 0 ? `- ... ${omitted} additional columns omitted from the prompt` : ''}
+
+Causal model JSON schema:
+{
+  "nodes": [
+    {"id":"obs_1","label":"Readable name","role":"observable","feature":"exact feature column","operation":"identity"},
+    {"id":"lat_1","label":"Latent concept","role":"latent"},
+    {"id":"out_1","label":"Readable outcome","role":"outcome","feature":"exact feature column","operation":"identity"}
+  ],
+  "edges": [
+    {"source":"obs_1","target":"lat_1"},
+    {"source":"lat_1","target":"out_1"}
+  ]
+}
+
+Rules:
+- Return only JSON.
+- Use only exact feature column names from the list.
+- Valid roles are observable, latent, outcome.
+- Valid operations are identity, log10, log_e, sqrt.
+- Legal edges are observable -> latent, latent -> latent, and latent -> outcome.
+- The graph must be a DAG.
+- The same feature column may appear in multiple observable/outcome nodes.
+- Prefer 2-5 observables, 1-3 latents, and 1-3 outcomes.`;
   }
 
   private loadStatePatterns(preserveSelection = false): void {
@@ -2322,6 +2414,119 @@ function nextCausalNodeId(role: CausalNodeRole, nodes: CausalModelNode[]): strin
       return id;
     }
   }
+}
+
+function parseCausalModelSuggestion(
+  response: string,
+  availableFeatures: string[],
+): { nodes: CausalModelNode[]; edges: CausalModelEdge[] } {
+  const parsed = readJsonObject(extractJsonPayload(response));
+  const rawNodes = Array.isArray(parsed['nodes']) ? parsed['nodes'] : [];
+  const rawEdges = Array.isArray(parsed['edges']) ? parsed['edges'] : [];
+  const featureSet = new Set(availableFeatures);
+  const nodes: CausalModelNode[] = [];
+  const originalToNewId = new Map<string, string>();
+
+  for (const rawNode of rawNodes) {
+    if (!rawNode || typeof rawNode !== 'object') {
+      continue;
+    }
+    const record = rawNode as Record<string, unknown>;
+    const role = normalizeCausalRole(record['role']);
+    if (!role) {
+      continue;
+    }
+    const originalId = String(record['id'] ?? record['label'] ?? `${role}-${nodes.length + 1}`);
+    const label = String(record['label'] ?? record['name'] ?? originalId).trim();
+    if (role === 'latent') {
+      const node: CausalModelNode = {
+        id: nextCausalNodeId('latent', nodes),
+        label: label || `Latent ${nodes.filter((node) => node.role === 'latent').length + 1}`,
+        role,
+        operation: 'identity',
+      };
+      nodes.push(node);
+      originalToNewId.set(originalId, node.id);
+      originalToNewId.set(node.label, node.id);
+      continue;
+    }
+
+    const feature = String(record['feature'] ?? '').trim();
+    if (!featureSet.has(feature)) {
+      continue;
+    }
+    const operation = normalizeCausalOperation(record['operation']);
+    const node: CausalModelNode = {
+      id: nextCausalNodeId(role, nodes),
+      label: label || causalFeatureLabel(feature),
+      role,
+      feature,
+      operation,
+    };
+    nodes.push(node);
+    originalToNewId.set(originalId, node.id);
+    originalToNewId.set(node.label, node.id);
+  }
+
+  const edges: CausalModelEdge[] = [];
+  for (const rawEdge of rawEdges) {
+    if (!rawEdge || typeof rawEdge !== 'object') {
+      continue;
+    }
+    const record = rawEdge as Record<string, unknown>;
+    const source = originalToNewId.get(String(record['source'] ?? ''));
+    const target = originalToNewId.get(String(record['target'] ?? ''));
+    if (!source || !target || !canAddCausalEdge(nodes, edges, source, target)) {
+      continue;
+    }
+    edges.push({ source, target });
+  }
+
+  if (nodes.length === 0) {
+    throw new Error('The LLM did not return any usable causal model nodes.');
+  }
+  return { nodes, edges };
+}
+
+function extractJsonPayload(response: string): string {
+  const fenced = response.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  const candidate = (fenced?.[1] ?? response).trim();
+  const start = candidate.indexOf('{');
+  const end = candidate.lastIndexOf('}');
+  if (start >= 0 && end > start) {
+    return candidate.slice(start, end + 1);
+  }
+  return candidate;
+}
+
+function readJsonObject(jsonText: string): Record<string, unknown> {
+  const parsed = JSON.parse(jsonText) as unknown;
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('The LLM response was not a JSON object.');
+  }
+  return parsed as Record<string, unknown>;
+}
+
+function normalizeCausalRole(value: unknown): CausalNodeRole | null {
+  const role = String(value ?? '').trim().toLowerCase();
+  if (role === 'observable' || role === 'latent' || role === 'outcome') {
+    return role;
+  }
+  return null;
+}
+
+function normalizeCausalOperation(value: unknown): CausalOperation {
+  const operation = String(value ?? '').trim().toLowerCase();
+  if (operation === 'log_10' || operation === 'log10') {
+    return 'log10';
+  }
+  if (operation === 'ln' || operation === 'loge' || operation === 'log_e') {
+    return 'log_e';
+  }
+  if (operation === 'sqrt' || operation === 'square_root') {
+    return 'sqrt';
+  }
+  return 'identity';
 }
 
 function causalFeatureLabel(feature: string): string {

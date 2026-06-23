@@ -515,6 +515,18 @@
           <button type="button" class="ghost-button" (click)="reloadCausalFeatureTable()">
             Refresh
           </button>
+          <button
+            type="button"
+            class="ghost-button"
+            [disabled]="!causalFeatureTable() || isGeneratingCausalModel()"
+            (click)="generateCausalModelWithLlm()"
+          >
+            @if (isGeneratingCausalModel()) {
+              Generating
+            } @else {
+              Ask LLM
+            }
+          </button>
           <button type="button" [disabled]="!canFitCausalModel()" (click)="fitCausalModel()">
             Fit
           </button>
@@ -699,10 +711,7 @@
             <div>
               <h2>Feature Table</h2>
               <span>
-                {{ causalPreviewRows(table).length }} rows
-                @if (hiddenCausalFeatureColumnCount(table) > 0) {
-                  / +{{ hiddenCausalFeatureColumnCount(table) }} columns
-                }
+                {{ causalPreviewRows(table).length }} rows / {{ table.feature_count }} columns
               </span>
             </div>
           </header>

@@ -944,10 +944,21 @@ textarea:focus {
   overflow: auto;
 }
 
+.causal-table-preview .table-scroll {
+  max-height: 440px;
+  overflow: auto;
+  scrollbar-gutter: stable both-edges;
+}
+
 .feature-table-preview table {
   width: 100%;
   min-width: 720px;
   border-collapse: collapse;
+}
+
+.causal-table-preview table {
+  width: max-content;
+  min-width: 100%;
 }
 
 .feature-table-preview th,
@@ -1045,6 +1056,7 @@ textarea:focus {
 
 .causal-feature-palette {
   display: grid;
+  min-width: 0;
   gap: 12px;
   max-height: 680px;
   overflow: hidden;
@@ -1064,11 +1076,14 @@ textarea:focus {
   display: grid;
   gap: 8px;
   overflow: auto;
+  scrollbar-gutter: stable both-edges;
+  padding-bottom: 6px;
 }
 
 .causal-feature-row {
   display: grid;
   gap: 7px;
+  min-width: max-content;
   border-bottom: 1px solid #edf2f0;
   padding-bottom: 8px;
 }
@@ -1089,7 +1104,7 @@ textarea:focus {
   background: #f7faf9;
   color: #17221f;
   padding: 0 10px;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
   text-align: left;
 }
 
