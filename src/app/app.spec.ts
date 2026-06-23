@@ -599,6 +599,12 @@ describe('App', () => {
 
     const native = fixture.nativeElement as HTMLElement;
     expect(native.querySelector('[role="dialog"]')).toBeTruthy();
+    expect(native.querySelector('.info-icon-button')?.getAttribute('aria-describedby')).toBe(
+      'state-language-help',
+    );
+    expect(native.textContent).toContain('State Definition Language');
+    expect(native.textContent).toContain("STATE state FOR LEADING OBJECT TYPE 'Order'");
+    expect(native.textContent).toContain('event."Stock After"');
     expect(native.textContent).toContain('Fulfillment Stage');
     expect(native.textContent).toContain('Value and Weight');
     expect(native.textContent).toContain('Leading object type');

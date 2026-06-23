@@ -1355,7 +1355,33 @@
         (click)="$event.stopPropagation()"
       >
         <header class="state-modal-header">
-          <h2 id="state-dialog-title">Add Event State</h2>
+          <div class="state-modal-title">
+            <h2 id="state-dialog-title">Add Event State</h2>
+            <div class="state-language-help">
+              <button
+                type="button"
+                class="info-icon-button"
+                aria-label="State language help"
+                aria-describedby="state-language-help"
+              >
+                i
+              </button>
+              <section id="state-language-help" class="state-language-popover" role="tooltip">
+                <strong>State Definition Language</strong>
+                <p>
+                  Use a SQL-like CASE expression:
+                  <code>STATE state FOR LEADING OBJECT TYPE 'Order' AS CASE ... END</code>.
+                </p>
+                <ul>
+                  <li><code>WHEN condition THEN 'State label'</code> assigns a state.</li>
+                  <li><code>ELSE 'State label'</code> is optional, but useful for complete coverage.</li>
+                  <li>Reference fields with <code>event.type</code>, <code>event.attribute</code>, or <code>object.attribute</code>.</li>
+                  <li>Quote spaced names like <code>event."Stock After"</code>.</li>
+                  <li>Use <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>LIKE</code>, <code>IS NULL</code>, <code>AND</code>, <code>OR</code>, and parentheses.</li>
+                </ul>
+              </section>
+            </div>
+          </div>
           <button type="button" class="ghost-button" (click)="closeStateDialog()">Cancel</button>
         </header>
 
