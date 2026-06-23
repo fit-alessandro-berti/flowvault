@@ -209,6 +209,64 @@ describe('App', () => {
     expect(native.querySelector('.upload-page')).toBeTruthy();
     expect(native.querySelectorAll('.summary-card').length).toBe(0);
     expect(native.querySelector('.feature-sidebar')).toBeFalsy();
+    expect(native.querySelectorAll('.sample-button').length).toBe(8);
+    expect(native.textContent).toContain('Or start with a sample');
+  });
+
+  it('imports bundled compressed samples from static assets', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance as unknown as {
+      ocelWasm: {
+        importDocument(input: ArrayBuffer, formatHint?: string): Promise<unknown>;
+      };
+    };
+    let requestedUrl = '';
+    let importedHint: string | undefined;
+    let importedByteLength = 0;
+    const previousFetch = globalThis.fetch;
+
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      requestedUrl = input.toString();
+      return {
+        ok: true,
+        arrayBuffer: async () => new Uint8Array([0x1f, 0x8b]).buffer,
+      } as Response;
+    }) as typeof fetch;
+    component.ocelWasm = {
+      importDocument: async (input: ArrayBuffer, formatHint?: string) => {
+        importedHint = formatHint;
+        importedByteLength = input.byteLength;
+        return {
+          document: {
+            filteredObjectCentricDirectlyFollowsGraphJson: () =>
+              JSON.stringify(traditionalProcessGraph),
+            free: () => undefined,
+          },
+          summary: importedSummary,
+          originalSummary: importedSummary,
+          filterOptions: {
+            event_types: ['Create Order'],
+            object_types: ['Order'],
+          },
+        };
+      },
+    };
+
+    try {
+      fixture.detectChanges();
+      (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.sample-button')?.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+    } finally {
+      globalThis.fetch = previousFetch;
+    }
+
+    const native = fixture.nativeElement as HTMLElement;
+    expect(requestedUrl).toContain('/static/ocel2_compressed/ocel20_example.json.gz');
+    expect(importedHint).toBe('json');
+    expect(importedByteLength).toBe(2);
+    expect(native.textContent).toContain('ocel20_example.json.gz');
+    expect(native.textContent).toContain('Statistics');
   });
 
   it('opens state preset dialog after import', () => {

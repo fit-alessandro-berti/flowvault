@@ -176,7 +176,9 @@ button:disabled {
 .upload-page {
   display: grid;
   min-height: calc(100vh - 110px);
-  place-items: center;
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
 }
 
 .dropzone {
@@ -214,6 +216,68 @@ button:disabled {
 
 .dropzone.is-loading {
   cursor: progress;
+}
+
+.sample-imports {
+  display: grid;
+  width: min(860px, 100%);
+  gap: 12px;
+}
+
+.sample-imports header {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+}
+
+.sample-imports h1,
+.sample-imports p {
+  margin: 0;
+}
+
+.sample-imports h1 {
+  font-size: 1.05rem;
+}
+
+.sample-imports p {
+  color: #5c6c68;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.sample-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sample-button {
+  display: grid;
+  min-height: 76px;
+  align-content: center;
+  justify-items: start;
+  gap: 4px;
+  border-color: #c8d3d0;
+  background: #ffffff;
+  color: #17221f;
+  padding: 12px;
+  text-align: left;
+}
+
+.sample-button:hover {
+  border-color: #1d4f49;
+  background: #eef8f5;
+}
+
+.sample-button span {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.sample-button small {
+  color: #5c6c68;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .drop-mark {
@@ -799,6 +863,10 @@ textarea:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .sample-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .state-modal-body {
     grid-template-columns: 1fr;
     overflow: auto;
@@ -838,6 +906,10 @@ textarea:focus {
 
   .summary-card {
     min-height: 96px;
+  }
+
+  .sample-grid {
+    grid-template-columns: 1fr;
   }
 
   .pattern-stats {

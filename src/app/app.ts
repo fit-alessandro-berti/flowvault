@@ -84,6 +84,13 @@ interface PatternGraph {
   edges: PatternGraphEdge[];
 }
 
+interface StaticSampleLog {
+  label: string;
+  detail: string;
+  fileName: string;
+  path: string;
+}
+
 @Component({
   selector: 'app-root',
   imports: [ProcessGraphComponent],
@@ -94,6 +101,7 @@ export class App {
   private readonly ocelWasm = inject(OcelWasmService);
   private documentHandle?: OcelDocumentHandle;
 
+  protected readonly sampleLogs = STATIC_SAMPLE_LOGS;
   protected readonly isDragging = signal(false);
   protected readonly isLoading = signal(false);
   protected readonly fileName = signal('');
@@ -228,6 +236,16 @@ export class App {
     }
   }
 
+  protected async importSampleLog(sample: StaticSampleLog): Promise<void> {
+    await this.importSource(sample.fileName, async () => {
+      const response = await fetch(new URL(sample.path, document.baseURI));
+      if (!response.ok) {
+        throw new Error(`Could not load bundled sample '${sample.fileName}'.`);
+      }
+      return response.arrayBuffer();
+    });
+  }
+
   exportJson(): void {
     this.exportDocument('json');
   }
@@ -336,16 +354,23 @@ export class App {
   }
 
   private async importFile(file: File): Promise<void> {
+    await this.importSource(file.name, () => file.arrayBuffer());
+  }
+
+  private async importSource(
+    fileName: string,
+    readInput: () => Promise<ArrayBuffer>,
+  ): Promise<void> {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
     try {
-      const input = await file.arrayBuffer();
-      const imported = await this.ocelWasm.importDocument(input, formatHintForFile(file.name));
+      const input = await readInput();
+      const imported = await this.ocelWasm.importDocument(input, formatHintForFile(fileName));
 
       this.documentHandle?.free();
       this.documentHandle = imported.document;
-      this.fileName.set(file.name);
+      this.fileName.set(fileName);
       this.summary.set(imported.summary);
       this.originalSummary.set(imported.originalSummary);
       this.filterOptions.set(imported.filterOptions);
@@ -368,7 +393,7 @@ export class App {
       this.activeFeature.set('statistics');
       this.fullScreenPattern.set(null);
       this.isStateDialogOpen.set(false);
-      this.initializeStatePresetForFile(file.name);
+      this.initializeStatePresetForFile(fileName);
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
       this.summary.set(null);
@@ -382,7 +407,7 @@ export class App {
       this.isFilterMenuOpen.set(false);
       this.isFilterChainOpen.set(false);
       this.selectedLeadingObjectType.set('');
-      this.fileName.set(file.name);
+      this.fileName.set(fileName);
       this.documentHandle?.free();
       this.documentHandle = undefined;
       this.stateMessage.set('');
@@ -867,6 +892,57 @@ function emptyGraphSettings(): ProcessGraphSettings {
     min_path_frequency: 1,
   };
 }
+
+const STATIC_SAMPLE_LOGS: StaticSampleLog[] = [
+  {
+    label: 'Purchase-to-Pay JSON',
+    detail: 'Small example log',
+    fileName: 'ocel20_example.json.gz',
+    path: 'static/ocel2_compressed/ocel20_example.json.gz',
+  },
+  {
+    label: 'Purchase-to-Pay XML',
+    detail: 'Small example log',
+    fileName: 'ocel20_example.xml.gz',
+    path: 'static/ocel2_compressed/ocel20_example.xml.gz',
+  },
+  {
+    label: 'Order Management JSON',
+    detail: 'Order, item, and delivery flow',
+    fileName: 'order-management.json.gz',
+    path: 'static/ocel2_compressed/order-management.json.gz',
+  },
+  {
+    label: 'Order Management XML',
+    detail: 'Order, item, and delivery flow',
+    fileName: 'order-management.xml.gz',
+    path: 'static/ocel2_compressed/order-management.xml.gz',
+  },
+  {
+    label: 'Container Logistics JSON',
+    detail: 'Shipment and warehouse flow',
+    fileName: 'container_logistics.json.gz',
+    path: 'static/ocel2_compressed/container_logistics.json.gz',
+  },
+  {
+    label: 'Container Logistics XML',
+    detail: 'Shipment and warehouse flow',
+    fileName: 'container_logistics.xml.gz',
+    path: 'static/ocel2_compressed/container_logistics.xml.gz',
+  },
+  {
+    label: 'Inventory Simulation JSON',
+    detail: 'Stock and replenishment flow',
+    fileName: 'inventory_management_simulated.json.gz',
+    path: 'static/ocel2_compressed/inventory_management_simulated.json.gz',
+  },
+  {
+    label: 'Inventory Simulation XML',
+    detail: 'Stock and replenishment flow',
+    fileName: 'inventory_management_simulated.xml.gz',
+    path: 'static/ocel2_compressed/inventory_management_simulated.xml.gz',
+  },
+];
 
 function graphRequestJson(settings: ProcessGraphSettings): string {
   return JSON.stringify(settings);

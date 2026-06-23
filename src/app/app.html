@@ -79,6 +79,26 @@
           }
         </span>
       </label>
+
+      <section class="sample-imports" aria-label="Bundled OCEL samples">
+        <header>
+          <h1>Or start with a sample</h1>
+          <p>These bundled logs are gzip-compressed OCEL 2.0 files.</p>
+        </header>
+        <div class="sample-grid">
+          @for (sample of sampleLogs; track sample.fileName) {
+            <button
+              type="button"
+              class="sample-button"
+              (click)="importSampleLog(sample)"
+              [disabled]="isLoading()"
+            >
+              <span>{{ sample.label }}</span>
+              <small>{{ sample.detail }}</small>
+            </button>
+          }
+        </div>
+      </section>
     </section>
   } @else {
     <aside class="feature-sidebar" aria-label="Feature selector">
