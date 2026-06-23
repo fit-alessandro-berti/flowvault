@@ -4,7 +4,7 @@ const JSON_EXTENSIONS = ['.json', '.jsonocel'];
 const XML_EXTENSIONS = ['.xml', '.xmlocel'];
 
 export function formatHintForFile(fileName: string): OcelFormatHint {
-  const normalized = fileName.trim().toLowerCase();
+  const normalized = normalizedSourceName(fileName).toLowerCase();
 
   if (JSON_EXTENSIONS.some((extension) => normalized.endsWith(extension))) {
     return 'json';
@@ -18,10 +18,14 @@ export function formatHintForFile(fileName: string): OcelFormatHint {
 }
 
 export function exportBaseName(fileName: string): string {
-  const trimmed = fileName.trim();
+  const trimmed = normalizedSourceName(fileName);
   if (!trimmed) {
     return 'ocel-export';
   }
 
   return trimmed.replace(/\.(jsonocel|xmlocel|json|xml)$/i, '') || 'ocel-export';
+}
+
+function normalizedSourceName(fileName: string): string {
+  return fileName.trim().replace(/\.gz$/i, '');
 }

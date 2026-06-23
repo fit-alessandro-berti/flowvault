@@ -1,6 +1,6 @@
 # Flowvault
 
-Flowvault is a mixed Angular and Rust/WebAssembly OCEL 2.0 inspector. It imports OCEL 2.0 JSON/XML files in the browser, stores them in a compact Rust data structure, shows event/object/E2O/O2O counts, and exports the loaded log back to OCEL 2.0 JSON or XML.
+Flowvault is a mixed Angular and Rust/WebAssembly OCEL 2.0 inspector. It imports OCEL 2.0 JSON/XML files in the browser, including gzip-compressed `.json.gz` and `.xml.gz` files, stores them in a compact Rust data structure, shows event/object/E2O/O2O counts, and exports the loaded log back to OCEL 2.0 JSON or XML.
 
 The implementation follows the official OCEL 2.0 JSON and XML format shape: top-level event type, object type, event, and object collections; scalar attributes; ISO 8601 timestamps; Event-to-Object relationships; and Object-to-Object relationships.
 
@@ -44,7 +44,7 @@ The importer validates duplicate IDs/types, declared attribute types, unknown ev
 
 ## Activity and Object-Type Filtering
 
-The first screen is intentionally minimal: it only asks for an OCEL 2.0 JSON/XML upload. After importing a log, Flowvault switches to a workspace with a persistent black toolbar and a left-side feature selector. The toolbar contains import/export/state actions and a filter menu for activities and object types. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. When filters are active, the toolbar shows the number of filters; opening it reveals the filter chain and removal controls. The `Statistics` page shows plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
+The first screen is intentionally minimal: it only asks for an OCEL 2.0 JSON/XML upload, either plain text or gzip-compressed. After importing a log, Flowvault switches to a workspace with a persistent black toolbar and a left-side feature selector. The toolbar contains import/export/state actions and a filter menu for activities and object types. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. When filters are active, the toolbar shows the number of filters; opening it reveals the filter chain and removal controls. The `Statistics` page shows plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
 
 Filtered exports use the active filtered log. Changing any filter resets derived state enrichment and pattern analysis because those results belong to the previous active log.
 

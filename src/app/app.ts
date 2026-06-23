@@ -340,8 +340,8 @@ export class App {
     this.errorMessage.set('');
 
     try {
-      const text = await file.text();
-      const imported = await this.ocelWasm.importDocument(text, formatHintForFile(file.name));
+      const input = await file.arrayBuffer();
+      const imported = await this.ocelWasm.importDocument(input, formatHintForFile(file.name));
 
       this.documentHandle?.free();
       this.documentHandle = imported.document;

@@ -6,6 +6,8 @@ describe('state query presets', () => {
     expect(presetsForFile('container_logistics.xml').length).toBe(3);
     expect(presetsForFile('order-management.json').length).toBe(3);
     expect(presetsForFile('inventory_management_simulated.xml').length).toBe(3);
+    expect(presetsForFile('order-management.json.gz').length).toBe(3);
+    expect(presetsForFile('inventory_management_simulated.xml.gz').length).toBe(3);
   });
 
   it('uses named SQL-like state queries', () => {

@@ -135,7 +135,10 @@ interface OcelWasmModule {
   default(options?: {
     module_or_path?: string | URL | Request | Response | BufferSource | WebAssembly.Module;
   }): Promise<unknown>;
-  OcelDocument: new (input: string, formatHint?: string) => OcelDocumentHandle;
+  OcelDocument: {
+    new (input: string, formatHint?: string): OcelDocumentHandle;
+    fromBytes(input: Uint8Array, formatHint?: string): OcelDocumentHandle;
+  };
 }
 
 @Injectable({
@@ -144,9 +147,18 @@ interface OcelWasmModule {
 export class OcelWasmService {
   private modulePromise?: Promise<OcelWasmModule>;
 
-  async importDocument(input: string, formatHint?: string): Promise<ImportedOcelDocument> {
+  async importDocument(
+    input: string | ArrayBuffer | Uint8Array,
+    formatHint?: string,
+  ): Promise<ImportedOcelDocument> {
     const wasm = await this.loadModule();
-    const document = new wasm.OcelDocument(input, formatHint);
+    const document =
+      typeof input === 'string'
+        ? new wasm.OcelDocument(input, formatHint)
+        : wasm.OcelDocument.fromBytes(
+            input instanceof Uint8Array ? input : new Uint8Array(input),
+            formatHint,
+          );
     const summary = JSON.parse(document.summaryJson()) as OcelSummary;
     const originalSummary = JSON.parse(document.originalSummaryJson()) as OcelSummary;
     const filterOptions = JSON.parse(document.filterOptionsJson()) as OcelFilterOptions;

@@ -31,7 +31,7 @@
     <label class="toolbar-button">
       <input
         type="file"
-        accept=".json,.jsonocel,.xml,.xmlocel,application/json,application/xml,text/xml"
+        accept=".json,.jsonocel,.xml,.xmlocel,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,application/gzip,application/x-gzip"
         (change)="onFileSelected($event)"
       />
       Import
@@ -66,7 +66,7 @@
       >
         <input
           type="file"
-          accept=".json,.jsonocel,.xml,.xmlocel,application/json,application/xml,text/xml"
+          accept=".json,.jsonocel,.xml,.xmlocel,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,application/gzip,application/x-gzip"
           (change)="onFileSelected($event)"
         />
         <span class="drop-mark" aria-hidden="true"></span>

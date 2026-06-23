@@ -7,11 +7,13 @@
 //! keeps a timestamp-ordered lifecycle of related events.
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime, SecondsFormat, Utc};
+use flate2::read::GzDecoder;
 use roxmltree::{Document, Node};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Number, Value};
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt::{Display, Write};
+use std::io::Read;
 use wasm_bindgen::prelude::*;
 
 type OcelResult<T> = Result<T, OcelError>;
@@ -275,6 +277,11 @@ impl CompactOcelLog {
             OcelFormat::Xml => parse_xml(input)?,
         };
         Self::from_source(source, format)
+    }
+
+    fn from_bytes(input: &[u8], format_hint: Option<&str>) -> OcelResult<Self> {
+        let text = decode_ocel_bytes(input)?;
+        Self::from_input(&text, format_hint)
     }
 
     fn from_source(source: SourceLog, format: OcelFormat) -> OcelResult<Self> {
@@ -2363,6 +2370,21 @@ impl OcelDocument {
         })
     }
 
+    /// Imports an OCEL 2.0 JSON/XML file from raw bytes.
+    ///
+    /// The byte input may be plain UTF-8 JSON/XML or a gzip-compressed `.gz`
+    /// file containing UTF-8 JSON/XML.
+    #[wasm_bindgen(js_name = fromBytes)]
+    pub fn from_bytes(input: &[u8], format_hint: Option<String>) -> Result<OcelDocument, JsValue> {
+        let log = CompactOcelLog::from_bytes(input, format_hint.as_deref())?;
+        let current_filter = OcelFilterRequest::all_for(&log);
+        Ok(Self {
+            original_log: log.clone(),
+            log,
+            current_filter,
+        })
+    }
+
     /// Returns summary counts as a JSON string.
     #[wasm_bindgen(js_name = summaryJson)]
     pub fn summary_json(&self) -> String {
@@ -3869,9 +3891,26 @@ fn parse_boolean_value(source_value: &SourceValue) -> OcelResult<bool> {
     }
 }
 
+fn decode_ocel_bytes(input: &[u8]) -> OcelResult<String> {
+    let bytes = if input.starts_with(&[0x1f, 0x8b]) {
+        let mut decoder = GzDecoder::new(input);
+        let mut decoded = Vec::new();
+        decoder
+            .read_to_end(&mut decoded)
+            .map_err(|err| OcelError::new(format!("could not decompress gzip OCEL file: {err}")))?;
+        decoded
+    } else {
+        input.to_vec()
+    };
+
+    String::from_utf8(bytes)
+        .map_err(|err| OcelError::new(format!("OCEL input is not valid UTF-8: {err}")))
+}
+
 fn detect_format(input: &str, hint: Option<&str>) -> OcelResult<OcelFormat> {
     if let Some(hint) = hint {
         let hint = hint.to_ascii_lowercase();
+        let hint = hint.strip_suffix(".gz").unwrap_or(&hint);
         if hint.ends_with(".json") || hint.ends_with(".jsonocel") || hint == "json" {
             return Ok(OcelFormat::Json);
         }
@@ -4503,6 +4542,58 @@ END"#,
         }
     }
 
+    #[test]
+    fn imports_compressed_ocel_fixtures() {
+        for compressed_path in compressed_ocel_fixture_paths() {
+            let compressed_name = compressed_path.display().to_string();
+            let compressed_bytes = fs::read(&compressed_path)
+                .unwrap_or_else(|err| panic!("failed to read {compressed_name}: {err}"));
+            let compressed_file_name = compressed_path
+                .file_name()
+                .and_then(|name| name.to_str())
+                .expect("compressed fixture should have a file name");
+            let compressed_log =
+                CompactOcelLog::from_bytes(&compressed_bytes, Some(compressed_file_name))
+                    .unwrap_or_else(|err| panic!("failed to import {compressed_name}: {err}"));
+
+            let uncompressed_file_name = compressed_file_name
+                .strip_suffix(".gz")
+                .expect("compressed fixture should end with .gz");
+            let uncompressed_path = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../files/ocel2")
+                .join(uncompressed_file_name);
+            let uncompressed_name = uncompressed_path.display().to_string();
+            let uncompressed_input = fs::read_to_string(&uncompressed_path)
+                .unwrap_or_else(|err| panic!("failed to read {uncompressed_name}: {err}"));
+            let uncompressed_log =
+                CompactOcelLog::from_input(&uncompressed_input, Some(uncompressed_file_name))
+                    .unwrap_or_else(|err| panic!("failed to import {uncompressed_name}: {err}"));
+
+            assert_same_structural_summary(
+                &compressed_log.summary(),
+                &uncompressed_log.summary(),
+                &format!("compressed import changed summary counts for {compressed_name}"),
+            );
+
+            let document =
+                OcelDocument::from_bytes(&compressed_bytes, Some(compressed_file_name.to_owned()))
+                    .unwrap_or_else(|err| {
+                        panic!("failed to import compressed fixture through WASM API: {err:?}")
+                    });
+            let document_summary: Value = serde_json::from_str(&document.summary_json()).unwrap();
+            assert_eq!(
+                document_summary["events"].as_u64().unwrap() as usize,
+                uncompressed_log.summary().events,
+                "WASM compressed import changed event count for {compressed_name}"
+            );
+            assert_eq!(
+                document_summary["objects"].as_u64().unwrap() as usize,
+                uncompressed_log.summary().objects,
+                "WASM compressed import changed object count for {compressed_name}"
+            );
+        }
+    }
+
     fn assert_same_structural_summary(actual: &OcelSummary, expected: &OcelSummary, context: &str) {
         assert_eq!(actual.event_types, expected.event_types, "{context}");
         assert_eq!(actual.object_types, expected.object_types, "{context}");
@@ -4547,6 +4638,32 @@ END"#,
                 path.extension()
                     .and_then(|extension| extension.to_str())
                     .map(|extension| matches!(extension, "json" | "xml" | "jsonocel" | "xmlocel"))
+                    .unwrap_or(false)
+            })
+            .collect::<Vec<_>>();
+        paths.sort();
+        paths
+    }
+
+    fn compressed_ocel_fixture_paths() -> Vec<PathBuf> {
+        let fixture_dir =
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../files/ocel2_compressed");
+        let mut paths = fs::read_dir(&fixture_dir)
+            .unwrap_or_else(|err| panic!("failed to read {}: {err}", fixture_dir.display()))
+            .map(|entry| {
+                entry
+                    .expect("failed to read compressed fixture directory entry")
+                    .path()
+            })
+            .filter(|path| {
+                path.file_name()
+                    .and_then(|name| name.to_str())
+                    .map(|name| {
+                        name.ends_with(".json.gz")
+                            || name.ends_with(".xml.gz")
+                            || name.ends_with(".jsonocel.gz")
+                            || name.ends_with(".xmlocel.gz")
+                    })
                     .unwrap_or(false)
             })
             .collect::<Vec<_>>();

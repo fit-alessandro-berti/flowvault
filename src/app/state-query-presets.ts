@@ -168,5 +168,6 @@ function logKeyForFile(fileName: string): string {
   return fileName
     .trim()
     .toLowerCase()
+    .replace(/\.gz$/i, '')
     .replace(/\.(jsonocel|xmlocel|json|xml)$/i, '');
 }
