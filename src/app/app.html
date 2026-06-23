@@ -47,6 +47,9 @@
           <section class="toolbar-popover filter-menu" aria-label="Filter menu">
             <button type="button" (click)="openActivityFilterDialog()">Activities</button>
             <button type="button" (click)="openObjectTypeFilterDialog()">Object Types</button>
+            <button type="button" (click)="openDfNodeFilterDialog()">OC-DFG Nodes</button>
+            <button type="button" (click)="openDfEdgeFilterDialog()">OC-DFG Edges</button>
+            <button type="button" (click)="openTextAttributeFilterDialog()">Text Attributes</button>
           </section>
         }
       </div>
@@ -564,8 +567,14 @@
           <h2 id="filter-modal-title">
             @if (dialog === 'activities') {
               Activity Filter
-            } @else {
+            } @else if (dialog === 'objectTypes') {
               Object Type Filter
+            } @else if (dialog === 'dfNodes') {
+              OC-DFG Node Filter
+            } @else if (dialog === 'dfEdges') {
+              OC-DFG Edge Filter
+            } @else {
+              Text Attribute Filter
             }
           </h2>
           <button type="button" class="ghost-button" (click)="closeFilterDialog()">Cancel</button>
@@ -593,7 +602,7 @@
                 </label>
               }
             </div>
-          } @else {
+          } @else if (dialog === 'objectTypes') {
             <div class="filter-actions">
               <button type="button" class="ghost-button" (click)="selectAllDraftObjectTypes()">
                 All
@@ -612,6 +621,89 @@
                   />
                   <span>{{ objectType }}</span>
                 </label>
+              }
+            </div>
+          } @else if (dialog === 'dfNodes') {
+            <div class="filter-actions">
+              <button type="button" class="ghost-button" (click)="selectAllDraftDfNodes()">
+                All
+              </button>
+              <button type="button" class="ghost-button" (click)="clearDraftDfNodes()">
+                None
+              </button>
+            </div>
+            <div class="filter-options">
+              @for (eventType of filterOptions().event_types; track eventType) {
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="draftDfNodes().includes(eventType)"
+                    (change)="toggleDraftDfNode(eventType, $event)"
+                  />
+                  <span>{{ eventType }}</span>
+                </label>
+              }
+            </div>
+          } @else if (dialog === 'dfEdges') {
+            <div class="filter-actions">
+              <button type="button" class="ghost-button" (click)="selectAllDraftDfEdges()">
+                All
+              </button>
+              <button type="button" class="ghost-button" (click)="clearDraftDfEdges()">
+                None
+              </button>
+            </div>
+            <div class="filter-options">
+              @for (edge of dfEdgeOptions(); track edge.label) {
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="isDraftDfEdgeSelected(edge)"
+                    (change)="toggleDraftDfEdge(edge, $event)"
+                  />
+                  <span>{{ edge.label }}</span>
+                </label>
+              }
+              @if (dfEdgeOptions().length === 0) {
+                <p class="muted">Run or open the OC-DFG to populate edge options.</p>
+              }
+            </div>
+          } @else {
+            <label class="filter-select">
+              <span>Attribute</span>
+              <select
+                [value]="draftTextAttributeKey()"
+                (change)="onDraftTextAttributeChange($event)"
+              >
+                @for (attribute of filterOptions().text_attributes; track attribute.scope + attribute.name) {
+                  <option [value]="attribute.scope + '::' + attribute.name">
+                    {{ attribute.scope }}.{{ attribute.name }}
+                  </option>
+                }
+              </select>
+            </label>
+            <div class="filter-actions">
+              <button type="button" class="ghost-button" (click)="selectAllDraftTextAttributeValues()">
+                All
+              </button>
+              <button type="button" class="ghost-button" (click)="clearDraftTextAttributeValues()">
+                None
+              </button>
+            </div>
+            <div class="filter-options">
+              @if (draftTextAttributeOption(); as attribute) {
+                @for (value of attribute.values; track value) {
+                  <label>
+                    <input
+                      type="checkbox"
+                      [checked]="draftTextAttributeValues().includes(value)"
+                      (change)="toggleDraftTextAttributeValue(value, $event)"
+                    />
+                    <span>{{ value }}</span>
+                  </label>
+                }
+              } @else {
+                <p class="muted">No textual attributes are available yet.</p>
               }
             </div>
           }
@@ -752,6 +844,11 @@
             </label>
 
             @if (selectedIntraPattern(); as pattern) {
+              <div class="graph-toolbar">
+                <button type="button" class="ghost-button" (click)="applyPatternStateFilter(pattern)">
+                  Filter globally by state
+                </button>
+              </div>
               @if (intraVisualization() === 'text') {
                 <section class="pattern-text-view" aria-label="Selected intra-state pattern">
                   <dl class="pattern-stats">
@@ -947,6 +1044,11 @@
             </label>
 
             @if (selectedInterPattern(); as pattern) {
+              <div class="graph-toolbar">
+                <button type="button" class="ghost-button" (click)="applyPatternStateFilter(pattern)">
+                  Filter globally by transition states
+                </button>
+              </div>
               @if (interVisualization() === 'text') {
                 <section class="pattern-text-view" aria-label="Selected inter-state pattern">
                   <dl class="pattern-stats">

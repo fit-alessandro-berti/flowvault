@@ -27,6 +27,7 @@ import {
   OcelSummary,
   OcelWasmService,
   StateQueryResult,
+  TextAttributeOption,
 } from './ocel-wasm.service';
 
 interface SummaryCard {
@@ -56,9 +57,27 @@ type SummaryMetric = keyof Pick<
 interface FilterRequest {
   event_types: string[];
   object_types: string[];
+  df_nodes?: string[];
+  df_edges?: DfEdgeFilterRequest[];
+  text_attributes?: TextAttributeFilterRequest[];
 }
 
-type FilterDialogKind = 'activities' | 'objectTypes';
+interface DfEdgeFilterRequest {
+  source: string;
+  target: string;
+}
+
+interface TextAttributeFilterRequest {
+  scope: 'event' | 'object';
+  name: string;
+  values: string[];
+}
+
+interface DfEdgeOption extends DfEdgeFilterRequest {
+  label: string;
+}
+
+type FilterDialogKind = 'activities' | 'objectTypes' | 'dfNodes' | 'dfEdges' | 'textAttributes';
 type PatternTab = 'intra' | 'inter';
 type StateDetectionCellTab = 'dfg' | 'entering' | 'exiting';
 type PatternVisualization = 'text' | 'graph';
@@ -144,11 +163,19 @@ export class App {
   protected readonly filterOptions = signal<OcelFilterOptions>({
     event_types: [],
     object_types: [],
+    text_attributes: [],
   });
   protected readonly selectedEventTypes = signal<string[]>([]);
   protected readonly selectedObjectTypes = signal<string[]>([]);
+  protected readonly selectedDfNodes = signal<string[]>([]);
+  protected readonly selectedDfEdges = signal<DfEdgeFilterRequest[]>([]);
+  protected readonly selectedTextAttribute = signal<TextAttributeFilterRequest | null>(null);
   protected readonly draftEventTypes = signal<string[]>([]);
   protected readonly draftObjectTypes = signal<string[]>([]);
+  protected readonly draftDfNodes = signal<string[]>([]);
+  protected readonly draftDfEdges = signal<DfEdgeFilterRequest[]>([]);
+  protected readonly draftTextAttributeKey = signal('');
+  protected readonly draftTextAttributeValues = signal<string[]>([]);
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
   protected readonly isFilterMenuOpen = signal(false);
   protected readonly isFilterChainOpen = signal(false);
@@ -211,7 +238,67 @@ export class App {
       });
     }
 
+    if (this.selectedDfNodes().length > 0) {
+      chips.push({
+        kind: 'dfNodes',
+        label: `OC-DFG nodes ${this.selectedDfNodes().length}`,
+        description: filterDescription('Objects containing activities', this.selectedDfNodes()),
+        removeLabel: 'Remove OC-DFG node filter',
+      });
+    }
+
+    if (this.selectedDfEdges().length > 0) {
+      const labels = this.selectedDfEdges().map((edge) => edgeLabel(edge));
+      chips.push({
+        kind: 'dfEdges',
+        label: `OC-DFG edges ${this.selectedDfEdges().length}`,
+        description: filterDescription('Objects containing directly-follows edges', labels),
+        removeLabel: 'Remove OC-DFG edge filter',
+      });
+    }
+
+    const textAttribute = this.selectedTextAttribute();
+    if (textAttribute && textAttribute.values.length > 0) {
+      chips.push({
+        kind: 'textAttributes',
+        label: `${textAttribute.name} ${textAttribute.values.length}`,
+        description: filterDescription(
+          `${textAttribute.scope} attribute ${textAttribute.name}`,
+          textAttribute.values,
+        ),
+        removeLabel: 'Remove text attribute filter',
+      });
+    }
+
     return chips;
+  });
+  protected readonly dfEdgeOptions = computed<DfEdgeOption[]>(() => {
+    const graph = this.traditionalOcdfg();
+    if (!graph) {
+      return [];
+    }
+    const nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
+    const seen = new Set<string>();
+    const options: DfEdgeOption[] = [];
+    for (const edge of graph.edges) {
+      const source = nodeById.get(edge.source);
+      const target = nodeById.get(edge.target);
+      if (!source || !target || source.kind !== 'activity' || target.kind !== 'activity') {
+        continue;
+      }
+      const option = {
+        source: source.label,
+        target: target.label,
+        label: `${source.label} -> ${target.label}`,
+      };
+      const key = edgeKey(option);
+      if (seen.has(key)) {
+        continue;
+      }
+      seen.add(key);
+      options.push(option);
+    }
+    return options;
   });
   protected readonly intraPatterns = computed(() => this.patternAnalysis()?.intra ?? []);
   protected readonly interPatterns = computed(() => this.patternAnalysis()?.inter ?? []);
@@ -464,6 +551,7 @@ export class App {
     try {
       const result = JSON.parse(this.documentHandle.applyStateQuery(query)) as StateQueryResult;
       this.persistStateExpression(query);
+      this.filterOptions.set(JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions);
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
@@ -546,8 +634,15 @@ export class App {
       this.filterOptions.set(imported.filterOptions);
       this.selectedEventTypes.set(imported.filterOptions.event_types);
       this.selectedObjectTypes.set(imported.filterOptions.object_types);
+      this.selectedDfNodes.set([]);
+      this.selectedDfEdges.set([]);
+      this.selectedTextAttribute.set(null);
       this.draftEventTypes.set(imported.filterOptions.event_types);
       this.draftObjectTypes.set(imported.filterOptions.object_types);
+      this.draftDfNodes.set([]);
+      this.draftDfEdges.set([]);
+      this.draftTextAttributeKey.set('');
+      this.draftTextAttributeValues.set([]);
       this.filterDialog.set(null);
       this.isFilterMenuOpen.set(false);
       this.isFilterChainOpen.set(false);
@@ -577,11 +672,18 @@ export class App {
       this.errorMessage.set(errorToMessage(error));
       this.summary.set(null);
       this.originalSummary.set(null);
-      this.filterOptions.set({ event_types: [], object_types: [] });
+      this.filterOptions.set({ event_types: [], object_types: [], text_attributes: [] });
       this.selectedEventTypes.set([]);
       this.selectedObjectTypes.set([]);
+      this.selectedDfNodes.set([]);
+      this.selectedDfEdges.set([]);
+      this.selectedTextAttribute.set(null);
       this.draftEventTypes.set([]);
       this.draftObjectTypes.set([]);
+      this.draftDfNodes.set([]);
+      this.draftDfEdges.set([]);
+      this.draftTextAttributeKey.set('');
+      this.draftTextAttributeValues.set([]);
       this.filterDialog.set(null);
       this.isFilterMenuOpen.set(false);
       this.isFilterChainOpen.set(false);
@@ -685,6 +787,30 @@ export class App {
     this.filterDialog.set('objectTypes');
   }
 
+  protected openDfNodeFilterDialog(): void {
+    this.draftDfNodes.set([...this.selectedDfNodes()]);
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.filterDialog.set('dfNodes');
+  }
+
+  protected openDfEdgeFilterDialog(): void {
+    this.draftDfEdges.set([...this.selectedDfEdges()]);
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.filterDialog.set('dfEdges');
+  }
+
+  protected openTextAttributeFilterDialog(): void {
+    const selected = this.selectedTextAttribute();
+    const first = selected ?? this.defaultTextAttributeFilter();
+    this.draftTextAttributeKey.set(first ? textAttributeKey(first) : '');
+    this.draftTextAttributeValues.set(first?.values ?? []);
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.filterDialog.set('textAttributes');
+  }
+
   protected closeFilterDialog(): void {
     this.filterDialog.set(null);
   }
@@ -709,6 +835,39 @@ export class App {
     );
   }
 
+  protected toggleDraftDfNode(activity: string, event: Event): void {
+    this.draftDfNodes.set(
+      toggleSelection(this.draftDfNodes(), activity, (event.target as HTMLInputElement).checked),
+    );
+  }
+
+  protected toggleDraftDfEdge(edge: DfEdgeFilterRequest, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    const current = this.draftDfEdges();
+    const normalizedEdge = { source: edge.source, target: edge.target };
+    this.draftDfEdges.set(
+      checked
+        ? [...current, normalizedEdge].filter(uniqueEdges)
+        : current.filter((candidate) => !sameEdge(candidate, normalizedEdge)),
+    );
+  }
+
+  protected onDraftTextAttributeChange(event: Event): void {
+    const key = (event.target as HTMLSelectElement).value;
+    this.draftTextAttributeKey.set(key);
+    this.draftTextAttributeValues.set([]);
+  }
+
+  protected toggleDraftTextAttributeValue(value: string, event: Event): void {
+    this.draftTextAttributeValues.set(
+      toggleSelection(
+        this.draftTextAttributeValues(),
+        value,
+        (event.target as HTMLInputElement).checked,
+      ),
+    );
+  }
+
   protected selectAllDraftEventTypes(): void {
     this.draftEventTypes.set([...this.filterOptions().event_types]);
   }
@@ -725,6 +884,58 @@ export class App {
     this.draftObjectTypes.set([]);
   }
 
+  protected selectAllDraftDfNodes(): void {
+    this.draftDfNodes.set([...this.filterOptions().event_types]);
+  }
+
+  protected clearDraftDfNodes(): void {
+    this.draftDfNodes.set([]);
+  }
+
+  protected selectAllDraftDfEdges(): void {
+    this.draftDfEdges.set(this.dfEdgeOptions().map(({ source, target }) => ({ source, target })));
+  }
+
+  protected clearDraftDfEdges(): void {
+    this.draftDfEdges.set([]);
+  }
+
+  protected selectAllDraftTextAttributeValues(): void {
+    this.draftTextAttributeValues.set([...(this.draftTextAttributeOption()?.values ?? [])]);
+  }
+
+  protected clearDraftTextAttributeValues(): void {
+    this.draftTextAttributeValues.set([]);
+  }
+
+  protected draftTextAttributeOption(): TextAttributeOption | null {
+    const key = this.draftTextAttributeKey();
+    return (
+      this.filterOptions().text_attributes.find((option) => textAttributeKey(option) === key) ??
+      null
+    );
+  }
+
+  private defaultTextAttributeFilter(): TextAttributeFilterRequest | null {
+    const options = this.filterOptions().text_attributes;
+    const option =
+      options.find((candidate) => candidate.name === 'state' && candidate.scope === 'event') ??
+      options[0];
+    if (!option) {
+      return null;
+    }
+
+    return {
+      scope: option.scope,
+      name: option.name,
+      values: [],
+    };
+  }
+
+  protected isDraftDfEdgeSelected(edge: DfEdgeFilterRequest): boolean {
+    return this.draftDfEdges().some((candidate) => sameEdge(candidate, edge));
+  }
+
   protected applyFilterDialog(): void {
     const dialog = this.filterDialog();
 
@@ -733,6 +944,25 @@ export class App {
     }
     if (dialog === 'objectTypes') {
       this.selectedObjectTypes.set([...this.draftObjectTypes()]);
+    }
+    if (dialog === 'dfNodes') {
+      this.selectedDfNodes.set([...this.draftDfNodes()]);
+    }
+    if (dialog === 'dfEdges') {
+      this.selectedDfEdges.set([...this.draftDfEdges()]);
+    }
+    if (dialog === 'textAttributes') {
+      const option = this.draftTextAttributeOption();
+      const values = this.draftTextAttributeValues();
+      this.selectedTextAttribute.set(
+        option && values.length > 0
+          ? {
+              scope: option.scope,
+              name: option.name,
+              values,
+            }
+          : null,
+      );
     }
 
     this.filterDialog.set(null);
@@ -744,9 +974,19 @@ export class App {
     if (kind === 'activities') {
       this.selectedEventTypes.set([...this.filterOptions().event_types]);
       this.draftEventTypes.set([...this.filterOptions().event_types]);
-    } else {
+    } else if (kind === 'objectTypes') {
       this.selectedObjectTypes.set([...this.filterOptions().object_types]);
       this.draftObjectTypes.set([...this.filterOptions().object_types]);
+    } else if (kind === 'dfNodes') {
+      this.selectedDfNodes.set([]);
+      this.draftDfNodes.set([]);
+    } else if (kind === 'dfEdges') {
+      this.selectedDfEdges.set([]);
+      this.draftDfEdges.set([]);
+    } else {
+      this.selectedTextAttribute.set(null);
+      this.draftTextAttributeKey.set('');
+      this.draftTextAttributeValues.set([]);
     }
 
     this.filterDialog.set(null);
@@ -794,6 +1034,7 @@ export class App {
       const result = JSON.parse(
         this.documentHandle.applyStateDetection(this.stateDetectionRequestJson()),
       ) as StateQueryResult;
+      this.filterOptions.set(JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions);
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
@@ -962,6 +1203,22 @@ export class App {
 
   protected closeFullScreenGraph(): void {
     this.fullScreenPattern.set(null);
+  }
+
+  protected applyPatternStateFilter(pattern: StatePattern): void {
+    const values = [pattern.state, pattern.from_state, pattern.to_state].filter(
+      (value): value is string => Boolean(value),
+    );
+    if (values.length === 0) {
+      return;
+    }
+
+    this.selectedTextAttribute.set({
+      scope: 'event',
+      name: 'state',
+      values: [...new Set(values)],
+    });
+    this.applyActiveFilter();
   }
 
   protected applyStateAwareGraphSettings(settings: ProcessGraphSettings): void {
@@ -1282,6 +1539,16 @@ Return only one valid Flowvault state expression.`;
       event_types: this.selectedEventTypes(),
       object_types: this.selectedObjectTypes(),
     };
+    if (this.selectedDfNodes().length > 0) {
+      filter.df_nodes = this.selectedDfNodes();
+    }
+    if (this.selectedDfEdges().length > 0) {
+      filter.df_edges = this.selectedDfEdges();
+    }
+    const textAttribute = this.selectedTextAttribute();
+    if (textAttribute && textAttribute.values.length > 0) {
+      filter.text_attributes = [textAttribute];
+    }
 
     try {
       const nextSummary = JSON.parse(
@@ -1567,6 +1834,26 @@ function toggleSelection(values: string[], value: string, checked: boolean): str
 
 function filterDescription(prefix: string, values: string[]): string {
   return values.length > 0 ? `${prefix}: ${values.join(', ')}` : `${prefix}: none`;
+}
+
+function edgeLabel(edge: DfEdgeFilterRequest): string {
+  return `${edge.source} -> ${edge.target}`;
+}
+
+function edgeKey(edge: DfEdgeFilterRequest): string {
+  return `${edge.source}\u0000${edge.target}`;
+}
+
+function sameEdge(left: DfEdgeFilterRequest, right: DfEdgeFilterRequest): boolean {
+  return left.source === right.source && left.target === right.target;
+}
+
+function uniqueEdges(edge: DfEdgeFilterRequest, index: number, edges: DfEdgeFilterRequest[]): boolean {
+  return edges.findIndex((candidate) => sameEdge(candidate, edge)) === index;
+}
+
+function textAttributeKey(attribute: Pick<TextAttributeOption, 'scope' | 'name'>): string {
+  return `${attribute.scope}::${attribute.name}`;
 }
 
 function clampInteger(value: string, min: number, max: number): number {

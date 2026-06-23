@@ -635,6 +635,52 @@ textarea:focus {
   background: #ffffff;
 }
 
+.filter-modal-body {
+  display: grid;
+  gap: 12px;
+  overflow: auto;
+  padding: 14px;
+}
+
+.filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-options {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-select {
+  display: grid;
+  gap: 6px;
+}
+
+.filter-select span {
+  color: #5c6c68;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.filter-select select {
+  min-height: 42px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #fbfdfc;
+  color: #17221f;
+  padding: 0 10px;
+  font: inherit;
+}
+
 .details {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));

@@ -228,6 +228,13 @@ export interface ImportedOcelDocument {
 export interface OcelFilterOptions {
   event_types: string[];
   object_types: string[];
+  text_attributes: TextAttributeOption[];
+}
+
+export interface TextAttributeOption {
+  scope: 'event' | 'object';
+  name: string;
+  values: string[];
 }
 
 interface OcelWasmModule {

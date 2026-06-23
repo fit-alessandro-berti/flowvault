@@ -227,14 +227,45 @@ struct OcelSummary {
 
 #[derive(Clone, Deserialize)]
 struct OcelFilterRequest {
+    #[serde(default)]
     event_types: Vec<String>,
+    #[serde(default)]
     object_types: Vec<String>,
+    #[serde(default)]
+    df_nodes: Vec<String>,
+    #[serde(default)]
+    df_edges: Vec<DfEdgeFilter>,
+    #[serde(default)]
+    text_attributes: Vec<TextAttributeFilter>,
+}
+
+#[derive(Clone, Deserialize)]
+struct DfEdgeFilter {
+    source: String,
+    target: String,
+}
+
+#[derive(Clone, Deserialize)]
+struct TextAttributeFilter {
+    #[serde(default = "default_text_attribute_scope")]
+    scope: String,
+    name: String,
+    #[serde(default)]
+    values: Vec<String>,
 }
 
 #[derive(Serialize)]
 struct FilterOptions {
     event_types: Vec<String>,
     object_types: Vec<String>,
+    text_attributes: Vec<TextAttributeOption>,
+}
+
+#[derive(Serialize)]
+struct TextAttributeOption {
+    scope: String,
+    name: String,
+    values: Vec<String>,
 }
 
 #[derive(Default, Deserialize)]
@@ -278,8 +309,24 @@ impl OcelFilterRequest {
         Self {
             event_types: options.event_types,
             object_types: options.object_types,
+            df_nodes: Vec::new(),
+            df_edges: Vec::new(),
+            text_attributes: Vec::new(),
         }
     }
+
+    fn has_object_predicates(&self) -> bool {
+        !self.df_nodes.is_empty()
+            || !self.df_edges.is_empty()
+            || self
+                .text_attributes
+                .iter()
+                .any(|attribute| !attribute.values.is_empty())
+    }
+}
+
+fn default_text_attribute_scope() -> String {
+    "event".to_owned()
 }
 
 impl GraphFilterRequest {
@@ -500,32 +547,52 @@ impl CompactOcelLog {
     }
 
     fn filter(&self, filter: &OcelFilterRequest) -> Self {
-        let event_type_selection = filter
-            .event_types
-            .iter()
-            .map(String::as_str)
-            .collect::<HashSet<_>>();
-        let object_type_selection = filter
-            .object_types
-            .iter()
-            .map(String::as_str)
-            .collect::<HashSet<_>>();
+        let event_type_selection = if filter.event_types.is_empty() {
+            self.event_types
+                .iter()
+                .map(|type_def| self.pool.resolve(type_def.name))
+                .collect::<HashSet<_>>()
+        } else {
+            filter
+                .event_types
+                .iter()
+                .map(String::as_str)
+                .collect::<HashSet<_>>()
+        };
+        let object_type_selection = if filter.object_types.is_empty() {
+            self.object_types
+                .iter()
+                .map(|type_def| self.pool.resolve(type_def.name))
+                .collect::<HashSet<_>>()
+        } else {
+            filter
+                .object_types
+                .iter()
+                .map(String::as_str)
+                .collect::<HashSet<_>>()
+        };
         let all_event_types_selected = event_type_selection.len() >= self.event_types.len();
         let all_object_types_selected = object_type_selection.len() >= self.object_types.len();
 
-        if all_event_types_selected && all_object_types_selected {
+        if all_event_types_selected && all_object_types_selected && !filter.has_object_predicates()
+        {
             return self.clone();
         }
 
         let selected_object_ids = self
             .objects
             .iter()
-            .filter(|object| object_type_selection.contains(self.pool.resolve(object.type_name)))
+            .filter(|object| {
+                object_type_selection.contains(self.pool.resolve(object.type_name))
+                    && self.object_satisfies_filter(object, filter)
+            })
             .map(|object| object.id)
             .collect::<HashSet<_>>();
 
         let mut retained_events = Vec::new();
         let mut retained_object_ids = HashSet::new();
+        let require_relationship_match =
+            !all_object_types_selected || filter.has_object_predicates();
 
         for event in &self.events {
             if !event_type_selection.contains(self.pool.resolve(event.type_name)) {
@@ -539,7 +606,7 @@ impl CompactOcelLog {
                 .cloned()
                 .collect::<Vec<_>>();
 
-            if !all_object_types_selected && relationships.is_empty() {
+            if require_relationship_match && relationships.is_empty() {
                 continue;
             }
 
@@ -640,7 +707,102 @@ impl CompactOcelLog {
         FilterOptions {
             event_types,
             object_types,
+            text_attributes: self.text_attribute_options(),
         }
+    }
+
+    fn text_attribute_options(&self) -> Vec<TextAttributeOption> {
+        let mut options = BTreeMap::<(String, String), BTreeSet<String>>::new();
+
+        for event in &self.events {
+            for attribute in &event.attributes {
+                if !matches!(attribute.value, AttrValue::String(_)) {
+                    continue;
+                }
+                options
+                    .entry((
+                        "event".to_owned(),
+                        self.pool.resolve(attribute.name).to_owned(),
+                    ))
+                    .or_default()
+                    .insert(self.attr_value_label(&attribute.value));
+            }
+        }
+
+        for object in &self.objects {
+            for attribute in &object.attributes {
+                if !matches!(attribute.value, AttrValue::String(_)) {
+                    continue;
+                }
+                options
+                    .entry((
+                        "object".to_owned(),
+                        self.pool.resolve(attribute.name).to_owned(),
+                    ))
+                    .or_default()
+                    .insert(self.attr_value_label(&attribute.value));
+            }
+        }
+
+        options
+            .into_iter()
+            .map(|((scope, name), values)| TextAttributeOption {
+                scope,
+                name,
+                values: values.into_iter().take(200).collect(),
+            })
+            .collect()
+    }
+
+    fn object_satisfies_filter(&self, object: &Object, filter: &OcelFilterRequest) -> bool {
+        filter.df_nodes.iter().all(|activity| {
+            object.lifecycle.iter().any(|event_index| {
+                self.pool.resolve(self.events[*event_index].type_name) == activity
+            })
+        }) && filter.df_edges.iter().all(|edge| {
+            object.lifecycle.windows(2).any(|pair| {
+                let [source_index, target_index] = pair else {
+                    return false;
+                };
+                self.pool.resolve(self.events[*source_index].type_name) == edge.source
+                    && self.pool.resolve(self.events[*target_index].type_name) == edge.target
+            })
+        }) && filter
+            .text_attributes
+            .iter()
+            .all(|attribute_filter| self.object_matches_text_attribute(object, attribute_filter))
+    }
+
+    fn object_matches_text_attribute(
+        &self,
+        object: &Object,
+        attribute_filter: &TextAttributeFilter,
+    ) -> bool {
+        if attribute_filter.values.is_empty() {
+            return true;
+        }
+        let values = attribute_filter
+            .values
+            .iter()
+            .map(String::as_str)
+            .collect::<HashSet<_>>();
+
+        if attribute_filter.scope == "object" {
+            return object.attributes.iter().any(|attribute| {
+                self.pool.resolve(attribute.name) == attribute_filter.name
+                    && values.contains(self.attr_value_label(&attribute.value).as_str())
+            });
+        }
+
+        object.lifecycle.iter().any(|event_index| {
+            self.events[*event_index]
+                .attributes
+                .iter()
+                .any(|attribute| {
+                    self.pool.resolve(attribute.name) == attribute_filter.name
+                        && values.contains(self.attr_value_label(&attribute.value).as_str())
+                })
+        })
     }
 
     fn object_type_symbol(&self, object_type: &str) -> Option<Symbol> {
@@ -5902,6 +6064,9 @@ mod tests {
                 "Insert Invoice".to_owned(),
             ],
             object_types: vec!["Purchase Order".to_owned(), "Invoice".to_owned()],
+            df_nodes: Vec::new(),
+            df_edges: Vec::new(),
+            text_attributes: Vec::new(),
         });
         let summary = filtered.summary();
 
@@ -5918,6 +6083,78 @@ mod tests {
             filtered.pool.resolve(object.type_name),
             "Purchase Order" | "Invoice"
         )));
+    }
+
+    #[test]
+    fn filters_active_log_by_ocdfg_and_text_attribute_predicates() {
+        let mut log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        log.apply_state_query(
+            r#"
+            STATE state FOR LEADING OBJECT TYPE 'Purchase Order' AS CASE
+              WHEN event.type = 'Create Purchase Order' THEN 'Opening'
+              ELSE 'Other'
+            END
+            "#,
+        )
+        .unwrap();
+
+        let filtered_by_node = log.filter(&OcelFilterRequest {
+            event_types: Vec::new(),
+            object_types: Vec::new(),
+            df_nodes: vec!["Create Purchase Order".to_owned()],
+            df_edges: Vec::new(),
+            text_attributes: Vec::new(),
+        });
+        assert!(filtered_by_node.summary().events > 0);
+        assert!(filtered_by_node.summary().events < log.summary().events);
+        assert!(filtered_by_node.objects.iter().all(|object| {
+            object.lifecycle.iter().any(|event_index| {
+                filtered_by_node
+                    .pool
+                    .resolve(filtered_by_node.events[*event_index].type_name)
+                    == "Create Purchase Order"
+            })
+        }));
+
+        let filtered_by_edge = log.filter(&OcelFilterRequest {
+            event_types: Vec::new(),
+            object_types: Vec::new(),
+            df_nodes: Vec::new(),
+            df_edges: vec![DfEdgeFilter {
+                source: "Create Purchase Order".to_owned(),
+                target: "Change PO Quantity".to_owned(),
+            }],
+            text_attributes: Vec::new(),
+        });
+        assert!(filtered_by_edge.summary().events > 0);
+        assert!(filtered_by_edge.summary().events <= filtered_by_node.summary().events);
+
+        let filtered_by_state = log.filter(&OcelFilterRequest {
+            event_types: Vec::new(),
+            object_types: Vec::new(),
+            df_nodes: Vec::new(),
+            df_edges: Vec::new(),
+            text_attributes: vec![TextAttributeFilter {
+                scope: "event".to_owned(),
+                name: "state".to_owned(),
+                values: vec!["Opening".to_owned()],
+            }],
+        });
+        assert!(filtered_by_state.summary().events > 0);
+        assert!(filtered_by_state.summary().events < log.summary().events);
+        assert!(filtered_by_state.events.iter().any(|event| {
+            event.attributes.iter().any(|attribute| {
+                filtered_by_state.pool.resolve(attribute.name) == "state"
+                    && filtered_by_state.attr_value_label(&attribute.value) == "Opening"
+            })
+        }));
+
+        let options = log.filter_options();
+        assert!(options.text_attributes.iter().any(|attribute| {
+            attribute.scope == "event"
+                && attribute.name == "state"
+                && attribute.values.iter().any(|value| value == "Opening")
+        }));
     }
 
     #[test]
