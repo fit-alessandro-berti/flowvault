@@ -144,6 +144,7 @@ describe('App', () => {
       applyStateQuery: () =>
         JSON.stringify({ attribute: 'state', assigned_events: 2, total_events: 2 }),
       summaryJson: () => JSON.stringify(statefulSummary),
+      originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
     };
     component.summary.set(importedSummary);
@@ -158,7 +159,7 @@ describe('App', () => {
     expect(native.querySelectorAll('.pattern-select').length).toBe(2);
   });
 
-  it('applies filters, renders fractions, and resets states and patterns', () => {
+  it('applies filters from dialogs, renders chips, and recomputes state patterns', () => {
     const fixture = TestBed.createComponent(App);
     const filteredSummary = {
       ...importedSummary,
@@ -168,9 +169,10 @@ describe('App', () => {
       objects: 1,
       e2o_relationships: 1,
       o2o_relationships: 0,
-      stateful_events: 0,
+      stateful_events: 1,
     };
     let filterRequest = '';
+    let patternCalls = 0;
     const component = fixture.componentInstance as unknown as {
       documentHandle: unknown;
       summary: { set(value: unknown): void };
@@ -187,9 +189,14 @@ describe('App', () => {
         filterRequest = request;
         return JSON.stringify(filteredSummary);
       },
+      originalSummaryJson: () => JSON.stringify(statefulSummary),
+      statePatternsJson: () => {
+        patternCalls += 1;
+        return JSON.stringify(patternAnalysis);
+      },
     };
     component.summary.set(statefulSummary);
-    component.originalSummary.set(importedSummary);
+    component.originalSummary.set(statefulSummary);
     component.filterOptions.set({
       event_types: ['Create Order', 'Close Order'],
       object_types: ['Order', 'Item'],
@@ -201,10 +208,17 @@ describe('App', () => {
     fixture.detectChanges();
 
     const native = fixture.nativeElement as HTMLElement;
+    native
+      .querySelectorAll<HTMLButtonElement>('.filter-button-row button')[0]
+      .click();
+    fixture.detectChanges();
+
     const closeOrderCheckbox = Array.from(
-      native.querySelectorAll<HTMLInputElement>('.filter-options input'),
+      native.querySelectorAll<HTMLInputElement>('.filter-modal .filter-options input'),
     )[1];
     closeOrderCheckbox.click();
+    fixture.detectChanges();
+    native.querySelector<HTMLButtonElement>('.state-modal-footer button:last-child')?.click();
     fixture.detectChanges();
 
     expect(JSON.parse(filterRequest)).toEqual({
@@ -212,8 +226,19 @@ describe('App', () => {
       object_types: ['Order', 'Item'],
     });
     expect(native.textContent).toContain('1/2');
-    expect(native.textContent).not.toContain('Added state');
-    expect(native.textContent).not.toContain('State Patterns');
+    expect(native.textContent).toContain('Activities 1/2');
+    expect(native.querySelector('.filter-chip')?.getAttribute('title')).toContain('Create Order');
+    expect(native.textContent).toContain('State retained on 1 of 1 active events.');
+    expect(native.textContent).toContain('State Patterns');
+    expect(patternCalls).toBe(1);
+
+    native.querySelector<HTMLButtonElement>('.filter-chip-remove')?.click();
+    fixture.detectChanges();
+
+    expect(JSON.parse(filterRequest)).toEqual({
+      event_types: ['Create Order', 'Close Order'],
+      object_types: ['Order', 'Item'],
+    });
   });
 
   it('renders the graphical pattern view', () => {
@@ -231,6 +256,7 @@ describe('App', () => {
       applyStateQuery: () =>
         JSON.stringify({ attribute: 'state', assigned_events: 2, total_events: 2 }),
       summaryJson: () => JSON.stringify(statefulSummary),
+      originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
     };
     component.summary.set(importedSummary);

@@ -222,7 +222,7 @@ struct OcelSummary {
     stateful_events: usize,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 struct OcelFilterRequest {
     event_types: Vec<String>,
     object_types: Vec<String>,
@@ -232,6 +232,16 @@ struct OcelFilterRequest {
 struct FilterOptions {
     event_types: Vec<String>,
     object_types: Vec<String>,
+}
+
+impl OcelFilterRequest {
+    fn all_for(log: &CompactOcelLog) -> Self {
+        let options = log.filter_options();
+        Self {
+            event_types: options.event_types,
+            object_types: options.object_types,
+        }
+    }
 }
 
 impl CompactOcelLog {
@@ -1474,6 +1484,7 @@ fn unordered_pair(left: &str, right: &str) -> (String, String) {
 pub struct OcelDocument {
     original_log: CompactOcelLog,
     log: CompactOcelLog,
+    current_filter: OcelFilterRequest,
 }
 
 #[wasm_bindgen]
@@ -1486,9 +1497,11 @@ impl OcelDocument {
     #[wasm_bindgen(constructor)]
     pub fn new(input: &str, format_hint: Option<String>) -> Result<OcelDocument, JsValue> {
         let log = CompactOcelLog::from_input(input, format_hint.as_deref())?;
+        let current_filter = OcelFilterRequest::all_for(&log);
         Ok(Self {
             original_log: log.clone(),
             log,
+            current_filter,
         })
     }
 
@@ -1511,15 +1524,13 @@ impl OcelDocument {
             .expect("filter option serialization cannot fail")
     }
 
-    /// Rebuilds the active log from the original log using selected types.
-    ///
-    /// This intentionally drops derived state attributes and pattern results from
-    /// the active log because it starts from the original imported OCEL again.
+    /// Rebuilds the active log from the original, possibly state-enriched, log.
     #[wasm_bindgen(js_name = applyFilter)]
     pub fn apply_filter(&mut self, filter_json: &str) -> Result<String, JsValue> {
         let filter = serde_json::from_str::<OcelFilterRequest>(filter_json)
             .map_err(|err| JsValue::from_str(&format!("could not parse filter request: {err}")))?;
-        self.log = self.original_log.filter(&filter);
+        self.current_filter = filter;
+        self.log = self.original_log.filter(&self.current_filter);
         Ok(self.log.summary_json())
     }
 
@@ -1544,7 +1555,23 @@ impl OcelDocument {
     /// Applies a SQL-like CASE query and writes a string state attribute to events.
     #[wasm_bindgen(js_name = applyStateQuery)]
     pub fn apply_state_query(&mut self, query: &str) -> Result<String, JsValue> {
-        self.log.apply_state_query(query).map_err(JsValue::from)
+        let attribute = StateQuery::parse(query)
+            .map_err(JsValue::from)?
+            .attribute_name;
+        self.original_log
+            .apply_state_query(query)
+            .map_err(JsValue::from)?;
+        self.log = self.original_log.filter(&self.current_filter);
+        let assigned_events = self.log.count_events_with_attribute(&attribute);
+        let total_events = self.log.events.len();
+
+        let result = StateQueryResult {
+            attribute,
+            assigned_events,
+            total_events,
+        };
+        serde_json::to_string(&result)
+            .map_err(|err| JsValue::from_str(&format!("could not serialize state result: {err}")))
     }
 
     /// Detects ranked intra-state and inter-state behavioral patterns.
@@ -3184,7 +3211,7 @@ mod tests {
     }
 
     #[test]
-    fn wasm_filter_resets_active_state_from_original_log() {
+    fn wasm_filter_preserves_state_from_original_log() {
         let mut document = OcelDocument::new(JSON_EXAMPLE, Some("json".to_owned())).unwrap();
         document
             .apply_state_query(
@@ -3209,9 +3236,10 @@ mod tests {
         let summary = serde_json::from_str::<Value>(&document.summary_json()).unwrap();
         let original = serde_json::from_str::<Value>(&document.original_summary_json()).unwrap();
 
-        assert_eq!(summary["stateful_events"], Value::from(0));
-        assert_eq!(original["stateful_events"], Value::from(0));
+        assert_eq!(summary["stateful_events"], summary["events"]);
+        assert_eq!(original["stateful_events"], Value::from(13));
         assert!(summary["events"].as_u64().unwrap() < original["events"].as_u64().unwrap());
+        assert!(!document.state_patterns_json().unwrap().is_empty());
     }
 
     #[test]

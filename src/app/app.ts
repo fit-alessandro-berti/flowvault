@@ -41,7 +41,15 @@ interface FilterRequest {
   object_types: string[];
 }
 
+type FilterDialogKind = 'activities' | 'objectTypes';
 type PatternVisualization = 'text' | 'graph';
+
+interface AppliedFilterChip {
+  kind: FilterDialogKind;
+  label: string;
+  description: string;
+  removeLabel: string;
+}
 
 interface PatternGraphNode {
   id: string;
@@ -97,6 +105,9 @@ export class App {
   });
   protected readonly selectedEventTypes = signal<string[]>([]);
   protected readonly selectedObjectTypes = signal<string[]>([]);
+  protected readonly draftEventTypes = signal<string[]>([]);
+  protected readonly draftObjectTypes = signal<string[]>([]);
+  protected readonly filterDialog = signal<FilterDialogKind | null>(null);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly selectedIntraPatternId = signal('');
   protected readonly selectedInterPatternId = signal('');
@@ -110,6 +121,30 @@ export class App {
       this.selectedObjectTypes().length !== this.filterOptions().object_types.length,
   );
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
+  protected readonly appliedFilters = computed<AppliedFilterChip[]>(() => {
+    const options = this.filterOptions();
+    const chips: AppliedFilterChip[] = [];
+
+    if (this.selectedEventTypes().length < options.event_types.length) {
+      chips.push({
+        kind: 'activities',
+        label: `Activities ${this.selectedEventTypes().length}/${options.event_types.length}`,
+        description: filterDescription('Selected activities', this.selectedEventTypes()),
+        removeLabel: 'Remove activity filter',
+      });
+    }
+
+    if (this.selectedObjectTypes().length < options.object_types.length) {
+      chips.push({
+        kind: 'objectTypes',
+        label: `Object types ${this.selectedObjectTypes().length}/${options.object_types.length}`,
+        description: filterDescription('Selected object types', this.selectedObjectTypes()),
+        removeLabel: 'Remove object type filter',
+      });
+    }
+
+    return chips;
+  });
   protected readonly intraPatterns = computed(() => this.patternAnalysis()?.intra ?? []);
   protected readonly interPatterns = computed(() => this.patternAnalysis()?.inter ?? []);
   protected readonly selectedIntraPattern = computed(() =>
@@ -224,6 +259,9 @@ export class App {
         this.documentHandle.applyStateQuery(this.stateQueryDraft()),
       ) as StateQueryResult;
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
+      this.originalSummary.set(
+        JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
+      );
       this.loadStatePatterns();
       this.stateMessage.set(
         `Added ${result.attribute} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
@@ -250,6 +288,9 @@ export class App {
       this.filterOptions.set(imported.filterOptions);
       this.selectedEventTypes.set(imported.filterOptions.event_types);
       this.selectedObjectTypes.set(imported.filterOptions.object_types);
+      this.draftEventTypes.set(imported.filterOptions.event_types);
+      this.draftObjectTypes.set(imported.filterOptions.object_types);
+      this.filterDialog.set(null);
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.selectedIntraPatternId.set('');
@@ -264,6 +305,9 @@ export class App {
       this.filterOptions.set({ event_types: [], object_types: [] });
       this.selectedEventTypes.set([]);
       this.selectedObjectTypes.set([]);
+      this.draftEventTypes.set([]);
+      this.draftObjectTypes.set([]);
+      this.filterDialog.set(null);
       this.fileName.set(file.name);
       this.documentHandle?.free();
       this.documentHandle = undefined;
@@ -318,45 +362,80 @@ export class App {
     this.selectedInterPatternId.set((event.target as HTMLSelectElement).value);
   }
 
-  protected toggleEventType(eventType: string, event: Event): void {
-    this.selectedEventTypes.set(
+  protected openActivityFilterDialog(): void {
+    this.draftEventTypes.set([...this.selectedEventTypes()]);
+    this.filterDialog.set('activities');
+  }
+
+  protected openObjectTypeFilterDialog(): void {
+    this.draftObjectTypes.set([...this.selectedObjectTypes()]);
+    this.filterDialog.set('objectTypes');
+  }
+
+  protected closeFilterDialog(): void {
+    this.filterDialog.set(null);
+  }
+
+  protected toggleDraftEventType(eventType: string, event: Event): void {
+    this.draftEventTypes.set(
       toggleSelection(
-        this.selectedEventTypes(),
+        this.draftEventTypes(),
         eventType,
         (event.target as HTMLInputElement).checked,
       ),
     );
-    this.applyActiveFilter();
   }
 
-  protected toggleObjectType(objectType: string, event: Event): void {
-    this.selectedObjectTypes.set(
+  protected toggleDraftObjectType(objectType: string, event: Event): void {
+    this.draftObjectTypes.set(
       toggleSelection(
-        this.selectedObjectTypes(),
+        this.draftObjectTypes(),
         objectType,
         (event.target as HTMLInputElement).checked,
       ),
     );
+  }
+
+  protected selectAllDraftEventTypes(): void {
+    this.draftEventTypes.set([...this.filterOptions().event_types]);
+  }
+
+  protected clearDraftEventTypes(): void {
+    this.draftEventTypes.set([]);
+  }
+
+  protected selectAllDraftObjectTypes(): void {
+    this.draftObjectTypes.set([...this.filterOptions().object_types]);
+  }
+
+  protected clearDraftObjectTypes(): void {
+    this.draftObjectTypes.set([]);
+  }
+
+  protected applyFilterDialog(): void {
+    const dialog = this.filterDialog();
+
+    if (dialog === 'activities') {
+      this.selectedEventTypes.set([...this.draftEventTypes()]);
+    }
+    if (dialog === 'objectTypes') {
+      this.selectedObjectTypes.set([...this.draftObjectTypes()]);
+    }
+
+    this.filterDialog.set(null);
     this.applyActiveFilter();
   }
 
-  protected selectAllEventTypes(): void {
-    this.selectedEventTypes.set(this.filterOptions().event_types);
-    this.applyActiveFilter();
-  }
+  protected removeFilter(kind: FilterDialogKind): void {
+    if (kind === 'activities') {
+      this.selectedEventTypes.set([...this.filterOptions().event_types]);
+      this.draftEventTypes.set([...this.filterOptions().event_types]);
+    } else {
+      this.selectedObjectTypes.set([...this.filterOptions().object_types]);
+      this.draftObjectTypes.set([...this.filterOptions().object_types]);
+    }
 
-  protected clearEventTypes(): void {
-    this.selectedEventTypes.set([]);
-    this.applyActiveFilter();
-  }
-
-  protected selectAllObjectTypes(): void {
-    this.selectedObjectTypes.set(this.filterOptions().object_types);
-    this.applyActiveFilter();
-  }
-
-  protected clearObjectTypes(): void {
-    this.selectedObjectTypes.set([]);
+    this.filterDialog.set(null);
     this.applyActiveFilter();
   }
 
@@ -510,16 +589,35 @@ export class App {
     return { width, height, nodeWidth, nodeHeight, nodes, edges };
   }
 
-  private loadStatePatterns(): void {
+  private loadStatePatterns(preserveSelection = false): void {
     if (!this.documentHandle) {
       this.patternAnalysis.set(null);
       return;
     }
 
+    const previousIntraId = this.selectedIntraPatternId();
+    const previousInterId = this.selectedInterPatternId();
+    const previousFullScreenPatternId = this.fullScreenPattern()?.id;
     const analysis = JSON.parse(this.documentHandle.statePatternsJson()) as StatePatternAnalysis;
     this.patternAnalysis.set(analysis);
-    this.selectedIntraPatternId.set(analysis.intra[0]?.id ?? '');
-    this.selectedInterPatternId.set(analysis.inter[0]?.id ?? '');
+    this.selectedIntraPatternId.set(
+      preserveSelection
+        ? (selectedPattern(analysis.intra, previousIntraId)?.id ?? '')
+        : (analysis.intra[0]?.id ?? ''),
+    );
+    this.selectedInterPatternId.set(
+      preserveSelection
+        ? (selectedPattern(analysis.inter, previousInterId)?.id ?? '')
+        : (analysis.inter[0]?.id ?? ''),
+    );
+
+    if (previousFullScreenPatternId) {
+      this.fullScreenPattern.set(
+        [...analysis.intra, ...analysis.inter].find(
+          (pattern) => pattern.id === previousFullScreenPatternId,
+        ) ?? null,
+      );
+    }
   }
 
   private applyActiveFilter(): void {
@@ -533,18 +631,46 @@ export class App {
     };
 
     try {
-      this.summary.set(
-        JSON.parse(this.documentHandle.applyFilter(JSON.stringify(filter))) as OcelSummary,
+      const nextSummary = JSON.parse(
+        this.documentHandle.applyFilter(JSON.stringify(filter)),
+      ) as OcelSummary;
+
+      this.summary.set(nextSummary);
+      this.originalSummary.set(
+        JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
-      this.stateMessage.set('');
-      this.patternAnalysis.set(null);
-      this.selectedIntraPatternId.set('');
-      this.selectedInterPatternId.set('');
-      this.fullScreenPattern.set(null);
-      this.isStateDialogOpen.set(false);
+      this.updateStateMessageAfterFilter(nextSummary);
+
+      if (nextSummary.stateful_events > 0) {
+        this.loadStatePatterns(true);
+      } else {
+        this.patternAnalysis.set(null);
+        this.selectedIntraPatternId.set('');
+        this.selectedInterPatternId.set('');
+        this.fullScreenPattern.set(null);
+      }
+      this.errorMessage.set('');
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
     }
+  }
+
+  private updateStateMessageAfterFilter(summary: OcelSummary): void {
+    const originalSummary = this.originalSummary();
+
+    if (!originalSummary?.stateful_events) {
+      this.stateMessage.set('');
+      return;
+    }
+
+    if (summary.stateful_events > 0) {
+      this.stateMessage.set(
+        `State retained on ${summary.stateful_events.toLocaleString()} of ${summary.events.toLocaleString()} active events.`,
+      );
+      return;
+    }
+
+    this.stateMessage.set('State is retained in the original log, but no active events match it.');
   }
 }
 
@@ -577,6 +703,10 @@ function toggleSelection(values: string[], value: string, checked: boolean): str
   }
 
   return values.filter((candidate) => candidate !== value);
+}
+
+function filterDescription(prefix: string, values: string[]): string {
+  return values.length > 0 ? `${prefix}: ${values.join(', ')}` : `${prefix}: none`;
 }
 
 function wrapGraphLabel(label: string, maxLineLength: number, maxLines: number): string[] {

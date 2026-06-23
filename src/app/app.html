@@ -145,54 +145,112 @@
   @if (filterOptions().event_types.length > 0 || filterOptions().object_types.length > 0) {
     <section class="filter-section" aria-label="OCEL filter controls">
       <header class="pattern-section-header">
-        <h2>Filter Log</h2>
+        <h2>Filters</h2>
         @if (isFilterApplied()) {
           <span>Filtered</span>
         }
       </header>
 
-      <div class="filter-columns">
-        <fieldset>
-          <legend>Activities</legend>
-          <div class="filter-actions">
-            <button type="button" class="ghost-button" (click)="selectAllEventTypes()">All</button>
-            <button type="button" class="ghost-button" (click)="clearEventTypes()">None</button>
-          </div>
-          <div class="filter-options">
-            @for (eventType of filterOptions().event_types; track eventType) {
-              <label>
-                <input
-                  type="checkbox"
-                  [checked]="selectedEventTypes().includes(eventType)"
-                  (change)="toggleEventType(eventType, $event)"
-                />
-                <span>{{ eventType }}</span>
-              </label>
-            }
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Object Types</legend>
-          <div class="filter-actions">
-            <button type="button" class="ghost-button" (click)="selectAllObjectTypes()">All</button>
-            <button type="button" class="ghost-button" (click)="clearObjectTypes()">None</button>
-          </div>
-          <div class="filter-options">
-            @for (objectType of filterOptions().object_types; track objectType) {
-              <label>
-                <input
-                  type="checkbox"
-                  [checked]="selectedObjectTypes().includes(objectType)"
-                  (change)="toggleObjectType(objectType, $event)"
-                />
-                <span>{{ objectType }}</span>
-              </label>
-            }
-          </div>
-        </fieldset>
+      <div class="filter-button-row">
+        <button type="button" class="ghost-button" (click)="openActivityFilterDialog()">
+          Activities
+        </button>
+        <button type="button" class="ghost-button" (click)="openObjectTypeFilterDialog()">
+          Object Types
+        </button>
       </div>
+
+      @if (appliedFilters().length > 0) {
+        <div class="filter-chips" aria-label="Applied filters">
+          @for (filter of appliedFilters(); track filter.kind) {
+            <span class="filter-chip" [attr.title]="filter.description">
+              <span>{{ filter.label }}</span>
+              <button
+                type="button"
+                class="filter-chip-remove"
+                [attr.aria-label]="filter.removeLabel"
+                (click)="removeFilter(filter.kind)"
+              >
+                x
+              </button>
+            </span>
+          }
+        </div>
+      }
     </section>
+  }
+
+  @if (filterDialog(); as dialog) {
+    <div class="modal-backdrop" role="presentation">
+      <section
+        class="state-modal filter-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="filter-modal-title"
+      >
+        <header class="state-modal-header">
+          <h2 id="filter-modal-title">
+            @if (dialog === 'activities') {
+              Activity Filter
+            } @else {
+              Object Type Filter
+            }
+          </h2>
+          <button type="button" class="ghost-button" (click)="closeFilterDialog()">Cancel</button>
+        </header>
+
+        <div class="filter-modal-body">
+          @if (dialog === 'activities') {
+            <div class="filter-actions">
+              <button type="button" class="ghost-button" (click)="selectAllDraftEventTypes()">
+                All
+              </button>
+              <button type="button" class="ghost-button" (click)="clearDraftEventTypes()">
+                None
+              </button>
+            </div>
+            <div class="filter-options">
+              @for (eventType of filterOptions().event_types; track eventType) {
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="draftEventTypes().includes(eventType)"
+                    (change)="toggleDraftEventType(eventType, $event)"
+                  />
+                  <span>{{ eventType }}</span>
+                </label>
+              }
+            </div>
+          } @else {
+            <div class="filter-actions">
+              <button type="button" class="ghost-button" (click)="selectAllDraftObjectTypes()">
+                All
+              </button>
+              <button type="button" class="ghost-button" (click)="clearDraftObjectTypes()">
+                None
+              </button>
+            </div>
+            <div class="filter-options">
+              @for (objectType of filterOptions().object_types; track objectType) {
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="draftObjectTypes().includes(objectType)"
+                    (change)="toggleDraftObjectType(objectType, $event)"
+                  />
+                  <span>{{ objectType }}</span>
+                </label>
+              }
+            </div>
+          }
+        </div>
+
+        <footer class="state-modal-footer">
+          <button type="button" class="ghost-button" (click)="closeFilterDialog()">Cancel</button>
+          <button type="button" (click)="applyFilterDialog()">OK</button>
+        </footer>
+      </section>
+    </div>
   }
 
   @if (patternAnalysis(); as patterns) {
