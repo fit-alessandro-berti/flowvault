@@ -344,6 +344,14 @@
           </select>
         </label>
         <button type="button" (click)="runStateDetection()">Run</button>
+        <button
+          type="button"
+          class="ghost-button"
+          [disabled]="!stateDetectionAnalysis()"
+          (click)="applyStateDetection()"
+        >
+          Apply
+        </button>
       </section>
 
       @if (stateDetectionAnalysis(); as analysis) {

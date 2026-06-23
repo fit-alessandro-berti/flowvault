@@ -447,6 +447,7 @@ describe('App', () => {
     };
     let stateDetectionRequest = '';
     let stateDetectionCellRequest = '';
+    let stateDetectionApplyRequest = '';
     let csvRequest = '';
     const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:features');
     const revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
@@ -465,6 +466,20 @@ describe('App', () => {
         csvRequest = request;
         return 'object_id,activity.Create Order\nO1,1\n';
       },
+      applyStateDetection: (request: string) => {
+        stateDetectionApplyRequest = request;
+        return JSON.stringify({
+          attribute: 'state',
+          leading_object_type: 'Order',
+          assigned_events: 2,
+          total_events: 2,
+        });
+      },
+      summaryJson: () => JSON.stringify(statefulSummary),
+      originalSummaryJson: () => JSON.stringify(statefulSummary),
+      statePatternsJson: () => JSON.stringify(patternAnalysis),
+      stateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
+      filteredStateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
     };
     component.fileName.set('orders.json');
     component.summary.set(importedSummary);
@@ -486,8 +501,8 @@ describe('App', () => {
     expect(JSON.parse(stateDetectionRequest)).toEqual({
       object_type: 'Order',
       window_size: 4,
-      som_width: 5,
-      som_height: 5,
+      som_width: 3,
+      som_height: 3,
       color_attribute: '__window_count',
     });
     expect(native.textContent).toContain('State Detection');
@@ -513,8 +528,8 @@ describe('App', () => {
     expect(JSON.parse(stateDetectionCellRequest)).toEqual({
       object_type: 'Order',
       window_size: 4,
-      som_width: 5,
-      som_height: 5,
+      som_width: 3,
+      som_height: 3,
       color_attribute: 'attribute::priority',
       cell_x: 0,
       cell_y: 0,
@@ -534,6 +549,22 @@ describe('App', () => {
     fixture.detectChanges();
     expect(native.textContent).toContain('Exiting Windows: S1-1');
     expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
+
+    native.querySelector<HTMLButtonElement>('.state-detection-cell-modal .ghost-button')?.click();
+    fixture.detectChanges();
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.state-detection-controls button'))
+      .find((button) => button.textContent?.includes('Apply'))
+      ?.click();
+    fixture.detectChanges();
+
+    expect(JSON.parse(stateDetectionApplyRequest)).toEqual({
+      object_type: 'Order',
+      window_size: 4,
+      som_width: 3,
+      som_height: 3,
+      color_attribute: 'attribute::priority',
+    });
+    expect(native.textContent).toContain('Added state for Order from 3 x 3 SOM windows');
 
     createObjectUrl.mockRestore();
     revokeObjectUrl.mockRestore();

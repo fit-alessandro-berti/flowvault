@@ -716,6 +716,86 @@ impl CompactOcelLog {
             .map_err(|err| OcelError::new(format!("could not serialize state query result: {err}")))
     }
 
+    fn state_detection_state_assignments(
+        &self,
+        request: &StateDetectionRequest,
+    ) -> OcelResult<StateDetectionStateAssignments> {
+        let run = self.compute_state_detection_run(request)?;
+        let mut event_votes = vec![StateDetectionEventVote::default(); self.events.len()];
+
+        for (window_index, (window, cell)) in run
+            .windows
+            .iter()
+            .zip(run.som.assignments.iter())
+            .enumerate()
+        {
+            for event_index in &window.event_indices {
+                event_votes[*event_index].add(*cell, window_index);
+            }
+        }
+
+        let states = event_votes
+            .into_iter()
+            .enumerate()
+            .filter_map(|(event_index, vote)| {
+                vote.winning_cell().map(|cell| StateDetectionEventState {
+                    event_id: self.events[event_index].id,
+                    state: cell_label(cell.0, cell.1),
+                })
+            })
+            .collect();
+
+        Ok(StateDetectionStateAssignments {
+            leading_object_type: request.object_type.clone(),
+            states,
+        })
+    }
+
+    fn apply_state_labels_by_event_id(
+        &mut self,
+        leading_object_type: &str,
+        states: &[StateDetectionEventState],
+    ) -> OcelResult<usize> {
+        let leading_type_symbol =
+            self.object_type_symbol(leading_object_type)
+                .ok_or_else(|| {
+                    OcelError::new(format!(
+                        "unknown leading object type '{leading_object_type}'"
+                    ))
+                })?;
+        let attribute_symbol = self.pool.intern("state");
+        self.ensure_event_attribute(attribute_symbol, AttrType::String);
+        self.state_leading_object_type = Some(leading_type_symbol);
+
+        for event in &mut self.events {
+            event
+                .attributes
+                .retain(|attribute| attribute.name != attribute_symbol);
+        }
+
+        let event_index_by_id = self
+            .events
+            .iter()
+            .enumerate()
+            .map(|(event_index, event)| (event.id, event_index))
+            .collect::<HashMap<_, _>>();
+
+        let mut assigned = 0usize;
+        for assignment in states {
+            let Some(event_index) = event_index_by_id.get(&assignment.event_id) else {
+                continue;
+            };
+            let state_symbol = self.pool.intern(&assignment.state);
+            self.events[*event_index].attributes.push(Attribute {
+                name: attribute_symbol,
+                value: AttrValue::String(state_symbol),
+            });
+            assigned += 1;
+        }
+
+        Ok(assigned)
+    }
+
     fn state_patterns_json(&self) -> OcelResult<String> {
         let analysis = self.detect_state_patterns()?;
         serde_json::to_string(&analysis).map_err(|err| {
@@ -2723,6 +2803,52 @@ struct StateDetectionRun {
     color_options: Vec<StateDetectionColorOption>,
 }
 
+struct StateDetectionStateAssignments {
+    leading_object_type: String,
+    states: Vec<StateDetectionEventState>,
+}
+
+struct StateDetectionEventState {
+    event_id: Symbol,
+    state: String,
+}
+
+#[derive(Clone, Default)]
+struct StateDetectionEventVote {
+    counts: BTreeMap<(usize, usize), usize>,
+    latest_window_index: BTreeMap<(usize, usize), usize>,
+}
+
+impl StateDetectionEventVote {
+    fn add(&mut self, cell: (usize, usize), window_index: usize) {
+        *self.counts.entry(cell).or_default() += 1;
+        self.latest_window_index.insert(cell, window_index);
+    }
+
+    fn winning_cell(&self) -> Option<(usize, usize)> {
+        let mut best = None;
+
+        for (cell, count) in &self.counts {
+            let latest_window_index = self.latest_window_index.get(cell).copied().unwrap_or(0);
+            match best {
+                None => best = Some((*cell, *count, latest_window_index)),
+                Some((best_cell, best_count, best_latest_window_index)) => {
+                    if *count > best_count
+                        || (*count == best_count
+                            && (latest_window_index > best_latest_window_index
+                                || (latest_window_index == best_latest_window_index
+                                    && *cell < best_cell)))
+                    {
+                        best = Some((*cell, *count, latest_window_index));
+                    }
+                }
+            }
+        }
+
+        best.map(|(cell, _, _)| cell)
+    }
+}
+
 #[derive(Clone)]
 enum ColorMetric {
     WindowCount,
@@ -3996,6 +4122,34 @@ impl OcelDocument {
         let result = StateQueryResult {
             attribute,
             leading_object_type,
+            assigned_events,
+            total_events,
+        };
+        serde_json::to_string(&result)
+            .map_err(|err| JsValue::from_str(&format!("could not serialize state result: {err}")))
+    }
+
+    /// Applies the current State Detection SOM labels as the string `state` event attribute.
+    #[wasm_bindgen(js_name = applyStateDetection)]
+    pub fn apply_state_detection(&mut self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<StateDetectionRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!("could not parse state detection request: {err}"))
+            })?;
+        let assignments = self
+            .log
+            .state_detection_state_assignments(&request)
+            .map_err(JsValue::from)?;
+        self.original_log
+            .apply_state_labels_by_event_id(&assignments.leading_object_type, &assignments.states)
+            .map_err(JsValue::from)?;
+        self.log = self.original_log.filter(&self.current_filter);
+        let assigned_events = self.log.count_events_with_attribute("state");
+        let total_events = self.log.events.len();
+
+        let result = StateQueryResult {
+            attribute: "state".to_owned(),
+            leading_object_type: assignments.leading_object_type,
             assigned_events,
             total_events,
         };
@@ -6098,6 +6252,71 @@ mod tests {
         assert!(detail["exiting_window_count"].as_u64().is_some());
         assert!(detail["entering_windows"].as_array().is_some());
         assert!(detail["exiting_windows"].as_array().is_some());
+    }
+
+    #[test]
+    fn applies_state_detection_cells_as_event_states() {
+        let mut log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let request = StateDetectionRequest {
+            object_type: "Purchase Order".to_owned(),
+            window_size: Some(2),
+            som_width: Some(3),
+            som_height: Some(3),
+            epochs: Some(25),
+            color_attribute: Some("__window_count".to_owned()),
+        };
+
+        let assignments = log.state_detection_state_assignments(&request).unwrap();
+        assert_eq!(assignments.leading_object_type, "Purchase Order");
+        let assigned = log
+            .apply_state_labels_by_event_id(&assignments.leading_object_type, &assignments.states)
+            .unwrap();
+
+        assert!(assigned > 0);
+        assert_eq!(log.summary().stateful_events, assigned);
+        assert!(log.events.iter().any(|event| {
+            event.attributes.iter().any(|attribute| {
+                if log.pool.resolve(attribute.name) != "state" {
+                    return false;
+                }
+
+                match &attribute.value {
+                    AttrValue::String(symbol) => {
+                        let state = log.pool.resolve(*symbol);
+                        state.starts_with('S') && state.contains('-')
+                    }
+                    _ => false,
+                }
+            })
+        }));
+        assert!(!log.state_patterns_json().unwrap().is_empty());
+    }
+
+    #[test]
+    fn wasm_applies_state_detection_to_current_log() {
+        let mut document = OcelDocument::new(JSON_EXAMPLE, Some("json".to_owned())).unwrap();
+        let result: Value = serde_json::from_str(
+            &document
+                .apply_state_detection(
+                    r#"{
+                      "object_type":"Purchase Order",
+                      "window_size":2,
+                      "som_width":3,
+                      "som_height":3
+                    }"#,
+                )
+                .unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(result["attribute"], Value::from("state"));
+        assert_eq!(result["leading_object_type"], Value::from("Purchase Order"));
+        assert!(result["assigned_events"]
+            .as_u64()
+            .is_some_and(|count| count > 0));
+        let summary = serde_json::from_str::<Value>(&document.summary_json()).unwrap();
+        assert_eq!(summary["stateful_events"], result["assigned_events"]);
+        assert!(!document.state_patterns_json().unwrap().is_empty());
     }
 
     #[test]

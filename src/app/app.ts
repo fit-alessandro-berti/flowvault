@@ -133,8 +133,8 @@ export class App {
   protected readonly isFilterChainOpen = signal(false);
   protected readonly stateDetectionObjectType = signal('');
   protected readonly stateDetectionWindowSize = signal(4);
-  protected readonly stateDetectionSomWidth = signal(5);
-  protected readonly stateDetectionSomHeight = signal(5);
+  protected readonly stateDetectionSomWidth = signal(3);
+  protected readonly stateDetectionSomHeight = signal(3);
   protected readonly stateDetectionColorAttribute = signal('__window_count');
   protected readonly stateDetectionColorOptions =
     signal<StateDetectionColorOption[]>(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
@@ -408,8 +408,8 @@ export class App {
       this.stateDetectionAnalysis.set(null);
       this.stateDetectionObjectType.set(imported.filterOptions.object_types[0] ?? '');
       this.stateDetectionWindowSize.set(4);
-      this.stateDetectionSomWidth.set(5);
-      this.stateDetectionSomHeight.set(5);
+      this.stateDetectionSomWidth.set(3);
+      this.stateDetectionSomHeight.set(3);
       this.stateDetectionColorAttribute.set('__window_count');
       this.stateDetectionColorOptions.set(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
       this.stateDetectionCellDetail.set(null);
@@ -625,6 +625,33 @@ export class App {
 
   protected runStateDetection(): void {
     this.loadStateDetection();
+  }
+
+  protected applyStateDetection(): void {
+    if (!this.documentHandle || !this.stateDetectionAnalysis()) {
+      return;
+    }
+
+    try {
+      this.ensureStateDetectionObjectType();
+      const result = JSON.parse(
+        this.documentHandle.applyStateDetection(this.stateDetectionRequestJson()),
+      ) as StateQueryResult;
+      this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
+      this.originalSummary.set(
+        JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
+      );
+      this.loadStatePatterns();
+      this.loadStateAwareOcdfg();
+      this.stateDetectionCellDetail.set(null);
+      this.activeFeature.set('patterns');
+      this.stateMessage.set(
+        `Added ${result.attribute} for ${result.leading_object_type} from ${this.stateDetectionSomWidth()} x ${this.stateDetectionSomHeight()} SOM windows to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
+      );
+      this.errorMessage.set('');
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    }
   }
 
   protected downloadStateFeatureTable(): void {
