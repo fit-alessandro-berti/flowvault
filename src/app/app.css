@@ -179,25 +179,6 @@ button:disabled {
   line-height: 1;
 }
 
-.stat-value {
-  display: flex;
-  min-width: 0;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.12em;
-  overflow-wrap: anywhere;
-}
-
-.stat-value.is-fraction {
-  font-size: clamp(1.25rem, 3vw, 1.85rem);
-  line-height: 1.08;
-}
-
-.stat-separator {
-  color: #73827e;
-  font-size: 0.75em;
-}
-
 .message {
   margin: 18px 0 0;
   border-radius: 8px;
@@ -359,38 +340,6 @@ textarea:focus {
 
 .details strong {
   font-size: 1.45rem;
-}
-
-.details .stat-value.is-fraction {
-  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
-}
-
-.filter-section {
-  margin-top: 18px;
-}
-
-.filter-columns {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.filter-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.filter-options {
-  display: grid;
-  gap: 6px;
-  max-height: 220px;
-  overflow: auto;
-}
-
-.filter-options label {
-  display: flex;
-  gap: 8px;
-  align-items: center;
 }
 
 .patterns {
@@ -630,7 +579,6 @@ textarea:focus {
   .topbar,
   .workspace,
   .details,
-  .filter-columns,
   .pattern-columns {
     grid-template-columns: 1fr;
   }
