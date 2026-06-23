@@ -114,6 +114,18 @@ The WASM-facing method is `statePatternsJson()`, which returns:
 
 Calling pattern detection before applying a state query returns an error.
 
+## Directly-Follows Graphs
+
+Flowvault exposes three layout-ready graph computations from the Rust/WebAssembly core:
+
+- `directlyFollowsGraphJson(objectType)`: flattens the active OCEL over one object type and counts directly-follows activity pairs along those object lifecycles.
+- `objectCentricDirectlyFollowsGraphJson()`: flattens over every object type and collates directly-follows edges by activity pair, preserving per-object-type weights on each edge.
+- `stateAwareObjectCentricDirectlyFollowsGraphJson()`: uses the enriched event `state` attribute, labels activities as `Activity [State]`, and inserts explicit `CHANGE previous -> next` transition nodes when consecutive stateful lifecycle events change state.
+
+Each method returns a shared `ProcessGraph` JSON shape with positioned nodes, curved routed edge paths, labels, weights, and per-object-type edge details. The layout uses wider layer and row spacing so larger directly-follows graphs read as left-to-right flows rather than dense grids. The Angular `app-process-graph` component renders that shape as SVG and can be reused for flattened DFGs, OCDFGs, and SA-OCDFGs. The current UI renders the SA-OCDFG below the intra/inter-state pattern tabs after a state query has been applied.
+
+For a DOT-compatible WebAssembly renderer, the strongest fit is Graphviz compiled to WASM. The `@hpcc-js/wasm` project packages Graphviz and exposes `Graphviz.load().dot(...)`; Viz.js similarly provides `@viz-js/viz` as a WebAssembly Graphviz wrapper. Flowvault does not currently add either package because the graph DTOs are already computed in the Rust/WASM core and rendered directly as SVG, avoiding an extra WASM download and a DOT-to-SVG string pipeline.
+
 ## Commands
 
 Install JavaScript dependencies:

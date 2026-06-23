@@ -1,0 +1,100 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.process-graph-shell {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+h3,
+p {
+  margin: 0;
+}
+
+p,
+header span {
+  color: #6a7975;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.process-graph-scroll {
+  overflow: auto;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #fbfdfc;
+}
+
+.process-graph {
+  display: block;
+  min-width: 100%;
+}
+
+.process-edge {
+  fill: none;
+  stroke: #31544e;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.process-graph marker path {
+  fill: #31544e;
+}
+
+.process-edge-label {
+  fill: #263632;
+  text-anchor: middle;
+  font-size: 11px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: #fbfdfc;
+  stroke-width: 4px;
+}
+
+.process-node rect {
+  stroke: #9cafaa;
+  stroke-width: 1;
+  rx: 8;
+}
+
+.process-node-activity rect {
+  fill: #e9f5f1;
+}
+
+.process-node-state-activity rect {
+  fill: #eaf2ff;
+}
+
+.process-node-state-change rect {
+  fill: #fff0da;
+  stroke: #b45f1a;
+  stroke-width: 2;
+}
+
+.process-node text {
+  fill: #17221f;
+  text-anchor: middle;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.process-node-state-change text {
+  fill: #7a3710;
+}
+
+@media (max-width: 780px) {
+  header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

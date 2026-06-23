@@ -23,6 +23,9 @@ export interface OcelDocumentHandle {
   objectLifecycleJson(objectId: string): string;
   applyStateQuery(query: string): string;
   statePatternsJson(): string;
+  directlyFollowsGraphJson(objectType: string): string;
+  objectCentricDirectlyFollowsGraphJson(): string;
+  stateAwareObjectCentricDirectlyFollowsGraphJson(): string;
   free(): void;
 }
 
@@ -59,6 +62,48 @@ export interface StatePattern {
 export interface StatePatternAnalysis {
   intra: StatePattern[];
   inter: StatePattern[];
+}
+
+export interface ProcessGraphPoint {
+  x: number;
+  y: number;
+}
+
+export interface ProcessGraphNode {
+  id: string;
+  label: string;
+  kind: string;
+  count: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  lines: string[];
+}
+
+export interface ProcessGraphEdge {
+  id: string;
+  source: string;
+  target: string;
+  kind: string;
+  path: string;
+  label: string;
+  title: string;
+  weight: number;
+  directed: boolean;
+  points: ProcessGraphPoint[];
+  label_x: number;
+  label_y: number;
+  object_types: Array<{ object_type: string; weight: number }>;
+}
+
+export interface ProcessGraph {
+  title: string;
+  subtitle: string;
+  width: number;
+  height: number;
+  nodes: ProcessGraphNode[];
+  edges: ProcessGraphEdge[];
 }
 
 export interface ImportedOcelDocument {

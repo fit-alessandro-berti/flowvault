@@ -672,6 +672,121 @@ impl CompactOcelLog {
         })
     }
 
+    fn directly_follows_graph_json(&self, object_type: &str) -> OcelResult<String> {
+        self.object_type_symbol(object_type).ok_or_else(|| {
+            OcelError::new(format!("unknown leading object type '{object_type}'"))
+        })?;
+        let mut graph = GraphAccumulator::new(
+            format!("Directly-Follows Graph: {object_type}"),
+            format!("Flattened over {object_type} object lifecycles"),
+        );
+        for object in &self.objects {
+            let current_type = self.pool.resolve(object.type_name);
+            if current_type == object_type {
+                self.accumulate_directly_follows_for_object(&mut graph, object, current_type);
+            }
+        }
+        graph.into_layout()
+    }
+
+    fn object_centric_directly_follows_graph_json(&self) -> OcelResult<String> {
+        let mut graph = GraphAccumulator::new(
+            "Object-Centric Directly-Follows Graph".to_owned(),
+            "Flattened over every object type and collated by activity pair".to_owned(),
+        );
+        for object in &self.objects {
+            let object_type = self.pool.resolve(object.type_name);
+            self.accumulate_directly_follows_for_object(&mut graph, object, object_type);
+        }
+        graph.into_layout()
+    }
+
+    fn state_aware_ocdfg_json(&self) -> OcelResult<String> {
+        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+            OcelError::new("event state attribute is missing; apply a state query first")
+        })?;
+        let mut graph = GraphAccumulator::new(
+            "State-Aware Object-Centric Directly-Follows Graph".to_owned(),
+            "State-enriched lifecycles collated across object types".to_owned(),
+        );
+
+        for object in &self.objects {
+            let object_type = self.pool.resolve(object.type_name);
+            self.accumulate_state_aware_directly_follows_for_object(
+                &mut graph,
+                object,
+                object_type,
+                state_attribute,
+            );
+        }
+
+        graph.into_layout()
+    }
+
+    fn accumulate_directly_follows_for_object(
+        &self,
+        graph: &mut GraphAccumulator,
+        object: &Object,
+        object_type: &str,
+    ) {
+        for (position, event_index) in object.lifecycle.iter().enumerate() {
+            let event_type = self.pool.resolve(self.events[*event_index].type_name);
+            graph.add_node(event_type, "activity", position as f64, 1);
+        }
+
+        for pair in object.lifecycle.windows(2) {
+            let [source_index, target_index] = pair else {
+                continue;
+            };
+            let source = self.pool.resolve(self.events[*source_index].type_name);
+            let target = self.pool.resolve(self.events[*target_index].type_name);
+            graph.add_edge(source, target, object_type, 1);
+        }
+    }
+
+    fn accumulate_state_aware_directly_follows_for_object(
+        &self,
+        graph: &mut GraphAccumulator,
+        object: &Object,
+        object_type: &str,
+        state_attribute: Symbol,
+    ) {
+        let stateful_lifecycle = object
+            .lifecycle
+            .iter()
+            .filter_map(|event_index| {
+                self.event_state(&self.events[*event_index], state_attribute)
+                    .map(|state| (*event_index, state.to_owned()))
+            })
+            .collect::<Vec<_>>();
+
+        for (position, (event_index, state)) in stateful_lifecycle.iter().enumerate() {
+            let event_type = self.pool.resolve(self.events[*event_index].type_name);
+            let label = format!("{event_type} [{state}]");
+            graph.add_node(&label, "state-activity", position as f64 * 2.0, 1);
+        }
+
+        for (position, pair) in stateful_lifecycle.windows(2).enumerate() {
+            let [(source_index, source_state), (target_index, target_state)] = pair else {
+                continue;
+            };
+            let source_event_type = self.pool.resolve(self.events[*source_index].type_name);
+            let target_event_type = self.pool.resolve(self.events[*target_index].type_name);
+            let source = format!("{source_event_type} [{source_state}]");
+            let target = format!("{target_event_type} [{target_state}]");
+
+            if source_state == target_state {
+                graph.add_edge(&source, &target, object_type, 1);
+                continue;
+            }
+
+            let change = format!("CHANGE {source_state} -> {target_state}");
+            graph.add_node(&change, "state-change", position as f64 * 2.0 + 1.0, 1);
+            graph.add_edge(&source, &change, object_type, 1);
+            graph.add_edge(&change, &target, object_type, 1);
+        }
+    }
+
     fn detect_state_patterns(&self) -> OcelResult<PatternAnalysis> {
         let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
@@ -1298,6 +1413,474 @@ struct PatternEdge {
     weight: usize,
 }
 
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LayoutGraph {
+    title: String,
+    subtitle: String,
+    width: f64,
+    height: f64,
+    nodes: Vec<LayoutNode>,
+    edges: Vec<LayoutEdge>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LayoutNode {
+    id: String,
+    label: String,
+    kind: String,
+    count: usize,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    lines: Vec<String>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LayoutEdge {
+    id: String,
+    source: String,
+    target: String,
+    kind: String,
+    path: String,
+    label: String,
+    title: String,
+    weight: usize,
+    directed: bool,
+    points: Vec<LayoutPoint>,
+    label_x: f64,
+    label_y: f64,
+    object_types: Vec<WeightedObjectType>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LayoutPoint {
+    x: f64,
+    y: f64,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct WeightedObjectType {
+    object_type: String,
+    weight: usize,
+}
+
+struct GraphAccumulator {
+    title: String,
+    subtitle: String,
+    nodes: BTreeMap<String, GraphNodeAccumulator>,
+    edges: BTreeMap<(String, String), GraphEdgeAccumulator>,
+}
+
+struct GraphNodeAccumulator {
+    label: String,
+    kind: String,
+    count: usize,
+    order_sum: f64,
+    order_count: usize,
+}
+
+struct GraphEdgeAccumulator {
+    source: String,
+    target: String,
+    weight: usize,
+    object_types: BTreeMap<String, usize>,
+}
+
+impl GraphAccumulator {
+    fn new(title: String, subtitle: String) -> Self {
+        Self {
+            title,
+            subtitle,
+            nodes: BTreeMap::new(),
+            edges: BTreeMap::new(),
+        }
+    }
+
+    fn add_node(&mut self, label: &str, kind: &str, order: f64, count: usize) {
+        let entry = self
+            .nodes
+            .entry(label.to_owned())
+            .or_insert_with(|| GraphNodeAccumulator {
+                label: label.to_owned(),
+                kind: kind.to_owned(),
+                count: 0,
+                order_sum: 0.0,
+                order_count: 0,
+            });
+        entry.count += count;
+        entry.order_sum += order * count as f64;
+        entry.order_count += count;
+        if entry.kind != "state-change" && kind == "state-change" {
+            entry.kind = kind.to_owned();
+        }
+    }
+
+    fn add_edge(&mut self, source: &str, target: &str, object_type: &str, weight: usize) {
+        let entry = self
+            .edges
+            .entry((source.to_owned(), target.to_owned()))
+            .or_insert_with(|| GraphEdgeAccumulator {
+                source: source.to_owned(),
+                target: target.to_owned(),
+                weight: 0,
+                object_types: BTreeMap::new(),
+            });
+        entry.weight += weight;
+        *entry
+            .object_types
+            .entry(object_type.to_owned())
+            .or_default() += weight;
+    }
+
+    fn into_layout(self) -> OcelResult<String> {
+        let graph = layout_accumulated_graph(self);
+        serde_json::to_string(&graph)
+            .map_err(|err| OcelError::new(format!("could not serialize graph layout: {err}")))
+    }
+}
+
+fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
+    let mut node_items = graph
+        .nodes
+        .into_values()
+        .map(|node| {
+            let average_order = if node.order_count == 0 {
+                0.0
+            } else {
+                node.order_sum / node.order_count as f64
+            };
+            (average_order, node)
+        })
+        .collect::<Vec<_>>();
+
+    node_items.sort_by(|left, right| {
+        left.0
+            .partial_cmp(&right.0)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then_with(|| right.1.count.cmp(&left.1.count))
+            .then_with(|| left.1.label.cmp(&right.1.label))
+    });
+
+    let mut layers = BTreeMap::<i32, Vec<(f64, GraphNodeAccumulator)>>::new();
+    for (average_order, node) in node_items {
+        layers
+            .entry((average_order * 2.0).round() as i32)
+            .or_default()
+            .push((average_order, node));
+    }
+    let mut layers = layers.into_iter().collect::<Vec<_>>();
+    let max_layer_rows = layers
+        .iter()
+        .map(|(_, nodes)| nodes.len())
+        .max()
+        .unwrap_or(1);
+
+    let mut nodes = Vec::new();
+    let mut node_positions = HashMap::<String, (String, f64, f64, f64, f64)>::new();
+    let node_gap_x = 340.0;
+    let node_gap_y = 158.0;
+    let margin_x = 76.0;
+    let margin_y = 76.0;
+    let mut max_rows = 1usize;
+
+    for (layer_index, (_layer, layer_nodes)) in layers.iter_mut().enumerate() {
+        layer_nodes.sort_by(|left, right| {
+            right
+                .1
+                .count
+                .cmp(&left.1.count)
+                .then_with(|| left.1.label.cmp(&right.1.label))
+        });
+        max_rows = max_rows.max(layer_nodes.len());
+        let layer_offset_y =
+            (max_layer_rows.saturating_sub(layer_nodes.len()) as f64 * node_gap_y) / 2.0;
+        let wave_offset_y = if layer_index % 2 == 1 && layer_nodes.len() > 1 {
+            node_gap_y * 0.12
+        } else {
+            0.0
+        };
+        for (row_index, (_average_order, node)) in layer_nodes.drain(..).enumerate() {
+            let lines = wrap_label(&node.label, 24, 4);
+            let width = if node.kind == "state-change" {
+                230.0
+            } else {
+                205.0
+            };
+            let height = (62.0 + (lines.len().saturating_sub(1) as f64 * 14.0)).max(68.0);
+            let x = margin_x + layer_index as f64 * node_gap_x;
+            let y = margin_y + layer_offset_y + wave_offset_y + row_index as f64 * node_gap_y;
+            let id = format!("n{}", nodes.len() + 1);
+            node_positions.insert(node.label.clone(), (id.clone(), x, y, width, height));
+            nodes.push(LayoutNode {
+                id,
+                label: node.label,
+                kind: node.kind,
+                count: node.count,
+                x,
+                y,
+                width,
+                height,
+                lines,
+            });
+        }
+    }
+
+    let width = nodes
+        .iter()
+        .map(|node| node.x + node.width + margin_x)
+        .fold(720.0, f64::max);
+    let height = (margin_y * 2.0 + max_rows as f64 * node_gap_y).max(320.0);
+
+    let mut edges = graph
+        .edges
+        .into_values()
+        .filter_map(|edge| {
+            let (source_id, source_x, source_y, source_width, source_height) =
+                node_positions.get(&edge.source)?.clone();
+            let (target_id, target_x, target_y, target_width, target_height) =
+                node_positions.get(&edge.target)?.clone();
+            let points = routed_edge_points(
+                source_x,
+                source_y,
+                source_width,
+                source_height,
+                target_x,
+                target_y,
+                target_width,
+                target_height,
+                source_id == target_id,
+            );
+            let (label_x, label_y) = edge_label_position(&points);
+            let path = curved_edge_path(&points);
+            let object_types = edge
+                .object_types
+                .into_iter()
+                .map(|(object_type, weight)| WeightedObjectType {
+                    object_type,
+                    weight,
+                })
+                .collect::<Vec<_>>();
+            let title = object_types
+                .iter()
+                .map(|entry| format!("{}: {}", entry.object_type, entry.weight))
+                .collect::<Vec<_>>()
+                .join(", ");
+            Some(LayoutEdge {
+                id: String::new(),
+                source: source_id,
+                target: target_id,
+                kind: "df".to_owned(),
+                path,
+                label: edge.weight.to_string(),
+                title,
+                weight: edge.weight,
+                directed: true,
+                points,
+                label_x,
+                label_y,
+                object_types,
+            })
+        })
+        .collect::<Vec<_>>();
+
+    edges.sort_by(|left, right| {
+        right
+            .weight
+            .cmp(&left.weight)
+            .then_with(|| left.source.cmp(&right.source))
+            .then_with(|| left.target.cmp(&right.target))
+    });
+    for (index, edge) in edges.iter_mut().enumerate() {
+        edge.id = format!("e{}", index + 1);
+    }
+
+    LayoutGraph {
+        title: graph.title,
+        subtitle: graph.subtitle,
+        width,
+        height,
+        nodes,
+        edges,
+    }
+}
+
+fn routed_edge_points(
+    source_x: f64,
+    source_y: f64,
+    source_width: f64,
+    source_height: f64,
+    target_x: f64,
+    target_y: f64,
+    target_width: f64,
+    target_height: f64,
+    self_loop: bool,
+) -> Vec<LayoutPoint> {
+    let source_mid_y = source_y + source_height / 2.0;
+    let target_mid_y = target_y + target_height / 2.0;
+    if self_loop {
+        let x1 = source_x + source_width;
+        let y1 = source_mid_y;
+        return vec![
+            LayoutPoint { x: x1, y: y1 },
+            LayoutPoint {
+                x: x1 + 44.0,
+                y: y1 - 42.0,
+            },
+            LayoutPoint {
+                x: source_x + source_width / 2.0,
+                y: source_y - 28.0,
+            },
+            LayoutPoint {
+                x: source_x,
+                y: y1 - 16.0,
+            },
+        ];
+    }
+
+    let starts_before_target = source_x + source_width <= target_x;
+    if starts_before_target {
+        let x1 = source_x + source_width;
+        let x2 = target_x;
+        let mid_x = (x1 + x2) / 2.0;
+        vec![
+            LayoutPoint {
+                x: x1,
+                y: source_mid_y,
+            },
+            LayoutPoint {
+                x: mid_x,
+                y: source_mid_y,
+            },
+            LayoutPoint {
+                x: mid_x,
+                y: target_mid_y,
+            },
+            LayoutPoint {
+                x: x2,
+                y: target_mid_y,
+            },
+        ]
+    } else {
+        let x1 = source_x;
+        let x2 = target_x + target_width;
+        let mid_x = (x1 + x2) / 2.0;
+        vec![
+            LayoutPoint {
+                x: x1,
+                y: source_mid_y,
+            },
+            LayoutPoint {
+                x: mid_x,
+                y: source_mid_y,
+            },
+            LayoutPoint {
+                x: mid_x,
+                y: target_mid_y,
+            },
+            LayoutPoint {
+                x: x2,
+                y: target_mid_y,
+            },
+        ]
+    }
+}
+
+fn curved_edge_path(points: &[LayoutPoint]) -> String {
+    match points {
+        [] => String::new(),
+        [start] => format!("M {:.1} {:.1}", start.x, start.y),
+        [start, end] => format!(
+            "M {:.1} {:.1} L {:.1} {:.1}",
+            start.x, start.y, end.x, end.y
+        ),
+        [start, control, end] => format!(
+            "M {:.1} {:.1} Q {:.1} {:.1} {:.1} {:.1}",
+            start.x, start.y, control.x, control.y, end.x, end.y
+        ),
+        [start, control_a, control_b, end, ..] => format!(
+            "M {:.1} {:.1} C {:.1} {:.1} {:.1} {:.1} {:.1} {:.1}",
+            start.x, start.y, control_a.x, control_a.y, control_b.x, control_b.y, end.x, end.y
+        ),
+    }
+}
+
+fn edge_label_position(points: &[LayoutPoint]) -> (f64, f64) {
+    if points.is_empty() {
+        return (0.0, 0.0);
+    }
+    let middle = points.len() / 2;
+    if points.len() % 2 == 0 {
+        (
+            (points[middle - 1].x + points[middle].x) / 2.0,
+            (points[middle - 1].y + points[middle].y) / 2.0 - 6.0,
+        )
+    } else {
+        (points[middle].x, points[middle].y - 6.0)
+    }
+}
+
+fn wrap_label(label: &str, max_line_length: usize, max_lines: usize) -> Vec<String> {
+    let mut lines = Vec::new();
+    for chunk in label.split('\n') {
+        let mut current = String::new();
+        for word in chunk.split_whitespace() {
+            for part in split_label_word(word, max_line_length) {
+                let candidate = if current.is_empty() {
+                    part.clone()
+                } else {
+                    format!("{current} {part}")
+                };
+                if candidate.len() <= max_line_length {
+                    current = candidate;
+                } else {
+                    if !current.is_empty() {
+                        lines.push(current);
+                    }
+                    current = part;
+                }
+            }
+        }
+        if !current.is_empty() {
+            lines.push(current);
+        }
+    }
+    if lines.is_empty() {
+        lines.push(label.to_owned());
+    }
+    if lines.len() <= max_lines {
+        return lines;
+    }
+    let mut trimmed = lines.into_iter().take(max_lines).collect::<Vec<_>>();
+    if let Some(last) = trimmed.last_mut() {
+        last.truncate(max_line_length.saturating_sub(3));
+        last.push_str("...");
+    }
+    trimmed
+}
+
+fn split_label_word(word: &str, max_line_length: usize) -> Vec<String> {
+    if word.len() <= max_line_length {
+        return vec![word.to_owned()];
+    }
+    let mut parts = Vec::new();
+    let mut start = 0usize;
+    while start < word.len() {
+        let mut end = (start + max_line_length).min(word.len());
+        while !word.is_char_boundary(end) {
+            end -= 1;
+        }
+        parts.push(word[start..end].to_owned());
+        start = end;
+    }
+    parts
+}
+
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 enum PatternFamily {
     Intra,
@@ -1614,6 +2197,28 @@ impl OcelDocument {
     #[wasm_bindgen(js_name = statePatternsJson)]
     pub fn state_patterns_json(&self) -> Result<String, JsValue> {
         self.log.state_patterns_json().map_err(JsValue::from)
+    }
+
+    /// Computes a flattened directly-follows graph for one object type.
+    #[wasm_bindgen(js_name = directlyFollowsGraphJson)]
+    pub fn directly_follows_graph_json(&self, object_type: &str) -> Result<String, JsValue> {
+        self.log
+            .directly_follows_graph_json(object_type)
+            .map_err(JsValue::from)
+    }
+
+    /// Computes an object-centric directly-follows graph collated over all object types.
+    #[wasm_bindgen(js_name = objectCentricDirectlyFollowsGraphJson)]
+    pub fn object_centric_directly_follows_graph_json(&self) -> Result<String, JsValue> {
+        self.log
+            .object_centric_directly_follows_graph_json()
+            .map_err(JsValue::from)
+    }
+
+    /// Computes a state-aware object-centric directly-follows graph.
+    #[wasm_bindgen(js_name = stateAwareObjectCentricDirectlyFollowsGraphJson)]
+    pub fn state_aware_ocdfg_json(&self) -> Result<String, JsValue> {
+        self.log.state_aware_ocdfg_json().map_err(JsValue::from)
     }
 }
 
@@ -3269,6 +3874,73 @@ mod tests {
             filtered.pool.resolve(object.type_name),
             "Purchase Order" | "Invoice"
         )));
+    }
+
+    #[test]
+    fn computes_flattened_and_object_centric_dfg_layouts() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+
+        let flattened: Value =
+            serde_json::from_str(&log.directly_follows_graph_json("Purchase Order").unwrap())
+                .unwrap();
+        assert_eq!(
+            flattened["title"],
+            Value::from("Directly-Follows Graph: Purchase Order")
+        );
+        assert!(flattened["nodes"]
+            .as_array()
+            .is_some_and(|nodes| !nodes.is_empty()));
+        assert!(flattened["edges"].as_array().is_some_and(|edges| {
+            edges
+                .iter()
+                .any(|edge| edge["path"].as_str().is_some_and(|path| path.contains('C')))
+        }));
+
+        let object_centric: Value =
+            serde_json::from_str(&log.object_centric_directly_follows_graph_json().unwrap())
+                .unwrap();
+        assert!(object_centric["nodes"]
+            .as_array()
+            .is_some_and(|nodes| nodes.len() >= flattened["nodes"].as_array().unwrap().len()));
+        assert!(object_centric["edges"].as_array().is_some_and(|edges| {
+            edges.iter().any(|edge| {
+                edge["object_types"].as_array().is_some_and(|types| {
+                    types
+                        .iter()
+                        .any(|entry| entry["object_type"] == Value::from("Invoice"))
+                })
+            })
+        }));
+    }
+
+    #[test]
+    fn computes_state_aware_ocdfg_layout() {
+        let mut log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        log.apply_state_query(
+            r#"
+            STATE state FOR LEADING OBJECT TYPE 'Purchase Order' AS CASE
+              WHEN event.type = 'Create Purchase Order' THEN 'Created'
+              ELSE 'Follow-Up'
+            END
+            "#,
+        )
+        .unwrap();
+
+        let graph: Value = serde_json::from_str(&log.state_aware_ocdfg_json().unwrap()).unwrap();
+        assert_eq!(
+            graph["title"],
+            Value::from("State-Aware Object-Centric Directly-Follows Graph")
+        );
+        assert!(graph["nodes"].as_array().is_some_and(|nodes| {
+            nodes
+                .iter()
+                .any(|node| node["kind"] == Value::from("state-change"))
+        }));
+        assert!(graph["edges"].as_array().is_some_and(|edges| {
+            edges
+                .iter()
+                .any(|edge| edge["path"].as_str().is_some_and(|path| path.contains('C')))
+        }));
     }
 
     #[test]

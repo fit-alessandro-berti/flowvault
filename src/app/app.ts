@@ -1,9 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { exportBaseName, formatHintForFile } from './ocel-file';
 import { presetsForFile, StateQueryPreset } from './state-query-presets';
+import { ProcessGraphComponent } from './process-graph.component';
 import {
   OcelDocumentHandle,
   OcelFilterOptions,
+  ProcessGraph,
   StatePattern,
   StatePatternAnalysis,
   StatePatternEdge,
@@ -82,7 +84,7 @@ interface PatternGraph {
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [ProcessGraphComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -111,6 +113,7 @@ export class App {
   protected readonly draftObjectTypes = signal<string[]>([]);
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
+  protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly selectedIntraPatternId = signal('');
   protected readonly selectedInterPatternId = signal('');
   protected readonly activePatternTab = signal<PatternTab>('intra');
@@ -315,6 +318,7 @@ export class App {
       this.filterDialog.set(null);
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
+      this.stateAwareOcdfg.set(null);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
       this.activePatternTab.set('intra');
@@ -337,6 +341,7 @@ export class App {
       this.documentHandle = undefined;
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
+      this.stateAwareOcdfg.set(null);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
       this.activePatternTab.set('intra');
@@ -634,6 +639,7 @@ export class App {
   private loadStatePatterns(preserveSelection = false): void {
     if (!this.documentHandle) {
       this.patternAnalysis.set(null);
+      this.stateAwareOcdfg.set(null);
       return;
     }
 
@@ -642,6 +648,7 @@ export class App {
     const previousFullScreenPatternId = this.fullScreenPattern()?.id;
     const analysis = JSON.parse(this.documentHandle.statePatternsJson()) as StatePatternAnalysis;
     this.patternAnalysis.set(analysis);
+    this.loadStateAwareOcdfg();
     if (!preserveSelection) {
       this.activePatternTab.set('intra');
     }
@@ -662,6 +669,24 @@ export class App {
           (pattern) => pattern.id === previousFullScreenPatternId,
         ) ?? null,
       );
+    }
+  }
+
+  private loadStateAwareOcdfg(): void {
+    if (!this.documentHandle) {
+      this.stateAwareOcdfg.set(null);
+      return;
+    }
+
+    try {
+      this.stateAwareOcdfg.set(
+        JSON.parse(
+          this.documentHandle.stateAwareObjectCentricDirectlyFollowsGraphJson(),
+        ) as ProcessGraph,
+      );
+    } catch (error) {
+      this.stateAwareOcdfg.set(null);
+      this.errorMessage.set(errorToMessage(error));
     }
   }
 
@@ -690,6 +715,7 @@ export class App {
         this.loadStatePatterns(true);
       } else {
         this.patternAnalysis.set(null);
+        this.stateAwareOcdfg.set(null);
         this.selectedIntraPatternId.set('');
         this.selectedInterPatternId.set('');
         this.activePatternTab.set('intra');

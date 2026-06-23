@@ -348,6 +348,14 @@ textarea:focus {
   margin-top: 18px;
 }
 
+.process-graph-section {
+  margin-top: 18px;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+}
+
 .pattern-section-header,
 .pattern-panel-header {
   display: flex;

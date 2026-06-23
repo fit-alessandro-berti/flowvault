@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
-import { StatePatternAnalysis } from './ocel-wasm.service';
+import { ProcessGraph, StatePatternAnalysis } from './ocel-wasm.service';
 
 const importedSummary = {
   source_format: 'json' as const,
@@ -66,6 +66,58 @@ const patternAnalysis: StatePatternAnalysis = {
       ],
       eo_edges: [{ source: 'Close Order [Closed]', target: 'Item', weight: 3 }],
       oo_edges: [{ source: 'Order', target: 'Item', weight: 3 }],
+    },
+  ],
+};
+
+const processGraph: ProcessGraph = {
+  title: 'State-Aware Object-Centric Directly-Follows Graph',
+  subtitle: 'State-enriched lifecycles collated across object types',
+  width: 520,
+  height: 220,
+  nodes: [
+    {
+      id: 'n1',
+      label: 'Create Order [Open]',
+      kind: 'state-activity',
+      count: 2,
+      x: 40,
+      y: 60,
+      width: 180,
+      height: 68,
+      lines: ['Create Order', '[Open]'],
+    },
+    {
+      id: 'n2',
+      label: 'CHANGE Open -> Closed',
+      kind: 'state-change',
+      count: 1,
+      x: 300,
+      y: 60,
+      width: 190,
+      height: 68,
+      lines: ['CHANGE Open', '-> Closed'],
+    },
+  ],
+  edges: [
+    {
+      id: 'e1',
+      source: 'n1',
+      target: 'n2',
+      kind: 'df',
+      path: 'M 220 94 C 240 78 280 110 300 94',
+      label: '2',
+      title: 'Order: 2',
+      weight: 2,
+      directed: true,
+      points: [
+        { x: 220, y: 94 },
+        { x: 260, y: 94 },
+        { x: 300, y: 94 },
+      ],
+      label_x: 260,
+      label_y: 86,
+      object_types: [{ object_type: 'Order', weight: 2 }],
     },
   ],
 };
@@ -161,6 +213,7 @@ describe('App', () => {
       summaryJson: () => JSON.stringify(statefulSummary),
       originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
+      stateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
     };
     component.summary.set(importedSummary);
     component.filterOptions.set({ event_types: [], object_types: ['Order'] });
@@ -173,6 +226,14 @@ describe('App', () => {
 
     const native = fixture.nativeElement as HTMLElement;
     expect(native.textContent).toContain('State Patterns');
+    expect(native.textContent).toContain('State-Aware Object-Centric Directly-Follows Graph');
+    expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
+    expect(native.querySelector('app-process-graph path.process-edge')?.getAttribute('d')).toContain(
+      'C',
+    );
+    expect(
+      native.querySelector('app-process-graph marker')?.getAttribute('markerWidth'),
+    ).toBe('4');
     expect(native.textContent).toContain('5x | Open on Order');
     expect(native.textContent).not.toContain('3x | Open -> Closed on Order');
     expect(native.querySelectorAll('.pattern-select').length).toBe(1);
@@ -225,6 +286,7 @@ describe('App', () => {
         patternCalls += 1;
         return JSON.stringify(patternAnalysis);
       },
+      stateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
     };
     component.summary.set(statefulSummary);
     component.originalSummary.set(statefulSummary);
@@ -296,6 +358,7 @@ describe('App', () => {
       summaryJson: () => JSON.stringify(statefulSummary),
       originalSummaryJson: () => JSON.stringify(statefulSummary),
       statePatternsJson: () => JSON.stringify(patternAnalysis),
+      stateAwareObjectCentricDirectlyFollowsGraphJson: () => JSON.stringify(processGraph),
     };
     component.summary.set(importedSummary);
     component.filterOptions.set({ event_types: [], object_types: ['Order'] });
@@ -316,6 +379,9 @@ describe('App', () => {
       native.querySelectorAll('.graph-node').length,
     );
     expect(native.querySelector('.graph-edge-oo')?.getAttribute('marker-end')).toBeNull();
+    expect(native.querySelector('svg.pattern-graph marker')?.getAttribute('markerWidth')).toBe(
+      '4',
+    );
 
     native.querySelectorAll<HTMLButtonElement>('.pattern-tab-button')[1].click();
     fixture.detectChanges();
@@ -330,6 +396,9 @@ describe('App', () => {
 
     expect(native.querySelector('.graph-modal')).toBeTruthy();
     expect(native.querySelector('svg.pattern-graph-expanded')).toBeTruthy();
+    expect(
+      native.querySelector('svg.pattern-graph-expanded marker')?.getAttribute('markerWidth'),
+    ).toBe('5');
     expect(native.textContent).toContain('Open -> Closed on Order');
 
     native.querySelector<HTMLButtonElement>('.graph-modal .ghost-button')?.click();
