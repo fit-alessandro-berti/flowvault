@@ -28,7 +28,7 @@
               markerHeight="4"
               orient="auto-start-reverse"
             >
-              <path d="M 0 0 L 10 5 L 0 10 z"></path>
+              <path d="M 0 0 L 10 5 L 0 10 z" [attr.fill]="edgeColor(edge)"></path>
             </marker>
           }
         </defs>
@@ -37,6 +37,7 @@
           <path
             [attr.class]="'process-edge process-edge-' + edge.kind"
             [attr.d]="edge.path"
+            [attr.stroke]="edgeColor(edge)"
             [attr.stroke-width]="edgeStrokeWidth(edge)"
             [attr.marker-end]="edge.directed ? 'url(#' + markerId(edge) + ')' : null"
           >
@@ -50,12 +51,31 @@
         @for (node of graph.nodes; track node.id) {
           <g [attr.class]="'process-node process-node-' + node.kind">
             <title>{{ node.label }} ({{ node.count }})</title>
-            <rect
-              [attr.x]="node.x"
-              [attr.y]="node.y"
-              [attr.width]="node.width"
-              [attr.height]="node.height"
-            ></rect>
+            @if (node.shape === 'ellipse') {
+              <ellipse
+                class="process-node-shape"
+                [attr.cx]="node.x + node.width / 2"
+                [attr.cy]="node.y + node.height / 2"
+                [attr.rx]="node.width / 2"
+                [attr.ry]="node.height / 2"
+                [attr.fill]="nodeFill(node)"
+                [attr.fill-opacity]="nodeFillOpacity(node)"
+                [attr.stroke]="nodeStroke(node)"
+                [attr.stroke-width]="nodeStrokeWidth(node)"
+              ></ellipse>
+            } @else {
+              <rect
+                class="process-node-shape"
+                [attr.x]="node.x"
+                [attr.y]="node.y"
+                [attr.width]="node.width"
+                [attr.height]="node.height"
+                [attr.fill]="nodeFill(node)"
+                [attr.fill-opacity]="nodeFillOpacity(node)"
+                [attr.stroke]="nodeStroke(node)"
+                [attr.stroke-width]="nodeStrokeWidth(node)"
+              ></rect>
+            }
             <text
               [attr.x]="node.x + node.width / 2"
               [attr.y]="node.y + node.height / 2 - (node.lines.length - 1) * 7 + 4"

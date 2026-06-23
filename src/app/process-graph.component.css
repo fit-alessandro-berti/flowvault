@@ -42,13 +42,8 @@ header span {
 
 .process-edge {
   fill: none;
-  stroke: #31544e;
   stroke-linejoin: round;
   stroke-linecap: round;
-}
-
-.process-graph marker path {
-  fill: #31544e;
 }
 
 .process-edge-label {
@@ -61,24 +56,8 @@ header span {
   stroke-width: 4px;
 }
 
-.process-node rect {
-  stroke: #9cafaa;
-  stroke-width: 1;
+.process-node .process-node-shape {
   rx: 8;
-}
-
-.process-node-activity rect {
-  fill: #e9f5f1;
-}
-
-.process-node-state-activity rect {
-  fill: #eaf2ff;
-}
-
-.process-node-state-change rect {
-  fill: #fff0da;
-  stroke: #b45f1a;
-  stroke-width: 2;
 }
 
 .process-node text {

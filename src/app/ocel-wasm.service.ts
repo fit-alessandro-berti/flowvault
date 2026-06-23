@@ -73,6 +73,9 @@ export interface ProcessGraphNode {
   id: string;
   label: string;
   kind: string;
+  shape: 'rect' | 'ellipse';
+  color: string;
+  object_type?: string;
   count: number;
   x: number;
   y: number;
@@ -90,6 +93,8 @@ export interface ProcessGraphEdge {
   label: string;
   title: string;
   weight: number;
+  object_type: string;
+  color: string;
   directed: boolean;
   points: ProcessGraphPoint[];
   label_x: number;

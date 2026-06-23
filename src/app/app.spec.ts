@@ -77,9 +77,25 @@ const processGraph: ProcessGraph = {
   height: 220,
   nodes: [
     {
+      id: 'n0',
+      label: 'START\nOrder',
+      kind: 'object-start',
+      shape: 'ellipse',
+      color: 'hsl(214 68% 38%)',
+      object_type: 'Order',
+      count: 1,
+      x: 20,
+      y: 60,
+      width: 140,
+      height: 72,
+      lines: ['START', 'Order'],
+    },
+    {
       id: 'n1',
       label: 'Create Order [Open]',
       kind: 'state-activity',
+      shape: 'rect',
+      color: '#42635c',
       count: 2,
       x: 40,
       y: 60,
@@ -91,6 +107,8 @@ const processGraph: ProcessGraph = {
       id: 'n2',
       label: 'CHANGE Open -> Closed',
       kind: 'state-change',
+      shape: 'rect',
+      color: '#42635c',
       count: 1,
       x: 300,
       y: 60,
@@ -109,6 +127,8 @@ const processGraph: ProcessGraph = {
       label: '2',
       title: 'Order: 2',
       weight: 2,
+      object_type: 'Order',
+      color: 'hsl(214 68% 38%)',
       directed: true,
       points: [
         { x: 220, y: 94 },
@@ -230,6 +250,12 @@ describe('App', () => {
     expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
     expect(native.querySelector('app-process-graph path.process-edge')?.getAttribute('d')).toContain(
       'C',
+    );
+    expect(native.querySelector('app-process-graph path.process-edge')?.getAttribute('stroke')).toBe(
+      'hsl(214 68% 38%)',
+    );
+    expect(native.querySelector('app-process-graph ellipse')?.getAttribute('stroke')).toBe(
+      'hsl(214 68% 38%)',
     );
     expect(
       native.querySelector('app-process-graph marker')?.getAttribute('markerWidth'),

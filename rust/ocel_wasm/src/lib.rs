@@ -729,9 +729,29 @@ impl CompactOcelLog {
         object: &Object,
         object_type: &str,
     ) {
+        if object.lifecycle.is_empty() {
+            return;
+        }
+
+        let start = object_boundary_label("START", object_type);
+        let end = object_boundary_label("END", object_type);
+        graph.add_object_boundary_node(&start, "object-start", object_type, 0.0, 1);
+        graph.add_object_boundary_node(
+            &end,
+            "object-end",
+            object_type,
+            object.lifecycle.len() as f64 + 1.0,
+            1,
+        );
+
         for (position, event_index) in object.lifecycle.iter().enumerate() {
             let event_type = self.pool.resolve(self.events[*event_index].type_name);
-            graph.add_node(event_type, "activity", position as f64, 1);
+            graph.add_node(event_type, "activity", position as f64 + 1.0, 1);
+        }
+
+        if let Some(first_index) = object.lifecycle.first() {
+            let first = self.pool.resolve(self.events[*first_index].type_name);
+            graph.add_edge(&start, first, object_type, 1);
         }
 
         for pair in object.lifecycle.windows(2) {
@@ -741,6 +761,11 @@ impl CompactOcelLog {
             let source = self.pool.resolve(self.events[*source_index].type_name);
             let target = self.pool.resolve(self.events[*target_index].type_name);
             graph.add_edge(source, target, object_type, 1);
+        }
+
+        if let Some(last_index) = object.lifecycle.last() {
+            let last = self.pool.resolve(self.events[*last_index].type_name);
+            graph.add_edge(last, &end, object_type, 1);
         }
     }
 
@@ -760,10 +785,31 @@ impl CompactOcelLog {
             })
             .collect::<Vec<_>>();
 
+        if stateful_lifecycle.is_empty() {
+            return;
+        }
+
+        let start = object_boundary_label("START", object_type);
+        let end = object_boundary_label("END", object_type);
+        graph.add_object_boundary_node(&start, "object-start", object_type, 0.0, 1);
+        graph.add_object_boundary_node(
+            &end,
+            "object-end",
+            object_type,
+            stateful_lifecycle.len() as f64 * 2.0,
+            1,
+        );
+
         for (position, (event_index, state)) in stateful_lifecycle.iter().enumerate() {
             let event_type = self.pool.resolve(self.events[*event_index].type_name);
             let label = format!("{event_type} [{state}]");
-            graph.add_node(&label, "state-activity", position as f64 * 2.0, 1);
+            graph.add_node(&label, "state-activity", position as f64 * 2.0 + 1.0, 1);
+        }
+
+        if let Some((first_index, first_state)) = stateful_lifecycle.first() {
+            let first_event_type = self.pool.resolve(self.events[*first_index].type_name);
+            let first = format!("{first_event_type} [{first_state}]");
+            graph.add_edge(&start, &first, object_type, 1);
         }
 
         for (position, pair) in stateful_lifecycle.windows(2).enumerate() {
@@ -781,9 +827,15 @@ impl CompactOcelLog {
             }
 
             let change = format!("CHANGE {source_state} -> {target_state}");
-            graph.add_node(&change, "state-change", position as f64 * 2.0 + 1.0, 1);
+            graph.add_node(&change, "state-change", position as f64 * 2.0 + 2.0, 1);
             graph.add_edge(&source, &change, object_type, 1);
             graph.add_edge(&change, &target, object_type, 1);
+        }
+
+        if let Some((last_index, last_state)) = stateful_lifecycle.last() {
+            let last_event_type = self.pool.resolve(self.events[*last_index].type_name);
+            let last = format!("{last_event_type} [{last_state}]");
+            graph.add_edge(&last, &end, object_type, 1);
         }
     }
 
@@ -1430,6 +1482,10 @@ struct LayoutNode {
     id: String,
     label: String,
     kind: String,
+    shape: String,
+    color: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    object_type: Option<String>,
     count: usize,
     x: f64,
     y: f64,
@@ -1449,6 +1505,8 @@ struct LayoutEdge {
     label: String,
     title: String,
     weight: usize,
+    object_type: String,
+    color: String,
     directed: bool,
     points: Vec<LayoutPoint>,
     label_x: f64,
@@ -1474,12 +1532,16 @@ struct GraphAccumulator {
     title: String,
     subtitle: String,
     nodes: BTreeMap<String, GraphNodeAccumulator>,
-    edges: BTreeMap<(String, String), GraphEdgeAccumulator>,
+    edges: BTreeMap<(String, String, String), GraphEdgeAccumulator>,
+    object_type_colors: BTreeMap<String, String>,
 }
 
 struct GraphNodeAccumulator {
     label: String,
     kind: String,
+    shape: String,
+    color: String,
+    object_type: Option<String>,
     count: usize,
     order_sum: f64,
     order_count: usize,
@@ -1488,8 +1550,9 @@ struct GraphNodeAccumulator {
 struct GraphEdgeAccumulator {
     source: String,
     target: String,
+    object_type: String,
+    color: String,
     weight: usize,
-    object_types: BTreeMap<String, usize>,
 }
 
 impl GraphAccumulator {
@@ -1499,16 +1562,53 @@ impl GraphAccumulator {
             subtitle,
             nodes: BTreeMap::new(),
             edges: BTreeMap::new(),
+            object_type_colors: BTreeMap::new(),
         }
     }
 
     fn add_node(&mut self, label: &str, kind: &str, order: f64, count: usize) {
+        self.add_node_with_style(label, kind, "rect", "#42635c", None, order, count);
+    }
+
+    fn add_object_boundary_node(
+        &mut self,
+        label: &str,
+        kind: &str,
+        object_type: &str,
+        order: f64,
+        count: usize,
+    ) {
+        let color = self.color_for_object_type(object_type);
+        self.add_node_with_style(
+            label,
+            kind,
+            "ellipse",
+            &color,
+            Some(object_type),
+            order,
+            count,
+        );
+    }
+
+    fn add_node_with_style(
+        &mut self,
+        label: &str,
+        kind: &str,
+        shape: &str,
+        color: &str,
+        object_type: Option<&str>,
+        order: f64,
+        count: usize,
+    ) {
         let entry = self
             .nodes
             .entry(label.to_owned())
             .or_insert_with(|| GraphNodeAccumulator {
                 label: label.to_owned(),
                 kind: kind.to_owned(),
+                shape: shape.to_owned(),
+                color: color.to_owned(),
+                object_type: object_type.map(str::to_owned),
                 count: 0,
                 order_sum: 0.0,
                 order_count: 0,
@@ -1518,24 +1618,37 @@ impl GraphAccumulator {
         entry.order_count += count;
         if entry.kind != "state-change" && kind == "state-change" {
             entry.kind = kind.to_owned();
+            entry.shape = shape.to_owned();
+            entry.color = color.to_owned();
+            entry.object_type = object_type.map(str::to_owned);
         }
     }
 
     fn add_edge(&mut self, source: &str, target: &str, object_type: &str, weight: usize) {
+        let color = self.color_for_object_type(object_type);
         let entry = self
             .edges
-            .entry((source.to_owned(), target.to_owned()))
+            .entry((source.to_owned(), target.to_owned(), object_type.to_owned()))
             .or_insert_with(|| GraphEdgeAccumulator {
                 source: source.to_owned(),
                 target: target.to_owned(),
+                object_type: object_type.to_owned(),
+                color,
                 weight: 0,
-                object_types: BTreeMap::new(),
             });
         entry.weight += weight;
-        *entry
-            .object_types
-            .entry(object_type.to_owned())
-            .or_default() += weight;
+    }
+
+    fn color_for_object_type(&mut self, object_type: &str) -> String {
+        if let Some(color) = self.object_type_colors.get(object_type) {
+            return color.clone();
+        }
+
+        let index = self.object_type_colors.len();
+        let color = object_type_graph_color(index);
+        self.object_type_colors
+            .insert(object_type.to_owned(), color.clone());
+        color
     }
 
     fn into_layout(self) -> OcelResult<String> {
@@ -1543,6 +1656,15 @@ impl GraphAccumulator {
         serde_json::to_string(&graph)
             .map_err(|err| OcelError::new(format!("could not serialize graph layout: {err}")))
     }
+}
+
+fn object_boundary_label(boundary: &str, object_type: &str) -> String {
+    format!("{boundary}\n{object_type}")
+}
+
+fn object_type_graph_color(index: usize) -> String {
+    let hue = (214 + index * 137) % 360;
+    format!("hsl({hue} 68% 38%)")
 }
 
 fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
@@ -1606,13 +1728,14 @@ fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
             0.0
         };
         for (row_index, (_average_order, node)) in layer_nodes.drain(..).enumerate() {
-            let lines = wrap_label(&node.label, 24, 4);
-            let width = if node.kind == "state-change" {
-                230.0
-            } else {
-                205.0
+            let max_line_length = if node.shape == "ellipse" { 18 } else { 24 };
+            let lines = wrap_label(&node.label, max_line_length, 4);
+            let width = match node.kind.as_str() {
+                "state-change" => 230.0,
+                "object-start" | "object-end" => 168.0,
+                _ => 215.0,
             };
-            let height = (62.0 + (lines.len().saturating_sub(1) as f64 * 14.0)).max(68.0);
+            let height = (62.0 + (lines.len().saturating_sub(1) as f64 * 14.0)).max(72.0);
             let x = margin_x + layer_index as f64 * node_gap_x;
             let y = margin_y + layer_offset_y + wave_offset_y + row_index as f64 * node_gap_y;
             let id = format!("n{}", nodes.len() + 1);
@@ -1621,6 +1744,9 @@ fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
                 id,
                 label: node.label,
                 kind: node.kind,
+                shape: node.shape,
+                color: node.color,
+                object_type: node.object_type,
                 count: node.count,
                 x,
                 y,
@@ -1637,14 +1763,27 @@ fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
         .fold(720.0, f64::max);
     let height = (margin_y * 2.0 + max_rows as f64 * node_gap_y).max(320.0);
 
-    let mut edges = graph
-        .edges
-        .into_values()
+    let edge_items = graph.edges.into_values().collect::<Vec<_>>();
+    let mut parallel_totals = BTreeMap::<(String, String), usize>::new();
+    for edge in &edge_items {
+        *parallel_totals
+            .entry((edge.source.clone(), edge.target.clone()))
+            .or_default() += 1;
+    }
+    let mut parallel_seen = BTreeMap::<(String, String), usize>::new();
+
+    let mut edges = edge_items
+        .into_iter()
         .filter_map(|edge| {
             let (source_id, source_x, source_y, source_width, source_height) =
                 node_positions.get(&edge.source)?.clone();
             let (target_id, target_x, target_y, target_width, target_height) =
                 node_positions.get(&edge.target)?.clone();
+            let parallel_key = (edge.source.clone(), edge.target.clone());
+            let parallel_total = *parallel_totals.get(&parallel_key).unwrap_or(&1);
+            let parallel_index = parallel_seen.entry(parallel_key).or_default();
+            let lane_offset = parallel_edge_offset(*parallel_index, parallel_total);
+            *parallel_index += 1;
             let points = routed_edge_points(
                 source_x,
                 source_y,
@@ -1655,22 +1794,16 @@ fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
                 target_width,
                 target_height,
                 source_id == target_id,
+                lane_offset,
             );
             let (label_x, label_y) = edge_label_position(&points);
             let path = curved_edge_path(&points);
-            let object_types = edge
-                .object_types
-                .into_iter()
-                .map(|(object_type, weight)| WeightedObjectType {
-                    object_type,
-                    weight,
-                })
-                .collect::<Vec<_>>();
-            let title = object_types
-                .iter()
-                .map(|entry| format!("{}: {}", entry.object_type, entry.weight))
-                .collect::<Vec<_>>()
-                .join(", ");
+            let object_type = edge.object_type;
+            let object_types = vec![WeightedObjectType {
+                object_type: object_type.clone(),
+                weight: edge.weight,
+            }];
+            let title = format!("{object_type}: {}", edge.weight);
             Some(LayoutEdge {
                 id: String::new(),
                 source: source_id,
@@ -1680,6 +1813,8 @@ fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
                 label: edge.weight.to_string(),
                 title,
                 weight: edge.weight,
+                object_type,
+                color: edge.color,
                 directed: true,
                 points,
                 label_x,
@@ -1695,6 +1830,7 @@ fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
             .cmp(&left.weight)
             .then_with(|| left.source.cmp(&right.source))
             .then_with(|| left.target.cmp(&right.target))
+            .then_with(|| left.object_type.cmp(&right.object_type))
     });
     for (index, edge) in edges.iter_mut().enumerate() {
         edge.id = format!("e{}", index + 1);
@@ -1710,6 +1846,14 @@ fn layout_accumulated_graph(graph: GraphAccumulator) -> LayoutGraph {
     }
 }
 
+fn parallel_edge_offset(index: usize, total: usize) -> f64 {
+    if total <= 1 {
+        return 0.0;
+    }
+
+    (index as f64 - (total as f64 - 1.0) / 2.0) * 30.0
+}
+
 fn routed_edge_points(
     source_x: f64,
     source_y: f64,
@@ -1720,6 +1864,7 @@ fn routed_edge_points(
     target_width: f64,
     target_height: f64,
     self_loop: bool,
+    lane_offset: f64,
 ) -> Vec<LayoutPoint> {
     let source_mid_y = source_y + source_height / 2.0;
     let target_mid_y = target_y + target_height / 2.0;
@@ -1730,11 +1875,11 @@ fn routed_edge_points(
             LayoutPoint { x: x1, y: y1 },
             LayoutPoint {
                 x: x1 + 44.0,
-                y: y1 - 42.0,
+                y: y1 - 42.0 + lane_offset,
             },
             LayoutPoint {
                 x: source_x + source_width / 2.0,
-                y: source_y - 28.0,
+                y: source_y - 28.0 + lane_offset,
             },
             LayoutPoint {
                 x: source_x,
@@ -1755,11 +1900,11 @@ fn routed_edge_points(
             },
             LayoutPoint {
                 x: mid_x,
-                y: source_mid_y,
+                y: source_mid_y + lane_offset,
             },
             LayoutPoint {
                 x: mid_x,
-                y: target_mid_y,
+                y: target_mid_y + lane_offset,
             },
             LayoutPoint {
                 x: x2,
@@ -1777,11 +1922,11 @@ fn routed_edge_points(
             },
             LayoutPoint {
                 x: mid_x,
-                y: source_mid_y,
+                y: source_mid_y + lane_offset,
             },
             LayoutPoint {
                 x: mid_x,
-                y: target_mid_y,
+                y: target_mid_y + lane_offset,
             },
             LayoutPoint {
                 x: x2,
@@ -3890,10 +4035,23 @@ mod tests {
         assert!(flattened["nodes"]
             .as_array()
             .is_some_and(|nodes| !nodes.is_empty()));
+        assert!(flattened["nodes"].as_array().is_some_and(|nodes| {
+            nodes.iter().any(|node| {
+                node["kind"] == Value::from("object-start")
+                    && node["shape"] == Value::from("ellipse")
+                    && node["object_type"] == Value::from("Purchase Order")
+            }) && nodes.iter().any(|node| {
+                node["kind"] == Value::from("object-end")
+                    && node["shape"] == Value::from("ellipse")
+                    && node["object_type"] == Value::from("Purchase Order")
+            })
+        }));
         assert!(flattened["edges"].as_array().is_some_and(|edges| {
-            edges
-                .iter()
-                .any(|edge| edge["path"].as_str().is_some_and(|path| path.contains('C')))
+            edges.iter().any(|edge| {
+                edge["object_type"] == Value::from("Purchase Order")
+                    && edge["color"].as_str().is_some()
+                    && edge["path"].as_str().is_some_and(|path| path.contains('C'))
+            })
         }));
 
         let object_centric: Value =
@@ -3902,13 +4060,22 @@ mod tests {
         assert!(object_centric["nodes"]
             .as_array()
             .is_some_and(|nodes| nodes.len() >= flattened["nodes"].as_array().unwrap().len()));
+        assert!(object_centric["nodes"].as_array().is_some_and(|nodes| {
+            nodes.iter().any(|node| {
+                node["kind"] == Value::from("object-start")
+                    && node["shape"] == Value::from("ellipse")
+                    && node["object_type"] == Value::from("Invoice")
+            })
+        }));
         assert!(object_centric["edges"].as_array().is_some_and(|edges| {
             edges.iter().any(|edge| {
-                edge["object_types"].as_array().is_some_and(|types| {
-                    types
-                        .iter()
-                        .any(|entry| entry["object_type"] == Value::from("Invoice"))
-                })
+                edge["object_type"] == Value::from("Invoice")
+                    && edge["color"].as_str().is_some()
+                    && edge["object_types"].as_array().is_some_and(|types| {
+                        types.len() == 1
+                            && types[0]["object_type"] == Value::from("Invoice")
+                            && types[0]["weight"] == edge["weight"]
+                    })
             })
         }));
     }
@@ -3936,10 +4103,19 @@ mod tests {
                 .iter()
                 .any(|node| node["kind"] == Value::from("state-change"))
         }));
+        assert!(graph["nodes"].as_array().is_some_and(|nodes| {
+            nodes.iter().any(|node| {
+                node["kind"] == Value::from("object-start")
+                    && node["shape"] == Value::from("ellipse")
+                    && node["object_type"] == Value::from("Purchase Order")
+            })
+        }));
         assert!(graph["edges"].as_array().is_some_and(|edges| {
-            edges
-                .iter()
-                .any(|edge| edge["path"].as_str().is_some_and(|path| path.contains('C')))
+            edges.iter().any(|edge| {
+                edge["object_type"] == Value::from("Purchase Order")
+                    && edge["color"].as_str().is_some()
+                    && edge["path"].as_str().is_some_and(|path| path.contains('C'))
+            })
         }));
     }
 
