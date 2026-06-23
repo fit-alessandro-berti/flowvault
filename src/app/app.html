@@ -28,6 +28,7 @@
   </div>
 
   <div class="toolbar-actions">
+    <button type="button" class="toolbar-button" (click)="openLlmConfig()">LLM Config</button>
     <label class="toolbar-button">
       <input
         type="file"
@@ -624,6 +625,61 @@
     </div>
   }
 
+  @if (isLlmConfigOpen()) {
+    <div class="modal-backdrop" role="presentation" (click)="closeLlmConfig()">
+      <section
+        class="state-modal llm-config-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="llm-config-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header class="state-modal-header">
+          <h2 id="llm-config-title">LLM Config</h2>
+          <button type="button" class="ghost-button" (click)="closeLlmConfig()">Cancel</button>
+        </header>
+
+        <div class="llm-config-body">
+          <label>
+            <span>Provider</span>
+            <select [value]="llmProvider()" (change)="onLlmProviderChange($event)">
+              @for (provider of llmProviders; track provider.id) {
+                <option [value]="provider.id">{{ provider.name }}</option>
+              }
+            </select>
+          </label>
+          <label>
+            <span>Model</span>
+            <input type="text" [value]="llmModel()" (input)="onLlmModelChange($event)" />
+          </label>
+          <label>
+            <span>API key</span>
+            <input
+              type="password"
+              autocomplete="off"
+              [value]="llmApiKey()"
+              (input)="onLlmApiKeyChange($event)"
+            />
+          </label>
+          @if (llmStatus()) {
+            <p class="llm-status">{{ llmStatus() }}</p>
+          }
+        </div>
+
+        <footer class="state-modal-footer">
+          <button type="button" class="ghost-button" (click)="testLlmConfig()" [disabled]="isTestingLlm()">
+            @if (isTestingLlm()) {
+              Testing
+            } @else {
+              Test
+            }
+          </button>
+          <button type="button" (click)="saveLlmConfig()">Save</button>
+        </footer>
+      </section>
+    </div>
+  }
+
   @if (activeFeature() === 'patterns' && patternAnalysis(); as patterns) {
     <section class="patterns feature-panel" aria-label="State pattern analysis">
       <header class="pattern-section-header">
@@ -1176,6 +1232,16 @@
 
         <div class="state-modal-body">
           <nav class="preset-list" aria-label="State query presets">
+            @if (persistedStateExpression()) {
+              <button
+                type="button"
+                class="preset-option"
+                [class.is-selected]="selectedPresetId() === '__saved_state_expression'"
+                (click)="selectPersistedStateExpression()"
+              >
+                Saved Expression
+              </button>
+            }
             @for (preset of stateQueryPresets(); track preset.id) {
               <button
                 type="button"
@@ -1186,9 +1252,42 @@
                 {{ preset.name }}
               </button>
             }
+            <button
+              type="button"
+              class="preset-option"
+              [class.is-selected]="isLlmStateMode()"
+              (click)="selectLlmStateExpression()"
+            >
+              Ask LLM
+            </button>
           </nav>
 
           <div class="state-editor">
+            @if (isLlmStateMode()) {
+              <section class="llm-state-panel">
+                <label>
+                  <span>LLM request</span>
+                  <textarea
+                    class="llm-prompt-input"
+                    spellcheck="true"
+                    [value]="llmStatePrompt()"
+                    (input)="onLlmStatePromptChange($event)"
+                  ></textarea>
+                </label>
+                <button
+                  type="button"
+                  class="ghost-button"
+                  (click)="generateStateExpressionWithLlm()"
+                  [disabled]="isGeneratingStateExpression()"
+                >
+                  @if (isGeneratingStateExpression()) {
+                    Generating
+                  } @else {
+                    Generate Expression
+                  }
+                </button>
+              </section>
+            }
             <label class="state-leading-control">
               <span>Leading object type</span>
               <select

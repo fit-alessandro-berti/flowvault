@@ -517,6 +517,48 @@ textarea:focus {
   overflow: hidden;
 }
 
+.llm-config-modal {
+  width: min(620px, 100%);
+}
+
+.llm-config-body {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.llm-config-body label,
+.llm-state-panel label {
+  display: grid;
+  gap: 6px;
+}
+
+.llm-config-body span,
+.llm-state-panel span,
+.state-leading-control span {
+  color: #5c6c68;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.llm-config-body select,
+.llm-config-body input {
+  min-height: 42px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #fbfdfc;
+  color: #17221f;
+  padding: 0 10px;
+  font: inherit;
+}
+
+.llm-status {
+  margin: 0;
+  color: #1d4f49;
+  font-weight: 800;
+}
+
 .preset-list {
   display: grid;
   align-content: start;
@@ -543,7 +585,49 @@ textarea:focus {
   color: #123c36;
 }
 
+.state-editor {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.llm-state-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  border-bottom: 1px solid #d7dfdd;
+  background: #f7faf9;
+  padding: 12px;
+}
+
+.state-leading-control {
+  display: grid;
+  gap: 6px;
+  padding: 12px 12px 0;
+}
+
+.state-leading-control select {
+  min-height: 38px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #fbfdfc;
+  color: #17221f;
+  padding: 0 10px;
+  font: inherit;
+}
+
+.state-modal textarea.llm-prompt-input {
+  min-height: 88px;
+  height: 88px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  padding: 10px;
+}
+
 .state-modal textarea {
+  flex: 1 1 auto;
   height: 100%;
   min-height: 420px;
   border: 0;

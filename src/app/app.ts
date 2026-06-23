@@ -3,6 +3,14 @@ import { exportBaseName, formatHintForFile } from './ocel-file';
 import { presetsForFile, StateQueryPreset } from './state-query-presets';
 import { ProcessGraphComponent } from './process-graph.component';
 import {
+  DEFAULT_LLM_PROVIDER,
+  LLM_PROVIDERS,
+  LlmConfig,
+  LlmProviderId,
+  providerById,
+  requestChatCompletion,
+} from './llm';
+import {
   OcelDocumentHandle,
   OcelFilterOptions,
   ProcessGraph,
@@ -55,6 +63,9 @@ type PatternTab = 'intra' | 'inter';
 type StateDetectionCellTab = 'dfg' | 'entering' | 'exiting';
 type PatternVisualization = 'text' | 'graph';
 type FeaturePage = 'statistics' | 'stateDetection' | 'ocdfg' | 'patterns' | 'stateAwareOcdfg';
+
+const SAVED_STATE_PRESET_ID = '__saved_state_expression';
+const LLM_STATE_PRESET_ID = '__llm_state_expression';
 
 interface AppliedFilterChip {
   kind: FilterDialogKind;
@@ -115,9 +126,19 @@ export class App {
   protected readonly errorMessage = signal('');
   protected readonly stateMessage = signal('');
   protected readonly isStateDialogOpen = signal(false);
+  protected readonly isLlmConfigOpen = signal(false);
   protected readonly selectedPresetId = signal('');
   protected readonly selectedLeadingObjectType = signal('');
   protected readonly stateQueryDraft = signal('');
+  protected readonly persistedStateExpression = signal(readStoredString(STATE_EXPRESSION_STORAGE_KEY));
+  protected readonly llmProviders = LLM_PROVIDERS;
+  protected readonly llmProvider = signal<LlmProviderId>(loadLlmConfig().provider);
+  protected readonly llmModel = signal(loadLlmConfig().model);
+  protected readonly llmApiKey = signal(loadLlmConfig().apiKey);
+  protected readonly llmStatus = signal('');
+  protected readonly isTestingLlm = signal(false);
+  protected readonly isGeneratingStateExpression = signal(false);
+  protected readonly llmStatePrompt = signal(DEFAULT_LLM_STATE_PROMPT);
   protected readonly summary = signal<OcelSummary | null>(null);
   protected readonly originalSummary = signal<OcelSummary | null>(null);
   protected readonly filterOptions = signal<OcelFilterOptions>({
@@ -163,6 +184,7 @@ export class App {
       this.selectedObjectTypes().length !== this.filterOptions().object_types.length,
   );
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
+  protected readonly isLlmStateMode = computed(() => this.selectedPresetId() === LLM_STATE_PRESET_ID);
   protected readonly leadingObjectTypeOptions = computed(() => {
     const selected = this.selectedObjectTypes();
     return selected.length > 0 ? selected : this.filterOptions().object_types;
@@ -271,6 +293,64 @@ export class App {
     this.exportDocument('xml');
   }
 
+  protected openLlmConfig(): void {
+    this.llmStatus.set('');
+    this.isLlmConfigOpen.set(true);
+  }
+
+  protected closeLlmConfig(): void {
+    this.isLlmConfigOpen.set(false);
+  }
+
+  protected onLlmProviderChange(event: Event): void {
+    const provider = providerById((event.target as HTMLSelectElement).value);
+    this.llmProvider.set(provider.id);
+    this.llmModel.set(provider.defaultModel);
+    this.llmStatus.set('');
+  }
+
+  protected onLlmModelChange(event: Event): void {
+    this.llmModel.set((event.target as HTMLInputElement).value);
+    this.llmStatus.set('');
+  }
+
+  protected onLlmApiKeyChange(event: Event): void {
+    this.llmApiKey.set((event.target as HTMLInputElement).value);
+    this.llmStatus.set('');
+  }
+
+  protected saveLlmConfig(): void {
+    writeStoredJson(LLM_CONFIG_STORAGE_KEY, this.currentLlmConfig());
+    this.llmStatus.set('Configuration saved.');
+  }
+
+  protected async testLlmConfig(): Promise<void> {
+    this.llmStatus.set('');
+    if (!this.currentLlmConfig().apiKey.trim()) {
+      this.llmStatus.set('API key is required.');
+      return;
+    }
+
+    this.isTestingLlm.set(true);
+    try {
+      const response = await requestChatCompletion(this.currentLlmConfig(), [
+        {
+          role: 'system',
+          content: 'Respond with OK.',
+        },
+        {
+          role: 'user',
+          content: 'Connection test.',
+        },
+      ]);
+      this.llmStatus.set(`Test succeeded: ${response.slice(0, 80)}`);
+    } catch (error) {
+      this.llmStatus.set(errorToMessage(error));
+    } finally {
+      this.isTestingLlm.set(false);
+    }
+  }
+
   protected setActiveFeature(feature: FeaturePage): void {
     if ((feature === 'patterns' || feature === 'stateAwareOcdfg') && !this.hasAppliedState()) {
       return;
@@ -330,8 +410,33 @@ export class App {
     this.stateQueryDraft.set(withLeadingObjectTypeClause(preset.query, leadingObjectType));
   }
 
+  protected selectPersistedStateExpression(): void {
+    const expression = this.persistedStateExpression();
+    if (!expression) {
+      return;
+    }
+
+    this.ensureLeadingObjectTypeSelection();
+    this.selectedPresetId.set(SAVED_STATE_PRESET_ID);
+    this.stateQueryDraft.set(
+      withLeadingObjectTypeClause(expression, this.selectedLeadingObjectType()),
+    );
+  }
+
+  protected selectLlmStateExpression(): void {
+    this.ensureLeadingObjectTypeSelection();
+    this.selectedPresetId.set(LLM_STATE_PRESET_ID);
+    if (!this.stateQueryDraft().trim()) {
+      this.stateQueryDraft.set(defaultStateQuery(this.selectedLeadingObjectType()));
+    }
+  }
+
   onStateQueryDraftChange(event: Event): void {
     this.stateQueryDraft.set((event.target as HTMLTextAreaElement).value);
+  }
+
+  protected onLlmStatePromptChange(event: Event): void {
+    this.llmStatePrompt.set((event.target as HTMLTextAreaElement).value);
   }
 
   onLeadingObjectTypeChange(event: Event): void {
@@ -358,6 +463,7 @@ export class App {
 
     try {
       const result = JSON.parse(this.documentHandle.applyStateQuery(query)) as StateQueryResult;
+      this.persistStateExpression(query);
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
@@ -370,6 +476,50 @@ export class App {
       this.isStateDialogOpen.set(false);
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  protected async generateStateExpressionWithLlm(): Promise<void> {
+    if (!this.documentHandle) {
+      return;
+    }
+
+    const config = this.currentLlmConfig();
+    if (!config.apiKey.trim()) {
+      this.errorMessage.set('Configure and save an LLM API key first.');
+      this.openLlmConfig();
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.stateMessage.set('');
+    this.ensureLeadingObjectTypeSelection();
+    this.selectedPresetId.set(LLM_STATE_PRESET_ID);
+    this.isGeneratingStateExpression.set(true);
+
+    try {
+      const expression = await requestChatCompletion(config, [
+        {
+          role: 'system',
+          content:
+            'You generate Flowvault state expressions for object-centric event logs. Return only one valid expression and no markdown.',
+        },
+        {
+          role: 'user',
+          content: this.buildLlmStatePrompt(),
+        },
+      ]);
+      this.stateQueryDraft.set(
+        withLeadingObjectTypeClause(
+          extractStateExpression(expression),
+          this.selectedLeadingObjectType(),
+        ),
+      );
+      this.stateMessage.set('LLM state expression generated.');
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    } finally {
+      this.isGeneratingStateExpression.set(false);
     }
   }
 
@@ -489,7 +639,14 @@ export class App {
 
   private initializeStatePresetForFile(fileName: string): void {
     const preset = presetsForFile(fileName)[0];
-    this.selectStatePreset(preset);
+    if (preset) {
+      this.selectStatePreset(preset);
+      return;
+    }
+
+    this.selectedPresetId.set('');
+    this.ensureLeadingObjectTypeSelection();
+    this.stateQueryDraft.set(defaultStateQuery(this.selectedLeadingObjectType()));
   }
 
   private ensureLeadingObjectTypeSelection(): void {
@@ -976,6 +1133,70 @@ export class App {
     this.stateDetectionObjectType.set(selected[0] ?? this.filterOptions().object_types[0] ?? '');
   }
 
+  private currentLlmConfig(): LlmConfig {
+    const provider = providerById(this.llmProvider());
+    return {
+      provider: provider.id,
+      model: this.llmModel().trim() || provider.defaultModel,
+      apiKey: this.llmApiKey().trim(),
+    };
+  }
+
+  private persistStateExpression(expression: string): void {
+    const normalized = expression.trim();
+    if (!normalized) {
+      return;
+    }
+
+    this.persistedStateExpression.set(normalized);
+    writeStoredString(STATE_EXPRESSION_STORAGE_KEY, normalized);
+  }
+
+  private buildLlmStatePrompt(): string {
+    const summary = this.summary();
+    const originalSummary = this.originalSummary();
+    const stateDetection = this.stateDetectionAnalysis();
+    const examples = STATE_EXPRESSION_EXAMPLES.map((example, index) => {
+      return `Example ${index + 1}:\n${example}`;
+    }).join('\n\n');
+    const stateDetectionMetadata = stateDetection
+      ? `
+State Detection feature columns for ${stateDetection.object_type}:
+${stateDetection.feature_columns.slice(0, 30).map((column) => `- ${column}`).join('\n')}
+`
+      : '';
+
+    return `${this.llmStatePrompt().trim() || DEFAULT_LLM_STATE_PROMPT}
+
+Basic OCEL metadata:
+- File: ${this.fileName() || 'unknown'}
+- Active events: ${summary?.events ?? 0}
+- Active objects: ${summary?.objects ?? 0}
+- Original events: ${originalSummary?.events ?? summary?.events ?? 0}
+- Original objects: ${originalSummary?.objects ?? summary?.objects ?? 0}
+- Event types: ${this.filterOptions().event_types.join(', ') || 'unknown'}
+- Object types: ${this.filterOptions().object_types.join(', ') || 'unknown'}
+- Active event types: ${this.selectedEventTypes().join(', ') || 'none'}
+- Active object types: ${this.selectedObjectTypes().join(', ') || 'none'}
+- Leading object type to use: ${this.selectedLeadingObjectType() || 'choose one from active object types'}
+${stateDetectionMetadata}
+State expression language:
+- Shape: STATE state FOR LEADING OBJECT TYPE '<object type>' AS CASE ... END
+- Each branch is WHEN <condition> THEN '<state label>'.
+- Add ELSE '<state label>' unless a partial state assignment is intentional.
+- Use event.type for the activity name.
+- Use event.attribute_name or event."Attribute Name" for event attributes.
+- Use object.attribute_name or object."Attribute Name" for the selected leading object's attributes.
+- Supported comparisons include =, !=, <, <=, >, >=, LIKE, IS NULL, IS NOT NULL.
+- Combine conditions with AND, OR, NOT and parentheses.
+- Return concise, interpretable state labels.
+
+Few-shot examples:
+${examples}
+
+Return only one valid Flowvault state expression.`;
+  }
+
   private loadStatePatterns(preserveSelection = false): void {
     if (!this.documentHandle) {
       this.patternAnalysis.set(null);
@@ -1147,6 +1368,107 @@ function emptyGraphSettings(): ProcessGraphSettings {
     min_activity_frequency: 1,
     min_path_frequency: 1,
   };
+}
+
+const LLM_CONFIG_STORAGE_KEY = 'flowvault.llmConfig';
+const STATE_EXPRESSION_STORAGE_KEY = 'flowvault.stateExpression';
+const DEFAULT_LLM_STATE_PROMPT = 'Give me a state expression for this object-centric event log.';
+const STATE_EXPRESSION_EXAMPLES = [
+  `STATE state FOR LEADING OBJECT TYPE 'Invoice' AS CASE
+  WHEN object.is_blocked = 'Yes' THEN 'Invoice Blocked'
+  WHEN event.type LIKE '%Payment%' THEN 'Payment Execution'
+  WHEN event.type LIKE '%Invoice%' THEN 'Invoice Handling'
+  ELSE 'Procurement'
+END`,
+  `STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE
+  WHEN event."Stock After" = 0 THEN 'Zero Stock'
+  WHEN event."Stock After" < 30 THEN 'Low Stock'
+  WHEN event."Stock After" >= 100 THEN 'High Stock'
+  ELSE 'Available Stock'
+END`,
+  `STATE state FOR LEADING OBJECT TYPE 'orders' AS CASE
+  WHEN event.type = 'item out of stock' THEN 'Stock Exception'
+  WHEN event.type = 'reorder item' THEN 'Replenishment'
+  WHEN event.type = 'payment reminder' THEN 'Payment Risk'
+  ELSE 'Nominal'
+END`,
+];
+
+function loadLlmConfig(): LlmConfig {
+  const stored = readStoredJson(LLM_CONFIG_STORAGE_KEY);
+  if (!stored || typeof stored !== 'object') {
+    return defaultLlmConfig();
+  }
+
+  const candidate = stored as Partial<LlmConfig>;
+  const provider = providerById(String(candidate.provider ?? DEFAULT_LLM_PROVIDER.id));
+  return {
+    provider: provider.id,
+    model: String(candidate.model ?? provider.defaultModel),
+    apiKey: String(candidate.apiKey ?? ''),
+  };
+}
+
+function defaultLlmConfig(): LlmConfig {
+  return {
+    provider: DEFAULT_LLM_PROVIDER.id,
+    model: DEFAULT_LLM_PROVIDER.defaultModel,
+    apiKey: '',
+  };
+}
+
+function defaultStateQuery(leadingObjectType: string): string {
+  return `STATE state FOR LEADING OBJECT TYPE '${leadingObjectType}' AS CASE
+  WHEN event.type IS NOT NULL THEN 'Active'
+  ELSE 'Other'
+END`;
+}
+
+function extractStateExpression(response: string): string {
+  const fenced = response.match(/```(?:sql|text)?\s*([\s\S]*?)```/i);
+  const candidate = (fenced?.[1] ?? response).trim();
+  const start = candidate.toUpperCase().indexOf('STATE ');
+  if (start >= 0) {
+    return candidate.slice(start).trim();
+  }
+  return candidate;
+}
+
+function readStoredString(key: string): string {
+  try {
+    return globalThis.localStorage?.getItem(key) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function writeStoredString(key: string, value: string): void {
+  try {
+    globalThis.localStorage?.setItem(key, value);
+  } catch {
+    return;
+  }
+}
+
+function readStoredJson(key: string): unknown {
+  const stored = readStoredString(key);
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredJson(key: string, value: unknown): void {
+  try {
+    globalThis.localStorage?.setItem(key, JSON.stringify(value));
+  } catch {
+    return;
+  }
 }
 
 const DEFAULT_STATE_DETECTION_COLOR_OPTIONS: StateDetectionColorOption[] = [
