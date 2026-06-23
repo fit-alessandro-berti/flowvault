@@ -28,6 +28,10 @@ import {
   StateDetectionSomTransition,
   StateDetectionCellDetail,
   StateDetectionColorOption,
+  CausalFeatureTableResult,
+  CausalFitResult,
+  CausalFitNode,
+  CausalFitEdge,
   OcelSummary,
   OcelWasmService,
   StateQueryResult,
@@ -108,7 +112,15 @@ type FilterDialogKind =
 type PatternTab = 'intra' | 'inter';
 type StateDetectionCellTab = 'dfg' | 'entering' | 'exiting';
 type PatternVisualization = 'text' | 'graph';
-type FeaturePage = 'statistics' | 'stateDetection' | 'ocdfg' | 'patterns' | 'stateAwareOcdfg';
+type FeaturePage =
+  | 'statistics'
+  | 'stateDetection'
+  | 'causalModel'
+  | 'ocdfg'
+  | 'patterns'
+  | 'stateAwareOcdfg';
+type CausalNodeRole = 'observable' | 'latent' | 'outcome';
+type CausalOperation = 'identity' | 'log10' | 'log_e' | 'sqrt';
 
 type GraphFilterMenu =
   | { kind: 'node'; activity: string; x: number; y: number }
@@ -159,6 +171,47 @@ interface StaticSampleLog {
   path: string;
 }
 
+interface CausalModelNode {
+  id: string;
+  label: string;
+  role: CausalNodeRole;
+  feature?: string;
+  operation: CausalOperation;
+}
+
+interface CausalModelEdge {
+  source: string;
+  target: string;
+}
+
+interface CausalFitGraphNode {
+  id: string;
+  label: string;
+  role: CausalNodeRole;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  lines: string[];
+}
+
+interface CausalFitGraphEdge {
+  id: string;
+  source: CausalFitGraphNode;
+  target: CausalFitGraphNode;
+  edge: CausalFitEdge;
+  path: string;
+  labelX: number;
+  labelY: number;
+}
+
+interface CausalFitGraph {
+  width: number;
+  height: number;
+  nodes: CausalFitGraphNode[];
+  edges: CausalFitGraphEdge[];
+}
+
 @Component({
   selector: 'app-root',
   imports: [ProcessGraphComponent],
@@ -170,6 +223,7 @@ export class App {
   private documentHandle?: OcelDocumentHandle;
 
   protected readonly sampleLogs = STATIC_SAMPLE_LOGS;
+  protected readonly causalOperations = CAUSAL_OPERATIONS;
   protected readonly isDragging = signal(false);
   protected readonly isLoading = signal(false);
   protected readonly fileName = signal('');
@@ -223,6 +277,13 @@ export class App {
   protected readonly stateDetectionAnalysis = signal<StateDetectionResult | null>(null);
   protected readonly stateDetectionCellDetail = signal<StateDetectionCellDetail | null>(null);
   protected readonly stateDetectionCellTab = signal<StateDetectionCellTab>('dfg');
+  protected readonly causalObjectType = signal('');
+  protected readonly causalFeatureTable = signal<CausalFeatureTableResult | null>(null);
+  protected readonly causalNodes = signal<CausalModelNode[]>([]);
+  protected readonly causalEdges = signal<CausalModelEdge[]>([]);
+  protected readonly causalLatentDraft = signal('');
+  protected readonly causalFit = signal<CausalFitResult | null>(null);
+  protected readonly causalMessage = signal('');
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
@@ -380,6 +441,26 @@ export class App {
       },
     ];
   });
+  protected readonly causalObservableNodes = computed(() =>
+    this.causalNodes().filter((node) => node.role === 'observable'),
+  );
+  protected readonly causalLatentNodes = computed(() =>
+    this.causalNodes().filter((node) => node.role === 'latent'),
+  );
+  protected readonly causalOutcomeNodes = computed(() =>
+    this.causalNodes().filter((node) => node.role === 'outcome'),
+  );
+  protected readonly canFitCausalModel = computed(
+    () =>
+      this.causalObservableNodes().length > 0 &&
+      this.causalLatentNodes().length > 0 &&
+      this.causalOutcomeNodes().length > 0 &&
+      this.causalEdges().length > 0,
+  );
+  protected readonly causalFitGraph = computed(() => {
+    const fit = this.causalFit();
+    return fit ? causalFitGraph(fit) : null;
+  });
 
   async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
@@ -503,6 +584,9 @@ export class App {
     this.graphFilterMenu.set(null);
     if (feature === 'stateDetection' && !this.stateDetectionAnalysis()) {
       this.loadStateDetection();
+    }
+    if (feature === 'causalModel' && !this.causalFeatureTable()) {
+      this.loadCausalFeatureTable();
     }
   }
 
@@ -738,6 +822,13 @@ export class App {
       this.stateDetectionColorOptions.set(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
       this.stateDetectionCellDetail.set(null);
       this.stateDetectionCellTab.set('dfg');
+      this.causalObjectType.set(imported.filterOptions.object_types[0] ?? '');
+      this.causalFeatureTable.set(null);
+      this.causalNodes.set([]);
+      this.causalEdges.set([]);
+      this.causalLatentDraft.set('');
+      this.causalFit.set(null);
+      this.causalMessage.set('');
       this.resetGraphSettings(imported.filterOptions.object_types);
       this.loadTraditionalOcdfg();
       this.selectedIntraPatternId.set('');
@@ -783,6 +874,13 @@ export class App {
       this.stateDetectionColorOptions.set(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
       this.stateDetectionCellDetail.set(null);
       this.stateDetectionCellTab.set('dfg');
+      this.causalObjectType.set('');
+      this.causalFeatureTable.set(null);
+      this.causalNodes.set([]);
+      this.causalEdges.set([]);
+      this.causalLatentDraft.set('');
+      this.causalFit.set(null);
+      this.causalMessage.set('');
       this.resetGraphSettings([]);
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
@@ -1261,6 +1359,168 @@ export class App {
     return;
   }
 
+  protected onCausalObjectTypeChange(event: Event): void {
+    this.causalObjectType.set((event.target as HTMLSelectElement).value);
+    this.resetCausalModel();
+    this.loadCausalFeatureTable();
+  }
+
+  protected reloadCausalFeatureTable(): void {
+    this.loadCausalFeatureTable();
+  }
+
+  protected causalPreviewColumns(table: CausalFeatureTableResult, limit = 10): string[] {
+    return table.feature_columns.slice(0, limit);
+  }
+
+  protected causalPreviewRows(table: CausalFeatureTableResult): StateDetectionPreviewRow[] {
+    return table.table_preview.slice(0, 10);
+  }
+
+  protected causalPreviewValues(row: StateDetectionPreviewRow, limit = 10): number[] {
+    return row.values.slice(0, limit);
+  }
+
+  protected hiddenCausalFeatureColumnCount(table: CausalFeatureTableResult, limit = 10): number {
+    return Math.max(table.feature_columns.length - limit, 0);
+  }
+
+  protected onCausalFeatureDragStart(event: DragEvent, feature: string): void {
+    event.dataTransfer?.setData('text/plain', feature);
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'copy';
+    }
+  }
+
+  protected allowCausalDrop(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  protected dropCausalFeature(event: DragEvent, role: 'observable' | 'outcome'): void {
+    event.preventDefault();
+    const feature = event.dataTransfer?.getData('text/plain') ?? '';
+    if (!feature) {
+      return;
+    }
+    this.addCausalFeatureNode(role, feature);
+  }
+
+  protected addCausalFeatureNode(role: 'observable' | 'outcome', feature: string): void {
+    const node: CausalModelNode = {
+      id: nextCausalNodeId(role, this.causalNodes()),
+      label: causalFeatureLabel(feature),
+      role,
+      feature,
+      operation: 'identity',
+    };
+    this.causalNodes.set([...this.causalNodes(), node]);
+    this.causalFit.set(null);
+    this.causalMessage.set(`${role === 'observable' ? 'Observable' : 'Outcome'} added.`);
+  }
+
+  protected onCausalNodeLabelChange(nodeId: string, event: Event): void {
+    const label = (event.target as HTMLInputElement).value;
+    this.causalNodes.set(
+      this.causalNodes().map((node) => (node.id === nodeId ? { ...node, label } : node)),
+    );
+    this.causalFit.set(null);
+  }
+
+  protected onCausalNodeRoleChange(nodeId: string, event: Event): void {
+    const role = (event.target as HTMLSelectElement).value as 'observable' | 'outcome';
+    const nodes = this.causalNodes().map((node) =>
+      node.id === nodeId && node.role !== 'latent' ? { ...node, role } : node,
+    );
+    this.causalNodes.set(nodes);
+    this.causalEdges.set(pruneCausalEdges(nodes, this.causalEdges()));
+    this.causalFit.set(null);
+  }
+
+  protected onCausalOperationChange(nodeId: string, event: Event): void {
+    const operation = (event.target as HTMLSelectElement).value as CausalOperation;
+    this.causalNodes.set(
+      this.causalNodes().map((node) => (node.id === nodeId ? { ...node, operation } : node)),
+    );
+    this.causalFit.set(null);
+  }
+
+  protected onCausalLatentDraftChange(event: Event): void {
+    this.causalLatentDraft.set((event.target as HTMLInputElement).value);
+  }
+
+  protected addCausalLatent(): void {
+    const label = this.causalLatentDraft().trim() || `Latent ${this.causalLatentNodes().length + 1}`;
+    const node: CausalModelNode = {
+      id: nextCausalNodeId('latent', this.causalNodes()),
+      label,
+      role: 'latent',
+      operation: 'identity',
+    };
+    this.causalNodes.set([...this.causalNodes(), node]);
+    this.causalLatentDraft.set('');
+    this.causalFit.set(null);
+    this.causalMessage.set('Latent variable added.');
+  }
+
+  protected removeCausalNode(nodeId: string): void {
+    this.causalNodes.set(this.causalNodes().filter((node) => node.id !== nodeId));
+    this.causalEdges.set(
+      this.causalEdges().filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
+    );
+    this.causalFit.set(null);
+  }
+
+  protected isCausalEdgeSelected(source: string, target: string): boolean {
+    return this.causalEdges().some((edge) => edge.source === source && edge.target === target);
+  }
+
+  protected isCausalEdgeDisabled(source: string, target: string): boolean {
+    if (this.isCausalEdgeSelected(source, target)) {
+      return false;
+    }
+    return !canAddCausalEdge(this.causalNodes(), this.causalEdges(), source, target);
+  }
+
+  protected toggleCausalEdge(source: string, target: string, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (!checked) {
+      this.causalEdges.set(
+        this.causalEdges().filter((edge) => edge.source !== source || edge.target !== target),
+      );
+      this.causalFit.set(null);
+      return;
+    }
+
+    if (!canAddCausalEdge(this.causalNodes(), this.causalEdges(), source, target)) {
+      (event.target as HTMLInputElement).checked = false;
+      this.causalMessage.set('That edge would violate the DAG or role constraints.');
+      return;
+    }
+
+    this.causalEdges.set([...this.causalEdges(), { source, target }]);
+    this.causalFit.set(null);
+  }
+
+  protected fitCausalModel(): void {
+    if (!this.documentHandle || !this.canFitCausalModel()) {
+      return;
+    }
+
+    try {
+      const fit = JSON.parse(
+        this.documentHandle.fitCausalModelJson(this.causalModelRequestJson()),
+      ) as CausalFitResult;
+      this.causalFit.set(fit);
+      this.causalMessage.set(
+        `Fitted ${fit.edges.length.toLocaleString()} edges over ${fit.sample_count.toLocaleString()} objects.`,
+      );
+      this.errorMessage.set('');
+    } catch (error) {
+      this.causalFit.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
   protected summaryDisplayValue(metric: SummaryMetric): SummaryDisplayValue {
     const summary = this.summary();
     const originalSummary = this.originalSummary();
@@ -1467,6 +1727,68 @@ export class App {
     }
 
     return { width, height, nodeWidth, nodeHeight, nodes, edges };
+  }
+
+  private loadCausalFeatureTable(): void {
+    if (!this.documentHandle) {
+      this.causalFeatureTable.set(null);
+      return;
+    }
+
+    try {
+      this.ensureCausalObjectType();
+      if (!this.causalObjectType()) {
+        this.causalFeatureTable.set(null);
+        return;
+      }
+      const table = JSON.parse(
+        this.documentHandle.causalFeatureTableJson(
+          JSON.stringify({ object_type: this.causalObjectType() }),
+        ),
+      ) as CausalFeatureTableResult;
+      this.causalFeatureTable.set(table);
+      this.causalNodes.set(
+        this.causalNodes().filter(
+          (node) => node.role === 'latent' || table.feature_columns.includes(node.feature ?? ''),
+        ),
+      );
+      this.causalEdges.set(pruneCausalEdges(this.causalNodes(), this.causalEdges()));
+      this.causalFit.set(null);
+      this.causalMessage.set(
+        `Loaded ${table.feature_count.toLocaleString()} features for ${table.object_count.toLocaleString()} objects.`,
+      );
+      this.errorMessage.set('');
+    } catch (error) {
+      this.causalFeatureTable.set(null);
+      this.causalFit.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  private ensureCausalObjectType(): void {
+    const selected = this.selectedObjectTypes();
+    const current = this.causalObjectType();
+    if (current && selected.includes(current)) {
+      return;
+    }
+    this.causalObjectType.set(selected[0] ?? this.filterOptions().object_types[0] ?? '');
+  }
+
+  private resetCausalModel(): void {
+    this.causalFeatureTable.set(null);
+    this.causalNodes.set([]);
+    this.causalEdges.set([]);
+    this.causalLatentDraft.set('');
+    this.causalFit.set(null);
+    this.causalMessage.set('');
+  }
+
+  private causalModelRequestJson(): string {
+    return JSON.stringify({
+      object_type: this.causalObjectType(),
+      nodes: this.causalNodes(),
+      edges: this.causalEdges(),
+    });
   }
 
   private loadStateDetection(): void {
@@ -1697,6 +2019,10 @@ Return only one valid Flowvault state expression.`;
       this.stateDetectionCellDetail.set(null);
       if (this.activeFeature() === 'stateDetection' || this.stateDetectionAnalysis()) {
         this.loadStateDetection();
+      }
+      this.ensureCausalObjectType();
+      if (this.activeFeature() === 'causalModel' || this.causalFeatureTable()) {
+        this.loadCausalFeatureTable();
       }
 
       if (nextSummary.stateful_events > 0) {
@@ -1978,6 +2304,160 @@ function sameEdge(left: DfEdgeFilterRequest, right: DfEdgeFilterRequest): boolea
 
 function uniqueEdges(edge: DfEdgeFilterRequest, index: number, edges: DfEdgeFilterRequest[]): boolean {
   return edges.findIndex((candidate) => sameEdge(candidate, edge)) === index;
+}
+
+const CAUSAL_OPERATIONS: Array<{ id: CausalOperation; label: string }> = [
+  { id: 'identity', label: 'Identity' },
+  { id: 'log10', label: 'log_10' },
+  { id: 'log_e', label: 'log_e' },
+  { id: 'sqrt', label: 'sqrt' },
+];
+
+function nextCausalNodeId(role: CausalNodeRole, nodes: CausalModelNode[]): string {
+  const prefix = role === 'observable' ? 'obs' : role === 'outcome' ? 'out' : 'lat';
+  const existing = new Set(nodes.map((node) => node.id));
+  for (let index = 1; ; index += 1) {
+    const id = `${prefix}-${index}`;
+    if (!existing.has(id)) {
+      return id;
+    }
+  }
+}
+
+function causalFeatureLabel(feature: string): string {
+  return feature
+    .replace(/^activity\./, '')
+    .replace(/^attribute\./, '')
+    .replace(/^related_objects\./, 'Related ')
+    .replace(/=/g, ' = ');
+}
+
+function canAddCausalEdge(
+  nodes: CausalModelNode[],
+  edges: CausalModelEdge[],
+  source: string,
+  target: string,
+): boolean {
+  if (source === target || edges.some((edge) => edge.source === source && edge.target === target)) {
+    return false;
+  }
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const sourceNode = byId.get(source);
+  const targetNode = byId.get(target);
+  if (!sourceNode || !targetNode || !isLegalCausalEdge(sourceNode, targetNode)) {
+    return false;
+  }
+  return !causalGraphHasCycle(nodes, [...edges, { source, target }]);
+}
+
+function isLegalCausalEdge(source: CausalModelNode, target: CausalModelNode): boolean {
+  return (
+    (source.role === 'observable' && target.role === 'latent') ||
+    (source.role === 'latent' && target.role === 'latent') ||
+    (source.role === 'latent' && target.role === 'outcome')
+  );
+}
+
+function pruneCausalEdges(nodes: CausalModelNode[], edges: CausalModelEdge[]): CausalModelEdge[] {
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const pruned: CausalModelEdge[] = [];
+  for (const edge of edges) {
+    const source = byId.get(edge.source);
+    const target = byId.get(edge.target);
+    if (!source || !target || !isLegalCausalEdge(source, target)) {
+      continue;
+    }
+    if (!causalGraphHasCycle(nodes, [...pruned, edge])) {
+      pruned.push(edge);
+    }
+  }
+  return pruned;
+}
+
+function causalGraphHasCycle(nodes: CausalModelNode[], edges: CausalModelEdge[]): boolean {
+  const indegree = new Map(nodes.map((node) => [node.id, 0]));
+  const outgoing = new Map(nodes.map((node) => [node.id, [] as string[]]));
+  for (const edge of edges) {
+    if (!indegree.has(edge.source) || !indegree.has(edge.target)) {
+      continue;
+    }
+    indegree.set(edge.target, (indegree.get(edge.target) ?? 0) + 1);
+    outgoing.get(edge.source)?.push(edge.target);
+  }
+
+  const ready = nodes.filter((node) => (indegree.get(node.id) ?? 0) === 0).map((node) => node.id);
+  let visited = 0;
+  while (ready.length > 0) {
+    const nodeId = ready.shift() ?? '';
+    visited += 1;
+    for (const target of outgoing.get(nodeId) ?? []) {
+      const next = (indegree.get(target) ?? 0) - 1;
+      indegree.set(target, next);
+      if (next === 0) {
+        ready.push(target);
+      }
+    }
+  }
+  return visited !== nodes.length;
+}
+
+function causalFitGraph(fit: CausalFitResult): CausalFitGraph {
+  const nodeWidth = 190;
+  const nodeHeight = 74;
+  const columns: CausalNodeRole[] = ['observable', 'latent', 'outcome'];
+  const columnX: Record<CausalNodeRole, number> = {
+    observable: 60,
+    latent: 360,
+    outcome: 660,
+  };
+  const nodes: CausalFitGraphNode[] = [];
+  for (const role of columns) {
+    const roleNodes = fit.nodes.filter((node) => node.role === role);
+    roleNodes.forEach((node, index) => {
+      nodes.push({
+        id: node.id,
+        label: node.label,
+        role: node.role,
+        x: columnX[role],
+        y: 48 + index * 116,
+        width: nodeWidth,
+        height: nodeHeight,
+        lines: wrapGraphLabel(node.label, 20, 3),
+      });
+    });
+  }
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const maxRows = Math.max(
+    1,
+    ...columns.map((role) => fit.nodes.filter((node) => node.role === role).length),
+  );
+  const width = 900;
+  const height = 70 + maxRows * 116;
+  const edges = fit.edges
+    .map((edge, index) => {
+      const source = byId.get(edge.source);
+      const target = byId.get(edge.target);
+      if (!source || !target) {
+        return null;
+      }
+      const x1 = source.x + source.width;
+      const y1 = source.y + source.height / 2;
+      const x2 = target.x;
+      const y2 = target.y + target.height / 2;
+      const midX = (x1 + x2) / 2;
+      return {
+        id: `causal-edge-${index}`,
+        source,
+        target,
+        edge,
+        path: `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`,
+        labelX: midX,
+        labelY: (y1 + y2) / 2 - 6,
+      };
+    })
+    .filter((edge): edge is CausalFitGraphEdge => edge !== null);
+
+  return { width, height, nodes, edges };
 }
 
 function patternFilterRequest(pattern: StatePattern): PatternFilterRequest {

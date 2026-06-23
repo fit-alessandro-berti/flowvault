@@ -146,6 +146,20 @@
         <button
           type="button"
           class="feature-button"
+          [class.is-selected]="activeFeature() === 'causalModel'"
+          (click)="setActiveFeature('causalModel')"
+        >
+          <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="5" cy="7" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="19" cy="17" r="2" />
+            <path d="M7 8l3 3m4 2l3 3M12 5v5m0 4v5" />
+          </svg>
+          <span>Causal Model</span>
+        </button>
+        <button
+          type="button"
+          class="feature-button"
           [class.is-selected]="activeFeature() === 'ocdfg'"
           (click)="setActiveFeature('ocdfg')"
         >
@@ -478,6 +492,286 @@
             }
           </article>
         </section>
+      }
+    </section>
+  }
+
+  @if (activeFeature() === 'causalModel') {
+    <section class="causal-page feature-panel" aria-label="Causal model">
+      <header class="feature-header causal-header">
+        <div>
+          <h1>Causal Model</h1>
+          <p>{{ fileName() }}</p>
+        </div>
+        <div class="causal-controls">
+          <label>
+            <span>Object type</span>
+            <select [value]="causalObjectType()" (change)="onCausalObjectTypeChange($event)">
+              @for (objectType of selectedObjectTypes(); track objectType) {
+                <option [value]="objectType">{{ objectType }}</option>
+              }
+            </select>
+          </label>
+          <button type="button" class="ghost-button" (click)="reloadCausalFeatureTable()">
+            Refresh
+          </button>
+          <button type="button" [disabled]="!canFitCausalModel()" (click)="fitCausalModel()">
+            Fit
+          </button>
+        </div>
+      </header>
+
+      @if (causalMessage()) {
+        <p class="causal-message">{{ causalMessage() }}</p>
+      }
+
+      @if (causalFeatureTable(); as table) {
+        <section class="causal-workbench">
+          <aside class="causal-feature-palette" aria-label="Causal feature palette">
+            <header>
+              <h2>Features</h2>
+              <span>{{ table.feature_count }} columns / {{ table.object_count }} objects</span>
+            </header>
+            <div class="causal-feature-list">
+              @for (feature of table.feature_columns; track feature) {
+                <article class="causal-feature-row">
+                  <button
+                    type="button"
+                    class="causal-feature-token"
+                    draggable="true"
+                    (dragstart)="onCausalFeatureDragStart($event, feature)"
+                  >
+                    {{ feature }}
+                  </button>
+                  <div>
+                    <button type="button" class="mini-button" (click)="addCausalFeatureNode('observable', feature)">
+                      Observable
+                    </button>
+                    <button type="button" class="mini-button" (click)="addCausalFeatureNode('outcome', feature)">
+                      Outcome
+                    </button>
+                  </div>
+                </article>
+              }
+            </div>
+          </aside>
+
+          <section class="causal-editor" aria-label="Causal model editor">
+            <section
+              class="causal-node-column causal-drop-zone"
+              (dragover)="allowCausalDrop($event)"
+              (drop)="dropCausalFeature($event, 'observable')"
+            >
+              <header>
+                <h2>Observables</h2>
+                <span>{{ causalObservableNodes().length }}</span>
+              </header>
+              @for (node of causalObservableNodes(); track node.id) {
+                <article class="causal-node-card">
+                  <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                  <span>{{ node.feature }}</span>
+                  <div class="causal-node-controls">
+                    <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
+                      <option value="observable">Observable</option>
+                      <option value="outcome">Outcome</option>
+                    </select>
+                    <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
+                      @for (operation of causalOperations; track operation.id) {
+                        <option [value]="operation.id">{{ operation.label }}</option>
+                      }
+                    </select>
+                    <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                  </div>
+                </article>
+              }
+            </section>
+
+            <section class="causal-node-column">
+              <header>
+                <h2>Latents</h2>
+                <span>{{ causalLatentNodes().length }}</span>
+              </header>
+              <div class="causal-latent-add">
+                <input
+                  placeholder="Latent name"
+                  [value]="causalLatentDraft()"
+                  (input)="onCausalLatentDraftChange($event)"
+                />
+                <button type="button" class="mini-button" (click)="addCausalLatent()">Add</button>
+              </div>
+              @for (node of causalLatentNodes(); track node.id) {
+                <article class="causal-node-card is-latent">
+                  <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                  <span>Latent variable</span>
+                  <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                </article>
+              }
+            </section>
+
+            <section
+              class="causal-node-column causal-drop-zone"
+              (dragover)="allowCausalDrop($event)"
+              (drop)="dropCausalFeature($event, 'outcome')"
+            >
+              <header>
+                <h2>Outcomes</h2>
+                <span>{{ causalOutcomeNodes().length }}</span>
+              </header>
+              @for (node of causalOutcomeNodes(); track node.id) {
+                <article class="causal-node-card is-outcome">
+                  <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                  <span>{{ node.feature }}</span>
+                  <div class="causal-node-controls">
+                    <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
+                      <option value="observable">Observable</option>
+                      <option value="outcome">Outcome</option>
+                    </select>
+                    <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
+                      @for (operation of causalOperations; track operation.id) {
+                        <option [value]="operation.id">{{ operation.label }}</option>
+                      }
+                    </select>
+                    <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                  </div>
+                </article>
+              }
+            </section>
+          </section>
+        </section>
+
+        <section class="causal-edge-panel" aria-label="Causal edges">
+          <header>
+            <h2>Edges</h2>
+            <span>{{ causalEdges().length }} selected</span>
+          </header>
+          <div class="causal-edge-grid">
+            @for (observable of causalObservableNodes(); track observable.id) {
+              <fieldset>
+                <legend>{{ observable.label }} -> latent</legend>
+                @for (latent of causalLatentNodes(); track latent.id) {
+                  <label>
+                    <input
+                      type="checkbox"
+                      [checked]="isCausalEdgeSelected(observable.id, latent.id)"
+                      [disabled]="isCausalEdgeDisabled(observable.id, latent.id)"
+                      (change)="toggleCausalEdge(observable.id, latent.id, $event)"
+                    />
+                    <span>{{ latent.label }}</span>
+                  </label>
+                }
+              </fieldset>
+            }
+
+            @for (latent of causalLatentNodes(); track latent.id) {
+              <fieldset>
+                <legend>{{ latent.label }} -> latent/outcome</legend>
+                @for (targetLatent of causalLatentNodes(); track targetLatent.id) {
+                  @if (targetLatent.id !== latent.id) {
+                    <label>
+                      <input
+                        type="checkbox"
+                        [checked]="isCausalEdgeSelected(latent.id, targetLatent.id)"
+                        [disabled]="isCausalEdgeDisabled(latent.id, targetLatent.id)"
+                        (change)="toggleCausalEdge(latent.id, targetLatent.id, $event)"
+                      />
+                      <span>{{ targetLatent.label }}</span>
+                    </label>
+                  }
+                }
+                @for (outcome of causalOutcomeNodes(); track outcome.id) {
+                  <label>
+                    <input
+                      type="checkbox"
+                      [checked]="isCausalEdgeSelected(latent.id, outcome.id)"
+                      [disabled]="isCausalEdgeDisabled(latent.id, outcome.id)"
+                      (change)="toggleCausalEdge(latent.id, outcome.id, $event)"
+                    />
+                    <span>{{ outcome.label }}</span>
+                  </label>
+                }
+              </fieldset>
+            }
+          </div>
+        </section>
+
+        <section class="feature-table-preview causal-table-preview">
+          <header>
+            <div>
+              <h2>Feature Table</h2>
+              <span>
+                {{ causalPreviewRows(table).length }} rows
+                @if (hiddenCausalFeatureColumnCount(table) > 0) {
+                  / +{{ hiddenCausalFeatureColumnCount(table) }} columns
+                }
+              </span>
+            </div>
+          </header>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Object</th>
+                  @for (column of causalPreviewColumns(table); track column) {
+                    <th>{{ column }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of causalPreviewRows(table); track row.object_id) {
+                  <tr>
+                    <th>{{ row.object_id }}</th>
+                    @for (value of causalPreviewValues(row); track $index) {
+                      <td>{{ value }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        @if (causalFitGraph(); as graph) {
+          <section class="causal-fit-panel" aria-label="Fitted causal graph">
+            <header>
+              <h2>Fitted Graph</h2>
+              <span>{{ causalFit()?.sample_count }} objects</span>
+            </header>
+            <div class="causal-fit-scroll">
+              <svg
+                class="causal-fit-graph"
+                [attr.viewBox]="'0 0 ' + graph.width + ' ' + graph.height"
+                [attr.width]="graph.width"
+                [attr.height]="graph.height"
+                role="img"
+                aria-label="Fitted causal model"
+              >
+                <defs>
+                  <marker id="causal-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                  </marker>
+                </defs>
+                @for (edge of graph.edges; track edge.id) {
+                  <path class="causal-fit-edge" [attr.d]="edge.path" marker-end="url(#causal-arrow)"></path>
+                  <text class="causal-fit-edge-label" [attr.x]="edge.labelX" [attr.y]="edge.labelY">
+                    I={{ edge.edge.intensity }} / p={{ edge.edge.p_value }}
+                  </text>
+                }
+                @for (node of graph.nodes; track node.id) {
+                  <g [attr.class]="'causal-fit-node causal-fit-node-' + node.role">
+                    <rect [attr.x]="node.x" [attr.y]="node.y" [attr.width]="node.width" [attr.height]="node.height"></rect>
+                    <text [attr.x]="node.x + node.width / 2" [attr.y]="node.y + 24">
+                      @for (line of node.lines; track $index) {
+                        <tspan [attr.x]="node.x + node.width / 2" [attr.dy]="$first ? 0 : 14">{{ line }}</tspan>
+                      }
+                    </text>
+                  </g>
+                }
+              </svg>
+            </div>
+          </section>
+        }
+      } @else {
+        <p class="muted">No causal feature table is available for the selected object type.</p>
       }
     </section>
   }

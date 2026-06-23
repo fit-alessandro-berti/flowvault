@@ -11,7 +11,7 @@ use flate2::read::GzDecoder;
 use roxmltree::{Document, Node};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Number, Value};
-use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::fmt::{Display, Write};
 use std::io::Read;
 use wasm_bindgen::prelude::*;
@@ -323,6 +323,37 @@ struct StateDetectionCellRequest {
     color_attribute: Option<String>,
     cell_x: usize,
     cell_y: usize,
+}
+
+#[derive(Deserialize)]
+struct CausalFeatureTableRequest {
+    object_type: String,
+}
+
+#[derive(Deserialize)]
+struct CausalModelFitRequest {
+    object_type: String,
+    #[serde(default)]
+    nodes: Vec<CausalModelNodeRequest>,
+    #[serde(default)]
+    edges: Vec<CausalModelEdgeRequest>,
+}
+
+#[derive(Clone, Deserialize)]
+struct CausalModelNodeRequest {
+    id: String,
+    label: String,
+    role: String,
+    #[serde(default)]
+    feature: Option<String>,
+    #[serde(default)]
+    operation: String,
+}
+
+#[derive(Clone, Deserialize)]
+struct CausalModelEdgeRequest {
+    source: String,
+    target: String,
 }
 
 #[derive(Default)]
@@ -1094,6 +1125,137 @@ impl CompactOcelLog {
     fn state_feature_table_csv(&self, request: &StateDetectionRequest) -> OcelResult<String> {
         let table = self.state_feature_table(&request.object_type)?;
         Ok(feature_table_to_csv(&table))
+    }
+
+    fn causal_feature_table_json(&self, request: &CausalFeatureTableRequest) -> OcelResult<String> {
+        let table = self.state_feature_table(&request.object_type)?;
+        let result = CausalFeatureTableResult {
+            object_type: request.object_type.clone(),
+            object_count: table.rows.len(),
+            feature_count: table.columns.len(),
+            feature_columns: table.columns.clone(),
+            table_preview: table
+                .rows
+                .iter()
+                .take(15)
+                .map(|row| FeaturePreviewRow {
+                    object_id: row.object_id.clone(),
+                    values: row.values.clone(),
+                })
+                .collect(),
+        };
+        serde_json::to_string(&result)
+            .map_err(|err| OcelError::new(format!("could not serialize causal features: {err}")))
+    }
+
+    fn fit_causal_model_json(&self, request: &CausalModelFitRequest) -> OcelResult<String> {
+        let fit = self.fit_causal_model(request)?;
+        serde_json::to_string(&fit)
+            .map_err(|err| OcelError::new(format!("could not serialize causal model fit: {err}")))
+    }
+
+    fn fit_causal_model(
+        &self,
+        request: &CausalModelFitRequest,
+    ) -> OcelResult<CausalModelFitResult> {
+        let table = self.state_feature_table(&request.object_type)?;
+        if request.nodes.is_empty() {
+            return Err(OcelError::new(
+                "causal model must contain at least one node",
+            ));
+        }
+        let node_by_id = validate_causal_nodes(&request.nodes, &table.columns)?;
+        validate_causal_edges(&request.edges, &node_by_id)?;
+        let order = causal_topological_order(&request.nodes, &request.edges)?;
+        let feature_index = table
+            .columns
+            .iter()
+            .enumerate()
+            .map(|(index, column)| (column.as_str(), index))
+            .collect::<HashMap<_, _>>();
+        let row_count = table.rows.len();
+        let mut vectors = HashMap::<String, Vec<f64>>::new();
+
+        for node_id in order {
+            let node = node_by_id
+                .get(node_id.as_str())
+                .expect("topological order contains validated nodes");
+            match causal_role(&node.role)? {
+                CausalNodeRole::Observable | CausalNodeRole::Outcome => {
+                    let feature = node.feature.as_deref().ok_or_else(|| {
+                        OcelError::new(format!("node '{}' must reference a feature", node.label))
+                    })?;
+                    let column_index = *feature_index.get(feature).ok_or_else(|| {
+                        OcelError::new(format!("unknown causal feature '{feature}'"))
+                    })?;
+                    let values = table
+                        .rows
+                        .iter()
+                        .map(|row| {
+                            transform_causal_value(row.values[column_index], &node.operation)
+                        })
+                        .collect::<Vec<_>>();
+                    vectors.insert(node.id.clone(), values);
+                }
+                CausalNodeRole::Latent => {
+                    let parents = request
+                        .edges
+                        .iter()
+                        .filter(|edge| edge.target == node.id)
+                        .filter_map(|edge| vectors.get(&edge.source))
+                        .map(|values| standardized_vector(values))
+                        .collect::<Vec<_>>();
+                    vectors.insert(node.id.clone(), average_vectors(&parents, row_count));
+                }
+            }
+        }
+
+        let nodes = request
+            .nodes
+            .iter()
+            .map(|node| {
+                let values = vectors.get(&node.id).cloned().unwrap_or_default();
+                let (mean, std_dev) = vector_mean_std(&values);
+                CausalFitNode {
+                    id: node.id.clone(),
+                    label: node.label.clone(),
+                    role: node.role.clone(),
+                    feature: node.feature.clone(),
+                    operation: normalized_causal_operation(&node.operation),
+                    mean: round_f64(mean),
+                    std_dev: round_f64(std_dev),
+                }
+            })
+            .collect::<Vec<_>>();
+        let edges = request
+            .edges
+            .iter()
+            .map(|edge| {
+                let source_values = vectors
+                    .get(&edge.source)
+                    .expect("edge source validated before fitting");
+                let target_values = vectors
+                    .get(&edge.target)
+                    .expect("edge target validated before fitting");
+                let (correlation, sample_count) = pearson_correlation(source_values, target_values);
+                let intensity = correlation.abs();
+                CausalFitEdge {
+                    source: edge.source.clone(),
+                    target: edge.target.clone(),
+                    correlation: round_f64(correlation),
+                    intensity: round_f64(intensity),
+                    p_value: round_f64(approximate_correlation_p_value(correlation, sample_count)),
+                    sample_count,
+                }
+            })
+            .collect::<Vec<_>>();
+
+        Ok(CausalModelFitResult {
+            object_type: request.object_type.clone(),
+            sample_count: row_count,
+            nodes,
+            edges,
+        })
     }
 
     fn state_feature_table(&self, object_type: &str) -> OcelResult<FeatureTableData> {
@@ -2997,6 +3159,48 @@ struct StateDetectionBoundaryWindow {
     activities: Vec<String>,
 }
 
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct CausalFeatureTableResult {
+    object_type: String,
+    object_count: usize,
+    feature_count: usize,
+    feature_columns: Vec<String>,
+    table_preview: Vec<FeaturePreviewRow>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct CausalModelFitResult {
+    object_type: String,
+    sample_count: usize,
+    nodes: Vec<CausalFitNode>,
+    edges: Vec<CausalFitEdge>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct CausalFitNode {
+    id: String,
+    label: String,
+    role: String,
+    feature: Option<String>,
+    operation: String,
+    mean: f64,
+    std_dev: f64,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct CausalFitEdge {
+    source: String,
+    target: String,
+    correlation: f64,
+    intensity: f64,
+    p_value: f64,
+    sample_count: usize,
+}
+
 struct FeatureTableData {
     columns: Vec<String>,
     rows: Vec<FeatureRow>,
@@ -3748,6 +3952,291 @@ fn feature_table_to_csv(table: &FeatureTableData) -> String {
     }
 
     output
+}
+
+#[derive(Clone, Copy, Eq, PartialEq)]
+enum CausalNodeRole {
+    Observable,
+    Latent,
+    Outcome,
+}
+
+fn validate_causal_nodes<'a>(
+    nodes: &'a [CausalModelNodeRequest],
+    features: &[String],
+) -> OcelResult<HashMap<&'a str, &'a CausalModelNodeRequest>> {
+    let feature_set = features.iter().map(String::as_str).collect::<HashSet<_>>();
+    let mut node_by_id = HashMap::new();
+    for node in nodes {
+        if node.id.trim().is_empty() {
+            return Err(OcelError::new("causal model nodes must have non-empty ids"));
+        }
+        if node_by_id.insert(node.id.as_str(), node).is_some() {
+            return Err(OcelError::new(format!(
+                "duplicate causal model node id '{}'",
+                node.id
+            )));
+        }
+
+        match causal_role(&node.role)? {
+            CausalNodeRole::Observable | CausalNodeRole::Outcome => {
+                let feature = node.feature.as_deref().ok_or_else(|| {
+                    OcelError::new(format!("node '{}' must reference a feature", node.label))
+                })?;
+                if !feature_set.contains(feature) {
+                    return Err(OcelError::new(format!(
+                        "node '{}' references unknown feature '{feature}'",
+                        node.label
+                    )));
+                }
+                validate_causal_operation(&node.operation)?;
+            }
+            CausalNodeRole::Latent => {
+                if node.feature.is_some() {
+                    return Err(OcelError::new(format!(
+                        "latent node '{}' cannot reference an observed feature",
+                        node.label
+                    )));
+                }
+            }
+        }
+    }
+    Ok(node_by_id)
+}
+
+fn validate_causal_edges(
+    edges: &[CausalModelEdgeRequest],
+    node_by_id: &HashMap<&str, &CausalModelNodeRequest>,
+) -> OcelResult<()> {
+    let mut seen = HashSet::new();
+    for edge in edges {
+        if edge.source == edge.target {
+            return Err(OcelError::new("causal model edges cannot be self-loops"));
+        }
+        if !seen.insert((edge.source.as_str(), edge.target.as_str())) {
+            return Err(OcelError::new(format!(
+                "duplicate causal edge '{} -> {}'",
+                edge.source, edge.target
+            )));
+        }
+        let source = node_by_id.get(edge.source.as_str()).ok_or_else(|| {
+            OcelError::new(format!("unknown causal edge source '{}'", edge.source))
+        })?;
+        let target = node_by_id.get(edge.target.as_str()).ok_or_else(|| {
+            OcelError::new(format!("unknown causal edge target '{}'", edge.target))
+        })?;
+        let source_role = causal_role(&source.role)?;
+        let target_role = causal_role(&target.role)?;
+        let valid = matches!(
+            (source_role, target_role),
+            (CausalNodeRole::Observable, CausalNodeRole::Latent)
+                | (CausalNodeRole::Latent, CausalNodeRole::Latent)
+                | (CausalNodeRole::Latent, CausalNodeRole::Outcome)
+        );
+        if !valid {
+            return Err(OcelError::new(format!(
+                "invalid causal edge '{} -> {}': use observable -> latent, latent -> latent, or latent -> outcome",
+                source.label, target.label
+            )));
+        }
+    }
+    Ok(())
+}
+
+fn causal_topological_order(
+    nodes: &[CausalModelNodeRequest],
+    edges: &[CausalModelEdgeRequest],
+) -> OcelResult<Vec<String>> {
+    let mut indegree = nodes
+        .iter()
+        .map(|node| (node.id.as_str(), 0usize))
+        .collect::<HashMap<_, _>>();
+    let mut outgoing = nodes
+        .iter()
+        .map(|node| (node.id.as_str(), Vec::<&str>::new()))
+        .collect::<HashMap<_, _>>();
+    for edge in edges {
+        *indegree
+            .get_mut(edge.target.as_str())
+            .expect("edge target was validated") += 1;
+        outgoing
+            .get_mut(edge.source.as_str())
+            .expect("edge source was validated")
+            .push(edge.target.as_str());
+    }
+
+    let mut ready = nodes
+        .iter()
+        .filter_map(|node| (indegree[node.id.as_str()] == 0).then_some(node.id.as_str()))
+        .collect::<VecDeque<_>>();
+    let mut order = Vec::with_capacity(nodes.len());
+    while let Some(node_id) = ready.pop_front() {
+        order.push(node_id.to_owned());
+        for target in outgoing.get(node_id).into_iter().flatten() {
+            let degree = indegree
+                .get_mut(target)
+                .expect("topological target was validated");
+            *degree -= 1;
+            if *degree == 0 {
+                ready.push_back(target);
+            }
+        }
+    }
+
+    if order.len() != nodes.len() {
+        return Err(OcelError::new(
+            "causal model must be a DAG; remove latent-to-latent cycles before fitting",
+        ));
+    }
+    Ok(order)
+}
+
+fn causal_role(role: &str) -> OcelResult<CausalNodeRole> {
+    match role.trim().to_ascii_lowercase().as_str() {
+        "observable" => Ok(CausalNodeRole::Observable),
+        "latent" => Ok(CausalNodeRole::Latent),
+        "outcome" => Ok(CausalNodeRole::Outcome),
+        other => Err(OcelError::new(format!(
+            "unknown causal node role '{other}'; expected observable, latent, or outcome"
+        ))),
+    }
+}
+
+fn validate_causal_operation(operation: &str) -> OcelResult<()> {
+    match normalized_causal_operation(operation).as_str() {
+        "identity" | "log10" | "log_e" | "sqrt" => Ok(()),
+        other => Err(OcelError::new(format!(
+            "unknown causal transform '{other}'; expected identity, log10, log_e, or sqrt"
+        ))),
+    }
+}
+
+fn normalized_causal_operation(operation: &str) -> String {
+    match operation.trim().to_ascii_lowercase().as_str() {
+        "" | "none" | "raw" | "identity" => "identity".to_owned(),
+        "log_10" | "log10" => "log10".to_owned(),
+        "ln" | "loge" | "log_e" => "log_e".to_owned(),
+        "sqrt" | "square_root" => "sqrt".to_owned(),
+        other => other.to_owned(),
+    }
+}
+
+fn transform_causal_value(value: f64, operation: &str) -> f64 {
+    match normalized_causal_operation(operation).as_str() {
+        "log10" => {
+            if value > 0.0 {
+                value.log10()
+            } else {
+                0.0
+            }
+        }
+        "log_e" => {
+            if value > 0.0 {
+                value.ln()
+            } else {
+                0.0
+            }
+        }
+        "sqrt" => value.max(0.0).sqrt(),
+        _ => {
+            if value.is_finite() {
+                value
+            } else {
+                0.0
+            }
+        }
+    }
+}
+
+fn average_vectors(vectors: &[Vec<f64>], row_count: usize) -> Vec<f64> {
+    if vectors.is_empty() {
+        return vec![0.0; row_count];
+    }
+    let mut average = vec![0.0; row_count];
+    for vector in vectors {
+        for (index, value) in vector.iter().take(row_count).enumerate() {
+            average[index] += *value / vectors.len() as f64;
+        }
+    }
+    average
+}
+
+fn standardized_vector(values: &[f64]) -> Vec<f64> {
+    let (mean, std_dev) = vector_mean_std(values);
+    if std_dev <= f64::EPSILON {
+        return vec![0.0; values.len()];
+    }
+    values
+        .iter()
+        .map(|value| {
+            if value.is_finite() {
+                (value - mean) / std_dev
+            } else {
+                0.0
+            }
+        })
+        .collect()
+}
+
+fn vector_mean_std(values: &[f64]) -> (f64, f64) {
+    let finite = values
+        .iter()
+        .copied()
+        .filter(|value| value.is_finite())
+        .collect::<Vec<_>>();
+    if finite.is_empty() {
+        return (0.0, 0.0);
+    }
+    let mean = finite.iter().sum::<f64>() / finite.len() as f64;
+    let variance = finite
+        .iter()
+        .map(|value| {
+            let centered = value - mean;
+            centered * centered
+        })
+        .sum::<f64>()
+        / finite.len().max(1) as f64;
+    (mean, variance.sqrt())
+}
+
+fn pearson_correlation(left: &[f64], right: &[f64]) -> (f64, usize) {
+    let pairs = left
+        .iter()
+        .zip(right.iter())
+        .filter_map(|(left, right)| {
+            (left.is_finite() && right.is_finite()).then_some((*left, *right))
+        })
+        .collect::<Vec<_>>();
+    let sample_count = pairs.len();
+    if sample_count < 2 {
+        return (0.0, sample_count);
+    }
+    let left_mean = pairs.iter().map(|(left, _)| left).sum::<f64>() / sample_count as f64;
+    let right_mean = pairs.iter().map(|(_, right)| right).sum::<f64>() / sample_count as f64;
+    let mut covariance = 0.0;
+    let mut left_variance = 0.0;
+    let mut right_variance = 0.0;
+    for (left, right) in pairs {
+        let left_centered = left - left_mean;
+        let right_centered = right - right_mean;
+        covariance += left_centered * right_centered;
+        left_variance += left_centered * left_centered;
+        right_variance += right_centered * right_centered;
+    }
+    let denominator = (left_variance * right_variance).sqrt();
+    if denominator <= f64::EPSILON {
+        return (0.0, sample_count);
+    }
+    ((covariance / denominator).clamp(-1.0, 1.0), sample_count)
+}
+
+fn approximate_correlation_p_value(correlation: f64, sample_count: usize) -> f64 {
+    if sample_count < 3 {
+        return 1.0;
+    }
+    let denominator = (1.0 - correlation * correlation).max(1e-12);
+    let t_score = correlation.abs() * (((sample_count - 2) as f64) / denominator).sqrt();
+    (-0.5 * t_score * t_score).exp().clamp(0.0, 1.0)
 }
 
 fn csv_escape(value: &str) -> String {
@@ -4511,6 +5000,30 @@ impl OcelDocument {
             })?;
         self.log
             .state_feature_table_csv(&request)
+            .map_err(JsValue::from)
+    }
+
+    /// Returns object-level feature table metadata and a preview for causal-model editing.
+    #[wasm_bindgen(js_name = causalFeatureTableJson)]
+    pub fn causal_feature_table_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<CausalFeatureTableRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!("could not parse causal feature request: {err}"))
+            })?;
+        self.log
+            .causal_feature_table_json(&request)
+            .map_err(JsValue::from)
+    }
+
+    /// Fits a simple DAG-constrained causal model over the object-level feature table.
+    #[wasm_bindgen(js_name = fitCausalModelJson)]
+    pub fn fit_causal_model_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<CausalModelFitRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!("could not parse causal model request: {err}"))
+            })?;
+        self.log
+            .fit_causal_model_json(&request)
             .map_err(JsValue::from)
     }
 
@@ -6619,6 +7132,116 @@ mod tests {
         assert!(csv.starts_with("object_id,"));
         assert!(csv.contains("activity.Create Purchase Order"));
         assert!(csv.contains("PO1"));
+    }
+
+    #[test]
+    fn exposes_and_fits_causal_model_from_feature_table() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let feature_json = log
+            .causal_feature_table_json(&CausalFeatureTableRequest {
+                object_type: "Purchase Order".to_owned(),
+            })
+            .unwrap();
+        let features: Value = serde_json::from_str(&feature_json).unwrap();
+        assert_eq!(features["object_type"], Value::from("Purchase Order"));
+        assert!(features["feature_columns"]
+            .as_array()
+            .is_some_and(|columns| columns
+                .iter()
+                .any(|column| column == "activity.Create Purchase Order")));
+
+        let request = CausalModelFitRequest {
+            object_type: "Purchase Order".to_owned(),
+            nodes: vec![
+                CausalModelNodeRequest {
+                    id: "obs-create".to_owned(),
+                    label: "Create count".to_owned(),
+                    role: "observable".to_owned(),
+                    feature: Some("activity.Create Purchase Order".to_owned()),
+                    operation: "identity".to_owned(),
+                },
+                CausalModelNodeRequest {
+                    id: "obs-invoice".to_owned(),
+                    label: "Invoice links".to_owned(),
+                    role: "observable".to_owned(),
+                    feature: Some("related_objects.Invoice".to_owned()),
+                    operation: "log10".to_owned(),
+                },
+                CausalModelNodeRequest {
+                    id: "lat-process".to_owned(),
+                    label: "Process intensity".to_owned(),
+                    role: "latent".to_owned(),
+                    feature: None,
+                    operation: String::new(),
+                },
+                CausalModelNodeRequest {
+                    id: "out-pay".to_owned(),
+                    label: "Payment outcome".to_owned(),
+                    role: "outcome".to_owned(),
+                    feature: Some("activity.Change PO Quantity".to_owned()),
+                    operation: "identity".to_owned(),
+                },
+            ],
+            edges: vec![
+                CausalModelEdgeRequest {
+                    source: "obs-create".to_owned(),
+                    target: "lat-process".to_owned(),
+                },
+                CausalModelEdgeRequest {
+                    source: "obs-invoice".to_owned(),
+                    target: "lat-process".to_owned(),
+                },
+                CausalModelEdgeRequest {
+                    source: "lat-process".to_owned(),
+                    target: "out-pay".to_owned(),
+                },
+            ],
+        };
+
+        let fit_json = log.fit_causal_model_json(&request).unwrap();
+        let fit: Value = serde_json::from_str(&fit_json).unwrap();
+        assert_eq!(fit["sample_count"], Value::from(2));
+        assert_eq!(fit["nodes"].as_array().unwrap().len(), 4);
+        assert_eq!(fit["edges"].as_array().unwrap().len(), 3);
+        assert!(fit["edges"][0]["intensity"].as_f64().is_some());
+        assert!(fit["edges"][0]["p_value"].as_f64().is_some());
+    }
+
+    #[test]
+    fn rejects_causal_models_with_cycles() {
+        let log = CompactOcelLog::from_input(JSON_EXAMPLE, Some("json")).unwrap();
+        let request = CausalModelFitRequest {
+            object_type: "Purchase Order".to_owned(),
+            nodes: vec![
+                CausalModelNodeRequest {
+                    id: "latent-a".to_owned(),
+                    label: "A".to_owned(),
+                    role: "latent".to_owned(),
+                    feature: None,
+                    operation: String::new(),
+                },
+                CausalModelNodeRequest {
+                    id: "latent-b".to_owned(),
+                    label: "B".to_owned(),
+                    role: "latent".to_owned(),
+                    feature: None,
+                    operation: String::new(),
+                },
+            ],
+            edges: vec![
+                CausalModelEdgeRequest {
+                    source: "latent-a".to_owned(),
+                    target: "latent-b".to_owned(),
+                },
+                CausalModelEdgeRequest {
+                    source: "latent-b".to_owned(),
+                    target: "latent-a".to_owned(),
+                },
+            ],
+        };
+
+        let error = log.fit_causal_model_json(&request).unwrap_err();
+        assert!(error.to_string().contains("DAG"));
     }
 
     #[test]

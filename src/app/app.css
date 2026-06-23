@@ -974,6 +974,283 @@ textarea:focus {
   text-transform: uppercase;
 }
 
+.causal-page {
+  display: grid;
+  gap: 14px;
+}
+
+.causal-header {
+  align-items: end;
+}
+
+.causal-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: end;
+  justify-content: flex-end;
+}
+
+.causal-controls label {
+  display: grid;
+  gap: 6px;
+}
+
+.causal-controls span,
+.causal-feature-palette header span,
+.causal-node-column header span,
+.causal-edge-panel header span,
+.causal-fit-panel header span {
+  color: #5c6c68;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.causal-controls select,
+.causal-node-card input,
+.causal-node-card select,
+.causal-latent-add input {
+  min-height: 38px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #fbfdfc;
+  color: #17221f;
+  padding: 0 10px;
+  font: inherit;
+}
+
+.causal-message {
+  margin: 0;
+  color: #1d4f49;
+  font-weight: 800;
+}
+
+.causal-workbench {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.5fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.causal-feature-palette,
+.causal-node-column,
+.causal-edge-panel,
+.causal-fit-panel {
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.causal-feature-palette {
+  display: grid;
+  gap: 12px;
+  max-height: 680px;
+  overflow: hidden;
+}
+
+.causal-feature-palette header,
+.causal-node-column header,
+.causal-edge-panel header,
+.causal-fit-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.causal-feature-list {
+  display: grid;
+  gap: 8px;
+  overflow: auto;
+}
+
+.causal-feature-row {
+  display: grid;
+  gap: 7px;
+  border-bottom: 1px solid #edf2f0;
+  padding-bottom: 8px;
+}
+
+.causal-feature-row div,
+.causal-node-controls,
+.causal-latent-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+}
+
+.causal-feature-token {
+  justify-content: flex-start;
+  min-height: 34px;
+  border-color: #c7d3cf;
+  background: #f7faf9;
+  color: #17221f;
+  padding: 0 10px;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.mini-button {
+  min-height: 30px;
+  padding: 0 9px;
+  font-size: 0.76rem;
+}
+
+.causal-editor {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.causal-node-column {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 260px;
+}
+
+.causal-drop-zone {
+  outline: 2px dashed #d6e1de;
+  outline-offset: -8px;
+}
+
+.causal-node-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #f7faf9;
+  padding: 10px;
+}
+
+.causal-node-card.is-latent {
+  background: #fff8e9;
+}
+
+.causal-node-card.is-outcome {
+  background: #eef5ff;
+}
+
+.causal-node-card > span {
+  color: #5c6c68;
+  font-size: 0.78rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.causal-node-card input,
+.causal-latent-add input {
+  width: 100%;
+}
+
+.causal-edge-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.causal-edge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.causal-edge-grid fieldset {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.causal-edge-grid legend {
+  color: #263632;
+  font-size: 0.85rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.causal-edge-grid label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  color: #263632;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.causal-edge-grid span {
+  overflow-wrap: anywhere;
+}
+
+.causal-table-preview {
+  grid-row: auto;
+}
+
+.causal-fit-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.causal-fit-scroll {
+  overflow: auto;
+  border: 1px solid #e1e8e6;
+  border-radius: 8px;
+  background: #fbfdfc;
+}
+
+.causal-fit-graph {
+  display: block;
+  min-width: 100%;
+}
+
+.causal-fit-edge {
+  fill: none;
+  stroke: #42635d;
+  stroke-width: 2;
+}
+
+#causal-arrow path {
+  fill: #42635d;
+}
+
+.causal-fit-edge-label {
+  fill: #263632;
+  text-anchor: middle;
+  font-size: 12px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: #fbfdfc;
+  stroke-width: 4px;
+}
+
+.causal-fit-node rect {
+  rx: 8;
+  fill: #f7faf9;
+  stroke: #9cafaa;
+}
+
+.causal-fit-node-latent rect {
+  fill: #fff8e9;
+  stroke: #b88925;
+}
+
+.causal-fit-node-outcome rect {
+  fill: #eef5ff;
+  stroke: #426ca8;
+}
+
+.causal-fit-node text {
+  fill: #17221f;
+  text-anchor: middle;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .som-grid {
   display: grid;
   gap: 7px;

@@ -27,6 +27,8 @@ export interface OcelDocumentHandle {
   stateDetectionJson(requestJson: string): string;
   stateDetectionCellJson(requestJson: string): string;
   stateFeatureTableCsv(requestJson: string): string;
+  causalFeatureTableJson(requestJson: string): string;
+  fitCausalModelJson(requestJson: string): string;
   directlyFollowsGraphJson(objectType: string): string;
   objectCentricDirectlyFollowsGraphJson(): string;
   filteredObjectCentricDirectlyFollowsGraphJson(requestJson: string): string;
@@ -85,6 +87,40 @@ export interface StateDetectionResult {
   pca: StateDetectionPca;
   som: StateDetectionSom;
   windows: StateDetectionWindow[];
+}
+
+export interface CausalFeatureTableResult {
+  object_type: string;
+  object_count: number;
+  feature_count: number;
+  feature_columns: string[];
+  table_preview: StateDetectionPreviewRow[];
+}
+
+export interface CausalFitResult {
+  object_type: string;
+  sample_count: number;
+  nodes: CausalFitNode[];
+  edges: CausalFitEdge[];
+}
+
+export interface CausalFitNode {
+  id: string;
+  label: string;
+  role: 'observable' | 'latent' | 'outcome';
+  feature?: string;
+  operation: string;
+  mean: number;
+  std_dev: number;
+}
+
+export interface CausalFitEdge {
+  source: string;
+  target: string;
+  correlation: number;
+  intensity: number;
+  p_value: number;
+  sample_count: number;
 }
 
 export interface StateDetectionColorOption {
