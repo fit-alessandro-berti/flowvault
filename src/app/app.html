@@ -578,24 +578,26 @@
                 <h2>Observables</h2>
                 <span>{{ causalObservableNodes().length }}</span>
               </header>
-              @for (node of causalObservableNodes(); track node.id) {
-                <article class="causal-node-card">
-                  <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
-                  <span>{{ node.feature }}</span>
-                  <div class="causal-node-controls">
-                    <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
-                      <option value="observable">Observable</option>
-                      <option value="outcome">Outcome</option>
-                    </select>
-                    <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
-                      @for (operation of causalOperations; track operation.id) {
-                        <option [value]="operation.id">{{ operation.label }}</option>
-                      }
-                    </select>
-                    <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
-                  </div>
-                </article>
-              }
+              <div class="causal-node-list">
+                @for (node of causalObservableNodes(); track node.id) {
+                  <article class="causal-node-card">
+                    <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                    <span>{{ node.feature }}</span>
+                    <div class="causal-node-controls">
+                      <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
+                        <option value="observable">Observable</option>
+                        <option value="outcome">Outcome</option>
+                      </select>
+                      <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
+                        @for (operation of causalOperations; track operation.id) {
+                          <option [value]="operation.id">{{ operation.label }}</option>
+                        }
+                      </select>
+                      <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                    </div>
+                  </article>
+                }
+              </div>
             </section>
 
             <section class="causal-node-column">
@@ -603,21 +605,23 @@
                 <h2>Latents</h2>
                 <span>{{ causalLatentNodes().length }}</span>
               </header>
-              <div class="causal-latent-add">
-                <input
-                  placeholder="Latent name"
-                  [value]="causalLatentDraft()"
-                  (input)="onCausalLatentDraftChange($event)"
-                />
-                <button type="button" class="mini-button" (click)="addCausalLatent()">Add</button>
+              <div class="causal-node-list">
+                <div class="causal-latent-add">
+                  <input
+                    placeholder="Latent name"
+                    [value]="causalLatentDraft()"
+                    (input)="onCausalLatentDraftChange($event)"
+                  />
+                  <button type="button" class="mini-button" (click)="addCausalLatent()">Add</button>
+                </div>
+                @for (node of causalLatentNodes(); track node.id) {
+                  <article class="causal-node-card is-latent">
+                    <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                    <span>Latent variable</span>
+                    <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                  </article>
+                }
               </div>
-              @for (node of causalLatentNodes(); track node.id) {
-                <article class="causal-node-card is-latent">
-                  <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
-                  <span>Latent variable</span>
-                  <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
-                </article>
-              }
             </section>
 
             <section
@@ -629,24 +633,26 @@
                 <h2>Outcomes</h2>
                 <span>{{ causalOutcomeNodes().length }}</span>
               </header>
-              @for (node of causalOutcomeNodes(); track node.id) {
-                <article class="causal-node-card is-outcome">
-                  <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
-                  <span>{{ node.feature }}</span>
-                  <div class="causal-node-controls">
-                    <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
-                      <option value="observable">Observable</option>
-                      <option value="outcome">Outcome</option>
-                    </select>
-                    <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
-                      @for (operation of causalOperations; track operation.id) {
-                        <option [value]="operation.id">{{ operation.label }}</option>
-                      }
-                    </select>
-                    <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
-                  </div>
-                </article>
-              }
+              <div class="causal-node-list">
+                @for (node of causalOutcomeNodes(); track node.id) {
+                  <article class="causal-node-card is-outcome">
+                    <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                    <span>{{ node.feature }}</span>
+                    <div class="causal-node-controls">
+                      <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
+                        <option value="observable">Observable</option>
+                        <option value="outcome">Outcome</option>
+                      </select>
+                      <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
+                        @for (operation of causalOperations; track operation.id) {
+                          <option [value]="operation.id">{{ operation.label }}</option>
+                        }
+                      </select>
+                      <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                    </div>
+                  </article>
+                }
+              </div>
             </section>
           </section>
         </section>
