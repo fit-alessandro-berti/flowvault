@@ -44,7 +44,7 @@ The importer validates duplicate IDs/types, declared attribute types, unknown ev
 
 ## Activity and Object-Type Filtering
 
-After importing a log, the UI shows activity and object-type checkboxes. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. Summary cards and detail counters show plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
+The first screen is intentionally minimal: it only asks for an OCEL 2.0 JSON/XML upload. After importing a log, Flowvault switches to a workspace with a persistent black toolbar and a left-side feature selector. The toolbar contains import/export/state actions and a filter menu for activities and object types. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. When filters are active, the toolbar shows the number of filters; opening it reveals the filter chain and removal controls. The `Statistics` page shows plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
 
 Filtered exports use the active filtered log. Changing any filter resets derived state enrichment and pattern analysis because those results belong to the previous active log.
 
@@ -91,7 +91,7 @@ Selecting a preset writes its query into the editor on the right and selects its
 
 ## State Pattern Detection
 
-After a state query has been applied, Flowvault runs the pattern detection core in Rust/WebAssembly. It follows the state-determined segmentation described by Kretzschmann, Berti, and van der Aalst:
+State-based feature pages are visible in the left selector but disabled until a state query has been applied. After state enrichment, Flowvault runs the pattern detection core in Rust/WebAssembly. It follows the state-determined segmentation described by Kretzschmann, Berti, and van der Aalst:
 
 - each object of the selected leading object type is treated as a candidate leading object lifecycle;
 - consecutive lifecycle events with the same event `state` form an intra-state episode;
@@ -99,7 +99,7 @@ After a state query has been applied, Flowvault runs the pattern detection core 
 - each segment is represented as a small graph with directly-follows control-flow edges, event-to-object-type edges, and leading-object-type context edges;
 - structurally equal segment graphs are grouped and ranked by descending support, then by control-flow mass.
 
-The browser UI shows intra-state and inter-state tabs after state enrichment. Each tab has a frequency-sorted pattern dropdown and a `Text`/`Graph` view switch. The graphical view uses deterministic native SVG layout instead of a graph dependency, because the WASM API already returns the compact graph model needed by the page.
+The `Patterns` page shows intra-state and inter-state tabs after state enrichment. Each tab has a frequency-sorted pattern dropdown and a `Text`/`Graph` view switch. The graphical view uses deterministic native SVG layout instead of a graph dependency, because the WASM API already returns the compact graph model needed by the page.
 
 In the graph view, directly-follows and event-to-object-type edges are drawn with direction. Object-object context edges are drawn as undirected type links because they summarize co-participating object types in the segment, not a causal order.
 
@@ -122,7 +122,7 @@ Flowvault exposes three layout-ready graph computations from the Rust/WebAssembl
 - `objectCentricDirectlyFollowsGraphJson()`: flattens over every object type, creates separate typed edges for each object type, and adds typed `START`/`END` lifecycle nodes.
 - `stateAwareObjectCentricDirectlyFollowsGraphJson()`: uses the enriched event `state` attribute, labels activities as `Activity [State]`, inserts explicit `CHANGE previous -> next` transition nodes when consecutive stateful lifecycle events change state, and keeps the same typed OC-DFG start/end and edge semantics.
 
-Each method returns a shared `ProcessGraph` JSON shape with positioned nodes, curved routed edge paths, labels, weights, object-type colors, and node shape metadata. OC-DFG start/end nodes are rendered as ellipses; typed edges use the same color as their object type, so parallel edges of different object types between the same activities remain visually distinct. The layout uses wider layer and row spacing so larger directly-follows graphs read as left-to-right flows rather than dense grids. The Angular `app-process-graph` component renders that shape as SVG and embeds a left-side panel for choosing visualized object types and minimum activity/path frequencies. Draft changes are applied only when the `Apply` button is pressed. The UI renders the SA-OCDFG below the intra/inter-state pattern tabs after a state query has been applied, and it also renders the traditional OCDFG below it.
+Each method returns a shared `ProcessGraph` JSON shape with positioned nodes, curved routed edge paths, labels, weights, object-type colors, and node shape metadata. OC-DFG start/end nodes are rendered as ellipses; typed edges use the same color as their object type, so parallel edges of different object types between the same activities remain visually distinct. The layout uses wider layer and row spacing so larger directly-follows graphs read as left-to-right flows rather than dense grids. The Angular `app-process-graph` component renders that shape as SVG and embeds a left-side panel for choosing visualized object types and minimum activity/path frequencies. Draft changes are applied only when the `Apply` button is pressed. The `Object-Centric DFG` feature shows the traditional OCDFG, and the `State-Aware OC-DFG` feature becomes available after state enrichment.
 
 For a DOT-compatible WebAssembly renderer, the strongest fit is Graphviz compiled to WASM. The `@hpcc-js/wasm` project packages Graphviz and exposes `Graphviz.load().dot(...)`; Viz.js similarly provides `@viz-js/viz` as a WebAssembly Graphviz wrapper. Flowvault does not currently add either package because the graph DTOs are already computed in the Rust/WASM core and rendered directly as SVG, avoiding an extra WASM download and a DOT-to-SVG string pipeline.
 

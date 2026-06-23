@@ -47,6 +47,7 @@ interface FilterRequest {
 type FilterDialogKind = 'activities' | 'objectTypes';
 type PatternTab = 'intra' | 'inter';
 type PatternVisualization = 'text' | 'graph';
+type FeaturePage = 'statistics' | 'ocdfg' | 'patterns' | 'stateAwareOcdfg';
 
 interface AppliedFilterChip {
   kind: FilterDialogKind;
@@ -113,6 +114,8 @@ export class App {
   protected readonly draftEventTypes = signal<string[]>([]);
   protected readonly draftObjectTypes = signal<string[]>([]);
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
+  protected readonly isFilterMenuOpen = signal(false);
+  protected readonly isFilterChainOpen = signal(false);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
@@ -124,7 +127,11 @@ export class App {
   protected readonly intraVisualization = signal<PatternVisualization>('text');
   protected readonly interVisualization = signal<PatternVisualization>('text');
   protected readonly fullScreenPattern = signal<StatePattern | null>(null);
+  protected readonly activeFeature = signal<FeaturePage>('statistics');
   protected readonly hasDocument = computed(() => this.summary() !== null);
+  protected readonly hasAppliedState = computed(
+    () => (this.originalSummary()?.stateful_events ?? this.summary()?.stateful_events ?? 0) > 0,
+  );
   protected readonly isFilterApplied = computed(
     () =>
       this.selectedEventTypes().length !== this.filterOptions().event_types.length ||
@@ -229,6 +236,32 @@ export class App {
     this.exportDocument('xml');
   }
 
+  protected setActiveFeature(feature: FeaturePage): void {
+    if ((feature === 'patterns' || feature === 'stateAwareOcdfg') && !this.hasAppliedState()) {
+      return;
+    }
+
+    this.activeFeature.set(feature);
+  }
+
+  protected toggleFilterMenu(): void {
+    if (!this.hasDocument()) {
+      return;
+    }
+
+    this.isFilterMenuOpen.update((isOpen) => !isOpen);
+    this.isFilterChainOpen.set(false);
+  }
+
+  protected toggleFilterChain(): void {
+    if (this.appliedFilters().length === 0) {
+      return;
+    }
+
+    this.isFilterChainOpen.update((isOpen) => !isOpen);
+    this.isFilterMenuOpen.set(false);
+  }
+
   openStateDialog(): void {
     if (!this.documentHandle) {
       return;
@@ -292,6 +325,7 @@ export class App {
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
       this.loadStatePatterns();
+      this.activeFeature.set('patterns');
       this.stateMessage.set(
         `Added ${result.attribute} for ${result.leading_object_type} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
       );
@@ -320,6 +354,8 @@ export class App {
       this.draftEventTypes.set(imported.filterOptions.event_types);
       this.draftObjectTypes.set(imported.filterOptions.object_types);
       this.filterDialog.set(null);
+      this.isFilterMenuOpen.set(false);
+      this.isFilterChainOpen.set(false);
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.stateAwareOcdfg.set(null);
@@ -329,6 +365,7 @@ export class App {
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
       this.activePatternTab.set('intra');
+      this.activeFeature.set('statistics');
       this.fullScreenPattern.set(null);
       this.isStateDialogOpen.set(false);
       this.initializeStatePresetForFile(file.name);
@@ -342,6 +379,8 @@ export class App {
       this.draftEventTypes.set([]);
       this.draftObjectTypes.set([]);
       this.filterDialog.set(null);
+      this.isFilterMenuOpen.set(false);
+      this.isFilterChainOpen.set(false);
       this.selectedLeadingObjectType.set('');
       this.fileName.set(file.name);
       this.documentHandle?.free();
@@ -354,6 +393,7 @@ export class App {
       this.selectedIntraPatternId.set('');
       this.selectedInterPatternId.set('');
       this.activePatternTab.set('intra');
+      this.activeFeature.set('statistics');
       this.fullScreenPattern.set(null);
       this.isStateDialogOpen.set(false);
     } finally {
@@ -416,11 +456,15 @@ export class App {
 
   protected openActivityFilterDialog(): void {
     this.draftEventTypes.set([...this.selectedEventTypes()]);
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
     this.filterDialog.set('activities');
   }
 
   protected openObjectTypeFilterDialog(): void {
     this.draftObjectTypes.set([...this.selectedObjectTypes()]);
+    this.isFilterMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
     this.filterDialog.set('objectTypes');
   }
 
@@ -475,6 +519,7 @@ export class App {
     }
 
     this.filterDialog.set(null);
+    this.isFilterChainOpen.set(false);
     this.applyActiveFilter();
   }
 

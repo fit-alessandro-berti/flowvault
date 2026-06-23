@@ -1,68 +1,150 @@
-<main class="app-shell">
-  <header class="topbar">
-    <div>
-      <p class="eyebrow">Flowvault</p>
-      <h1>OCEL 2.0 Inspector</h1>
-    </div>
+<header class="app-topbar">
+  <div class="toolbar-left">
+    <strong>FLOWVAULT</strong>
+    @if (appliedFilters().length > 0) {
+      <div class="toolbar-popover-anchor">
+        <button type="button" class="filter-count-button" (click)="toggleFilterChain()">
+          {{ appliedFilters().length }} filters
+        </button>
+        @if (isFilterChainOpen()) {
+          <section class="toolbar-popover filter-chain-popover" aria-label="Applied filters">
+            @for (filter of appliedFilters(); track filter.kind) {
+              <span class="filter-chip" [attr.title]="filter.description">
+                <span>{{ filter.label }}</span>
+                <button
+                  type="button"
+                  class="filter-chip-remove"
+                  [attr.aria-label]="filter.removeLabel"
+                  (click)="removeFilter(filter.kind)"
+                >
+                  x
+                </button>
+              </span>
+            }
+          </section>
+        }
+      </div>
+    }
+  </div>
 
-    <div class="actions">
-      <button type="button" (click)="exportJson()" [disabled]="!hasDocument()">
-        <span aria-hidden="true">JSON</span>
-        Export
-      </button>
-      <button type="button" (click)="exportXml()" [disabled]="!hasDocument()">
-        <span aria-hidden="true">XML</span>
-        Export
-      </button>
-      <button type="button" (click)="openStateDialog()" [disabled]="!hasDocument()">
-        <span aria-hidden="true">STATE</span>
-        Add State
-      </button>
-    </div>
-  </header>
-
-  <section class="workspace">
-    <label
-      class="dropzone"
-      [class.is-dragging]="isDragging()"
-      [class.is-loading]="isLoading()"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)"
-    >
+  <div class="toolbar-actions">
+    <label class="toolbar-button">
       <input
         type="file"
         accept=".json,.jsonocel,.xml,.xmlocel,application/json,application/xml,text/xml"
         (change)="onFileSelected($event)"
       />
-      <span class="drop-mark" aria-hidden="true"></span>
-      <span class="drop-title">Drop OCEL 2.0 JSON/XML</span>
-      <span class="drop-subtitle">
-        @if (fileName()) {
-          {{ fileName() }}
-        } @else {
-          Select a file
-        }
-      </span>
+      Import
     </label>
+    @if (hasDocument()) {
+      <button type="button" class="toolbar-button" (click)="exportJson()">Export JSON</button>
+      <button type="button" class="toolbar-button" (click)="exportXml()">Export XML</button>
+      <button type="button" class="toolbar-button" (click)="openStateDialog()">State</button>
+      <div class="toolbar-popover-anchor">
+        <button type="button" class="toolbar-button" (click)="toggleFilterMenu()">Filter</button>
+        @if (isFilterMenuOpen()) {
+          <section class="toolbar-popover filter-menu" aria-label="Filter menu">
+            <button type="button" (click)="openActivityFilterDialog()">Activities</button>
+            <button type="button" (click)="openObjectTypeFilterDialog()">Object Types</button>
+          </section>
+        }
+      </div>
+    }
+  </div>
+</header>
 
-    <section class="summary-grid" aria-live="polite">
-      @for (card of summaryCards(); track card.label) {
-        <article class="summary-card">
-          <span>{{ card.label }}</span>
-          <strong class="stat-value" [class.is-fraction]="card.value.filtered">
-            @if (card.value.filtered) {
-              <span>{{ card.value.current }}</span>
-              <span class="stat-separator">/</span>
-              <span>{{ card.value.original }}</span>
-            } @else {
-              {{ card.value.current }}
-            }
-          </strong>
-        </article>
-      }
+<main class="app-shell" [class.has-document]="hasDocument()">
+  @if (!hasDocument()) {
+    <section class="upload-page" aria-label="Upload object-centric event log">
+      <label
+        class="dropzone"
+        [class.is-dragging]="isDragging()"
+        [class.is-loading]="isLoading()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <input
+          type="file"
+          accept=".json,.jsonocel,.xml,.xmlocel,application/json,application/xml,text/xml"
+          (change)="onFileSelected($event)"
+        />
+        <span class="drop-mark" aria-hidden="true"></span>
+        <span class="drop-title">Drop an OCEL 2.0 JSON/XML file</span>
+        <span class="drop-subtitle">
+          @if (fileName()) {
+            {{ fileName() }}
+          } @else {
+            Select a file
+          }
+        </span>
+      </label>
     </section>
-  </section>
+  } @else {
+    <aside class="feature-sidebar" aria-label="Feature selector">
+      <section>
+        <h2>General</h2>
+        <button
+          type="button"
+          class="feature-button"
+          [class.is-selected]="activeFeature() === 'statistics'"
+          (click)="setActiveFeature('statistics')"
+        >
+          <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 19h16M7 16V9m5 7V5m5 11v-4" />
+          </svg>
+          <span>Statistics</span>
+        </button>
+        <button
+          type="button"
+          class="feature-button"
+          [class.is-selected]="activeFeature() === 'ocdfg'"
+          (click)="setActiveFeature('ocdfg')"
+        >
+          <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="7" r="3" />
+            <circle cx="18" cy="17" r="3" />
+            <path d="M9 11l6-3M9 13l6 3" />
+          </svg>
+          <span>Object-Centric DFG</span>
+        </button>
+      </section>
+
+      <section>
+        <h2>State-Based</h2>
+        <button
+          type="button"
+          class="feature-button"
+          [class.is-selected]="activeFeature() === 'patterns'"
+          [disabled]="!hasAppliedState()"
+          (click)="setActiveFeature('patterns')"
+        >
+          <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 7h14M5 12h14M5 17h9" />
+            <circle cx="5" cy="7" r="1.5" />
+            <circle cx="5" cy="12" r="1.5" />
+            <circle cx="5" cy="17" r="1.5" />
+          </svg>
+          <span>Patterns</span>
+        </button>
+        <button
+          type="button"
+          class="feature-button"
+          [class.is-selected]="activeFeature() === 'stateAwareOcdfg'"
+          [disabled]="!hasAppliedState()"
+          (click)="setActiveFeature('stateAwareOcdfg')"
+        >
+          <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 12h6l4-6v12l4-6h2" />
+            <circle cx="4" cy="12" r="2" />
+            <circle cx="20" cy="12" r="2" />
+          </svg>
+          <span>State-Aware OC-DFG</span>
+        </button>
+      </section>
+    </aside>
+  }
 
   @if (errorMessage()) {
     <p class="message error">{{ errorMessage() }}</p>
@@ -72,8 +154,31 @@
     <p class="message success">{{ stateMessage() }}</p>
   }
 
-  @if (summary(); as summarySnapshot) {
-    <section class="details" aria-label="OCEL import details">
+  @if (activeFeature() === 'statistics' && summary(); as summarySnapshot) {
+    <section class="statistics-page feature-panel" aria-label="OCEL import details">
+      <header class="feature-header">
+        <h1>Statistics</h1>
+        <p>{{ fileName() }}</p>
+      </header>
+
+      <section class="summary-grid" aria-live="polite">
+        @for (card of summaryCards(); track card.label) {
+          <article class="summary-card">
+            <span>{{ card.label }}</span>
+            <strong class="stat-value" [class.is-fraction]="card.value.filtered">
+              @if (card.value.filtered) {
+                <span>{{ card.value.current }}</span>
+                <span class="stat-separator">/</span>
+                <span>{{ card.value.original }}</span>
+              } @else {
+                {{ card.value.current }}
+              }
+            </strong>
+          </article>
+        }
+      </section>
+
+      <section class="details" aria-label="Detailed OCEL statistics">
       <div>
         <span>Event types</span>
         @if (summaryDisplayValue('event_types'); as value) {
@@ -140,43 +245,6 @@
         }
       </div>
     </section>
-  }
-
-  @if (filterOptions().event_types.length > 0 || filterOptions().object_types.length > 0) {
-    <section class="filter-section" aria-label="OCEL filter controls">
-      <header class="pattern-section-header">
-        <h2>Filters</h2>
-        @if (isFilterApplied()) {
-          <span>Filtered</span>
-        }
-      </header>
-
-      <div class="filter-button-row">
-        <button type="button" class="ghost-button" (click)="openActivityFilterDialog()">
-          Activities
-        </button>
-        <button type="button" class="ghost-button" (click)="openObjectTypeFilterDialog()">
-          Object Types
-        </button>
-      </div>
-
-      @if (appliedFilters().length > 0) {
-        <div class="filter-chips" aria-label="Applied filters">
-          @for (filter of appliedFilters(); track filter.kind) {
-            <span class="filter-chip" [attr.title]="filter.description">
-              <span>{{ filter.label }}</span>
-              <button
-                type="button"
-                class="filter-chip-remove"
-                [attr.aria-label]="filter.removeLabel"
-                (click)="removeFilter(filter.kind)"
-              >
-                x
-              </button>
-            </span>
-          }
-        </div>
-      }
     </section>
   }
 
@@ -253,8 +321,8 @@
     </div>
   }
 
-  @if (patternAnalysis(); as patterns) {
-    <section class="patterns" aria-label="State pattern analysis">
+  @if (activeFeature() === 'patterns' && patternAnalysis(); as patterns) {
+    <section class="patterns feature-panel" aria-label="State pattern analysis">
       <header class="pattern-section-header">
         <h2>State Patterns</h2>
         <div>
@@ -680,8 +748,8 @@
     </section>
   }
 
-  @if (stateAwareOcdfg(); as graph) {
-    <section class="process-graph-section" aria-label="State-aware object-centric graph">
+  @if (activeFeature() === 'stateAwareOcdfg' && stateAwareOcdfg(); as graph) {
+    <section class="process-graph-section feature-panel" aria-label="State-aware object-centric graph">
       <app-process-graph
         [graph]="graph"
         [objectTypes]="selectedObjectTypes()"
@@ -691,8 +759,8 @@
     </section>
   }
 
-  @if (traditionalOcdfg(); as graph) {
-    <section class="process-graph-section" aria-label="Traditional object-centric graph">
+  @if (activeFeature() === 'ocdfg' && traditionalOcdfg(); as graph) {
+    <section class="process-graph-section feature-panel" aria-label="Traditional object-centric graph">
       <app-process-graph
         [graph]="graph"
         [objectTypes]="selectedObjectTypes()"

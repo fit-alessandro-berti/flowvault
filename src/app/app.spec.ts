@@ -180,29 +180,35 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance).toBeTruthy();
-    expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain(
-      'OCEL 2.0 Inspector',
+    const native = fixture.nativeElement as HTMLElement;
+    expect(native.querySelector('.toolbar-left strong')?.textContent).toContain('FLOWVAULT');
+    expect(native.querySelector('.drop-title')?.textContent).toContain(
+      'Drop an OCEL 2.0 JSON/XML file',
     );
   });
 
-  it('keeps export buttons disabled before import', () => {
+  it('keeps document actions hidden before import', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button'));
-    expect(buttons.length).toBe(3);
-    expect(buttons.every((button) => button.disabled)).toBe(true);
+    const buttons = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>(
+        '.toolbar-actions button',
+      ),
+    );
+    expect(buttons.length).toBe(0);
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Export JSON');
   });
 
-  it('renders empty summary counts initially', () => {
+  it('shows only the upload area before import', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    const values = Array.from(
-      (fixture.nativeElement as HTMLElement).querySelectorAll('.summary-card strong'),
-    ).map((element) => element.textContent?.trim());
+    const native = fixture.nativeElement as HTMLElement;
 
-    expect(values).toEqual(['0', '0', '0', '0']);
+    expect(native.querySelector('.upload-page')).toBeTruthy();
+    expect(native.querySelectorAll('.summary-card').length).toBe(0);
+    expect(native.querySelector('.feature-sidebar')).toBeFalsy();
   });
 
   it('opens state preset dialog after import', () => {
@@ -273,20 +279,11 @@ describe('App', () => {
 
     const native = fixture.nativeElement as HTMLElement;
     expect(native.textContent).toContain('State Patterns');
-    expect(native.textContent).toContain('State-Aware Object-Centric Directly-Follows Graph');
-    expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
-    expect(native.querySelector('app-process-graph path.process-edge')?.getAttribute('d')).toContain(
-      'C',
-    );
-    expect(native.querySelector('app-process-graph path.process-edge')?.getAttribute('stroke')).toBe(
-      'hsl(214 68% 38%)',
-    );
-    expect(native.querySelector('app-process-graph ellipse')?.getAttribute('stroke')).toBe(
-      'hsl(214 68% 38%)',
-    );
-    expect(
-      native.querySelector('app-process-graph marker')?.getAttribute('markerWidth'),
-    ).toBe('4');
+    expect(native.querySelector('.feature-sidebar')).toBeTruthy();
+    const stateAwareButton = Array.from(native.querySelectorAll<HTMLButtonElement>('.feature-button'))
+      .find((button) => button.textContent?.includes('State-Aware OC-DFG'));
+    expect(stateAwareButton?.disabled).toBe(false);
+    expect(native.querySelector('.feature-button.is-selected')?.textContent).toContain('Patterns');
     expect(native.textContent).toContain('5x | Open on Order');
     expect(native.textContent).not.toContain('3x | Open -> Closed on Order');
     expect(native.querySelectorAll('.pattern-select').length).toBe(1);
@@ -302,6 +299,24 @@ describe('App', () => {
     expect(native.querySelector('.pattern-tab-button.is-selected')?.textContent).toContain(
       'Inter-State',
     );
+
+    stateAwareButton?.click();
+    fixture.detectChanges();
+
+    expect(native.textContent).toContain('State-Aware Object-Centric Directly-Follows Graph');
+    expect(native.querySelector('app-process-graph svg.process-graph')).toBeTruthy();
+    expect(native.querySelector('app-process-graph path.process-edge')?.getAttribute('d')).toContain(
+      'C',
+    );
+    expect(native.querySelector('app-process-graph path.process-edge')?.getAttribute('stroke')).toBe(
+      'hsl(214 68% 38%)',
+    );
+    expect(native.querySelector('app-process-graph ellipse')?.getAttribute('stroke')).toBe(
+      'hsl(214 68% 38%)',
+    );
+    expect(
+      native.querySelector('app-process-graph marker')?.getAttribute('markerWidth'),
+    ).toBe('4');
   });
 
   it('applies filters from dialogs, renders chips, and recomputes state patterns', () => {
@@ -364,9 +379,12 @@ describe('App', () => {
     fixture.detectChanges();
 
     const native = fixture.nativeElement as HTMLElement;
-    native
-      .querySelectorAll<HTMLButtonElement>('.filter-button-row button')[0]
-      .click();
+    const filterButton = Array.from(native.querySelectorAll<HTMLButtonElement>('.toolbar-button'))
+      .find((button) => button.textContent?.includes('Filter'));
+    filterButton?.click();
+    fixture.detectChanges();
+
+    native.querySelectorAll<HTMLButtonElement>('.filter-menu button')[0].click();
     fixture.detectChanges();
 
     const closeOrderCheckbox = Array.from(
@@ -382,19 +400,29 @@ describe('App', () => {
       object_types: ['Order', 'Item'],
     });
     expect(native.textContent).toContain('1/2');
+    native.querySelector<HTMLButtonElement>('.filter-count-button')?.click();
+    fixture.detectChanges();
     expect(native.textContent).toContain('Activities 1/2');
     expect(native.querySelector('.filter-chip')?.getAttribute('title')).toContain('Create Order');
     expect(native.textContent).toContain('State retained on 1 of 1 active events.');
-    expect(native.textContent).toContain('State Patterns');
     expect(patternCalls).toBe(1);
-    expect(native.querySelectorAll('app-process-graph').length).toBe(2);
+
+    const featureButtons = Array.from(native.querySelectorAll<HTMLButtonElement>('.feature-button'));
+    featureButtons.find((button) => button.textContent?.includes('Object-Centric DFG'))?.click();
+    fixture.detectChanges();
+
+    expect(native.querySelectorAll('app-process-graph').length).toBe(1);
     expect(native.textContent).toContain('Object-Centric Directly-Follows Graph');
     expect(native.textContent).toContain('Activity Frequency');
     expect(native.querySelector('.process-node-count')?.textContent?.trim()).toMatch(/\d+/);
     expect(traditionalGraphRequests.length).toBe(1);
     expect(stateAwareGraphRequests.length).toBe(1);
 
+    featureButtons.find((button) => button.textContent?.includes('State-Aware OC-DFG'))?.click();
+    fixture.detectChanges();
+
     const stateAwareGraph = native.querySelector('app-process-graph');
+    expect(native.textContent).toContain('State-Aware Object-Centric Directly-Follows Graph');
     const activityFrequency = stateAwareGraph?.querySelector<HTMLInputElement>(
       '.frequency-control input[type="range"]',
     );
