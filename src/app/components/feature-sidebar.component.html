@@ -91,19 +91,6 @@
     <button
       type="button"
       class="feature-button"
-      [class.is-selected]="vm.activeFeature() === 'timePerspective'"
-      [disabled]="!vm.hasAppliedState()"
-      (click)="vm.setActiveFeature('timePerspective')"
-    >
-      <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 18h16M5 15c3-8 6-8 9-2 2 4 4 4 6-4" />
-        <path d="M7 6v3m5-5v5m5-3v3" />
-      </svg>
-      <span>Time Perspective</span>
-    </button>
-    <button
-      type="button"
-      class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'correlation'"
       [disabled]="!vm.hasAppliedState()"
       (click)="vm.setActiveFeature('correlation')"
@@ -128,6 +115,19 @@
         <path d="M10 9h4m-4 8h4" />
       </svg>
       <span>Transition KPIs</span>
+    </button>
+    <button
+      type="button"
+      class="feature-button"
+      [class.is-selected]="vm.activeFeature() === 'timePerspective'"
+      [disabled]="!vm.hasAppliedState()"
+      (click)="vm.setActiveFeature('timePerspective')"
+    >
+      <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 18h16M5 15c3-8 6-8 9-2 2 4 4 4 6-4" />
+        <path d="M7 6v3m5-5v5m5-3v3" />
+      </svg>
+      <span>Time Perspective</span>
     </button>
     <button
       type="button"
