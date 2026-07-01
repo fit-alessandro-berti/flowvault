@@ -4,9 +4,9 @@
     <p>{{ vm.fileName() }}</p>
   </header>
 
-  <section class="vm.summary-grid" aria-live="polite">
+  <section class="summary-grid" aria-live="polite">
     @for (card of vm.summaryCards(); track card.label) {
-      <article class="vm.summary-card">
+      <article class="summary-card">
         <span>{{ card.label }}</span>
         <strong class="stat-value" [class.is-fraction]="card.value.filtered">
           @if (card.value.filtered) {

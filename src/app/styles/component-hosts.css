@@ -1,0 +1,18 @@
+app-topbar,
+app-upload-page,
+app-feature-sidebar,
+app-statistics-page,
+app-state-detection-page,
+app-causal-page,
+app-patterns-page,
+app-correlation-page,
+app-transition-kpis-page,
+app-lifecycle-page,
+app-time-perspective-page,
+app-graph-panels,
+app-state-detection-cell-modal,
+app-filter-modal,
+app-state-dialog,
+app-llm-config-modal {
+  display: contents;
+}
