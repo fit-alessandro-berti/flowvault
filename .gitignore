@@ -6,6 +6,7 @@
 /out-tsc
 /bazel-out
 /rust/ocel_wasm/target
+/rust/target
 /public/wasm/*
 !/public/wasm/.gitkeep
 
