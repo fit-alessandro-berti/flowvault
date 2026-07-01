@@ -2030,7 +2030,7 @@
                 [value]="timePerspectiveToState()"
                 (change)="onTimePerspectiveToStateChange($event)"
               >
-                @for (state of analysis.states; track state) {
+                @for (state of timePerspectiveToStateOptions(); track state) {
                   <option [value]="state">{{ state }}</option>
                 }
               </select>
@@ -2069,36 +2069,47 @@
               role="img"
               aria-label="State transition duration spectrum"
             >
-              <line class="time-axis" x1="54" y1="176" x2="748" y2="176"></line>
-              @if (chart.medianX !== null) {
+              @for (lane of chart.laneLabels; track lane.label + lane.y) {
                 <line
-                  class="performance-median"
-                  [attr.x1]="chart.medianX"
-                  y1="28"
-                  [attr.x2]="chart.medianX"
-                  y2="176"
+                  class="performance-lane"
+                  stroke="#dfe8e5"
+                  stroke-width="1"
+                  x1="118"
+                  [attr.y1]="lane.y"
+                  x2="748"
+                  [attr.y2]="lane.y"
                 ></line>
+                <text class="time-axis-label time-axis-label-end" x="106" [attr.y]="lane.y + 4">
+                  {{ lane.label }}
+                </text>
               }
-              @for (
-                point of chart.points;
-                track point.sample.object_id + point.sample.start_time_ms
-              ) {
-                <circle
-                  class="performance-point"
-                  [attr.cx]="point.x"
-                  [attr.cy]="point.y"
-                  [attr.r]="point.radius"
+              @for (line of chart.lines; track line.sample.object_id + line.sample.start_time_ms) {
+                <path
+                  class="performance-spectrum-line"
+                  [attr.d]="line.path"
+                  [attr.stroke]="line.color"
+                  [attr.opacity]="line.opacity"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  fill="none"
                 >
                   <title>
-                    {{ point.sample.object_id }}: {{ durationLabel(point.sample.duration_ms) }} from
-                    {{ timeLabel(point.sample.start_time_ms) }}
+                    {{ line.sample.object_id }}: {{ durationLabel(line.sample.duration_ms) }} from
+                    {{ timeLabel(line.sample.start_time_ms) }}
                   </title>
-                </circle>
+                </path>
               }
-              <text class="time-axis-label" x="54" y="206">{{ chart.minLabel }}</text>
-              <text class="time-axis-label time-axis-label-end" x="748" y="206">
-                {{ chart.maxLabel }}
-              </text>
+              <line class="time-axis" x1="118" y1="176" x2="748" y2="176"></line>
+              @for (tick of chart.xTicks; track tick.label) {
+                <line
+                  class="time-grid-line"
+                  [attr.x1]="tick.x"
+                  y1="28"
+                  [attr.x2]="tick.x"
+                  y2="176"
+                ></line>
+                <text class="time-axis-label" [attr.x]="tick.x" y="206">{{ tick.label }}</text>
+              }
             </svg>
           }
           @if (analysis.performance.sample_count === 0) {

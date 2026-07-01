@@ -33,6 +33,7 @@ import {
   StateCorrelationRow,
   TimeFrequencyBucket,
   TimePerformanceSample,
+  TimePerformanceSpectrum,
   TimePerspectiveResult,
   CausalFitResult,
   CausalFitNode,
@@ -262,20 +263,19 @@ interface TimeFilterCurve {
   selectionBottom: number;
 }
 
-interface PerformanceSpectrumPoint {
+interface PerformanceSpectrumLine {
   sample: TimePerformanceSample;
-  x: number;
-  y: number;
-  radius: number;
+  path: string;
+  color: string;
+  opacity: number;
 }
 
 interface PerformanceSpectrumChart {
   width: number;
   height: number;
-  points: PerformanceSpectrumPoint[];
-  minLabel: string;
-  maxLabel: string;
-  medianX: number | null;
+  lines: PerformanceSpectrumLine[];
+  laneLabels: { label: string; y: number }[];
+  xTicks: { label: string; x: number }[];
 }
 
 @Component({
@@ -584,7 +584,15 @@ export class App {
   });
   protected readonly performanceSpectrumChart = computed(() => {
     const analysis = this.timePerspective();
-    return analysis ? performanceSpectrumChart(analysis.performance.samples) : null;
+    return analysis
+      ? performanceSpectrumChart(analysis.performance, analysis.event_min_ms, analysis.event_max_ms)
+      : null;
+  });
+  protected readonly timePerspectiveToStateOptions = computed(() => {
+    const analysis = this.timePerspective();
+    return analysis
+      ? analysis.states.filter((state) => state !== this.timePerspectiveFromState())
+      : [];
   });
 
   async onFileSelected(event: Event): Promise<void> {
@@ -1622,7 +1630,13 @@ export class App {
   }
 
   protected onTimePerspectiveFromStateChange(event: Event): void {
-    this.timePerspectiveFromState.set((event.target as HTMLSelectElement).value);
+    const fromState = (event.target as HTMLSelectElement).value;
+    this.timePerspectiveFromState.set(fromState);
+    if (this.timePerspectiveToState() === fromState) {
+      this.timePerspectiveToState.set(
+        this.timePerspective()?.states.find((state) => state !== fromState) ?? '',
+      );
+    }
     this.loadTimePerspective();
   }
 
@@ -2470,6 +2484,7 @@ Rules:
           this.timePerspectiveToState(),
           analysis.states,
           analysis.performance.to_state,
+          this.timePerspectiveFromState(),
         ),
       );
       this.errorMessage.set('');
@@ -3441,46 +3456,82 @@ function timeFrequencyChart(
 }
 
 function performanceSpectrumChart(
-  samples: TimePerformanceSample[],
+  performance: TimePerformanceSpectrum,
+  eventMinMs: number,
+  eventMaxMs: number,
 ): PerformanceSpectrumChart | null {
   const width = 800;
   const height = 230;
+  const samples = performance.samples;
+  const laneLabels = performance.roundtrip
+    ? [performance.from_state, performance.to_state, performance.from_state]
+    : [performance.from_state, performance.to_state];
+  const laneY = performance.roundtrip ? [44, 102, 160] : [62, 144];
   if (samples.length === 0) {
     return {
       width,
       height,
-      points: [],
-      minLabel: formatDuration(null),
-      maxLabel: formatDuration(null),
-      medianX: null,
+      lines: [],
+      laneLabels: laneLabels.map((label, index) => ({ label, y: laneY[index] })),
+      xTicks: [],
     };
   }
-  const sorted = [...samples].sort((left, right) => left.duration_ms - right.duration_ms);
-  const min = sorted[0].duration_ms;
-  const max = sorted[sorted.length - 1].duration_ms;
-  const span = Math.max(max - min, 1);
-  const plot = { left: 54, right: 748, top: 28, bottom: 176 };
-  const points = sorted.map((sample, index) => {
-    const x = plot.left + ((sample.duration_ms - min) / span) * (plot.right - plot.left);
-    const band = index % 7;
+
+  const minTime = Number.isFinite(eventMinMs) ? eventMinMs : samples[0].start_time_ms;
+  const maxTime = Number.isFinite(eventMaxMs)
+    ? eventMaxMs
+    : samples[samples.length - 1].middle_time_ms;
+  const timeSpan = Math.max(maxTime - minTime, 1);
+  const plot = { left: 118, right: 748 };
+  const xForTime = (timeMs: number) =>
+    plot.left + ((timeMs - minTime) / timeSpan) * (plot.right - plot.left);
+
+  const durations = [...samples]
+    .map((sample) => sample.duration_ms)
+    .sort((left, right) => left - right);
+  const q1 = durations[Math.floor(durations.length * 0.25)] ?? 0;
+  const q2 = durations[Math.floor(durations.length * 0.5)] ?? q1;
+  const q3 = durations[Math.floor(durations.length * 0.75)] ?? q2;
+
+  const lines = samples.map((sample) => {
+    const points = [
+      `${round(xForTime(sample.start_time_ms))},${laneY[0]}`,
+      `${round(xForTime(sample.middle_time_ms))},${laneY[1]}`,
+    ];
+    if (performance.roundtrip && sample.end_time_ms !== undefined) {
+      points.push(`${round(xForTime(sample.end_time_ms))},${laneY[2]}`);
+    }
     return {
       sample,
-      x,
-      y: plot.bottom - 18 - band * 18,
-      radius: Math.max(3, Math.min(7, 3 + Math.log2(sample.duration_ms / 60_000 + 1))),
+      path: `M ${points.join(' L ')}`,
+      color: durationQuartileColor(sample.duration_ms, q1, q2, q3),
+      opacity: 0.58,
     };
   });
-  const medianDuration = sorted[Math.floor(sorted.length / 2)].duration_ms;
-  const medianX = plot.left + ((medianDuration - min) / span) * (plot.right - plot.left);
 
   return {
     width,
     height,
-    points,
-    minLabel: formatDuration(min),
-    maxLabel: formatDuration(max),
-    medianX,
+    lines,
+    laneLabels: laneLabels.map((label, index) => ({ label, y: laneY[index] })),
+    xTicks: [
+      { label: formatShortDate(minTime), x: plot.left },
+      { label: formatShortDate(maxTime), x: plot.right },
+    ],
   };
+}
+
+function durationQuartileColor(durationMs: number, q1: number, q2: number, q3: number): string {
+  if (durationMs <= q1) {
+    return '#1f5aa6';
+  }
+  if (durationMs <= q2) {
+    return '#4fa3d1';
+  }
+  if (durationMs <= q3) {
+    return '#f0a23a';
+  }
+  return '#c83737';
 }
 
 function smoothPath(points: { x: number; y: number }[]): string {
@@ -3510,14 +3561,19 @@ function smoothPath(points: { x: number; y: number }[]): string {
   return commands.join(' ');
 }
 
-function validStateSelection(current: string, states: string[], fallback: string): string {
-  if (current && states.includes(current)) {
+function validStateSelection(
+  current: string,
+  states: string[],
+  fallback: string,
+  excluded = '',
+): string {
+  if (current && current !== excluded && states.includes(current)) {
     return current;
   }
-  if (fallback && states.includes(fallback)) {
+  if (fallback && fallback !== excluded && states.includes(fallback)) {
     return fallback;
   }
-  return states[0] ?? '';
+  return states.find((state) => state !== excluded) ?? '';
 }
 
 function formatDateTime(timeMs: number): string {

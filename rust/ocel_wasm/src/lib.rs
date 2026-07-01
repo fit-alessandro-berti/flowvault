@@ -1350,14 +1350,18 @@ impl CompactOcelLog {
         let to_state = request
             .to_state
             .clone()
-            .or_else(|| most_frequent_transition.as_ref().map(|(_, to)| to.clone()))
+            .filter(|state| Some(state) != from_state.as_ref())
+            .or_else(|| {
+                most_frequent_transition
+                    .as_ref()
+                    .and_then(|(_, to)| (Some(to) != from_state.as_ref()).then(|| to.clone()))
+            })
             .or_else(|| {
                 states
                     .iter()
                     .find(|state| Some(*state) != from_state.as_ref())
                     .cloned()
-            })
-            .or_else(|| from_state.clone());
+            });
         let performance = match (from_state, to_state) {
             (Some(from_state), Some(to_state)) => self.state_transition_performance(
                 leading_type_symbol,
