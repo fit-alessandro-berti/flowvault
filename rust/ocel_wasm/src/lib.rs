@@ -232,6 +232,8 @@ struct OcelFilterRequest {
     #[serde(default)]
     object_types: Vec<String>,
     #[serde(default)]
+    time_range: Option<TimeRangeFilter>,
+    #[serde(default)]
     df_nodes: Vec<String>,
     #[serde(default)]
     df_edges: Vec<DfEdgeFilter>,
@@ -239,6 +241,14 @@ struct OcelFilterRequest {
     text_attributes: Vec<TextAttributeFilter>,
     #[serde(default)]
     patterns: Vec<PatternFilter>,
+}
+
+#[derive(Clone, Deserialize)]
+struct TimeRangeFilter {
+    #[serde(default)]
+    start_ms: Option<i64>,
+    #[serde(default)]
+    end_ms: Option<i64>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -287,6 +297,16 @@ struct FilterOptions {
     event_types: Vec<String>,
     object_types: Vec<String>,
     text_attributes: Vec<TextAttributeOption>,
+    time_min_ms: Option<i64>,
+    time_max_ms: Option<i64>,
+    time_buckets: Vec<FilterTimeBucket>,
+}
+
+#[derive(Serialize)]
+struct FilterTimeBucket {
+    start_ms: i64,
+    end_ms: i64,
+    count: usize,
 }
 
 #[derive(Serialize)]
@@ -331,6 +351,20 @@ struct CausalFeatureTableRequest {
 }
 
 #[derive(Deserialize)]
+struct TimePerspectiveRequest {
+    #[serde(default)]
+    object_type: Option<String>,
+    #[serde(default)]
+    from_state: Option<String>,
+    #[serde(default)]
+    to_state: Option<String>,
+    #[serde(default)]
+    roundtrip: bool,
+    #[serde(default)]
+    buckets: Option<usize>,
+}
+
+#[derive(Deserialize)]
 struct CausalModelFitRequest {
     object_type: String,
     #[serde(default)]
@@ -368,6 +402,7 @@ impl OcelFilterRequest {
         Self {
             event_types: options.event_types,
             object_types: options.object_types,
+            time_range: None,
             df_nodes: Vec::new(),
             df_edges: Vec::new(),
             text_attributes: Vec::new(),
@@ -383,6 +418,25 @@ impl OcelFilterRequest {
                 .iter()
                 .any(|attribute| !attribute.values.is_empty())
             || !self.patterns.is_empty()
+    }
+
+    fn has_time_predicate(&self) -> bool {
+        self.time_range
+            .as_ref()
+            .is_some_and(|range| range.start_ms.is_some() || range.end_ms.is_some())
+    }
+
+    fn accepts_time(&self, time_ms: i64) -> bool {
+        let Some(range) = &self.time_range else {
+            return true;
+        };
+        if range.start_ms.is_some_and(|start_ms| time_ms < start_ms) {
+            return false;
+        }
+        if range.end_ms.is_some_and(|end_ms| time_ms > end_ms) {
+            return false;
+        }
+        true
     }
 }
 
@@ -635,7 +689,10 @@ impl CompactOcelLog {
         let all_event_types_selected = event_type_selection.len() >= self.event_types.len();
         let all_object_types_selected = object_type_selection.len() >= self.object_types.len();
 
-        if all_event_types_selected && all_object_types_selected && !filter.has_object_predicates()
+        if all_event_types_selected
+            && all_object_types_selected
+            && !filter.has_object_predicates()
+            && !filter.has_time_predicate()
         {
             return self.clone();
         }
@@ -658,6 +715,9 @@ impl CompactOcelLog {
 
         for event in &self.events {
             if !event_type_selection.contains(self.pool.resolve(event.type_name)) {
+                continue;
+            }
+            if !filter.accepts_time(event.time_ms) {
                 continue;
             }
 
@@ -770,7 +830,44 @@ impl CompactOcelLog {
             event_types,
             object_types,
             text_attributes: self.text_attribute_options(),
+            time_min_ms: self.events.iter().map(|event| event.time_ms).min(),
+            time_max_ms: self.events.iter().map(|event| event.time_ms).max(),
+            time_buckets: self.time_filter_buckets(32),
         }
+    }
+
+    fn time_filter_buckets(&self, buckets: usize) -> Vec<FilterTimeBucket> {
+        let Some(min_ms) = self.events.iter().map(|event| event.time_ms).min() else {
+            return Vec::new();
+        };
+        let max_ms = self
+            .events
+            .iter()
+            .map(|event| event.time_ms)
+            .max()
+            .unwrap_or(min_ms);
+        let bucket_count = buckets.max(1);
+        let span = (max_ms - min_ms).max(1) as f64;
+        let mut counts = vec![0usize; bucket_count];
+        for event in &self.events {
+            let ratio = ((event.time_ms - min_ms) as f64 / span).clamp(0.0, 1.0);
+            let index = ((ratio * bucket_count as f64).floor() as usize).min(bucket_count - 1);
+            counts[index] += 1;
+        }
+        let bucket_width = span / bucket_count as f64;
+        counts
+            .into_iter()
+            .enumerate()
+            .map(|(index, count)| FilterTimeBucket {
+                start_ms: min_ms + (bucket_width * index as f64).round() as i64,
+                end_ms: if index + 1 == bucket_count {
+                    max_ms
+                } else {
+                    min_ms + (bucket_width * (index + 1) as f64).round() as i64
+                },
+                count,
+            })
+            .collect()
     }
 
     fn text_attribute_options(&self) -> Vec<TextAttributeOption> {
@@ -1133,6 +1230,12 @@ impl CompactOcelLog {
             .map_err(|err| OcelError::new(format!("could not serialize state correlations: {err}")))
     }
 
+    fn time_perspective_json(&self, request: &TimePerspectiveRequest) -> OcelResult<String> {
+        let analysis = self.time_perspective(request)?;
+        serde_json::to_string(&analysis)
+            .map_err(|err| OcelError::new(format!("could not serialize time perspective: {err}")))
+    }
+
     fn causal_feature_table_json(&self, request: &CausalFeatureTableRequest) -> OcelResult<String> {
         let table = self.state_feature_table(&request.object_type)?;
         let result = CausalFeatureTableResult {
@@ -1157,6 +1260,228 @@ impl CompactOcelLog {
     fn causal_feature_table_csv(&self, request: &CausalFeatureTableRequest) -> OcelResult<String> {
         let table = self.state_feature_table(&request.object_type)?;
         Ok(feature_table_to_csv(&table))
+    }
+
+    fn time_perspective(
+        &self,
+        request: &TimePerspectiveRequest,
+    ) -> OcelResult<TimePerspectiveResult> {
+        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+            OcelError::new("event state attribute is missing; apply a state query first")
+        })?;
+        let leading_type_symbol = request
+            .object_type
+            .as_deref()
+            .and_then(|object_type| self.symbol_for_value(object_type))
+            .or(self.state_leading_object_type)
+            .or_else(|| self.objects.first().map(|object| object.type_name))
+            .ok_or_else(|| OcelError::new("no object type is available for time perspective"))?;
+        let object_type = self.pool.resolve(leading_type_symbol).to_owned();
+
+        let mut event_min_ms = None::<i64>;
+        let mut event_max_ms = None::<i64>;
+        let mut states = BTreeSet::<String>::new();
+        let mut stateful_events = Vec::<(i64, String)>::new();
+        for event in &self.events {
+            event_min_ms = Some(event_min_ms.map_or(event.time_ms, |min| min.min(event.time_ms)));
+            event_max_ms = Some(event_max_ms.map_or(event.time_ms, |max| max.max(event.time_ms)));
+            if let Some(state) = self.event_state(event, state_attribute) {
+                states.insert(state.to_owned());
+                stateful_events.push((event.time_ms, state.to_owned()));
+            }
+        }
+
+        let event_min_ms = event_min_ms.unwrap_or(0);
+        let event_max_ms = event_max_ms.unwrap_or(event_min_ms);
+        let buckets = request.buckets.unwrap_or(24).clamp(4, 96);
+        let mut bucket_counts = vec![BTreeMap::<String, usize>::new(); buckets];
+        let mut bucket_totals = vec![0usize; buckets];
+        let span = (event_max_ms - event_min_ms).max(1) as f64;
+        for (time_ms, state) in stateful_events {
+            let ratio = ((time_ms - event_min_ms) as f64 / span).clamp(0.0, 1.0);
+            let bucket_index = ((ratio * buckets as f64).floor() as usize).min(buckets - 1);
+            *bucket_counts[bucket_index].entry(state).or_default() += 1;
+            bucket_totals[bucket_index] += 1;
+        }
+        let bucket_width = span / buckets as f64;
+        let frequency_buckets = bucket_counts
+            .into_iter()
+            .enumerate()
+            .map(|(index, counts)| {
+                let total = bucket_totals[index];
+                let start_ms = event_min_ms + (bucket_width * index as f64).round() as i64;
+                let end_ms = if index + 1 == buckets {
+                    event_max_ms
+                } else {
+                    event_min_ms + (bucket_width * (index + 1) as f64).round() as i64
+                };
+                let percentages = states
+                    .iter()
+                    .map(|state| TimeStatePercentage {
+                        state: state.clone(),
+                        percentage: if total == 0 {
+                            0.0
+                        } else {
+                            (*counts.get(state).unwrap_or(&0) as f64 / total as f64) * 100.0
+                        },
+                        count: *counts.get(state).unwrap_or(&0),
+                    })
+                    .collect();
+                TimeFrequencyBucket {
+                    start_ms,
+                    end_ms,
+                    total,
+                    percentages,
+                }
+            })
+            .collect();
+
+        let from_state = request
+            .from_state
+            .clone()
+            .or_else(|| states.iter().next().cloned());
+        let to_state = request
+            .to_state
+            .clone()
+            .or_else(|| {
+                states
+                    .iter()
+                    .find(|state| Some(*state) != from_state.as_ref())
+                    .cloned()
+            })
+            .or_else(|| from_state.clone());
+        let performance = match (from_state, to_state) {
+            (Some(from_state), Some(to_state)) => self.state_transition_performance(
+                leading_type_symbol,
+                state_attribute,
+                &from_state,
+                &to_state,
+                request.roundtrip,
+            ),
+            _ => TimePerformanceSpectrum {
+                object_type: object_type.clone(),
+                from_state: String::new(),
+                to_state: String::new(),
+                roundtrip: request.roundtrip,
+                sample_count: 0,
+                min_duration_ms: None,
+                median_duration_ms: None,
+                avg_duration_ms: None,
+                max_duration_ms: None,
+                samples: Vec::new(),
+            },
+        };
+
+        Ok(TimePerspectiveResult {
+            object_type,
+            event_min_ms,
+            event_max_ms,
+            states: states.into_iter().collect(),
+            buckets: frequency_buckets,
+            performance,
+        })
+    }
+
+    fn state_transition_performance(
+        &self,
+        object_type: Symbol,
+        state_attribute: Symbol,
+        from_state: &str,
+        to_state: &str,
+        roundtrip: bool,
+    ) -> TimePerformanceSpectrum {
+        let mut samples = Vec::new();
+        for object in self
+            .objects
+            .iter()
+            .filter(|object| object.type_name == object_type)
+        {
+            let stateful_lifecycle = object
+                .lifecycle
+                .iter()
+                .filter_map(|event_index| {
+                    let event = &self.events[*event_index];
+                    self.event_state(event, state_attribute)
+                        .map(|state| (*event_index, state.to_owned()))
+                })
+                .collect::<Vec<_>>();
+
+            for (start_pos, (start_index, state)) in stateful_lifecycle.iter().enumerate() {
+                if state != from_state {
+                    continue;
+                }
+                let Some((middle_pos, (middle_index, _))) = stateful_lifecycle
+                    .iter()
+                    .enumerate()
+                    .skip(start_pos + 1)
+                    .find(|(_, (_, candidate))| candidate == to_state)
+                else {
+                    continue;
+                };
+                let end_index = if roundtrip {
+                    let Some((end_index, _)) = stateful_lifecycle
+                        .iter()
+                        .skip(middle_pos + 1)
+                        .find(|(_, candidate)| candidate == from_state)
+                    else {
+                        continue;
+                    };
+                    Some(*end_index)
+                } else {
+                    None
+                };
+                let start_time_ms = self.events[*start_index].time_ms;
+                let middle_time_ms = self.events[*middle_index].time_ms;
+                let end_time_ms = end_index.map(|index| self.events[index].time_ms);
+                let duration_ms = end_time_ms.unwrap_or(middle_time_ms) - start_time_ms;
+                if duration_ms < 0 {
+                    continue;
+                }
+                samples.push(TimePerformanceSample {
+                    object_id: self.pool.resolve(object.id).to_owned(),
+                    start_time_ms,
+                    middle_time_ms,
+                    end_time_ms,
+                    duration_ms,
+                });
+            }
+        }
+
+        samples.sort_by_key(|sample| sample.duration_ms);
+        let durations = samples
+            .iter()
+            .map(|sample| sample.duration_ms)
+            .collect::<Vec<_>>();
+        let sample_count = samples.len();
+        let avg_duration_ms = if durations.is_empty() {
+            None
+        } else {
+            Some(
+                durations
+                    .iter()
+                    .map(|duration| *duration as f64)
+                    .sum::<f64>()
+                    / durations.len() as f64,
+            )
+        };
+        let median_duration_ms = if durations.is_empty() {
+            None
+        } else {
+            Some(durations[durations.len() / 2])
+        };
+
+        TimePerformanceSpectrum {
+            object_type: self.pool.resolve(object_type).to_owned(),
+            from_state: from_state.to_owned(),
+            to_state: to_state.to_owned(),
+            roundtrip,
+            sample_count,
+            min_duration_ms: durations.first().copied(),
+            median_duration_ms,
+            avg_duration_ms,
+            max_duration_ms: durations.last().copied(),
+            samples,
+        }
     }
 
     fn state_correlations(&self) -> OcelResult<StateCorrelationResult> {
@@ -3285,6 +3610,59 @@ struct CausalFeatureTableResult {
 
 #[derive(Serialize)]
 #[cfg_attr(test, derive(Debug))]
+struct TimePerspectiveResult {
+    object_type: String,
+    event_min_ms: i64,
+    event_max_ms: i64,
+    states: Vec<String>,
+    buckets: Vec<TimeFrequencyBucket>,
+    performance: TimePerformanceSpectrum,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct TimeFrequencyBucket {
+    start_ms: i64,
+    end_ms: i64,
+    total: usize,
+    percentages: Vec<TimeStatePercentage>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct TimeStatePercentage {
+    state: String,
+    percentage: f64,
+    count: usize,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct TimePerformanceSpectrum {
+    object_type: String,
+    from_state: String,
+    to_state: String,
+    roundtrip: bool,
+    sample_count: usize,
+    min_duration_ms: Option<i64>,
+    median_duration_ms: Option<i64>,
+    avg_duration_ms: Option<f64>,
+    max_duration_ms: Option<i64>,
+    samples: Vec<TimePerformanceSample>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct TimePerformanceSample {
+    object_id: String,
+    start_time_ms: i64,
+    middle_time_ms: i64,
+    end_time_ms: Option<i64>,
+    duration_ms: i64,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
 struct StateCorrelationResult {
     object_type: String,
     object_count: usize,
@@ -5255,6 +5633,18 @@ impl OcelDocument {
         self.log.state_correlations_json().map_err(JsValue::from)
     }
 
+    /// Returns smoothed time-perspective inputs for state frequencies and transition durations.
+    #[wasm_bindgen(js_name = timePerspectiveJson)]
+    pub fn time_perspective_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<TimePerspectiveRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!("could not parse time perspective request: {err}"))
+            })?;
+        self.log
+            .time_perspective_json(&request)
+            .map_err(JsValue::from)
+    }
+
     /// Returns object-level feature table metadata and a preview for causal-model editing.
     #[wasm_bindgen(js_name = causalFeatureTableJson)]
     pub fn causal_feature_table_json(&self, request_json: &str) -> Result<String, JsValue> {
@@ -6992,6 +7382,7 @@ mod tests {
                 "Insert Invoice".to_owned(),
             ],
             object_types: vec!["Purchase Order".to_owned(), "Invoice".to_owned()],
+            time_range: None,
             df_nodes: Vec::new(),
             df_edges: Vec::new(),
             text_attributes: Vec::new(),
@@ -7030,6 +7421,7 @@ mod tests {
         let filtered_by_node = log.filter(&OcelFilterRequest {
             event_types: Vec::new(),
             object_types: Vec::new(),
+            time_range: None,
             df_nodes: vec!["Create Purchase Order".to_owned()],
             df_edges: Vec::new(),
             text_attributes: Vec::new(),
@@ -7049,6 +7441,7 @@ mod tests {
         let filtered_by_edge = log.filter(&OcelFilterRequest {
             event_types: Vec::new(),
             object_types: Vec::new(),
+            time_range: None,
             df_nodes: Vec::new(),
             df_edges: vec![DfEdgeFilter {
                 source: "Create Purchase Order".to_owned(),
@@ -7063,6 +7456,7 @@ mod tests {
         let filtered_by_state = log.filter(&OcelFilterRequest {
             event_types: Vec::new(),
             object_types: Vec::new(),
+            time_range: None,
             df_nodes: Vec::new(),
             df_edges: Vec::new(),
             text_attributes: vec![TextAttributeFilter {
@@ -7112,6 +7506,7 @@ mod tests {
         let filtered = log.filter(&OcelFilterRequest {
             event_types: Vec::new(),
             object_types: Vec::new(),
+            time_range: None,
             df_nodes: Vec::new(),
             df_edges: Vec::new(),
             text_attributes: Vec::new(),

@@ -31,12 +31,16 @@ import {
   CausalFeatureTableResult,
   StateCorrelationResult,
   StateCorrelationRow,
+  TimeFrequencyBucket,
+  TimePerformanceSample,
+  TimePerspectiveResult,
   CausalFitResult,
   CausalFitNode,
   CausalFitEdge,
   OcelSummary,
   OcelWasmService,
   StateQueryResult,
+  FilterTimeBucket,
   TextAttributeOption,
 } from './ocel-wasm.service';
 
@@ -69,6 +73,7 @@ interface FilterRequest {
   object_types: string[];
   df_nodes?: string[];
   df_edges?: DfEdgeFilterRequest[];
+  time_range?: TimeRangeFilterRequest;
   text_attributes?: TextAttributeFilterRequest[];
   patterns?: PatternFilterRequest[];
 }
@@ -76,6 +81,11 @@ interface FilterRequest {
 interface DfEdgeFilterRequest {
   source: string;
   target: string;
+}
+
+interface TimeRangeFilterRequest {
+  start_ms?: number;
+  end_ms?: number;
 }
 
 interface TextAttributeFilterRequest {
@@ -109,6 +119,7 @@ type FilterDialogKind =
   | 'objectTypes'
   | 'dfNodes'
   | 'dfEdges'
+  | 'timeframe'
   | 'textAttributes'
   | 'patterns';
 type PatternTab = 'intra' | 'inter';
@@ -121,6 +132,7 @@ type FeaturePage =
   | 'ocdfg'
   | 'patterns'
   | 'correlation'
+  | 'timePerspective'
   | 'stateAwareOcdfg';
 type CausalNodeRole = 'observable' | 'latent' | 'outcome';
 type CausalOperation = 'identity' | 'log10' | 'log_e' | 'sqrt';
@@ -220,6 +232,48 @@ interface CausalFitGraph {
   edges: CausalFitGraphEdge[];
 }
 
+interface TimeFrequencySeries {
+  state: string;
+  color: string;
+  path: string;
+  areaPath: string;
+  latest: number;
+}
+
+interface TimeFrequencyChart {
+  width: number;
+  height: number;
+  startLabel: string;
+  endLabel: string;
+  yTicks: number[];
+  series: TimeFrequencySeries[];
+}
+
+interface TimeFilterCurve {
+  width: number;
+  height: number;
+  path: string;
+  areaPath: string;
+  startLabel: string;
+  endLabel: string;
+}
+
+interface PerformanceSpectrumPoint {
+  sample: TimePerformanceSample;
+  x: number;
+  y: number;
+  radius: number;
+}
+
+interface PerformanceSpectrumChart {
+  width: number;
+  height: number;
+  points: PerformanceSpectrumPoint[];
+  minLabel: string;
+  maxLabel: string;
+  medianX: number | null;
+}
+
 @Component({
   selector: 'app-root',
   imports: [ProcessGraphComponent],
@@ -259,17 +313,21 @@ export class App {
     event_types: [],
     object_types: [],
     text_attributes: [],
+    time_buckets: [],
   });
   protected readonly selectedEventTypes = signal<string[]>([]);
   protected readonly selectedObjectTypes = signal<string[]>([]);
   protected readonly selectedDfNodes = signal<string[]>([]);
   protected readonly selectedDfEdges = signal<DfEdgeFilterRequest[]>([]);
+  protected readonly selectedTimeRange = signal<TimeRangeFilterRequest | null>(null);
   protected readonly selectedTextAttribute = signal<TextAttributeFilterRequest | null>(null);
   protected readonly selectedPatternFilters = signal<PatternFilterRequest[]>([]);
   protected readonly draftEventTypes = signal<string[]>([]);
   protected readonly draftObjectTypes = signal<string[]>([]);
   protected readonly draftDfNodes = signal<string[]>([]);
   protected readonly draftDfEdges = signal<DfEdgeFilterRequest[]>([]);
+  protected readonly draftTimeStart = signal('');
+  protected readonly draftTimeEnd = signal('');
   protected readonly draftTextAttributeKey = signal('');
   protected readonly draftTextAttributeValues = signal<string[]>([]);
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
@@ -298,6 +356,11 @@ export class App {
   protected readonly isGeneratingCausalModel = signal(false);
   protected readonly patternAnalysis = signal<StatePatternAnalysis | null>(null);
   protected readonly stateCorrelation = signal<StateCorrelationResult | null>(null);
+  protected readonly timePerspective = signal<TimePerspectiveResult | null>(null);
+  protected readonly timePerspectiveObjectType = signal('');
+  protected readonly timePerspectiveFromState = signal('');
+  protected readonly timePerspectiveToState = signal('');
+  protected readonly timePerspectiveRoundtrip = signal(false);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
   protected readonly stateAwareOcdfgSettings = signal<ProcessGraphSettings>(emptyGraphSettings());
@@ -320,6 +383,7 @@ export class App {
       this.selectedObjectTypes().length !== this.filterOptions().object_types.length ||
       this.selectedDfNodes().length > 0 ||
       this.selectedDfEdges().length > 0 ||
+      this.selectedTimeRange() !== null ||
       this.selectedTextAttribute() !== null ||
       this.selectedPatternFilters().length > 0,
   );
@@ -369,6 +433,16 @@ export class App {
         label: `OC-DFG edges ${this.selectedDfEdges().length}`,
         description: filterDescription('Objects containing directly-follows edges', labels),
         removeLabel: 'Remove OC-DFG edge filter',
+      });
+    }
+
+    const timeRange = this.selectedTimeRange();
+    if (timeRange) {
+      chips.push({
+        kind: 'timeframe',
+        label: 'Timeframe',
+        description: timeRangeLabel(timeRange),
+        removeLabel: 'Remove timeframe filter',
       });
     }
 
@@ -490,6 +564,18 @@ export class App {
     const fit = this.causalFit();
     return fit ? causalFitGraph(fit) : null;
   });
+  protected readonly timeFrequencyChart = computed(() => {
+    const analysis = this.timePerspective();
+    return analysis ? timeFrequencyChart(analysis.buckets, analysis.states) : null;
+  });
+  protected readonly timeFilterCurve = computed(() => {
+    const options = this.filterOptions();
+    return timeFilterCurve(options.time_buckets);
+  });
+  protected readonly performanceSpectrumChart = computed(() => {
+    const analysis = this.timePerspective();
+    return analysis ? performanceSpectrumChart(analysis.performance.samples) : null;
+  });
 
   async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
@@ -606,7 +692,10 @@ export class App {
 
   protected setActiveFeature(feature: FeaturePage): void {
     if (
-      (feature === 'patterns' || feature === 'correlation' || feature === 'stateAwareOcdfg') &&
+      (feature === 'patterns' ||
+        feature === 'correlation' ||
+        feature === 'timePerspective' ||
+        feature === 'stateAwareOcdfg') &&
       !this.hasAppliedState()
     ) {
       return;
@@ -622,6 +711,9 @@ export class App {
     }
     if (feature === 'correlation' && !this.stateCorrelation()) {
       this.loadStateCorrelation();
+    }
+    if (feature === 'timePerspective' && !this.timePerspective()) {
+      this.loadTimePerspective();
     }
   }
 
@@ -754,6 +846,7 @@ export class App {
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
       this.stateCorrelation.set(null);
+      this.timePerspective.set(null);
       this.loadStatePatterns();
       this.activeFeature.set('patterns');
       this.stateMessage.set(
@@ -834,12 +927,15 @@ export class App {
       this.selectedObjectTypes.set(imported.filterOptions.object_types);
       this.selectedDfNodes.set([]);
       this.selectedDfEdges.set([]);
+      this.selectedTimeRange.set(null);
       this.selectedTextAttribute.set(null);
       this.selectedPatternFilters.set([]);
       this.draftEventTypes.set(imported.filterOptions.event_types);
       this.draftObjectTypes.set(imported.filterOptions.object_types);
       this.draftDfNodes.set([]);
       this.draftDfEdges.set([]);
+      this.draftTimeStart.set('');
+      this.draftTimeEnd.set('');
       this.draftTextAttributeKey.set('');
       this.draftTextAttributeValues.set([]);
       this.filterDialog.set(null);
@@ -850,6 +946,11 @@ export class App {
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.stateCorrelation.set(null);
+      this.timePerspective.set(null);
+      this.timePerspectiveObjectType.set(imported.filterOptions.object_types[0] ?? '');
+      this.timePerspectiveFromState.set('');
+      this.timePerspectiveToState.set('');
+      this.timePerspectiveRoundtrip.set(false);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
       this.stateDetectionAnalysis.set(null);
@@ -882,17 +983,25 @@ export class App {
       this.errorMessage.set(errorToMessage(error));
       this.summary.set(null);
       this.originalSummary.set(null);
-      this.filterOptions.set({ event_types: [], object_types: [], text_attributes: [] });
+      this.filterOptions.set({
+        event_types: [],
+        object_types: [],
+        text_attributes: [],
+        time_buckets: [],
+      });
       this.selectedEventTypes.set([]);
       this.selectedObjectTypes.set([]);
       this.selectedDfNodes.set([]);
       this.selectedDfEdges.set([]);
+      this.selectedTimeRange.set(null);
       this.selectedTextAttribute.set(null);
       this.selectedPatternFilters.set([]);
       this.draftEventTypes.set([]);
       this.draftObjectTypes.set([]);
       this.draftDfNodes.set([]);
       this.draftDfEdges.set([]);
+      this.draftTimeStart.set('');
+      this.draftTimeEnd.set('');
       this.draftTextAttributeKey.set('');
       this.draftTextAttributeValues.set([]);
       this.filterDialog.set(null);
@@ -907,6 +1016,11 @@ export class App {
       this.stateMessage.set('');
       this.patternAnalysis.set(null);
       this.stateCorrelation.set(null);
+      this.timePerspective.set(null);
+      this.timePerspectiveObjectType.set('');
+      this.timePerspectiveFromState.set('');
+      this.timePerspectiveToState.set('');
+      this.timePerspectiveRoundtrip.set(false);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
       this.stateDetectionAnalysis.set(null);
@@ -1031,6 +1145,21 @@ export class App {
     this.filterDialog.set('dfEdges');
   }
 
+  protected openTimeframeFilterDialog(): void {
+    const selected = this.selectedTimeRange();
+    this.draftTimeStart.set(
+      toDateTimeLocalInput(selected?.start_ms ?? this.filterOptions().time_min_ms),
+    );
+    this.draftTimeEnd.set(
+      toDateTimeLocalInput(selected?.end_ms ?? this.filterOptions().time_max_ms),
+    );
+    this.isFilterMenuOpen.set(false);
+    this.isExportMenuOpen.set(false);
+    this.isFilterChainOpen.set(false);
+    this.graphFilterMenu.set(null);
+    this.filterDialog.set('timeframe');
+  }
+
   protected openTextAttributeFilterDialog(): void {
     const selected = this.selectedTextAttribute();
     const first = selected ?? this.defaultTextAttributeFilter();
@@ -1088,6 +1217,19 @@ export class App {
     const key = (event.target as HTMLSelectElement).value;
     this.draftTextAttributeKey.set(key);
     this.draftTextAttributeValues.set([]);
+  }
+
+  protected onDraftTimeStartChange(event: Event): void {
+    this.draftTimeStart.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onDraftTimeEndChange(event: Event): void {
+    this.draftTimeEnd.set((event.target as HTMLInputElement).value);
+  }
+
+  protected resetDraftTimeframe(): void {
+    this.draftTimeStart.set(toDateTimeLocalInput(this.filterOptions().time_min_ms));
+    this.draftTimeEnd.set(toDateTimeLocalInput(this.filterOptions().time_max_ms));
   }
 
   protected toggleDraftTextAttributeValue(value: string, event: Event): void {
@@ -1196,6 +1338,15 @@ export class App {
           : null,
       );
     }
+    if (dialog === 'timeframe') {
+      const range = normalizeTimeRange(
+        fromDateTimeLocalInput(this.draftTimeStart()),
+        fromDateTimeLocalInput(this.draftTimeEnd()),
+        this.filterOptions().time_min_ms,
+        this.filterOptions().time_max_ms,
+      );
+      this.selectedTimeRange.set(range);
+    }
 
     this.filterDialog.set(null);
     this.isFilterChainOpen.set(false);
@@ -1215,6 +1366,10 @@ export class App {
     } else if (kind === 'dfEdges') {
       this.selectedDfEdges.set([]);
       this.draftDfEdges.set([]);
+    } else if (kind === 'timeframe') {
+      this.selectedTimeRange.set(null);
+      this.draftTimeStart.set('');
+      this.draftTimeEnd.set('');
     } else if (kind === 'textAttributes') {
       this.selectedTextAttribute.set(null);
       this.draftTextAttributeKey.set('');
@@ -1278,6 +1433,7 @@ export class App {
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
       );
       this.stateCorrelation.set(null);
+      this.timePerspective.set(null);
       this.loadStatePatterns();
       this.loadStateAwareOcdfg();
       this.stateDetectionCellDetail.set(null);
@@ -1386,6 +1542,44 @@ export class App {
 
   protected correlationCellStyle(row: StateCorrelationRow): string {
     return correlationHeatStyle(row.correlation);
+  }
+
+  protected reloadTimePerspective(): void {
+    this.loadTimePerspective();
+  }
+
+  protected onTimePerspectiveObjectTypeChange(event: Event): void {
+    this.timePerspectiveObjectType.set((event.target as HTMLSelectElement).value);
+    this.loadTimePerspective();
+  }
+
+  protected onTimePerspectiveFromStateChange(event: Event): void {
+    this.timePerspectiveFromState.set((event.target as HTMLSelectElement).value);
+    this.loadTimePerspective();
+  }
+
+  protected onTimePerspectiveToStateChange(event: Event): void {
+    this.timePerspectiveToState.set((event.target as HTMLSelectElement).value);
+    this.loadTimePerspective();
+  }
+
+  protected onTimePerspectiveRoundtripChange(event: Event): void {
+    this.timePerspectiveRoundtrip.set((event.target as HTMLInputElement).checked);
+    this.loadTimePerspective();
+  }
+
+  protected performanceModeLabel(analysis: TimePerspectiveResult): string {
+    return analysis.performance.roundtrip
+      ? `${analysis.performance.from_state} -> ${analysis.performance.to_state} -> ${analysis.performance.from_state}`
+      : `${analysis.performance.from_state} -> ${analysis.performance.to_state}`;
+  }
+
+  protected durationLabel(durationMs?: number | null): string {
+    return formatDuration(durationMs);
+  }
+
+  protected timeLabel(timeMs: number): string {
+    return formatDateTime(timeMs);
   }
 
   protected stateDistributionLabel(analysis: StateCorrelationResult): string {
@@ -2183,6 +2377,59 @@ Rules:
     }
   }
 
+  private loadTimePerspective(): void {
+    if (!this.documentHandle) {
+      this.timePerspective.set(null);
+      return;
+    }
+
+    try {
+      this.ensureTimePerspectiveObjectType();
+      const analysis = JSON.parse(
+        this.documentHandle.timePerspectiveJson(this.timePerspectiveRequestJson()),
+      ) as TimePerspectiveResult;
+      this.timePerspective.set(analysis);
+      this.timePerspectiveObjectType.set(analysis.object_type);
+      this.timePerspectiveFromState.set(
+        validStateSelection(
+          this.timePerspectiveFromState(),
+          analysis.states,
+          analysis.performance.from_state,
+        ),
+      );
+      this.timePerspectiveToState.set(
+        validStateSelection(
+          this.timePerspectiveToState(),
+          analysis.states,
+          analysis.performance.to_state,
+        ),
+      );
+      this.errorMessage.set('');
+    } catch (error) {
+      this.timePerspective.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  private ensureTimePerspectiveObjectType(): void {
+    const selected = this.selectedObjectTypes();
+    const current = this.timePerspectiveObjectType();
+    if (current && selected.includes(current)) {
+      return;
+    }
+    this.timePerspectiveObjectType.set(selected[0] ?? this.filterOptions().object_types[0] ?? '');
+  }
+
+  private timePerspectiveRequestJson(): string {
+    return JSON.stringify({
+      object_type: this.timePerspectiveObjectType() || undefined,
+      from_state: this.timePerspectiveFromState() || undefined,
+      to_state: this.timePerspectiveToState() || undefined,
+      roundtrip: this.timePerspectiveRoundtrip(),
+      buckets: 32,
+    });
+  }
+
   private loadStateAwareOcdfg(): void {
     if (!this.documentHandle) {
       this.stateAwareOcdfg.set(null);
@@ -2238,6 +2485,10 @@ Rules:
     if (this.selectedDfEdges().length > 0) {
       filter.df_edges = this.selectedDfEdges();
     }
+    const timeRange = this.selectedTimeRange();
+    if (timeRange) {
+      filter.time_range = timeRange;
+    }
     const textAttribute = this.selectedTextAttribute();
     if (textAttribute && textAttribute.values.length > 0) {
       filter.text_attributes = [textAttribute];
@@ -2273,14 +2524,19 @@ Rules:
       }
 
       this.stateCorrelation.set(null);
+      this.timePerspective.set(null);
       if (nextSummary.stateful_events > 0) {
         this.loadStatePatterns(true);
         if (this.activeFeature() === 'correlation') {
           this.loadStateCorrelation();
         }
+        if (this.activeFeature() === 'timePerspective') {
+          this.loadTimePerspective();
+        }
       } else {
         this.patternAnalysis.set(null);
         this.stateCorrelation.set(null);
+        this.timePerspective.set(null);
         this.stateAwareOcdfg.set(null);
         this.selectedIntraPatternId.set('');
         this.selectedInterPatternId.set('');
@@ -2959,3 +3215,276 @@ function splitLongWord(word: string, maxLineLength: number): string[] {
   }
   return parts.length > 0 ? parts : [''];
 }
+
+function normalizeTimeRange(
+  startMs: number | null,
+  endMs: number | null,
+  minMs?: number,
+  maxMs?: number,
+): TimeRangeFilterRequest | null {
+  if (startMs === null && endMs === null) {
+    return null;
+  }
+
+  let start = startMs ?? minMs;
+  let end = endMs ?? maxMs;
+  if (start === undefined && end === undefined) {
+    return null;
+  }
+  if (start !== undefined && end !== undefined && start > end) {
+    [start, end] = [end, start];
+  }
+
+  const normalized: TimeRangeFilterRequest = {};
+  if (start !== undefined && start !== minMs) {
+    normalized.start_ms = start;
+  }
+  if (end !== undefined && end !== maxMs) {
+    normalized.end_ms = end;
+  }
+
+  return normalized.start_ms === undefined && normalized.end_ms === undefined ? null : normalized;
+}
+
+function toDateTimeLocalInput(timeMs?: number): string {
+  if (timeMs === undefined || !Number.isFinite(timeMs)) {
+    return '';
+  }
+  const date = new Date(timeMs);
+  const pad = (value: number) => value.toString().padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
+    date.getHours(),
+  )}:${pad(date.getMinutes())}`;
+}
+
+function fromDateTimeLocalInput(value: string): number | null {
+  if (!value) {
+    return null;
+  }
+  const timeMs = new Date(value).getTime();
+  return Number.isFinite(timeMs) ? timeMs : null;
+}
+
+function timeRangeLabel(range: TimeRangeFilterRequest): string {
+  const start = range.start_ms !== undefined ? formatDateTime(range.start_ms) : 'start';
+  const end = range.end_ms !== undefined ? formatDateTime(range.end_ms) : 'end';
+  return `${start} -> ${end}`;
+}
+
+function timeFilterCurve(buckets: FilterTimeBucket[]): TimeFilterCurve | null {
+  if (buckets.length === 0) {
+    return null;
+  }
+  const width = 640;
+  const height = 180;
+  const padding = { left: 10, right: 10, top: 14, bottom: 32 };
+  const maxCount = Math.max(1, ...buckets.map((bucket) => bucket.count));
+  const points = buckets.map((bucket, index) => ({
+    x:
+      padding.left +
+      (index / Math.max(buckets.length - 1, 1)) * (width - padding.left - padding.right),
+    y:
+      height - padding.bottom - (bucket.count / maxCount) * (height - padding.top - padding.bottom),
+  }));
+  const path = smoothPath(points);
+  const baseline = height - padding.bottom;
+  const areaPath =
+    path && points.length > 0
+      ? `${path} L ${points[points.length - 1].x} ${baseline} L ${points[0].x} ${baseline} Z`
+      : '';
+  return {
+    width,
+    height,
+    path,
+    areaPath,
+    startLabel: formatShortDate(buckets[0].start_ms),
+    endLabel: formatShortDate(buckets[buckets.length - 1].end_ms),
+  };
+}
+
+function timeFrequencyChart(
+  buckets: TimeFrequencyBucket[],
+  states: string[],
+): TimeFrequencyChart | null {
+  if (buckets.length === 0 || states.length === 0) {
+    return null;
+  }
+  const width = 790;
+  const height = 270;
+  const plot = { left: 48, right: 740, top: 28, bottom: 220 };
+  const colorByState = new Map(
+    states.map((state, index) => [state, CHART_COLORS[index % CHART_COLORS.length]]),
+  );
+  const percentageByBucket = buckets.map(
+    (bucket) => new Map(bucket.percentages.map((entry) => [entry.state, entry.percentage])),
+  );
+  const series = states.map((state) => {
+    const points = buckets.map((bucket, index) => {
+      const ratio = index / Math.max(buckets.length - 1, 1);
+      const percentage = percentageByBucket[index].get(state) ?? 0;
+      return {
+        x: plot.left + ratio * (plot.right - plot.left),
+        y: plot.bottom - (percentage / 100) * (plot.bottom - plot.top),
+      };
+    });
+    const path = smoothPath(points);
+    const areaPath =
+      path && points.length > 0
+        ? `${path} L ${points[points.length - 1].x} ${plot.bottom} L ${points[0].x} ${plot.bottom} Z`
+        : '';
+    return {
+      state,
+      color: colorByState.get(state) ?? CHART_COLORS[0],
+      path,
+      areaPath,
+      latest: percentageByBucket[percentageByBucket.length - 1].get(state) ?? 0,
+    };
+  });
+
+  return {
+    width,
+    height,
+    startLabel: formatShortDate(buckets[0].start_ms),
+    endLabel: formatShortDate(buckets[buckets.length - 1].end_ms),
+    yTicks: [0, 25, 50, 75, 100],
+    series,
+  };
+}
+
+function performanceSpectrumChart(
+  samples: TimePerformanceSample[],
+): PerformanceSpectrumChart | null {
+  const width = 800;
+  const height = 230;
+  if (samples.length === 0) {
+    return {
+      width,
+      height,
+      points: [],
+      minLabel: formatDuration(null),
+      maxLabel: formatDuration(null),
+      medianX: null,
+    };
+  }
+  const sorted = [...samples].sort((left, right) => left.duration_ms - right.duration_ms);
+  const min = sorted[0].duration_ms;
+  const max = sorted[sorted.length - 1].duration_ms;
+  const span = Math.max(max - min, 1);
+  const plot = { left: 54, right: 748, top: 28, bottom: 176 };
+  const points = sorted.map((sample, index) => {
+    const x = plot.left + ((sample.duration_ms - min) / span) * (plot.right - plot.left);
+    const band = index % 7;
+    return {
+      sample,
+      x,
+      y: plot.bottom - 18 - band * 18,
+      radius: Math.max(3, Math.min(7, 3 + Math.log2(sample.duration_ms / 60_000 + 1))),
+    };
+  });
+  const medianDuration = sorted[Math.floor(sorted.length / 2)].duration_ms;
+  const medianX = plot.left + ((medianDuration - min) / span) * (plot.right - plot.left);
+
+  return {
+    width,
+    height,
+    points,
+    minLabel: formatDuration(min),
+    maxLabel: formatDuration(max),
+    medianX,
+  };
+}
+
+function smoothPath(points: { x: number; y: number }[]): string {
+  if (points.length === 0) {
+    return '';
+  }
+  if (points.length === 1) {
+    return `M ${round(points[0].x)} ${round(points[0].y)}`;
+  }
+
+  const commands = [`M ${round(points[0].x)} ${round(points[0].y)}`];
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const previous = points[Math.max(0, index - 1)];
+    const current = points[index];
+    const next = points[index + 1];
+    const following = points[Math.min(points.length - 1, index + 2)];
+    const cp1x = current.x + (next.x - previous.x) / 6;
+    const cp1y = current.y + (next.y - previous.y) / 6;
+    const cp2x = next.x - (following.x - current.x) / 6;
+    const cp2y = next.y - (following.y - current.y) / 6;
+    commands.push(
+      `C ${round(cp1x)} ${round(cp1y)}, ${round(cp2x)} ${round(cp2y)}, ${round(next.x)} ${round(
+        next.y,
+      )}`,
+    );
+  }
+  return commands.join(' ');
+}
+
+function validStateSelection(current: string, states: string[], fallback: string): string {
+  if (current && states.includes(current)) {
+    return current;
+  }
+  if (fallback && states.includes(fallback)) {
+    return fallback;
+  }
+  return states[0] ?? '';
+}
+
+function formatDateTime(timeMs: number): string {
+  if (!Number.isFinite(timeMs)) {
+    return '-';
+  }
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(timeMs));
+}
+
+function formatShortDate(timeMs: number): string {
+  if (!Number.isFinite(timeMs)) {
+    return '-';
+  }
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  }).format(new Date(timeMs));
+}
+
+function formatDuration(durationMs?: number | null): string {
+  if (durationMs === undefined || durationMs === null || !Number.isFinite(durationMs)) {
+    return '-';
+  }
+  const absolute = Math.max(0, durationMs);
+  const minutes = absolute / 60_000;
+  if (minutes < 1) {
+    return `${Math.round(absolute / 1000)}s`;
+  }
+  if (minutes < 90) {
+    return `${round(minutes)}m`;
+  }
+  const hours = minutes / 60;
+  if (hours < 48) {
+    return `${round(hours)}h`;
+  }
+  return `${round(hours / 24)}d`;
+}
+
+function round(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+const CHART_COLORS = [
+  '#1d4f49',
+  '#4678a0',
+  '#b45f1a',
+  '#7b4fa3',
+  '#2f7d3d',
+  '#a33f5f',
+  '#5661a8',
+  '#8b6b23',
+];

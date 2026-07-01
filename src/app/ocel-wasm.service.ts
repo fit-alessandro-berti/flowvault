@@ -28,6 +28,7 @@ export interface OcelDocumentHandle {
   stateDetectionCellJson(requestJson: string): string;
   stateFeatureTableCsv(requestJson: string): string;
   stateCorrelationsJson(): string;
+  timePerspectiveJson(requestJson: string): string;
   causalFeatureTableJson(requestJson: string): string;
   causalFeatureTableCsv(requestJson: string): string;
   fitCausalModelJson(requestJson: string): string;
@@ -107,6 +108,49 @@ export interface StateCorrelationResult {
   feature_count: number;
   state_distribution: StateCorrelationStateCount[];
   rows: StateCorrelationRow[];
+}
+
+export interface TimePerspectiveResult {
+  object_type: string;
+  event_min_ms: number;
+  event_max_ms: number;
+  states: string[];
+  buckets: TimeFrequencyBucket[];
+  performance: TimePerformanceSpectrum;
+}
+
+export interface TimeFrequencyBucket {
+  start_ms: number;
+  end_ms: number;
+  total: number;
+  percentages: TimeStatePercentage[];
+}
+
+export interface TimeStatePercentage {
+  state: string;
+  percentage: number;
+  count: number;
+}
+
+export interface TimePerformanceSpectrum {
+  object_type: string;
+  from_state: string;
+  to_state: string;
+  roundtrip: boolean;
+  sample_count: number;
+  min_duration_ms?: number;
+  median_duration_ms?: number;
+  avg_duration_ms?: number;
+  max_duration_ms?: number;
+  samples: TimePerformanceSample[];
+}
+
+export interface TimePerformanceSample {
+  object_id: string;
+  start_time_ms: number;
+  middle_time_ms: number;
+  end_time_ms?: number;
+  duration_ms: number;
 }
 
 export interface StateCorrelationStateCount {
@@ -293,6 +337,15 @@ export interface OcelFilterOptions {
   event_types: string[];
   object_types: string[];
   text_attributes: TextAttributeOption[];
+  time_min_ms?: number;
+  time_max_ms?: number;
+  time_buckets: FilterTimeBucket[];
+}
+
+export interface FilterTimeBucket {
+  start_ms: number;
+  end_ms: number;
+  count: number;
 }
 
 export interface TextAttributeOption {
