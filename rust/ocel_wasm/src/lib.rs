@@ -1,2 +1,2 @@
-include!("wasm/01.rs");
-include!("wasm/02.rs");
+include!("wasm/document_struct.rs");
+include!("wasm/bindings.rs");

@@ -1,5 +1,5 @@
-include!("source/01.rs");
-include!("source/02.rs");
-include!("source/03.rs");
-include!("source/04.rs");
-include!("source/05.rs");
+include!("source/source_models.rs");
+include!("source/format_parsers.rs");
+include!("source/xml_and_compaction.rs");
+include!("source/value_compaction.rs");
+include!("source/xml_escape.rs");
