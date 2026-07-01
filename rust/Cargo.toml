@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "ocel_core",
+    "ocel_wasm",
+]
+resolver = "2"

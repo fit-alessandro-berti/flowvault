@@ -7,13 +7,16 @@ The implementation follows the official OCEL 2.0 JSON and XML format shape: top-
 ## Project Layout
 
 ```text
-src/                    Angular application
-src/app/ocel-wasm...    Runtime WebAssembly loader and TypeScript API
-src/landing/            Static root redirect page copied after production builds
-rust/ocel_wasm/         Rust OCEL parser/exporter compiled with wasm-pack
-files/ocel2/            Example OCEL 2.0 JSON/XML files
-public/wasm/            Generated wasm-pack output during builds
-dist/flowvault/browser/ Static production build output
+src/                     Angular application
+src/app/ocel-wasm...     Runtime WebAssembly loader and TypeScript API
+src/landing/             Static root redirect page copied after production builds
+rust/Cargo.toml          Rust workspace
+rust/ocel_core/          Rust OCEL parser/exporter/filtering/analysis core
+rust/ocel_core/tests/    Rust integration tests for the public core API
+rust/ocel_wasm/          Thin wasm-bindgen adapter compiled with wasm-pack
+files/ocel2/             Example OCEL 2.0 JSON/XML files
+public/wasm/             Generated wasm-pack output during builds
+dist/flowvault/browser/  Static production build output
 ```
 
 ## Compact OCEL Representation
@@ -178,7 +181,7 @@ The npm scripts set `CARGO_HOME=$PWD/.cargo-home` so Cargo does not need to writ
 
 `npm test` runs:
 
-- Rust unit tests in `rust/ocel_wasm`, including JSON/XML imports, relationship counts, object lifecycles, timestamp conversion, validation errors, state enrichment, state pattern detection, execution-state detection, and JSON/XML round trips;
+- Rust workspace tests, including integration tests in `rust/ocel_core/tests` for JSON/XML imports, relationship counts, object lifecycles, validation errors, state enrichment, filtering, graph endpoints, execution-state detection, causal feature tables, compressed imports, fixture imports, and JSON/XML round trips;
 - Angular unit tests for the app shell, file helper behavior, state preset dialog, state pattern text/graph rendering, and the State Detection page.
 
 The bundled examples in `files/ocel2/` are used by the Rust tests.

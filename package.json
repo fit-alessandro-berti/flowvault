@@ -9,7 +9,7 @@
     "watch": "npm run build:wasm && ng build --watch --configuration development",
     "test": "npm run test:rust && npm run test:angular",
     "test:angular": "ng test",
-    "test:rust": "CARGO_HOME=$PWD/.cargo-home cargo test --manifest-path rust/ocel_wasm/Cargo.toml",
+    "test:rust": "CARGO_HOME=$PWD/.cargo-home cargo test --manifest-path rust/Cargo.toml --workspace",
     "build:wasm": "CARGO_HOME=$PWD/.cargo-home wasm-pack build rust/ocel_wasm --target web --release --out-dir ../../public/wasm && rm -f public/wasm/.gitignore"
   },
   "private": true,

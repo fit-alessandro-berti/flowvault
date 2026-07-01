@@ -1,0 +1,13 @@
+[package]
+name = "ocel_core"
+version = "0.1.0"
+edition = "2021"
+description = "OCEL 2.0 JSON/XML import, export, filtering, and analysis core."
+license = "MIT"
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+roxmltree = "0.21"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
