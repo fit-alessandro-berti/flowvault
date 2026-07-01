@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { App } from './app';
 import type { ProcessGraph } from './ocel-wasm.service';
 import { importedSummary, patternAnalysis, processGraph, statefulSummary, traditionalProcessGraph } from './testing/core-fixtures';
-import { lifecycleDetail, objectSearchResult, stateCorrelationAnalysis, transitionKpisAnalysis } from './testing/dashboard-fixtures';
+import { lifecycleDetail, objectSearchResult, stateCorrelationAnalysis, timePerspectiveAnalysis, transitionKpisAnalysis } from './testing/dashboard-fixtures';
 import { stateDetectionAnalysis, stateDetectionCellDetail } from './testing/state-detection-fixtures';
 
 describe('App', () => {
@@ -139,5 +139,53 @@ describe('App', () => {
     expect(native.textContent).toContain('Stock After');
     expect(native.textContent).toContain('Related Objects');
     expect(native.querySelector('.lifecycle-timeline')).toBeTruthy();
+  });
+
+  it('renders the time perspective dashboard from the state-based sidebar', () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance as unknown as {
+      documentHandle: unknown;
+      fileName: { set(value: string): void };
+      summary: { set(value: unknown): void };
+      originalSummary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedObjectTypes: { set(value: string[]): void };
+      selectedEventTypes: { set(value: string[]): void };
+    };
+    let timeRequests = 0;
+    let lastRequest = '';
+
+    component.documentHandle = {
+      timePerspectiveJson: (request: string) => {
+        timeRequests += 1;
+        lastRequest = request;
+        return JSON.stringify(timePerspectiveAnalysis);
+      },
+    };
+    component.fileName.set('orders.json');
+    component.summary.set(statefulSummary);
+    component.originalSummary.set(statefulSummary);
+    component.filterOptions.set({
+      event_types: ['Create Order', 'Close Order'],
+      object_types: ['Order', 'Item'],
+      text_attributes: [{ scope: 'event', name: 'state', values: ['Open', 'Closed'] }],
+    });
+    component.selectedEventTypes.set(['Create Order', 'Close Order']);
+    component.selectedObjectTypes.set(['Order', 'Item']);
+    fixture.detectChanges();
+
+    const native = fixture.nativeElement as HTMLElement;
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.feature-button'))
+      .find((button) => button.textContent?.includes('Time Perspective'))
+      ?.click();
+    fixture.detectChanges();
+
+    expect(timeRequests).toBe(1);
+    expect(JSON.parse(lastRequest)).toMatchObject({ object_type: 'Order', buckets: 32 });
+    expect(native.querySelector('.time-page')).toBeTruthy();
+    expect(native.querySelector('.performance-summary')).toBeTruthy();
+    expect(native.textContent).toContain('Event State Frequency');
+    expect(native.textContent).toContain('Performance Spectrum');
+    expect(native.textContent).toContain('Open -> Closed');
   });
 });

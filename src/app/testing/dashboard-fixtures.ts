@@ -1,4 +1,4 @@
-import type { StateCorrelationResult } from '../ocel-wasm.service';
+import type { StateCorrelationResult, TimePerspectiveResult } from '../ocel-wasm.service';
 
 export const stateCorrelationAnalysis: StateCorrelationResult = {
   object_type: 'Order',
@@ -86,6 +86,52 @@ export const transitionKpisAnalysis = {
       event_count: 3,
     },
   ],
+};
+
+export const timePerspectiveAnalysis: TimePerspectiveResult = {
+  object_type: 'Order',
+  event_min_ms: 0,
+  event_max_ms: 240_000,
+  states: ['Open', 'Closed'],
+  buckets: [
+    {
+      start_ms: 0,
+      end_ms: 120_000,
+      total: 2,
+      percentages: [
+        { state: 'Open', percentage: 100, count: 2 },
+        { state: 'Closed', percentage: 0, count: 0 },
+      ],
+    },
+    {
+      start_ms: 120_000,
+      end_ms: 240_000,
+      total: 2,
+      percentages: [
+        { state: 'Open', percentage: 25, count: 1 },
+        { state: 'Closed', percentage: 75, count: 3 },
+      ],
+    },
+  ],
+  performance: {
+    object_type: 'Order',
+    from_state: 'Open',
+    to_state: 'Closed',
+    roundtrip: false,
+    sample_count: 1,
+    min_duration_ms: 120_000,
+    median_duration_ms: 120_000,
+    avg_duration_ms: 120_000,
+    max_duration_ms: 120_000,
+    samples: [
+      {
+        object_id: 'O1',
+        start_time_ms: 0,
+        middle_time_ms: 120_000,
+        duration_ms: 120_000,
+      },
+    ],
+  },
 };
 
 export const objectSearchResult = {

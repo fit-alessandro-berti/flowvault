@@ -77,9 +77,9 @@
     <button
       type="button"
       class="feature-button"
-      [class.is-selected]="vm.activeFeature() === 'vm.stateAwareOcdfg'"
+      [class.is-selected]="vm.activeFeature() === 'stateAwareOcdfg'"
       [disabled]="!vm.hasAppliedState()"
-      (click)="vm.setActiveFeature('vm.stateAwareOcdfg')"
+      (click)="vm.setActiveFeature('stateAwareOcdfg')"
     >
       <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 12h6l4-6v12l4-6h2" />
@@ -91,9 +91,9 @@
     <button
       type="button"
       class="feature-button"
-      [class.is-selected]="vm.activeFeature() === 'vm.timePerspective'"
+      [class.is-selected]="vm.activeFeature() === 'timePerspective'"
       [disabled]="!vm.hasAppliedState()"
-      (click)="vm.setActiveFeature('vm.timePerspective')"
+      (click)="vm.setActiveFeature('timePerspective')"
     >
       <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 18h16M5 15c3-8 6-8 9-2 2 4 4 4 6-4" />
