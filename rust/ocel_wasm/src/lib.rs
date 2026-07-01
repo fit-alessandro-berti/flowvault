@@ -1336,13 +1336,21 @@ impl CompactOcelLog {
             })
             .collect();
 
+        let most_frequent_transition =
+            self.most_frequent_state_transition(leading_type_symbol, state_attribute);
         let from_state = request
             .from_state
             .clone()
+            .or_else(|| {
+                most_frequent_transition
+                    .as_ref()
+                    .map(|(from, _)| from.clone())
+            })
             .or_else(|| states.iter().next().cloned());
         let to_state = request
             .to_state
             .clone()
+            .or_else(|| most_frequent_transition.as_ref().map(|(_, to)| to.clone()))
             .or_else(|| {
                 states
                     .iter()
@@ -1482,6 +1490,45 @@ impl CompactOcelLog {
             max_duration_ms: durations.last().copied(),
             samples,
         }
+    }
+
+    fn most_frequent_state_transition(
+        &self,
+        object_type: Symbol,
+        state_attribute: Symbol,
+    ) -> Option<(String, String)> {
+        let mut counts = BTreeMap::<(String, String), usize>::new();
+        for object in self
+            .objects
+            .iter()
+            .filter(|object| object.type_name == object_type)
+        {
+            let states = object
+                .lifecycle
+                .iter()
+                .filter_map(|event_index| {
+                    self.event_state(&self.events[*event_index], state_attribute)
+                        .map(str::to_owned)
+                })
+                .collect::<Vec<_>>();
+            for pair in states.windows(2) {
+                if pair[0] == pair[1] {
+                    continue;
+                }
+                *counts
+                    .entry((pair[0].clone(), pair[1].clone()))
+                    .or_default() += 1;
+            }
+        }
+
+        counts
+            .into_iter()
+            .max_by(|(left_pair, left_count), (right_pair, right_count)| {
+                left_count
+                    .cmp(right_count)
+                    .then_with(|| right_pair.cmp(left_pair))
+            })
+            .map(|(pair, _)| pair)
     }
 
     fn state_correlations(&self) -> OcelResult<StateCorrelationResult> {

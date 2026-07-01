@@ -828,7 +828,8 @@ textarea:focus {
 }
 
 .time-filter-inputs input,
-.time-controls select {
+.time-controls select,
+.performance-controls select {
   width: 100%;
   min-height: 42px;
   border: 1px solid #b9c7c3;
@@ -1533,7 +1534,7 @@ textarea:focus {
 
 .time-controls {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) repeat(2, minmax(160px, 0.8fr)) auto;
+  grid-template-columns: minmax(180px, 360px);
   gap: 10px;
   align-items: end;
   border: 1px solid #d7dfdd;
@@ -1542,12 +1543,14 @@ textarea:focus {
   padding: 14px;
 }
 
-.time-controls label {
+.time-controls label,
+.performance-controls label {
   display: grid;
   gap: 6px;
 }
 
 .time-controls span,
+.performance-controls span,
 .time-chart-panel header span,
 .performance-panel header span,
 .performance-summary span {
@@ -1576,6 +1579,13 @@ textarea:focus {
   border-radius: 8px;
   background: #ffffff;
   padding: 14px;
+}
+
+.performance-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(160px, 1fr)) auto;
+  gap: 10px;
+  align-items: end;
 }
 
 .time-frequency-chart,
@@ -1633,10 +1643,6 @@ textarea:focus {
 .time-legend span {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  color: #263632;
-  font-size: 0.78rem;
-  font-weight: 800;
 }
 
 .time-legend i {
@@ -1658,11 +1664,6 @@ textarea:focus {
   min-width: 0;
   background: #fbfdfc;
   padding: 12px;
-}
-
-.performance-summary strong {
-  overflow-wrap: anywhere;
-  font-size: 1.15rem;
 }
 
 .correlation-summary {
@@ -2231,6 +2232,7 @@ textarea:focus {
   .state-detection-summary,
   .correlation-summary,
   .time-controls,
+  .performance-controls,
   .performance-summary,
   .state-detection-grid {
     grid-template-columns: 1fr;

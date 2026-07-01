@@ -256,6 +256,10 @@ interface TimeFilterCurve {
   areaPath: string;
   startLabel: string;
   endLabel: string;
+  selectedStartX: number;
+  selectedEndX: number;
+  selectionTop: number;
+  selectionBottom: number;
 }
 
 interface PerformanceSpectrumPoint {
@@ -328,6 +332,8 @@ export class App {
   protected readonly draftDfEdges = signal<DfEdgeFilterRequest[]>([]);
   protected readonly draftTimeStart = signal('');
   protected readonly draftTimeEnd = signal('');
+  protected readonly isSelectingTimeRange = signal(false);
+  private timeSelectionAnchorMs: number | null = null;
   protected readonly draftTextAttributeKey = signal('');
   protected readonly draftTextAttributeValues = signal<string[]>([]);
   protected readonly filterDialog = signal<FilterDialogKind | null>(null);
@@ -570,7 +576,11 @@ export class App {
   });
   protected readonly timeFilterCurve = computed(() => {
     const options = this.filterOptions();
-    return timeFilterCurve(options.time_buckets);
+    return timeFilterCurve(
+      options.time_buckets,
+      fromDateTimeLocalInput(this.draftTimeStart()),
+      fromDateTimeLocalInput(this.draftTimeEnd()),
+    );
   });
   protected readonly performanceSpectrumChart = computed(() => {
     const analysis = this.timePerspective();
@@ -1232,6 +1242,62 @@ export class App {
     this.draftTimeEnd.set(toDateTimeLocalInput(this.filterOptions().time_max_ms));
   }
 
+  protected startTimeRangeSelection(event: PointerEvent, curve: TimeFilterCurve): void {
+    const timeMs = this.timeMsFromChartEvent(event, curve);
+    if (timeMs === null) {
+      return;
+    }
+
+    event.preventDefault();
+    (event.currentTarget as SVGSVGElement).setPointerCapture(event.pointerId);
+    this.timeSelectionAnchorMs = timeMs;
+    this.isSelectingTimeRange.set(true);
+    this.updateDraftTimeRangeFromSelection(timeMs, timeMs);
+  }
+
+  protected moveTimeRangeSelection(event: PointerEvent, curve: TimeFilterCurve): void {
+    if (!this.isSelectingTimeRange() || this.timeSelectionAnchorMs === null) {
+      return;
+    }
+    const timeMs = this.timeMsFromChartEvent(event, curve);
+    if (timeMs === null) {
+      return;
+    }
+    event.preventDefault();
+    this.updateDraftTimeRangeFromSelection(this.timeSelectionAnchorMs, timeMs);
+  }
+
+  protected endTimeRangeSelection(event: PointerEvent, curve: TimeFilterCurve): void {
+    if (!this.isSelectingTimeRange()) {
+      return;
+    }
+    this.moveTimeRangeSelection(event, curve);
+    if ((event.currentTarget as SVGSVGElement).hasPointerCapture(event.pointerId)) {
+      (event.currentTarget as SVGSVGElement).releasePointerCapture(event.pointerId);
+    }
+    this.timeSelectionAnchorMs = null;
+    this.isSelectingTimeRange.set(false);
+  }
+
+  private timeMsFromChartEvent(event: PointerEvent, curve: TimeFilterCurve): number | null {
+    const options = this.filterOptions();
+    const minMs = options.time_min_ms;
+    const maxMs = options.time_max_ms;
+    if (minMs === undefined || maxMs === undefined) {
+      return null;
+    }
+    const rect = (event.currentTarget as SVGSVGElement).getBoundingClientRect();
+    const ratio = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+    return Math.round(minMs + ratio * (maxMs - minMs));
+  }
+
+  private updateDraftTimeRangeFromSelection(startMs: number, endMs: number): void {
+    const start = Math.min(startMs, endMs);
+    const end = Math.max(startMs, endMs);
+    this.draftTimeStart.set(toDateTimeLocalInput(start));
+    this.draftTimeEnd.set(toDateTimeLocalInput(end));
+  }
+
   protected toggleDraftTextAttributeValue(value: string, event: Event): void {
     this.draftTextAttributeValues.set(
       toggleSelection(
@@ -1550,6 +1616,8 @@ export class App {
 
   protected onTimePerspectiveObjectTypeChange(event: Event): void {
     this.timePerspectiveObjectType.set((event.target as HTMLSelectElement).value);
+    this.timePerspectiveFromState.set('');
+    this.timePerspectiveToState.set('');
     this.loadTimePerspective();
   }
 
@@ -3271,7 +3339,11 @@ function timeRangeLabel(range: TimeRangeFilterRequest): string {
   return `${start} -> ${end}`;
 }
 
-function timeFilterCurve(buckets: FilterTimeBucket[]): TimeFilterCurve | null {
+function timeFilterCurve(
+  buckets: FilterTimeBucket[],
+  selectedStartMs: number | null,
+  selectedEndMs: number | null,
+): TimeFilterCurve | null {
   if (buckets.length === 0) {
     return null;
   }
@@ -3288,6 +3360,19 @@ function timeFilterCurve(buckets: FilterTimeBucket[]): TimeFilterCurve | null {
   }));
   const path = smoothPath(points);
   const baseline = height - padding.bottom;
+  const rangeStartMs = buckets[0].start_ms;
+  const rangeEndMs = buckets[buckets.length - 1].end_ms;
+  const span = Math.max(rangeEndMs - rangeStartMs, 1);
+  const selectedStart = selectedStartMs ?? rangeStartMs;
+  const selectedEnd = selectedEndMs ?? rangeEndMs;
+  const selectedStartX =
+    padding.left +
+    ((Math.min(selectedStart, selectedEnd) - rangeStartMs) / span) *
+      (width - padding.left - padding.right);
+  const selectedEndX =
+    padding.left +
+    ((Math.max(selectedStart, selectedEnd) - rangeStartMs) / span) *
+      (width - padding.left - padding.right);
   const areaPath =
     path && points.length > 0
       ? `${path} L ${points[points.length - 1].x} ${baseline} L ${points[0].x} ${baseline} Z`
@@ -3299,6 +3384,10 @@ function timeFilterCurve(buckets: FilterTimeBucket[]): TimeFilterCurve | null {
     areaPath,
     startLabel: formatShortDate(buckets[0].start_ms),
     endLabel: formatShortDate(buckets[buckets.length - 1].end_ms),
+    selectedStartX: Math.min(Math.max(selectedStartX, padding.left), width - padding.right),
+    selectedEndX: Math.min(Math.max(selectedEndX, padding.left), width - padding.right),
+    selectionTop: padding.top,
+    selectionBottom: baseline,
   };
 }
 

@@ -1107,13 +1107,69 @@
                   [attr.viewBox]="'0 0 ' + curve.width + ' ' + curve.height"
                   role="img"
                   aria-label="Event count over time"
+                  (pointerdown)="startTimeRangeSelection($event, curve)"
+                  (pointermove)="moveTimeRangeSelection($event, curve)"
+                  (pointerup)="endTimeRangeSelection($event, curve)"
+                  (pointercancel)="endTimeRangeSelection($event, curve)"
                 >
                   <path class="time-filter-area" [attr.d]="curve.areaPath"></path>
                   <path class="time-filter-line" [attr.d]="curve.path"></path>
+                  <rect
+                    class="time-filter-muted"
+                    fill="rgba(23, 34, 31, 0.22)"
+                    x="0"
+                    [attr.y]="curve.selectionTop"
+                    [attr.width]="curve.selectedStartX"
+                    [attr.height]="curve.selectionBottom - curve.selectionTop"
+                  ></rect>
+                  <rect
+                    class="time-filter-muted"
+                    fill="rgba(23, 34, 31, 0.22)"
+                    [attr.x]="curve.selectedEndX"
+                    [attr.y]="curve.selectionTop"
+                    [attr.width]="curve.width - curve.selectedEndX"
+                    [attr.height]="curve.selectionBottom - curve.selectionTop"
+                  ></rect>
+                  <rect
+                    class="time-filter-selection"
+                    fill="rgba(29, 79, 73, 0.08)"
+                    stroke="rgba(29, 79, 73, 0.28)"
+                    [attr.x]="curve.selectedStartX"
+                    [attr.y]="curve.selectionTop"
+                    [attr.width]="curve.selectedEndX - curve.selectedStartX"
+                    [attr.height]="curve.selectionBottom - curve.selectionTop"
+                  ></rect>
+                  <line
+                    class="time-filter-handle"
+                    stroke="#1d4f49"
+                    stroke-width="2"
+                    [attr.x1]="curve.selectedStartX"
+                    [attr.x2]="curve.selectedStartX"
+                    [attr.y1]="curve.selectionTop"
+                    [attr.y2]="curve.selectionBottom"
+                  ></line>
+                  <line
+                    class="time-filter-handle"
+                    stroke="#1d4f49"
+                    stroke-width="2"
+                    [attr.x1]="curve.selectedEndX"
+                    [attr.x2]="curve.selectedEndX"
+                    [attr.y1]="curve.selectionTop"
+                    [attr.y2]="curve.selectionBottom"
+                  ></line>
                   <text x="10" [attr.y]="curve.height - 8">{{ curve.startLabel }}</text>
                   <text [attr.x]="curve.width - 10" [attr.y]="curve.height - 8">
                     {{ curve.endLabel }}
                   </text>
+                  <rect
+                    class="time-filter-hit-area"
+                    fill="transparent"
+                    style="cursor: ew-resize"
+                    x="0"
+                    y="0"
+                    [attr.width]="curve.width"
+                    [attr.height]="curve.height"
+                  ></rect>
                 </svg>
               }
             </section>
@@ -1894,36 +1950,6 @@
               }
             </select>
           </label>
-          <label>
-            <span>State A</span>
-            <select
-              [value]="timePerspectiveFromState()"
-              (change)="onTimePerspectiveFromStateChange($event)"
-            >
-              @for (state of analysis.states; track state) {
-                <option [value]="state">{{ state }}</option>
-              }
-            </select>
-          </label>
-          <label>
-            <span>State B</span>
-            <select
-              [value]="timePerspectiveToState()"
-              (change)="onTimePerspectiveToStateChange($event)"
-            >
-              @for (state of analysis.states; track state) {
-                <option [value]="state">{{ state }}</option>
-              }
-            </select>
-          </label>
-          <label class="time-roundtrip-toggle">
-            <input
-              type="checkbox"
-              [checked]="timePerspectiveRoundtrip()"
-              (change)="onTimePerspectiveRoundtripChange($event)"
-            />
-            <span>A -> B -> A</span>
-          </label>
         </section>
 
         <section class="time-chart-panel">
@@ -1986,6 +2012,38 @@
               <span>{{ performanceModeLabel(analysis) }}</span>
             </div>
           </header>
+          <section class="performance-controls" aria-label="Performance spectrum controls">
+            <label>
+              <span>State A</span>
+              <select
+                [value]="timePerspectiveFromState()"
+                (change)="onTimePerspectiveFromStateChange($event)"
+              >
+                @for (state of analysis.states; track state) {
+                  <option [value]="state">{{ state }}</option>
+                }
+              </select>
+            </label>
+            <label>
+              <span>State B</span>
+              <select
+                [value]="timePerspectiveToState()"
+                (change)="onTimePerspectiveToStateChange($event)"
+              >
+                @for (state of analysis.states; track state) {
+                  <option [value]="state">{{ state }}</option>
+                }
+              </select>
+            </label>
+            <label class="time-roundtrip-toggle">
+              <input
+                type="checkbox"
+                [checked]="timePerspectiveRoundtrip()"
+                (change)="onTimePerspectiveRoundtripChange($event)"
+              />
+              <span>A -> B -> A</span>
+            </label>
+          </section>
           <div class="performance-summary">
             <article>
               <span>Samples</span>
