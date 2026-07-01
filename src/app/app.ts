@@ -1456,6 +1456,27 @@ export class App {
     this.loadCausalFeatureTable();
   }
 
+  protected downloadCausalFeatureTable(): void {
+    if (!this.documentHandle) {
+      return;
+    }
+
+    try {
+      this.ensureCausalObjectType();
+      if (!this.causalObjectType()) {
+        return;
+      }
+      const csv = this.documentHandle.causalFeatureTableCsv(this.causalFeatureTableRequestJson());
+      this.downloadNamed(
+        csv,
+        'text/csv',
+        `${exportBaseName(this.fileName())}-${safeFilePart(this.causalObjectType())}-causal-features.csv`,
+      );
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
   protected causalPreviewColumns(table: CausalFeatureTableResult): string[] {
     return table.feature_columns;
   }
@@ -1900,9 +1921,7 @@ export class App {
         return;
       }
       const table = JSON.parse(
-        this.documentHandle.causalFeatureTableJson(
-          JSON.stringify({ object_type: this.causalObjectType() }),
-        ),
+        this.documentHandle.causalFeatureTableJson(this.causalFeatureTableRequestJson()),
       ) as CausalFeatureTableResult;
       this.causalFeatureTable.set(table);
       this.causalNodes.set(
@@ -1939,6 +1958,10 @@ export class App {
     this.causalLatentDraft.set('');
     this.causalFit.set(null);
     this.causalMessage.set('');
+  }
+
+  private causalFeatureTableRequestJson(): string {
+    return JSON.stringify({ object_type: this.causalObjectType() });
   }
 
   private causalModelRequestJson(): string {

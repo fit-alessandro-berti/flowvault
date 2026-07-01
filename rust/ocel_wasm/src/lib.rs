@@ -1154,6 +1154,11 @@ impl CompactOcelLog {
             .map_err(|err| OcelError::new(format!("could not serialize causal features: {err}")))
     }
 
+    fn causal_feature_table_csv(&self, request: &CausalFeatureTableRequest) -> OcelResult<String> {
+        let table = self.state_feature_table(&request.object_type)?;
+        Ok(feature_table_to_csv(&table))
+    }
+
     fn state_correlations(&self) -> OcelResult<StateCorrelationResult> {
         let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
@@ -5259,6 +5264,18 @@ impl OcelDocument {
             })?;
         self.log
             .causal_feature_table_json(&request)
+            .map_err(JsValue::from)
+    }
+
+    /// Returns the object-level causal feature table as CSV.
+    #[wasm_bindgen(js_name = causalFeatureTableCsv)]
+    pub fn causal_feature_table_csv(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<CausalFeatureTableRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!("could not parse causal feature request: {err}"))
+            })?;
+        self.log
+            .causal_feature_table_csv(&request)
             .map_err(JsValue::from)
     }
 

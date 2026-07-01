@@ -772,6 +772,9 @@
                 {{ causalPreviewRows(table).length }} rows / {{ table.feature_count }} columns
               </span>
             </div>
+            <button type="button" class="ghost-button" (click)="downloadCausalFeatureTable()">
+              Download CSV
+            </button>
           </header>
           <div class="table-scroll">
             <table>

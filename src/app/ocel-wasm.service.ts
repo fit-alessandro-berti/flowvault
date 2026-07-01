@@ -29,6 +29,7 @@ export interface OcelDocumentHandle {
   stateFeatureTableCsv(requestJson: string): string;
   stateCorrelationsJson(): string;
   causalFeatureTableJson(requestJson: string): string;
+  causalFeatureTableCsv(requestJson: string): string;
   fitCausalModelJson(requestJson: string): string;
   directlyFollowsGraphJson(objectType: string): string;
   objectCentricDirectlyFollowsGraphJson(): string;
