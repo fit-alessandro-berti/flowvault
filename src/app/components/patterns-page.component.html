@@ -1,0 +1,53 @@
+@if (vm.patternAnalysis(); as patterns) {
+  <section class="patterns feature-panel" aria-label="State pattern analysis">
+    <header class="pattern-section-header">
+      <h2>State Patterns</h2>
+      <div>
+        <span>{{ patterns.intra.length }} intra-state</span>
+        <span>{{ patterns.inter.length }} inter-state</span>
+        <button
+          type="button"
+          class="ghost-button pattern-explorer-toggle"
+          [attr.aria-expanded]="vm.isPatternExplorerOpen()"
+          (click)="vm.togglePatternExplorer()"
+        >
+          @if (vm.isPatternExplorerOpen()) {
+            Hide table
+          } @else {
+            Explore all
+          }
+        </button>
+      </div>
+    </header>
+
+    <div class="pattern-tabs" role="tablist" aria-label="State pattern family">
+      <button
+        type="button"
+        class="pattern-tab-button"
+        role="tab"
+        [attr.aria-selected]="vm.activePatternTab() === 'intra'"
+        [class.is-selected]="vm.activePatternTab() === 'intra'"
+        (click)="vm.setPatternTab('intra')"
+      >
+        Intra-State <span>{{ patterns.intra.length }}</span>
+      </button>
+      <button
+        type="button"
+        class="pattern-tab-button"
+        role="tab"
+        [attr.aria-selected]="vm.activePatternTab() === 'inter'"
+        [class.is-selected]="vm.activePatternTab() === 'inter'"
+        (click)="vm.setPatternTab('inter')"
+      >
+        Inter-State <span>{{ patterns.inter.length }}</span>
+      </button>
+    </div>
+
+    <app-pattern-explorer [vm]="vm"></app-pattern-explorer>
+    @if (vm.activePatternTab() === 'intra') {
+      <app-intra-pattern-panel [vm]="vm"></app-intra-pattern-panel>
+    } @else {
+      <app-inter-pattern-panel [vm]="vm"></app-inter-pattern-panel>
+    }
+  </section>
+}

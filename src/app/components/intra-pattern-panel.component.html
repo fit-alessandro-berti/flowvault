@@ -1,0 +1,199 @@
+<section class="pattern-panel" aria-label="Intra-state patterns">
+  <header class="pattern-panel-header">
+    <h2>Intra-State</h2>
+    <div class="view-toggle" aria-label="Intra-state visualization">
+      <button
+        type="button"
+        class="mode-button"
+        [class.is-selected]="vm.intraVisualization() === 'text'"
+        (click)="vm.setIntraVisualization('text')"
+      >
+        Text
+      </button>
+      <button
+        type="button"
+        class="mode-button"
+        [class.is-selected]="vm.intraVisualization() === 'graph'"
+        (click)="vm.setIntraVisualization('graph')"
+      >
+        Graph
+      </button>
+    </div>
+  </header>
+
+  @if (vm.intraPatterns().length > 0) {
+    <label class="pattern-control">
+      <span>Pattern</span>
+      <select
+        class="pattern-select"
+        [value]="vm.selectedIntraPattern()?.id ?? ''"
+        (change)="vm.selectIntraPattern($event)"
+      >
+        @for (pattern of vm.intraPatterns(); track pattern.id) {
+          <option [value]="pattern.id">{{ vm.patternOptionLabel(pattern) }}</option>
+        }
+      </select>
+    </label>
+
+    @if (vm.selectedIntraPattern(); as pattern) {
+      <div class="graph-toolbar">
+        <button type="button" class="ghost-button" (click)="vm.applyPatternFilter(pattern)">
+          Filter by this pattern
+        </button>
+      </div>
+      @if (vm.intraVisualization() === 'text') {
+        <section class="pattern-text-view" aria-label="Selected intra-state pattern">
+          <dl class="pattern-stats">
+            <div>
+              <dt>Support</dt>
+              <dd>{{ pattern.support }}</dd>
+            </div>
+            <div>
+              <dt>Mass</dt>
+              <dd>{{ pattern.mass }}</dd>
+            </div>
+            <div>
+              <dt>Leading type</dt>
+              <dd>{{ pattern.leading_object_type }}</dd>
+            </div>
+            <div>
+              <dt>State</dt>
+              <dd>{{ pattern.state }}</dd>
+            </div>
+          </dl>
+
+          <h3>Control Sequence</h3>
+          <ol class="pattern-sequence">
+            @for (step of pattern.sequence; track $index) {
+              <li>{{ step }}</li>
+            }
+          </ol>
+
+          <div class="edge-columns">
+            <section class="edge-list">
+              <h3>Directly Follows</h3>
+              @for (edge of vm.topEdges(pattern.df_edges); track edge.source + edge.target) {
+                <p>
+                  {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                </p>
+              }
+              @if (vm.hiddenEdgeCount(pattern.df_edges) > 0) {
+                <small>+{{ vm.hiddenEdgeCount(pattern.df_edges) }} more</small>
+              }
+            </section>
+            <section class="edge-list">
+              <h3>Event to Object Type</h3>
+              @for (edge of vm.topEdges(pattern.eo_edges); track edge.source + edge.target) {
+                <p>
+                  {{ edge.source }} -> {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                </p>
+              }
+              @if (pattern.eo_edges.length === 0) {
+                <p class="muted">None</p>
+              }
+              @if (vm.hiddenEdgeCount(pattern.eo_edges) > 0) {
+                <small>+{{ vm.hiddenEdgeCount(pattern.eo_edges) }} more</small>
+              }
+            </section>
+            <section class="edge-list">
+              <h3>Object Type Context</h3>
+              @for (edge of vm.topEdges(pattern.oo_edges); track edge.source + edge.target) {
+                <p>
+                  {{ edge.source }} - {{ edge.target }} <strong>{{ edge.weight }}</strong>
+                </p>
+              }
+              @if (pattern.oo_edges.length === 0) {
+                <p class="muted">None</p>
+              }
+              @if (vm.hiddenEdgeCount(pattern.oo_edges) > 0) {
+                <small>+{{ vm.hiddenEdgeCount(pattern.oo_edges) }} more</small>
+              }
+            </section>
+          </div>
+        </section>
+      } @else {
+        @if (vm.patternGraph(pattern); as graph) {
+          <div class="graph-toolbar">
+            <button
+              type="button"
+              class="ghost-button graph-open-button"
+              (click)="vm.openFullScreenGraph(pattern)"
+            >
+              Open full screen
+            </button>
+          </div>
+          <div class="graph-scroll" aria-label="Selected intra-state pattern graph">
+            <svg
+              class="pattern-graph"
+              [attr.viewBox]="'0 0 ' + graph.width + ' ' + graph.height"
+              [attr.width]="graph.width"
+              [attr.height]="graph.height"
+              role="img"
+            >
+              <defs>
+                <marker
+                  [attr.id]="pattern.id + '-arrowhead'"
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="4"
+                  markerHeight="4"
+                  orient="auto-start-reverse"
+                >
+                  <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                </marker>
+              </defs>
+              @for (edge of graph.edges; track edge.id) {
+                <line
+                  [attr.class]="'graph-edge graph-edge-' + edge.kind"
+                  [attr.x1]="edge.x1"
+                  [attr.y1]="edge.y1"
+                  [attr.x2]="edge.x2"
+                  [attr.y2]="edge.y2"
+                  [attr.marker-end]="
+                    edge.kind === 'oo' ? null : 'url(#' + pattern.id + '-arrowhead)'
+                  "
+                ></line>
+                <text
+                  class="graph-edge-label"
+                  [attr.x]="(edge.x1 + edge.x2) / 2"
+                  [attr.y]="(edge.y1 + edge.y2) / 2 - 5"
+                >
+                  {{ edge.label }}
+                </text>
+              }
+              @for (node of graph.nodes; track node.id) {
+                <g [attr.class]="'graph-node graph-node-' + node.kind">
+                  <title>{{ node.title }}</title>
+                  <rect
+                    [attr.x]="node.x"
+                    [attr.y]="node.y"
+                    [attr.width]="graph.nodeWidth"
+                    [attr.height]="graph.nodeHeight"
+                  ></rect>
+                  <text
+                    [attr.x]="node.x + graph.nodeWidth / 2"
+                    [attr.y]="
+                      node.y + graph.nodeHeight / 2 - (node.lines.length - 1) * 7 + 4
+                    "
+                  >
+                    @for (line of node.lines; track $index) {
+                      <tspan
+                        [attr.x]="node.x + graph.nodeWidth / 2"
+                        [attr.dy]="$first ? 0 : 14"
+                      >
+                        {{ line }}
+                      </tspan>
+                    }
+                  </text>
+                </g>
+              }
+            </svg>
+          </div>
+        }
+      }
+    }
+  } @else {
+    <p class="empty-patterns">No intra-state patterns found.</p>
+  }
+</section>

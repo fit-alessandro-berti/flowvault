@@ -1,0 +1,161 @@
+import type { StateDetectionCellDetail, StateDetectionResult } from '../ocel-wasm.service';
+import { traditionalProcessGraph } from './core-fixtures';
+
+export const stateDetectionAnalysis: StateDetectionResult = {
+  object_type: 'Order',
+  window_size: 2,
+  som_width: 2,
+  som_height: 2,
+  color_attribute: 'attribute::priority',
+  color_attributes: [
+    { id: '__window_count', label: 'Assigned windows', kind: 'count' },
+    { id: 'attribute::priority', label: 'priority', kind: 'categorical' },
+  ],
+  object_count: 2,
+  feature_count: 4,
+  window_count: 3,
+  feature_columns: [
+    'activity.Create Order',
+    'activity.Close Order',
+    'related_objects.Item',
+    'attribute.priority=High',
+  ],
+  table_preview: [
+    {
+      object_id: 'O1',
+      values: [1, 1, 2, 1],
+    },
+    {
+      object_id: 'O2',
+      values: [1, 0, 1, 0],
+    },
+  ],
+  pca: {
+    pc1_variance: 1.4,
+    pc2_variance: 0.3,
+    pc1_explained_ratio: 0.7,
+    pc2_explained_ratio: 0.15,
+  },
+  som: {
+    cells: [
+      {
+        x: 0,
+        y: 0,
+        label: 'S1-1',
+        count: 2,
+        color_value: 1,
+        color_label: 'priority: High (2)',
+        color_kind: 'categorical',
+        avg_pc1: -0.4,
+        avg_pc2: 0.1,
+        dominant_activity: 'Create Order',
+      },
+      {
+        x: 1,
+        y: 0,
+        label: 'S2-1',
+        count: 0,
+        color_value: 0,
+        color_label: 'priority: n/a',
+        color_kind: 'categorical',
+        avg_pc1: 0.2,
+        avg_pc2: 0.2,
+      },
+      {
+        x: 0,
+        y: 1,
+        label: 'S1-2',
+        count: 1,
+        color_value: 0.5,
+        color_label: 'priority: Low (1)',
+        color_kind: 'categorical',
+        avg_pc1: 0.8,
+        avg_pc2: -0.1,
+        dominant_activity: 'Close Order',
+      },
+      {
+        x: 1,
+        y: 1,
+        label: 'S2-2',
+        count: 0,
+        color_value: 0,
+        color_label: 'priority: n/a',
+        color_kind: 'categorical',
+        avg_pc1: 0.6,
+        avg_pc2: 0.5,
+      },
+    ],
+    transitions: [
+      {
+        source_x: 0,
+        source_y: 0,
+        target_x: 0,
+        target_y: 1,
+        count: 1,
+        distance: 1,
+        nearby: true,
+      },
+    ],
+  },
+  windows: [
+    {
+      object_id: 'O1',
+      start_event: 'e1',
+      end_event: 'e2',
+      pc1: -0.4,
+      pc2: 0.1,
+      cell_x: 0,
+      cell_y: 0,
+    },
+    {
+      object_id: 'O1',
+      start_event: 'e2',
+      end_event: 'e3',
+      pc1: 0.8,
+      pc2: -0.1,
+      cell_x: 0,
+      cell_y: 1,
+    },
+  ],
+};
+
+export const stateDetectionCellDetail: StateDetectionCellDetail = {
+  cell: stateDetectionAnalysis.som.cells[0],
+  dfg: traditionalProcessGraph,
+  entering_dfg: {
+    ...traditionalProcessGraph,
+    title: 'Entering Windows: S1-1',
+    subtitle: 'Directly-follows graph over windows entering the selected SOM cell',
+  },
+  exiting_dfg: {
+    ...traditionalProcessGraph,
+    title: 'Exiting Windows: S1-1',
+    subtitle: 'Directly-follows graph over windows exiting the selected SOM cell',
+  },
+  entering_window_count: 1,
+  exiting_window_count: 1,
+  entering_windows: [
+    {
+      object_id: 'O1',
+      start_event: 'e1',
+      end_event: 'e2',
+      source_cell: 'S1-2',
+      target_cell: 'S1-1',
+      pc1: -0.4,
+      pc2: 0.1,
+      activities: ['Create Order', 'Close Order'],
+    },
+  ],
+  exiting_windows: [
+    {
+      object_id: 'O1',
+      start_event: 'e2',
+      end_event: 'e3',
+      source_cell: 'S1-1',
+      target_cell: 'S1-2',
+      pc1: 0.8,
+      pc2: -0.1,
+      activities: ['Close Order', 'Archive Order'],
+    },
+  ],
+};

@@ -1,0 +1,155 @@
+@if (vm.causalFeatureTable(); as table) {
+<section class="causal-workbench">
+  <aside class="causal-feature-palette" aria-label="Causal feature palette">
+    <header>
+      <h2>Features</h2>
+      <span>{{ table.feature_count }} columns / {{ table.object_count }} objects</span>
+    </header>
+    <div class="causal-feature-list">
+      @for (feature of table.feature_columns; track feature) {
+        <article class="causal-feature-row">
+          <button
+            type="button"
+            class="causal-feature-token"
+            draggable="true"
+            (dragstart)="vm.onCausalFeatureDragStart($event, feature)"
+          >
+            {{ feature }}
+          </button>
+          <div>
+            <button
+              type="button"
+              class="mini-button"
+              (click)="vm.addCausalFeatureNode('observable', feature)"
+            >
+              Observable
+            </button>
+            <button
+              type="button"
+              class="mini-button"
+              (click)="vm.addCausalFeatureNode('outcome', feature)"
+            >
+              Outcome
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  </aside>
+
+  <section class="causal-editor" aria-label="Causal model editor">
+    <section
+      class="causal-node-column causal-drop-zone"
+      (dragover)="vm.allowCausalDrop($event)"
+      (drop)="vm.dropCausalFeature($event, 'observable')"
+    >
+      <header>
+        <h2>Observables</h2>
+        <span>{{ vm.causalObservableNodes().length }}</span>
+      </header>
+      <div class="causal-node-list">
+        @for (node of vm.causalObservableNodes(); track node.id) {
+          <article class="causal-node-card">
+            <input
+              [value]="node.label"
+              (input)="vm.onCausalNodeLabelChange(node.id, $event)"
+            />
+            <span>{{ node.feature }}</span>
+            <div class="causal-node-controls">
+              <select
+                [value]="node.role"
+                (change)="vm.onCausalNodeRoleChange(node.id, $event)"
+              >
+                <option value="observable">Observable</option>
+                <option value="outcome">Outcome</option>
+              </select>
+              <select
+                [value]="node.operation"
+                (change)="vm.onCausalOperationChange(node.id, $event)"
+              >
+                @for (operation of vm.causalOperations; track operation.id) {
+                  <option [value]="operation.id">{{ operation.label }}</option>
+                }
+              </select>
+              <button type="button" class="mini-button" (click)="vm.removeCausalNode(node.id)">
+                Remove
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="causal-node-column">
+      <header>
+        <h2>Latents</h2>
+        <span>{{ vm.causalLatentNodes().length }}</span>
+      </header>
+      <div class="causal-node-list">
+        <div class="causal-latent-add">
+          <input
+            placeholder="Latent name"
+            [value]="vm.causalLatentDraft()"
+            (input)="vm.onCausalLatentDraftChange($event)"
+          />
+          <button type="button" class="mini-button" (click)="vm.addCausalLatent()">Add</button>
+        </div>
+        @for (node of vm.causalLatentNodes(); track node.id) {
+          <article class="causal-node-card is-latent">
+            <input
+              [value]="node.label"
+              (input)="vm.onCausalNodeLabelChange(node.id, $event)"
+            />
+            <span>Latent variable</span>
+            <button type="button" class="mini-button" (click)="vm.removeCausalNode(node.id)">
+              Remove
+            </button>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section
+      class="causal-node-column causal-drop-zone"
+      (dragover)="vm.allowCausalDrop($event)"
+      (drop)="vm.dropCausalFeature($event, 'outcome')"
+    >
+      <header>
+        <h2>Outcomes</h2>
+        <span>{{ vm.causalOutcomeNodes().length }}</span>
+      </header>
+      <div class="causal-node-list">
+        @for (node of vm.causalOutcomeNodes(); track node.id) {
+          <article class="causal-node-card is-outcome">
+            <input
+              [value]="node.label"
+              (input)="vm.onCausalNodeLabelChange(node.id, $event)"
+            />
+            <span>{{ node.feature }}</span>
+            <div class="causal-node-controls">
+              <select
+                [value]="node.role"
+                (change)="vm.onCausalNodeRoleChange(node.id, $event)"
+              >
+                <option value="observable">Observable</option>
+                <option value="outcome">Outcome</option>
+              </select>
+              <select
+                [value]="node.operation"
+                (change)="vm.onCausalOperationChange(node.id, $event)"
+              >
+                @for (operation of vm.causalOperations; track operation.id) {
+                  <option [value]="operation.id">{{ operation.label }}</option>
+                }
+              </select>
+              <button type="button" class="mini-button" (click)="vm.removeCausalNode(node.id)">
+                Remove
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  </section>
+</section>
+}

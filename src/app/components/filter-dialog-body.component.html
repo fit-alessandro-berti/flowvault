@@ -1,0 +1,228 @@
+@if (vm.filterDialog(); as dialog) {
+<div class="filter-modal-body">
+  @if (dialog === 'activities') {
+    <div class="filter-actions">
+      <button type="button" class="ghost-button" (click)="vm.selectAllDraftEventTypes()">
+        All
+      </button>
+      <button type="button" class="ghost-button" (click)="vm.clearDraftEventTypes()">
+        None
+      </button>
+    </div>
+    <div class="filter-options">
+      @for (eventType of vm.filterOptions().event_types; track eventType) {
+        <label>
+          <input
+            type="checkbox"
+            [checked]="vm.draftEventTypes().includes(eventType)"
+            (change)="vm.toggleDraftEventType(eventType, $event)"
+          />
+          <span>{{ eventType }}</span>
+        </label>
+      }
+    </div>
+  } @else if (dialog === 'objectTypes') {
+    <div class="filter-actions">
+      <button type="button" class="ghost-button" (click)="vm.selectAllDraftObjectTypes()">
+        All
+      </button>
+      <button type="button" class="ghost-button" (click)="vm.clearDraftObjectTypes()">
+        None
+      </button>
+    </div>
+    <div class="filter-options">
+      @for (objectType of vm.filterOptions().object_types; track objectType) {
+        <label>
+          <input
+            type="checkbox"
+            [checked]="vm.draftObjectTypes().includes(objectType)"
+            (change)="vm.toggleDraftObjectType(objectType, $event)"
+          />
+          <span>{{ objectType }}</span>
+        </label>
+      }
+    </div>
+  } @else if (dialog === 'dfNodes') {
+    <div class="filter-actions">
+      <button type="button" class="ghost-button" (click)="vm.selectAllDraftDfNodes()">
+        All
+      </button>
+      <button type="button" class="ghost-button" (click)="vm.clearDraftDfNodes()">None</button>
+    </div>
+    <div class="filter-options">
+      @for (eventType of vm.filterOptions().event_types; track eventType) {
+        <label>
+          <input
+            type="checkbox"
+            [checked]="vm.draftDfNodes().includes(eventType)"
+            (change)="vm.toggleDraftDfNode(eventType, $event)"
+          />
+          <span>{{ eventType }}</span>
+        </label>
+      }
+    </div>
+  } @else if (dialog === 'dfEdges') {
+    <div class="filter-actions">
+      <button type="button" class="ghost-button" (click)="vm.selectAllDraftDfEdges()">
+        All
+      </button>
+      <button type="button" class="ghost-button" (click)="vm.clearDraftDfEdges()">None</button>
+    </div>
+    <div class="filter-options">
+      @for (edge of vm.dfEdgeOptions(); track edge.label) {
+        <label>
+          <input
+            type="checkbox"
+            [checked]="vm.isDraftDfEdgeSelected(edge)"
+            (change)="vm.toggleDraftDfEdge(edge, $event)"
+          />
+          <span>{{ edge.label }}</span>
+        </label>
+      }
+      @if (vm.dfEdgeOptions().length === 0) {
+        <p class="muted">Run or open the OC-DFG to populate edge options.</p>
+      }
+    </div>
+  } @else if (dialog === 'timeframe') {
+    <section class="time-filter-panel" aria-label="Timeframe filter">
+      <div class="time-filter-inputs">
+        <label>
+          <span>Start</span>
+          <input
+            type="datetime-local"
+            [value]="vm.draftTimeStart()"
+            (input)="vm.onDraftTimeStartChange($event)"
+          />
+        </label>
+        <label>
+          <span>End</span>
+          <input
+            type="datetime-local"
+            [value]="vm.draftTimeEnd()"
+            (input)="vm.onDraftTimeEndChange($event)"
+          />
+        </label>
+        <button type="button" class="ghost-button" (click)="vm.resetDraftTimeframe()">
+          Full range
+        </button>
+      </div>
+      @if (vm.timeFilterCurve(); as curve) {
+        <svg
+          class="time-filter-chart"
+          [attr.viewBox]="'0 0 ' + curve.width + ' ' + curve.height"
+          role="img"
+          aria-label="Event count over time"
+          (pointerdown)="vm.startTimeRangeSelection($event, curve)"
+          (pointermove)="vm.moveTimeRangeSelection($event, curve)"
+          (pointerup)="vm.endTimeRangeSelection($event, curve)"
+          (pointercancel)="vm.endTimeRangeSelection($event, curve)"
+        >
+          <path class="time-filter-area" [attr.d]="curve.areaPath"></path>
+          <path class="time-filter-line" [attr.d]="curve.path"></path>
+          <rect
+            class="time-filter-muted"
+            fill="rgba(23, 34, 31, 0.22)"
+            x="0"
+            [attr.y]="curve.selectionTop"
+            [attr.width]="curve.selectedStartX"
+            [attr.height]="curve.selectionBottom - curve.selectionTop"
+          ></rect>
+          <rect
+            class="time-filter-muted"
+            fill="rgba(23, 34, 31, 0.22)"
+            [attr.x]="curve.selectedEndX"
+            [attr.y]="curve.selectionTop"
+            [attr.width]="curve.width - curve.selectedEndX"
+            [attr.height]="curve.selectionBottom - curve.selectionTop"
+          ></rect>
+          <rect
+            class="time-filter-selection"
+            fill="rgba(29, 79, 73, 0.08)"
+            stroke="rgba(29, 79, 73, 0.28)"
+            [attr.x]="curve.selectedStartX"
+            [attr.y]="curve.selectionTop"
+            [attr.width]="curve.selectedEndX - curve.selectedStartX"
+            [attr.height]="curve.selectionBottom - curve.selectionTop"
+          ></rect>
+          <line
+            class="time-filter-handle"
+            stroke="#1d4f49"
+            stroke-width="2"
+            [attr.x1]="curve.selectedStartX"
+            [attr.x2]="curve.selectedStartX"
+            [attr.y1]="curve.selectionTop"
+            [attr.y2]="curve.selectionBottom"
+          ></line>
+          <line
+            class="time-filter-handle"
+            stroke="#1d4f49"
+            stroke-width="2"
+            [attr.x1]="curve.selectedEndX"
+            [attr.x2]="curve.selectedEndX"
+            [attr.y1]="curve.selectionTop"
+            [attr.y2]="curve.selectionBottom"
+          ></line>
+          <text x="10" [attr.y]="curve.height - 8">{{ curve.startLabel }}</text>
+          <text [attr.x]="curve.width - 10" [attr.y]="curve.height - 8">
+            {{ curve.endLabel }}
+          </text>
+          <rect
+            class="time-filter-hit-area"
+            fill="transparent"
+            style="cursor: ew-resize"
+            x="0"
+            y="0"
+            [attr.width]="curve.width"
+            [attr.height]="curve.height"
+          ></rect>
+        </svg>
+      }
+    </section>
+  } @else {
+    <label class="filter-select">
+      <span>Attribute</span>
+      <select
+        [value]="vm.draftTextAttributeKey()"
+        (change)="vm.onDraftTextAttributeChange($event)"
+      >
+        @for (
+          attribute of vm.filterOptions().text_attributes;
+          track attribute.scope + attribute.name
+        ) {
+          <option [value]="attribute.scope + '::' + attribute.name">
+            {{ attribute.scope }}.{{ attribute.name }}
+          </option>
+        }
+      </select>
+    </label>
+    <div class="filter-actions">
+      <button
+        type="button"
+        class="ghost-button"
+        (click)="vm.selectAllDraftTextAttributeValues()"
+      >
+        All
+      </button>
+      <button type="button" class="ghost-button" (click)="vm.clearDraftTextAttributeValues()">
+        None
+      </button>
+    </div>
+    <div class="filter-options">
+      @if (vm.draftTextAttributeOption(); as attribute) {
+        @for (value of attribute.values; track value) {
+          <label>
+            <input
+              type="checkbox"
+              [checked]="vm.draftTextAttributeValues().includes(value)"
+              (change)="vm.toggleDraftTextAttributeValue(value, $event)"
+            />
+            <span>{{ value }}</span>
+          </label>
+        }
+      } @else {
+        <p class="muted">No textual attributes are available yet.</p>
+      }
+    </div>
+  }
+</div>
+ }

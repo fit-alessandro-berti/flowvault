@@ -1,0 +1,55 @@
+
+@media (max-width: 430px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    min-height: 96px;
+  }
+
+  .sample-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .state-detection-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .performance-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .som-cell {
+    min-height: 74px;
+  }
+
+  .transition-list p {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .pattern-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .pattern-explorer {
+    padding: 8px;
+  }
+
+  .pattern-explorer tbody th {
+    min-width: 150px;
+    max-width: 170px;
+    padding: 12px 9px;
+  }
+
+  .pattern-explorer td {
+    min-width: 460px;
+    padding: 8px;
+  }
+
+  .pattern-table-graph-scroll {
+    max-width: calc(100vw - 210px);
+    min-width: 320px;
+  }
+}

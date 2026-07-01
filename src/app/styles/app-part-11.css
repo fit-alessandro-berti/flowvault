@@ -1,0 +1,211 @@
+
+.pattern-explorer thead th:first-child {
+  z-index: 3;
+}
+
+.pattern-explorer tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  min-width: 210px;
+  max-width: 260px;
+  gap: 7px;
+  background: #ffffff;
+  padding: 14px 12px;
+  text-align: left;
+}
+
+.pattern-explorer tbody th strong {
+  color: #13201d;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.pattern-explorer tbody th span,
+.pattern-explorer tbody th em,
+.pattern-explorer tbody th small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pattern-explorer tbody th span {
+  color: #1d4f49;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.pattern-explorer tbody th em {
+  color: #263632;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.pattern-explorer tbody th small {
+  color: #6a7975;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.pattern-explorer td {
+  min-width: 720px;
+  padding: 10px 12px;
+}
+
+.pattern-table-graph-scroll {
+  max-width: min(940px, calc(97vw - 560px));
+  min-width: 560px;
+  overflow: auto;
+  border: 1px solid #e1e8e6;
+  border-radius: 8px;
+  background: #fbfdfc;
+}
+
+.pattern-graph-compact {
+  min-width: 620px;
+}
+
+.pattern-graph-compact .graph-edge-label {
+  font-size: 10px;
+}
+
+.pattern-graph-compact .graph-node text {
+  font-size: 10px;
+}
+
+.pattern-panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+}
+
+.view-toggle {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #f4f8f6;
+}
+
+.mode-button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #36534d;
+  padding: 0 12px;
+  font-size: 0.88rem;
+}
+
+.mode-button.is-selected {
+  background: #1d4f49;
+  color: #ffffff;
+}
+
+.pattern-control {
+  display: grid;
+  gap: 7px;
+}
+
+.pattern-select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  background: #fbfdfc;
+  color: #17221f;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.pattern-select:focus {
+  outline: 2px solid #2f6f68;
+  outline-offset: 2px;
+}
+
+.pattern-text-view {
+  display: grid;
+  gap: 14px;
+}
+
+.pattern-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #d7dfdd;
+}
+
+.pattern-stats div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  background: #fbfdfc;
+  padding: 12px;
+}
+
+.pattern-stats dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.pattern-sequence {
+  display: grid;
+  gap: 6px;
+  max-height: 220px;
+  margin: 0;
+  overflow: auto;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  padding: 10px 10px 10px 34px;
+  background: #f9fbfa;
+}
+
+.edge-columns {
+  display: grid;
+  gap: 12px;
+}
+
+.edge-list {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border-top: 1px solid #d7dfdd;
+  padding-top: 12px;
+}
+
+.edge-list p {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  margin: 0;
+  color: #263632;
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.edge-list small,
+.muted,
+.empty-patterns {
+  color: #6a7975;
+  font-weight: 700;
+}
+
+.empty-patterns {
+  margin: 0;
+}
+
+.graph-scroll {
+  overflow: auto;
+  border: 1px solid #d7dfdd;
+  border-radius: 8px;
+  background: #fbfdfc;
+}

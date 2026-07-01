@@ -1,0 +1,45 @@
+<section class="upload-page" aria-label="Upload object-centric event log">
+  <label
+    class="dropzone"
+    [class.is-dragging]="vm.isDragging()"
+    [class.is-loading]="vm.isLoading()"
+    (dragover)="vm.onDragOver($event)"
+    (dragleave)="vm.onDragLeave($event)"
+    (drop)="vm.onDrop($event)"
+  >
+    <input
+      type="file"
+      accept=".json,.jsonocel,.xml,.xmlocel,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,application/gzip,application/x-gzip"
+      (change)="vm.onFileSelected($event)"
+    />
+    <span class="drop-mark" aria-hidden="true"></span>
+    <span class="drop-title">Drop an OCEL 2.0 JSON/XML file</span>
+    <span class="drop-subtitle">
+      @if (vm.fileName()) {
+        {{ vm.fileName() }}
+      } @else {
+        Select a file
+      }
+    </span>
+  </label>
+
+  <section class="sample-imports" aria-label="Bundled OCEL samples">
+    <header>
+      <h1>Or start with a sample</h1>
+      <p>These bundled logs are gzip-compressed OCEL 2.0 files.</p>
+    </header>
+    <div class="sample-grid">
+      @for (sample of vm.sampleLogs; track sample.fileName) {
+        <button
+          type="button"
+          class="sample-button"
+          (click)="vm.importSampleLog(sample)"
+          [disabled]="vm.isLoading()"
+        >
+          <span>{{ sample.label }}</span>
+          <small>{{ sample.detail }}</small>
+        </button>
+      }
+    </div>
+  </section>
+</section>

@@ -1,0 +1,213 @@
+
+.graph-modal {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+}
+
+.pattern-graph {
+  display: block;
+  min-width: 100%;
+}
+
+.graph-edge {
+  stroke: #31544e;
+  stroke-width: 2;
+}
+
+.graph-edge-eo {
+  stroke: #4678a0;
+  stroke-dasharray: 7 5;
+}
+
+.graph-edge-oo {
+  stroke: #a36a25;
+  stroke-dasharray: 4 5;
+}
+
+.graph-edge-label {
+  fill: #263632;
+  text-anchor: middle;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.graph-node rect {
+  stroke: #9cafaa;
+  stroke-width: 1;
+  rx: 8;
+}
+
+.graph-node-control rect {
+  fill: #e9f5f1;
+}
+
+.graph-node-change rect {
+  fill: #fff0da;
+  stroke: #b45f1a;
+  stroke-width: 2;
+}
+
+.graph-node-change text {
+  fill: #7a3710;
+}
+
+.graph-node-object rect {
+  fill: #fff6e8;
+}
+
+.graph-node text {
+  fill: #17221f;
+  text-anchor: middle;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 780px) {
+  .app-shell {
+    width: min(100vw - 24px, 680px);
+    padding: 20px 0;
+  }
+
+  .app-topbar {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 10px 12px;
+  }
+
+  .toolbar-left,
+  .toolbar-actions {
+    justify-content: space-between;
+  }
+
+  .toolbar-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toolbar-button,
+  .toolbar-popover-anchor,
+  .toolbar-popover-anchor > button {
+    width: 100%;
+  }
+
+  .app-shell.has-document {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-sidebar,
+  .feature-panel,
+  .app-shell.has-document > .message,
+  .details {
+    grid-column: 1;
+  }
+
+  .feature-sidebar {
+    position: static;
+    grid-row: auto;
+    grid-template-columns: 1fr;
+  }
+
+  button {
+    flex: 1 1 150px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sample-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .state-detection-controls,
+  .state-detection-summary,
+  .correlation-summary,
+  .transition-summary,
+  .time-controls,
+  .performance-controls,
+  .performance-summary,
+  .transition-grid,
+  .lifecycle-layout,
+  .state-detection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lifecycle-search-panel {
+    position: static;
+  }
+
+  .time-filter-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .causal-page {
+    --causal-column-height: 460px;
+    --causal-section-scroll-height: 460px;
+  }
+
+  .causal-workbench,
+  .causal-editor,
+  .causal-edge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .state-detection-controls {
+    align-items: stretch;
+  }
+
+  .som-panel,
+  .som-transitions {
+    min-width: 0;
+  }
+
+  .state-modal-body {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  .preset-list {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(170px, 1fr);
+    border-right: 0;
+    border-bottom: 1px solid #d7dfdd;
+  }
+
+  .state-modal textarea {
+    min-height: 320px;
+  }
+
+  .pattern-section-header,
+  .pattern-panel-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pattern-section-header div,
+  .view-toggle {
+    justify-content: stretch;
+  }
+
+  .pattern-section-header span,
+  .pattern-explorer-toggle {
+    flex: 1 1 140px;
+  }
+
+  .pattern-explorer tbody th {
+    min-width: 180px;
+    max-width: 220px;
+  }
+
+  .pattern-explorer td {
+    min-width: 560px;
+  }
+
+  .pattern-table-graph-scroll {
+    max-width: calc(100vw - 270px);
+    min-width: 420px;
+  }
+
+  .mode-button {
+    flex: 1 1 50%;
+  }
+}

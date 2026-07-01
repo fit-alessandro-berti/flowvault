@@ -1,0 +1,185 @@
+<section class="state-detection-page feature-panel" aria-label="State detection">
+  <header class="feature-header">
+    <h1>State Detection</h1>
+    <p>{{ vm.fileName() }}</p>
+  </header>
+
+  <section class="state-detection-controls" aria-label="State detection controls">
+    <label>
+      <span>Object type</span>
+      <select
+        [value]="vm.stateDetectionObjectType()"
+        (change)="vm.onStateDetectionObjectTypeChange($event)"
+      >
+        @for (objectType of vm.selectedObjectTypes(); track objectType) {
+          <option [value]="objectType">{{ objectType }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      <span>Window</span>
+      <input
+        type="number"
+        min="1"
+        max="30"
+        [value]="vm.stateDetectionWindowSize()"
+        (input)="vm.onStateDetectionWindowSizeChange($event)"
+      />
+    </label>
+    <label>
+      <span>SOM width</span>
+      <input
+        type="number"
+        min="2"
+        max="12"
+        [value]="vm.stateDetectionSomWidth()"
+        (input)="vm.onStateDetectionSomWidthChange($event)"
+      />
+    </label>
+    <label>
+      <span>SOM height</span>
+      <input
+        type="number"
+        min="2"
+        max="12"
+        [value]="vm.stateDetectionSomHeight()"
+        (input)="vm.onStateDetectionSomHeightChange($event)"
+      />
+    </label>
+    <label>
+      <span>Cell color</span>
+      <select
+        [value]="vm.stateDetectionColorAttribute()"
+        (change)="vm.onStateDetectionColorAttributeChange($event)"
+      >
+        @for (option of vm.stateDetectionColorOptions(); track option.id) {
+          <option [value]="option.id">{{ option.label }} ({{ option.kind }})</option>
+        }
+      </select>
+    </label>
+    <button type="button" (click)="vm.runStateDetection()">Run</button>
+    <button
+      type="button"
+      class="ghost-button"
+      [disabled]="!vm.stateDetectionAnalysis()"
+      (click)="vm.applyStateDetection()"
+    >
+      Apply
+    </button>
+  </section>
+
+  @if (vm.stateDetectionAnalysis(); as analysis) {
+    <section class="state-detection-vm.summary" aria-label="State detection vm.summary">
+      <article>
+        <span>Objects</span>
+        <strong>{{ analysis.object_count }}</strong>
+      </article>
+      <article>
+        <span>Features</span>
+        <strong>{{ analysis.feature_count }}</strong>
+      </article>
+      <article>
+        <span>Windows</span>
+        <strong>{{ analysis.window_count }}</strong>
+      </article>
+      <article>
+        <span>PCA variance</span>
+        <strong>{{
+          vm.percent(analysis.pca.pc1_explained_ratio + analysis.pca.pc2_explained_ratio)
+        }}</strong>
+      </article>
+    </section>
+
+    <section class="state-detection-grid">
+      <article class="feature-table-preview">
+        <header>
+          <div>
+            <h2>Feature Table</h2>
+            <span>
+              {{ vm.previewRows(analysis).length }} rows
+              @if (vm.hiddenFeatureColumnCount(analysis) > 0) {
+                / +{{ vm.hiddenFeatureColumnCount(analysis) }} columns
+              }
+            </span>
+          </div>
+          <button type="button" class="ghost-button" (click)="vm.downloadStateFeatureTable()">
+            Download CSV
+          </button>
+        </header>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Object</th>
+                @for (column of vm.previewColumns(analysis); track column) {
+                  <th>{{ column }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of vm.previewRows(analysis); track row.object_id) {
+                <tr>
+                  <th>{{ row.object_id }}</th>
+                  @for (value of vm.previewValues(row); track $index) {
+                    <td>{{ value }}</td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="som-panel">
+        <header>
+          <h2>Self-Organizing Map</h2>
+          <span>{{ analysis.som_width }} x {{ analysis.som_height }}</span>
+        </header>
+        <div
+          class="som-grid"
+          [style.grid-template-columns]="vm.somGridColumns(analysis)"
+          role="img"
+          aria-label="SOM cells colored by assigned lifecycle windows"
+        >
+          @for (cell of analysis.som.cells; track cell.label) {
+            <button
+              type="button"
+              class="som-cell"
+              [class.is-empty]="cell.count === 0"
+              [style.background]="vm.somCellStyle(cell)"
+              [attr.title]="vm.somCellTitle(cell)"
+              (click)="vm.openStateDetectionCell(cell)"
+            >
+              <strong>{{ cell.label }}</strong>
+              <span>{{ cell.count }}</span>
+              <em>{{ cell.color_label }}</em>
+              @if (cell.dominant_activity) {
+                <small>{{ cell.dominant_activity }}</small>
+              }
+            </button>
+          }
+        </div>
+      </article>
+
+      <article class="som-transitions">
+        <header>
+          <h2>State Transitions</h2>
+          <span>{{ analysis.som.transitions.length }}</span>
+        </header>
+        @if (analysis.som.transitions.length > 0) {
+          <div class="transition-list">
+            @for (transition of vm.topSomTransitions(analysis.som.transitions); track $index) {
+              <p [class.is-nearby]="transition.nearby">
+                <span>{{ vm.transitionLabel(transition) }}</span>
+                <strong>{{ transition.count }}</strong>
+                <small>distance {{ transition.distance }}</small>
+              </p>
+            }
+          </div>
+        } @else {
+          <p class="muted">No cross-cell transitions.</p>
+        }
+      </article>
+    </section>
+  }
+</section>

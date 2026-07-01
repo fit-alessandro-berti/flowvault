@@ -1,0 +1,59 @@
+@if (vm.isLlmConfigOpen()) {
+  <div class="modal-backdrop" role="presentation" (click)="vm.closeLlmConfig()">
+    <section
+      class="state-modal llm-config-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="llm-config-title"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="state-modal-header">
+        <h2 id="llm-config-title">LLM Config</h2>
+        <button type="button" class="ghost-button" (click)="vm.closeLlmConfig()">Cancel</button>
+      </header>
+
+      <div class="llm-config-body">
+        <label>
+          <span>Provider</span>
+          <select [value]="vm.llmProvider()" (change)="vm.onLlmProviderChange($event)">
+            @for (provider of vm.llmProviders; track provider.id) {
+              <option [value]="provider.id">{{ provider.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Model</span>
+          <input type="text" [value]="vm.llmModel()" (input)="vm.onLlmModelChange($event)" />
+        </label>
+        <label>
+          <span>API key</span>
+          <input
+            type="password"
+            autocomplete="off"
+            [value]="vm.llmApiKey()"
+            (input)="vm.onLlmApiKeyChange($event)"
+          />
+        </label>
+        @if (vm.llmStatus()) {
+          <p class="llm-status">{{ vm.llmStatus() }}</p>
+        }
+      </div>
+
+      <footer class="state-modal-footer">
+        <button
+          type="button"
+          class="ghost-button"
+          (click)="vm.testLlmConfig()"
+          [disabled]="vm.isTestingLlm()"
+        >
+          @if (vm.isTestingLlm()) {
+            Testing
+          } @else {
+            Test
+          }
+        </button>
+        <button type="button" (click)="vm.saveLlmConfig()">Save</button>
+      </footer>
+    </section>
+  </div>
+}

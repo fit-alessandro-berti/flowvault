@@ -1,0 +1,188 @@
+<section class="lifecycle-page feature-panel" aria-label="Object lifecycle timeline">
+  <header class="feature-header time-header">
+    <div>
+      <h1>Lifecycle Timeline</h1>
+      <p>{{ vm.fileName() }}</p>
+    </div>
+    <button type="button" class="ghost-button" (click)="vm.loadLifecycleSearch()">
+      Refresh
+    </button>
+  </header>
+
+  <section class="lifecycle-layout">
+    <aside class="lifecycle-search-panel" aria-label="Object search">
+      <label>
+        <span>Object type</span>
+        <select [value]="vm.lifecycleObjectType()" (change)="vm.onLifecycleObjectTypeChange($event)">
+          @for (objectType of vm.selectedObjectTypes(); track objectType) {
+            <option [value]="objectType">{{ objectType }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>Object ID</span>
+        <input
+          type="search"
+          [value]="vm.lifecycleSearchQuery()"
+          (input)="vm.onLifecycleSearchQueryChange($event)"
+          placeholder="Search object id"
+        />
+      </label>
+      <button type="button" class="ghost-button" (click)="vm.loadSelectedLifecycleObject()">
+        Load
+      </button>
+      <div class="lifecycle-result-list">
+        @for (object of vm.lifecycleSearchResults(); track object.object_id) {
+          <button
+            type="button"
+            [class.is-selected]="vm.selectedLifecycleObjectId() === object.object_id"
+            (click)="vm.selectLifecycleObject(object.object_id)"
+          >
+            <strong>{{ object.object_id }}</strong>
+            <span>{{ object.event_count }} events</span>
+          </button>
+        }
+      </div>
+    </aside>
+
+    <section class="lifecycle-detail-panel">
+      @if (vm.lifecycleDetail(); as detail) {
+        <header class="lifecycle-detail-header">
+          <div>
+            <h2>{{ detail.object_id }}</h2>
+            <span>{{ detail.object_type }} | {{ detail.event_count }} events</span>
+          </div>
+          <span>{{ vm.timeLabel(detail.event_min_ms ?? 0) }} - {{ vm.timeLabel(detail.event_max_ms ?? 0) }}</span>
+        </header>
+
+        @if (vm.lifecycleTimelineView(); as timeline) {
+          <svg
+            class="lifecycle-timeline"
+            [attr.viewBox]="'0 0 ' + timeline.width + ' ' + timeline.height"
+            role="img"
+            aria-label="Object lifecycle state bands and stock curve"
+          >
+            <line class="time-axis" x1="58" y1="90" x2="790" y2="90"></line>
+            @for (band of timeline.bands; track band.start_event_id + band.state) {
+              <rect
+                class="lifecycle-state-band"
+                [attr.x]="band.x"
+                y="34"
+                [attr.width]="band.width"
+                height="48"
+              >
+                <title>{{ band.state }} | {{ vm.durationLabel(band.end_time_ms - band.start_time_ms) }}</title>
+              </rect>
+              <text class="lifecycle-band-label" [attr.x]="band.x + 6" y="63">
+                {{ band.state }}
+              </text>
+            }
+            @if (timeline.stockSeries.length > 0) {
+              <line class="time-axis" x1="58" y1="220" x2="790" y2="220"></line>
+              <text class="time-axis-label" x="54" y="116">{{ vm.formatFeatureNumber(timeline.yMax) }}</text>
+              <text class="time-axis-label" x="54" y="224">{{ vm.formatFeatureNumber(timeline.yMin) }}</text>
+              @for (series of timeline.stockSeries; track series.name) {
+                <path
+                  class="lifecycle-stock-line"
+                  [attr.d]="series.path"
+                  [attr.stroke]="series.color"
+                ></path>
+                @for (point of series.points; track point.event_id + point.name) {
+                  <circle
+                    class="lifecycle-stock-point"
+                    [attr.cx]="point.x"
+                    [attr.cy]="point.y"
+                    r="3"
+                    [attr.fill]="series.color"
+                  >
+                    <title>{{ series.name }} {{ point.value }} | {{ point.event_id }}</title>
+                  </circle>
+                }
+              }
+            }
+            <text class="time-axis-label" x="58" [attr.y]="timeline.height - 12">
+              {{ timeline.startLabel }}
+            </text>
+            <text class="time-axis-label time-axis-label-end" x="790" [attr.y]="timeline.height - 12">
+              {{ timeline.endLabel }}
+            </text>
+          </svg>
+          @if (timeline.stockSeries.length > 0) {
+            <div class="time-legend">
+              @for (series of timeline.stockSeries; track series.name) {
+                <span><i [style.background]="series.color"></i>{{ series.name }}</span>
+              }
+            </div>
+          }
+        }
+
+        <section class="transition-table-panel">
+          <header>
+            <div>
+              <h2>Events</h2>
+              <span>{{ detail.events.length }} lifecycle events</span>
+            </div>
+          </header>
+          <div class="lifecycle-event-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Event</th>
+                  <th>State</th>
+                  <th>Attributes</th>
+                  <th>Related</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (event of vm.visibleLifecycleEvents(detail); track event.event_id) {
+                  <tr>
+                    <td>{{ vm.timeLabel(event.time_ms) }}</td>
+                    <th>{{ event.event_type }}</th>
+                    <td>{{ event.state ?? '-' }}</td>
+                    <td>{{ vm.lifecycleAttributeLabel(event) }}</td>
+                    <td>{{ vm.lifecycleRelatedLabel(event) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          @if (vm.lifecycleHiddenEventCount(detail) > 0) {
+            <p class="muted">{{ vm.lifecycleHiddenEventCount(detail) }} additional events hidden.</p>
+          }
+        </section>
+
+        <section class="transition-table-panel">
+          <header>
+            <div>
+              <h2>Related Objects</h2>
+              <span>{{ detail.related_objects.length }} objects</span>
+            </div>
+          </header>
+          <table>
+            <thead>
+              <tr>
+                <th>Object</th>
+                <th>Type</th>
+                <th>Qualifier</th>
+                <th>Events</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (object of detail.related_objects.slice(0, 20); track object.object_id + object.qualifier) {
+                <tr>
+                  <th>{{ object.object_id }}</th>
+                  <td>{{ object.object_type }}</td>
+                  <td>{{ object.qualifier }}</td>
+                  <td>{{ object.event_count }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+      } @else {
+        <p class="muted">Select an object to inspect its lifecycle timeline.</p>
+      }
+    </section>
+  </section>
+</section>

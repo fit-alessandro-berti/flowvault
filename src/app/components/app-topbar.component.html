@@ -1,0 +1,68 @@
+<header class="app-topbar">
+  <div class="toolbar-left">
+    <strong>FLOWVAULT</strong>
+    @if (vm.appliedFilters().length > 0) {
+      <div class="toolbar-popover-anchor">
+        <button type="button" class="filter-count-button" (click)="vm.toggleFilterChain()">
+          {{ vm.appliedFilters().length }} filters
+        </button>
+        @if (vm.isFilterChainOpen()) {
+          <section class="toolbar-popover filter-chain-popover" aria-label="Applied filters">
+            @for (filter of vm.appliedFilters(); track filter.kind) {
+              <span class="filter-chip" [attr.title]="filter.description">
+                <span>{{ filter.label }}</span>
+                <button
+                  type="button"
+                  class="filter-chip-remove"
+                  [attr.aria-label]="filter.removeLabel"
+                  (click)="vm.removeFilter(filter.kind)"
+                >
+                  x
+                </button>
+              </span>
+            }
+          </section>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="toolbar-actions">
+    <button type="button" class="toolbar-button" (click)="vm.openLlmConfig()">LLM Config</button>
+    @if (!vm.hasDocument()) {
+      <label class="toolbar-button">
+        <input
+          type="file"
+          accept=".json,.jsonocel,.xml,.xmlocel,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,application/gzip,application/x-gzip"
+          (change)="vm.onFileSelected($event)"
+        />
+        Import
+      </label>
+    }
+    @if (vm.hasDocument()) {
+      <div class="toolbar-popover-anchor">
+        <button type="button" class="toolbar-button" (click)="vm.toggleExportMenu()">Export</button>
+        @if (vm.isExportMenuOpen()) {
+          <section class="toolbar-popover export-menu" aria-label="Export menu">
+            <button type="button" (click)="vm.exportJson()">JSON</button>
+            <button type="button" (click)="vm.exportXml()">XML</button>
+          </section>
+        }
+      </div>
+      <button type="button" class="toolbar-button" (click)="vm.openStateDialog()">State</button>
+      <div class="toolbar-popover-anchor">
+        <button type="button" class="toolbar-button" (click)="vm.toggleFilterMenu()">Filter</button>
+        @if (vm.isFilterMenuOpen()) {
+          <section class="toolbar-popover filter-menu" aria-label="Filter menu">
+            <button type="button" (click)="vm.openActivityFilterDialog()">Activities</button>
+            <button type="button" (click)="vm.openObjectTypeFilterDialog()">Object Types</button>
+            <button type="button" (click)="vm.openDfNodeFilterDialog()">OC-DFG Nodes</button>
+            <button type="button" (click)="vm.openDfEdgeFilterDialog()">OC-DFG Edges</button>
+            <button type="button" (click)="vm.openTimeframeFilterDialog()">Timeframe</button>
+            <button type="button" (click)="vm.openTextAttributeFilterDialog()">Text Attributes</button>
+          </section>
+        }
+      </div>
+    }
+  </div>
+</header>

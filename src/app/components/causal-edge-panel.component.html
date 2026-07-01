@@ -1,0 +1,54 @@
+<section class="causal-edge-panel" aria-label="Causal edges">
+  <header>
+    <h2>Edges</h2>
+    <span>{{ vm.causalEdges().length }} selected</span>
+  </header>
+  <div class="causal-edge-grid">
+    @for (observable of vm.causalObservableNodes(); track observable.id) {
+      <fieldset>
+        <legend>{{ observable.label }} -> latent</legend>
+        @for (latent of vm.causalLatentNodes(); track latent.id) {
+          <label>
+            <input
+              type="checkbox"
+              [checked]="vm.isCausalEdgeSelected(observable.id, latent.id)"
+              [disabled]="vm.isCausalEdgeDisabled(observable.id, latent.id)"
+              (change)="vm.toggleCausalEdge(observable.id, latent.id, $event)"
+            />
+            <span>{{ latent.label }}</span>
+          </label>
+        }
+      </fieldset>
+    }
+
+    @for (latent of vm.causalLatentNodes(); track latent.id) {
+      <fieldset>
+        <legend>{{ latent.label }} -> latent/outcome</legend>
+        @for (targetLatent of vm.causalLatentNodes(); track targetLatent.id) {
+          @if (targetLatent.id !== latent.id) {
+            <label>
+              <input
+                type="checkbox"
+                [checked]="vm.isCausalEdgeSelected(latent.id, targetLatent.id)"
+                [disabled]="vm.isCausalEdgeDisabled(latent.id, targetLatent.id)"
+                (change)="vm.toggleCausalEdge(latent.id, targetLatent.id, $event)"
+              />
+              <span>{{ targetLatent.label }}</span>
+            </label>
+          }
+        }
+        @for (outcome of vm.causalOutcomeNodes(); track outcome.id) {
+          <label>
+            <input
+              type="checkbox"
+              [checked]="vm.isCausalEdgeSelected(latent.id, outcome.id)"
+              [disabled]="vm.isCausalEdgeDisabled(latent.id, outcome.id)"
+              (change)="vm.toggleCausalEdge(latent.id, outcome.id, $event)"
+            />
+            <span>{{ outcome.label }}</span>
+          </label>
+        }
+      </fieldset>
+    }
+  </div>
+</section>

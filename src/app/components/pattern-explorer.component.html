@@ -1,0 +1,108 @@
+@if (vm.isPatternExplorerOpen()) {
+  <section class="pattern-explorer" aria-label="All state patterns">
+    <div class="pattern-explorer-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Frequency</th>
+            <th>Graph</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of vm.patternExplorerRows(); track row.pattern.id) {
+            <tr>
+              <th>
+                <strong>{{ row.pattern.support.toLocaleString() }}</strong>
+                <span>{{ vm.patternFamilyLabel(row.pattern) }}</span>
+                <em>{{ vm.patternStateLabel(row.pattern) }}</em>
+                <small>{{ row.pattern.leading_object_type }}</small>
+                <button
+                  type="button"
+                  class="mini-button"
+                  (click)="vm.openFullScreenGraph(row.pattern)"
+                >
+                  Open
+                </button>
+              </th>
+              <td>
+                <div class="pattern-table-graph-scroll">
+                  <svg
+                    class="pattern-graph pattern-graph-compact"
+                    [attr.viewBox]="'0 0 ' + row.graph.width + ' ' + row.graph.height"
+                    [attr.width]="row.graph.width"
+                    [attr.height]="row.graph.height"
+                    role="img"
+                  >
+                    <defs>
+                      <marker
+                        [attr.id]="row.pattern.id + '-explorer-arrowhead'"
+                        viewBox="0 0 10 10"
+                        refX="8"
+                        refY="5"
+                        markerWidth="4"
+                        markerHeight="4"
+                        orient="auto-start-reverse"
+                      >
+                        <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                      </marker>
+                    </defs>
+                    @for (edge of row.graph.edges; track edge.id) {
+                      <line
+                        [attr.class]="'graph-edge graph-edge-' + edge.kind"
+                        [attr.x1]="edge.x1"
+                        [attr.y1]="edge.y1"
+                        [attr.x2]="edge.x2"
+                        [attr.y2]="edge.y2"
+                        [attr.marker-end]="
+                          edge.kind === 'oo'
+                            ? null
+                            : 'url(#' + row.pattern.id + '-explorer-arrowhead)'
+                        "
+                      ></line>
+                      <text
+                        class="graph-edge-label"
+                        [attr.x]="(edge.x1 + edge.x2) / 2"
+                        [attr.y]="(edge.y1 + edge.y2) / 2 - 4"
+                      >
+                        {{ edge.label }}
+                      </text>
+                    }
+                    @for (node of row.graph.nodes; track node.id) {
+                      <g [attr.class]="'graph-node graph-node-' + node.kind">
+                        <title>{{ node.title }}</title>
+                        <rect
+                          [attr.x]="node.x"
+                          [attr.y]="node.y"
+                          [attr.width]="row.graph.nodeWidth"
+                          [attr.height]="row.graph.nodeHeight"
+                        ></rect>
+                        <text
+                          [attr.x]="node.x + row.graph.nodeWidth / 2"
+                          [attr.y]="
+                            node.y +
+                            row.graph.nodeHeight / 2 -
+                            (node.lines.length - 1) * 6 +
+                            4
+                          "
+                        >
+                          @for (line of node.lines; track $index) {
+                            <tspan
+                              [attr.x]="node.x + row.graph.nodeWidth / 2"
+                              [attr.dy]="$first ? 0 : 12"
+                            >
+                              {{ line }}
+                            </tspan>
+                          }
+                        </text>
+                      </g>
+                    }
+                  </svg>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}

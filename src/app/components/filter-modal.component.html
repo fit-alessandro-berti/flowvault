@@ -1,0 +1,36 @@
+@if (vm.filterDialog(); as dialog) {
+  <div class="modal-backdrop" role="presentation">
+    <section
+      class="state-modal filter-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="filter-modal-title"
+    >
+      <header class="state-modal-header">
+        <h2 id="filter-modal-title">
+          @if (dialog === 'activities') {
+            Activity Filter
+          } @else if (dialog === 'objectTypes') {
+            Object Type Filter
+          } @else if (dialog === 'dfNodes') {
+            OC-DFG Node Filter
+          } @else if (dialog === 'dfEdges') {
+            OC-DFG Edge Filter
+          } @else if (dialog === 'timeframe') {
+            Timeframe Filter
+          } @else {
+            Text Attribute Filter
+          }
+        </h2>
+        <button type="button" class="ghost-button" (click)="vm.closeFilterDialog()">Cancel</button>
+      </header>
+
+      <app-filter-dialog-body [vm]="vm"></app-filter-dialog-body>
+
+      <footer class="state-modal-footer">
+        <button type="button" class="ghost-button" (click)="vm.closeFilterDialog()">Cancel</button>
+        <button type="button" (click)="vm.applyFilterDialog()">OK</button>
+      </footer>
+    </section>
+  </div>
+}

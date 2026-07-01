@@ -1,0 +1,135 @@
+@if (vm.isStateDialogOpen()) {
+  <div class="modal-backdrop" role="presentation" (click)="vm.closeStateDialog()">
+    <section
+      class="state-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="state-dialog-title"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="state-modal-header">
+        <div class="state-modal-title">
+          <h2 id="state-dialog-title">Add Event State</h2>
+          <div class="state-language-help">
+            <button
+              type="button"
+              class="info-icon-button"
+              aria-label="State language help"
+              aria-describedby="state-language-help"
+            >
+              i
+            </button>
+            <section id="state-language-help" class="state-language-popover" role="tooltip">
+              <strong>State Definition Language</strong>
+              <p>
+                Use a SQL-like CASE expression:
+                <code>STATE state FOR LEADING OBJECT TYPE 'Order' AS CASE ... END</code>.
+              </p>
+              <ul>
+                <li><code>WHEN condition THEN 'State label'</code> assigns a state.</li>
+                <li>
+                  <code>ELSE 'State label'</code> is optional, but useful for complete coverage.
+                </li>
+                <li>
+                  Reference fields with <code>event.type</code>, <code>event.attribute</code>, or
+                  <code>object.attribute</code>.
+                </li>
+                <li>Quote spaced names like <code>event."Stock After"</code>.</li>
+                <li>
+                  Use <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
+                  <code>&gt;</code>, <code>&gt;=</code>, <code>LIKE</code>, <code>IS NULL</code>,
+                  <code>AND</code>, <code>OR</code>, and parentheses.
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+        <button type="button" class="ghost-button" (click)="vm.closeStateDialog()">Cancel</button>
+      </header>
+
+      <div class="state-modal-body">
+        <nav class="preset-list" aria-label="State query presets">
+          @if (vm.persistedStateExpression()) {
+            <button
+              type="button"
+              class="preset-option"
+              [class.is-selected]="vm.selectedPresetId() === '__saved_state_expression'"
+              (click)="vm.selectPersistedStateExpression()"
+            >
+              Saved Expression
+            </button>
+          }
+          @for (preset of vm.stateQueryPresets(); track preset.id) {
+            <button
+              type="button"
+              class="preset-option"
+              [class.is-selected]="vm.selectedPresetId() === preset.id"
+              (click)="vm.selectStatePreset(preset)"
+            >
+              {{ preset.name }}
+            </button>
+          }
+          <button
+            type="button"
+            class="preset-option"
+            [class.is-selected]="vm.isLlmStateMode()"
+            (click)="vm.selectLlmStateExpression()"
+          >
+            Ask LLM
+          </button>
+        </nav>
+
+        <div class="state-editor">
+          @if (vm.isLlmStateMode()) {
+            <section class="llm-state-panel">
+              <label>
+                <span>LLM request</span>
+                <textarea
+                  class="llm-prompt-input"
+                  spellcheck="true"
+                  [value]="vm.llmStatePrompt()"
+                  (input)="vm.onLlmStatePromptChange($event)"
+                ></textarea>
+              </label>
+              <button
+                type="button"
+                class="ghost-button"
+                (click)="vm.generateStateExpressionWithLlm()"
+                [disabled]="vm.isGeneratingStateExpression()"
+              >
+                @if (vm.isGeneratingStateExpression()) {
+                  Generating
+                } @else {
+                  Generate Expression
+                }
+              </button>
+            </section>
+          }
+          <label class="state-leading-control">
+            <span>Leading object type</span>
+            <select
+              [value]="vm.selectedLeadingObjectType()"
+              (change)="vm.onLeadingObjectTypeChange($event)"
+            >
+              @for (objectType of vm.leadingObjectTypeOptions(); track objectType) {
+                <option [value]="objectType">{{ objectType }}</option>
+              }
+            </select>
+          </label>
+
+          <textarea
+            spellcheck="false"
+            [value]="vm.stateQueryDraft()"
+            (input)="vm.onStateQueryDraftChange($event)"
+            aria-label="SQL-like state query"
+          ></textarea>
+        </div>
+      </div>
+
+      <footer class="state-modal-footer">
+        <button type="button" class="ghost-button" (click)="vm.closeStateDialog()">Cancel</button>
+        <button type="button" (click)="vm.applyStateQuery()">OK</button>
+      </footer>
+    </section>
+  </div>
+}

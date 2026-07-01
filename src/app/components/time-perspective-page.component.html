@@ -1,0 +1,194 @@
+<section class="time-page feature-panel" aria-label="State time perspective">
+  <header class="feature-header time-header">
+    <div>
+      <h1>Time Perspective</h1>
+      <p>{{ vm.fileName() }}</p>
+    </div>
+    <button type="button" class="ghost-button" (click)="vm.reloadTimePerspective()">
+      Refresh
+    </button>
+  </header>
+
+  @if (vm.timePerspective(); as analysis) {
+    <section class="time-controls" aria-label="Time perspective controls">
+      <label>
+        <span>Object type</span>
+        <select
+          [value]="vm.timePerspectiveObjectType()"
+          (change)="vm.onTimePerspectiveObjectTypeChange($event)"
+        >
+          @for (objectType of vm.selectedObjectTypes(); track objectType) {
+            <option [value]="objectType">{{ objectType }}</option>
+          }
+        </select>
+      </label>
+    </section>
+
+    <section class="time-chart-panel">
+      <header>
+        <div>
+          <h2>Event State Frequency</h2>
+          <span>{{ analysis.buckets.length }} time buckets</span>
+        </div>
+      </header>
+      @if (vm.timeFrequencyChart(); as chart) {
+        <svg
+          class="time-frequency-chart"
+          [attr.viewBox]="'0 0 ' + chart.width + ' ' + chart.height"
+          role="img"
+          aria-label="Percentage frequency of states over time"
+        >
+          @for (tick of chart.yTicks; track tick) {
+            <line
+              class="time-grid-line"
+              x1="48"
+              [attr.y1]="220 - tick * 1.8"
+              x2="740"
+              [attr.y2]="220 - tick * 1.8"
+            ></line>
+            <text class="time-axis-label" x="38" [attr.y]="224 - tick * 1.8">{{ tick }}%</text>
+          }
+          @for (series of chart.series; track series.state) {
+            <path
+              class="time-frequency-area"
+              [attr.d]="series.areaPath"
+              [attr.fill]="series.color"
+            ></path>
+            <path
+              class="time-frequency-line"
+              [attr.d]="series.path"
+              [attr.stroke]="series.color"
+            ></path>
+          }
+          <line class="time-axis" x1="48" y1="220" x2="740" y2="220"></line>
+          <text class="time-axis-label" x="48" y="252">{{ chart.startLabel }}</text>
+          <text class="time-axis-label time-axis-label-end" x="740" y="252">
+            {{ chart.endLabel }}
+          </text>
+        </svg>
+        <div class="time-legend">
+          @for (series of chart.series; track series.state) {
+            <span>
+              <i [style.background]="series.color"></i>
+              {{ series.state }} {{ series.latest.toFixed(1) }}%
+            </span>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="performance-panel">
+      <header>
+        <div>
+          <h2>Performance Spectrum</h2>
+          <span>{{ vm.performanceModeLabel(analysis) }}</span>
+        </div>
+      </header>
+      <section class="performance-controls" aria-label="Performance spectrum controls">
+        <label>
+          <span>State A</span>
+          <select
+            [value]="vm.timePerspectiveFromState()"
+            (change)="vm.onTimePerspectiveFromStateChange($event)"
+          >
+            @for (state of analysis.states; track state) {
+              <option [value]="state">{{ state }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>State B</span>
+          <select
+            [value]="vm.timePerspectiveToState()"
+            (change)="vm.onTimePerspectiveToStateChange($event)"
+          >
+            @for (state of vm.timePerspectiveToStateOptions(); track state) {
+              <option [value]="state">{{ state }}</option>
+            }
+          </select>
+        </label>
+        <label class="time-roundtrip-toggle">
+          <input
+            type="checkbox"
+            [checked]="vm.timePerspectiveRoundtrip()"
+            (change)="vm.onTimePerspectiveRoundtripChange($event)"
+          />
+          <span>A -> B -> A</span>
+        </label>
+      </section>
+      <div class="performance-vm.summary">
+        <article>
+          <span>Samples</span>
+          <strong>{{ analysis.performance.sample_count }}</strong>
+        </article>
+        <article>
+          <span>Median</span>
+          <strong>{{ vm.durationLabel(analysis.performance.median_duration_ms) }}</strong>
+        </article>
+        <article>
+          <span>Average</span>
+          <strong>{{ vm.durationLabel(analysis.performance.avg_duration_ms) }}</strong>
+        </article>
+        <article>
+          <span>Max</span>
+          <strong>{{ vm.durationLabel(analysis.performance.max_duration_ms) }}</strong>
+        </article>
+      </div>
+      @if (vm.performanceSpectrumChart(); as chart) {
+        <svg
+          class="performance-chart"
+          [attr.viewBox]="'0 0 ' + chart.width + ' ' + chart.height"
+          role="img"
+          aria-label="State transition duration spectrum"
+        >
+          @for (lane of chart.laneLabels; track lane.label + lane.y) {
+            <line
+              class="performance-lane"
+              stroke="#dfe8e5"
+              stroke-width="1"
+              x1="118"
+              [attr.y1]="lane.y"
+              x2="748"
+              [attr.y2]="lane.y"
+            ></line>
+            <text class="time-axis-label time-axis-label-end" x="106" [attr.y]="lane.y + 4">
+              {{ lane.label }}
+            </text>
+          }
+          @for (line of chart.lines; track line.sample.object_id + line.sample.start_time_ms) {
+            <path
+              class="performance-spectrum-line"
+              [attr.d]="line.path"
+              [attr.stroke]="line.color"
+              [attr.opacity]="line.opacity"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              fill="none"
+            >
+              <title>
+                {{ line.sample.object_id }}: {{ vm.durationLabel(line.sample.duration_ms) }} from
+                {{ vm.timeLabel(line.sample.start_time_ms) }}
+              </title>
+            </path>
+          }
+          <line class="time-axis" x1="118" y1="176" x2="748" y2="176"></line>
+          @for (tick of chart.xTicks; track tick.label) {
+            <line
+              class="time-grid-line"
+              [attr.x1]="tick.x"
+              y1="28"
+              [attr.x2]="tick.x"
+              y2="176"
+            ></line>
+            <text class="time-axis-label" [attr.x]="tick.x" y="206">{{ tick.label }}</text>
+          }
+        </svg>
+      }
+      @if (analysis.performance.sample_count === 0) {
+        <p class="muted">No matching state transitions for the selected states.</p>
+      }
+    </section>
+  } @else {
+    <p class="muted">No time perspective is available for the active log.</p>
+  }
+</section>

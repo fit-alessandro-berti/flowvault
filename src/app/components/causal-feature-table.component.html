@@ -1,0 +1,37 @@
+@if (vm.causalFeatureTable(); as table) {
+<section class="feature-table-preview causal-table-preview">
+  <header>
+    <div>
+      <h2>Feature Table</h2>
+      <span>
+        {{ vm.causalPreviewRows(table).length }} rows / {{ table.feature_count }} columns
+      </span>
+    </div>
+    <button type="button" class="ghost-button" (click)="vm.downloadCausalFeatureTable()">
+      Download CSV
+    </button>
+  </header>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Object</th>
+          @for (column of vm.causalPreviewColumns(table); track column) {
+            <th>{{ column }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of vm.causalPreviewRows(table); track row.object_id) {
+          <tr>
+            <th>{{ row.object_id }}</th>
+            @for (value of vm.causalPreviewValues(row); track $index) {
+              <td>{{ value }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+}

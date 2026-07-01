@@ -1,0 +1,87 @@
+@if (vm.stateDetectionCellDetail(); as detail) {
+  <div
+    class="modal-backdrop graph-modal-backdrop"
+    role="presentation"
+    (click)="vm.closeStateDetectionCell()"
+  >
+    <section
+      class="state-modal state-detection-cell-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="state-detection-cell-title"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="state-modal-header">
+        <div>
+          <h2 id="state-detection-cell-title">{{ detail.cell.label }}</h2>
+          <p>{{ detail.cell.count }} windows / {{ detail.cell.color_label }}</p>
+        </div>
+        <button type="button" class="ghost-button" (click)="vm.closeStateDetectionCell()">
+          Close
+        </button>
+      </header>
+
+      <div
+        class="pattern-tabs state-detection-cell-tabs"
+        role="tablist"
+        aria-label="SOM cell detail"
+      >
+        <button
+          type="button"
+          class="pattern-tab-button"
+          role="tab"
+          [attr.aria-selected]="vm.stateDetectionCellTab() === 'dfg'"
+          [class.is-selected]="vm.stateDetectionCellTab() === 'dfg'"
+          (click)="vm.setStateDetectionCellTab('dfg')"
+        >
+          DFG
+        </button>
+        <button
+          type="button"
+          class="pattern-tab-button"
+          role="tab"
+          [attr.aria-selected]="vm.stateDetectionCellTab() === 'entering'"
+          [class.is-selected]="vm.stateDetectionCellTab() === 'entering'"
+          (click)="vm.setStateDetectionCellTab('entering')"
+        >
+          Entering windows <span>{{ detail.entering_window_count }}</span>
+        </button>
+        <button
+          type="button"
+          class="pattern-tab-button"
+          role="tab"
+          [attr.aria-selected]="vm.stateDetectionCellTab() === 'exiting'"
+          [class.is-selected]="vm.stateDetectionCellTab() === 'exiting'"
+          (click)="vm.setStateDetectionCellTab('exiting')"
+        >
+          Exiting windows <span>{{ detail.exiting_window_count }}</span>
+        </button>
+      </div>
+
+      <div class="state-detection-cell-body">
+        @if (vm.stateDetectionCellTab() === 'dfg') {
+          <app-process-graph
+            [graph]="detail.dfg"
+            [objectTypes]="vm.stateDetectionCellObjectTypes()"
+            [settings]="vm.stateDetectionCellGraphSettings()"
+            (applySettings)="vm.ignoreStateDetectionCellGraphSettings($event)"
+          ></app-process-graph>
+        } @else if (vm.stateDetectionCellTab() === 'entering') {
+          <app-process-graph
+            [graph]="detail.entering_dfg"
+            [objectTypes]="vm.stateDetectionCellObjectTypes()"
+            [settings]="vm.stateDetectionCellGraphSettings()"
+            (applySettings)="vm.ignoreStateDetectionCellGraphSettings($event)"
+          ></app-process-graph>
+        } @else {
+          <app-process-graph
+            [graph]="detail.exiting_dfg"
+            [objectTypes]="vm.stateDetectionCellObjectTypes()"
+            [settings]="vm.stateDetectionCellGraphSettings()"
+            (applySettings)="vm.ignoreStateDetectionCellGraphSettings($event)"
+          ></app-process-graph>
+        }
+      </div>
+    </section>
+  </div>
+}

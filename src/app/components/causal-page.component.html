@@ -1,0 +1,45 @@
+<section class="causal-page feature-panel" aria-label="Causal model">
+  <header class="feature-header causal-header">
+    <div>
+      <h1>Causal Model</h1>
+      <p>{{ vm.fileName() }}</p>
+    </div>
+    <div class="causal-controls">
+      <label>
+        <span>Object type</span>
+        <select [value]="vm.causalObjectType()" (change)="vm.onCausalObjectTypeChange($event)">
+          @for (objectType of vm.selectedObjectTypes(); track objectType) {
+            <option [value]="objectType">{{ objectType }}</option>
+          }
+        </select>
+      </label>
+      <button type="button" class="ghost-button" (click)="vm.reloadCausalFeatureTable()">Refresh</button>
+      <button
+        type="button"
+        class="ghost-button"
+        [disabled]="!vm.causalFeatureTable() || vm.isGeneratingCausalModel()"
+        (click)="vm.generateCausalModelWithLlm()"
+      >
+        @if (vm.isGeneratingCausalModel()) {
+          Generating
+        } @else {
+          Ask LLM
+        }
+      </button>
+      <button type="button" [disabled]="!vm.canFitCausalModel()" (click)="vm.fitCausalModel()">Fit</button>
+    </div>
+  </header>
+
+  @if (vm.causalMessage()) {
+    <p class="causal-message">{{ vm.causalMessage() }}</p>
+  }
+
+  @if (vm.causalFeatureTable()) {
+    <app-causal-workbench [vm]="vm"></app-causal-workbench>
+    <app-causal-edge-panel [vm]="vm"></app-causal-edge-panel>
+    <app-causal-feature-table [vm]="vm"></app-causal-feature-table>
+    <app-causal-fit-panel [vm]="vm"></app-causal-fit-panel>
+  } @else {
+    <p class="muted">No causal feature table is available for the selected object type.</p>
+  }
+</section>

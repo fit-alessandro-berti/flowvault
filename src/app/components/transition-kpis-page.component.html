@@ -1,0 +1,214 @@
+<section class="transition-kpi-page feature-panel" aria-label="State transition KPI dashboard">
+  <header class="feature-header time-header">
+    <div>
+      <h1>Transition KPIs</h1>
+      <p>{{ vm.fileName() }}</p>
+    </div>
+    <button type="button" class="ghost-button" (click)="vm.reloadStateTransitionKpis()">
+      Refresh
+    </button>
+  </header>
+
+  @if (vm.stateTransitionKpis(); as analysis) {
+    <section class="time-controls" aria-label="Transition KPI controls">
+      <label>
+        <span>Object type</span>
+        <select
+          [value]="vm.stateTransitionObjectType()"
+          (change)="vm.onStateTransitionObjectTypeChange($event)"
+        >
+          @for (objectType of vm.selectedObjectTypes(); track objectType) {
+            <option [value]="objectType">{{ objectType }}</option>
+          }
+        </select>
+      </label>
+    </section>
+
+    <section class="correlation-vm.summary transition-vm.summary" aria-label="Transition vm.summary">
+      <article>
+        <span>Leading type</span>
+        <strong>{{ analysis.object_type }}</strong>
+      </article>
+      <article>
+        <span>Stateful objects</span>
+        <strong>{{ analysis.stateful_object_count }} / {{ analysis.object_count }}</strong>
+      </article>
+      <article>
+        <span>States</span>
+        <strong>{{ analysis.state_count }}</strong>
+      </article>
+      <article>
+        <span>Transitions</span>
+        <strong>{{ vm.transitionCount(analysis) }}</strong>
+      </article>
+    </section>
+
+    @if (vm.transitionMatrixView(); as matrix) {
+      <section class="transition-matrix-panel">
+        <header>
+          <div>
+            <h2>Transition Matrix</h2>
+            <span>{{ matrix.maxCount.toLocaleString() }} max cell count</span>
+          </div>
+        </header>
+        <div class="transition-matrix-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>From / To</th>
+                @for (state of matrix.states; track state) {
+                  <th>{{ state }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of matrix.rows; track row.state) {
+                <tr>
+                  <th>{{ row.state }}</th>
+                  @for (cell of row.cells; track cell.fromState + cell.toState) {
+                    <td [attr.style]="vm.matrixCellStyle(cell)">
+                      @if (cell.count > 0) {
+                        <strong>{{ cell.count }}</strong>
+                        <span>{{ vm.durationLabel(cell.medianDurationMs) }}</span>
+                      } @else {
+                        <span>-</span>
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <section class="transition-grid">
+      <section class="transition-table-panel">
+        <header>
+          <div>
+            <h2>Top Transitions</h2>
+            <span>{{ analysis.transitions.length }} pairs</span>
+          </div>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th>Transition</th>
+              <th>Count</th>
+              <th>Objects</th>
+              <th>Median</th>
+              <th>Max</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of vm.topTransitionRows(analysis); track row.from_state + row.to_state) {
+              <tr>
+                <th>{{ row.from_state }} -> {{ row.to_state }}</th>
+                <td>{{ row.count }}</td>
+                <td>{{ row.object_count }}</td>
+                <td>{{ vm.durationLabel(row.median_duration_ms) }}</td>
+                <td>{{ vm.durationLabel(row.max_duration_ms) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <section class="transition-table-panel">
+        <header>
+          <div>
+            <h2>Dwell Time</h2>
+            <span>{{ analysis.dwell.length }} states</span>
+          </div>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>Episodes</th>
+              <th>Objects</th>
+              <th>Median</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of vm.topDwellRows(analysis); track row.state) {
+              <tr>
+                <th>{{ row.state }}</th>
+                <td>{{ row.episode_count }}</td>
+                <td>{{ row.object_count }}</td>
+                <td>{{ vm.durationLabel(row.median_duration_ms) }}</td>
+                <td>{{ vm.durationLabel(row.total_duration_ms) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <section class="transition-table-panel">
+        <header>
+          <div>
+            <h2>Recovery Times</h2>
+            <span>{{ analysis.recovery.length }} normalizing pairs</span>
+          </div>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th>Recovery</th>
+              <th>Count</th>
+              <th>Median</th>
+              <th>Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of vm.topRecoveryRows(analysis); track row.from_state + row.to_state) {
+              <tr>
+                <th>{{ row.from_state }} -> {{ row.to_state }}</th>
+                <td>{{ row.count }}</td>
+                <td>{{ vm.durationLabel(row.median_duration_ms) }}</td>
+                <td>{{ vm.durationLabel(row.avg_duration_ms) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <section class="transition-table-panel">
+        <header>
+          <div>
+            <h2>Stuck In State</h2>
+            <span>{{ analysis.stuck.length }} objects</span>
+          </div>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th>Object</th>
+              <th>State</th>
+              <th>Duration</th>
+              <th>Events</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of vm.topStuckRows(analysis); track row.object_id + row.state) {
+              <tr>
+                <th>
+                  <button type="button" class="link-button" (click)="vm.selectLifecycleObject(row.object_id); vm.setActiveFeature('lifecycle')">
+                    {{ row.object_id }}
+                  </button>
+                </th>
+                <td>{{ row.state }}</td>
+                <td>{{ vm.durationLabel(row.duration_ms) }}</td>
+                <td>{{ row.event_count }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    </section>
+  } @else {
+    <p class="muted">No state transition KPIs are available for the active log.</p>
+  }
+</section>
