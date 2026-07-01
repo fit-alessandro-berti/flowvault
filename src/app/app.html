@@ -256,72 +256,72 @@
       </section>
 
       <section class="details" aria-label="Detailed OCEL statistics">
-      <div>
-        <span>Event types</span>
-        @if (summaryDisplayValue('event_types'); as value) {
-          <strong class="stat-value" [class.is-fraction]="value.filtered">
-            @if (value.filtered) {
-              <span>{{ value.current }}</span
-              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
-            } @else {
-              {{ value.current }}
-            }
-          </strong>
-        }
-      </div>
-      <div>
-        <span>Object types</span>
-        @if (summaryDisplayValue('object_types'); as value) {
-          <strong class="stat-value" [class.is-fraction]="value.filtered">
-            @if (value.filtered) {
-              <span>{{ value.current }}</span
-              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
-            } @else {
-              {{ value.current }}
-            }
-          </strong>
-        }
-      </div>
-      <div>
-        <span>Interned strings</span>
-        @if (summaryDisplayValue('interned_strings'); as value) {
-          <strong class="stat-value" [class.is-fraction]="value.filtered">
-            @if (value.filtered) {
-              <span>{{ value.current }}</span
-              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
-            } @else {
-              {{ value.current }}
-            }
-          </strong>
-        }
-      </div>
-      <div>
-        <span>Lifecycle indexes</span>
-        @if (summaryDisplayValue('objects_with_lifecycle'); as value) {
-          <strong class="stat-value" [class.is-fraction]="value.filtered">
-            @if (value.filtered) {
-              <span>{{ value.current }}</span
-              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
-            } @else {
-              {{ value.current }}
-            }
-          </strong>
-        }
-      </div>
-      <div>
-        <span>Stateful events</span>
-        @if (summaryDisplayValue('stateful_events'); as value) {
-          <strong class="stat-value" [class.is-fraction]="value.filtered">
-            @if (value.filtered) {
-              <span>{{ value.current }}</span
-              ><span class="stat-separator">/</span><span>{{ value.original }}</span>
-            } @else {
-              {{ value.current }}
-            }
-          </strong>
-        }
-      </div>
-    </section>
+        <div>
+          <span>Event types</span>
+          @if (summaryDisplayValue('event_types'); as value) {
+            <strong class="stat-value" [class.is-fraction]="value.filtered">
+              @if (value.filtered) {
+                <span>{{ value.current }}</span
+                ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+              } @else {
+                {{ value.current }}
+              }
+            </strong>
+          }
+        </div>
+        <div>
+          <span>Object types</span>
+          @if (summaryDisplayValue('object_types'); as value) {
+            <strong class="stat-value" [class.is-fraction]="value.filtered">
+              @if (value.filtered) {
+                <span>{{ value.current }}</span
+                ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+              } @else {
+                {{ value.current }}
+              }
+            </strong>
+          }
+        </div>
+        <div>
+          <span>Interned strings</span>
+          @if (summaryDisplayValue('interned_strings'); as value) {
+            <strong class="stat-value" [class.is-fraction]="value.filtered">
+              @if (value.filtered) {
+                <span>{{ value.current }}</span
+                ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+              } @else {
+                {{ value.current }}
+              }
+            </strong>
+          }
+        </div>
+        <div>
+          <span>Lifecycle indexes</span>
+          @if (summaryDisplayValue('objects_with_lifecycle'); as value) {
+            <strong class="stat-value" [class.is-fraction]="value.filtered">
+              @if (value.filtered) {
+                <span>{{ value.current }}</span
+                ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+              } @else {
+                {{ value.current }}
+              }
+            </strong>
+          }
+        </div>
+        <div>
+          <span>Stateful events</span>
+          @if (summaryDisplayValue('stateful_events'); as value) {
+            <strong class="stat-value" [class.is-fraction]="value.filtered">
+              @if (value.filtered) {
+                <span>{{ value.current }}</span
+                ><span class="stat-separator">/</span><span>{{ value.original }}</span>
+              } @else {
+                {{ value.current }}
+              }
+            </strong>
+          }
+        </div>
+      </section>
     </section>
   }
 
@@ -412,7 +412,9 @@
           </article>
           <article>
             <span>PCA variance</span>
-            <strong>{{ percent(analysis.pca.pc1_explained_ratio + analysis.pca.pc2_explained_ratio) }}</strong>
+            <strong>{{
+              percent(analysis.pca.pc1_explained_ratio + analysis.pca.pc2_explained_ratio)
+            }}</strong>
           </article>
         </section>
 
@@ -571,10 +573,18 @@
                     {{ feature }}
                   </button>
                   <div>
-                    <button type="button" class="mini-button" (click)="addCausalFeatureNode('observable', feature)">
+                    <button
+                      type="button"
+                      class="mini-button"
+                      (click)="addCausalFeatureNode('observable', feature)"
+                    >
                       Observable
                     </button>
-                    <button type="button" class="mini-button" (click)="addCausalFeatureNode('outcome', feature)">
+                    <button
+                      type="button"
+                      class="mini-button"
+                      (click)="addCausalFeatureNode('outcome', feature)"
+                    >
                       Outcome
                     </button>
                   </div>
@@ -596,19 +606,30 @@
               <div class="causal-node-list">
                 @for (node of causalObservableNodes(); track node.id) {
                   <article class="causal-node-card">
-                    <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                    <input
+                      [value]="node.label"
+                      (input)="onCausalNodeLabelChange(node.id, $event)"
+                    />
                     <span>{{ node.feature }}</span>
                     <div class="causal-node-controls">
-                      <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
+                      <select
+                        [value]="node.role"
+                        (change)="onCausalNodeRoleChange(node.id, $event)"
+                      >
                         <option value="observable">Observable</option>
                         <option value="outcome">Outcome</option>
                       </select>
-                      <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
+                      <select
+                        [value]="node.operation"
+                        (change)="onCausalOperationChange(node.id, $event)"
+                      >
                         @for (operation of causalOperations; track operation.id) {
                           <option [value]="operation.id">{{ operation.label }}</option>
                         }
                       </select>
-                      <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                      <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">
+                        Remove
+                      </button>
                     </div>
                   </article>
                 }
@@ -631,9 +652,14 @@
                 </div>
                 @for (node of causalLatentNodes(); track node.id) {
                   <article class="causal-node-card is-latent">
-                    <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                    <input
+                      [value]="node.label"
+                      (input)="onCausalNodeLabelChange(node.id, $event)"
+                    />
                     <span>Latent variable</span>
-                    <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                    <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">
+                      Remove
+                    </button>
                   </article>
                 }
               </div>
@@ -651,19 +677,30 @@
               <div class="causal-node-list">
                 @for (node of causalOutcomeNodes(); track node.id) {
                   <article class="causal-node-card is-outcome">
-                    <input [value]="node.label" (input)="onCausalNodeLabelChange(node.id, $event)" />
+                    <input
+                      [value]="node.label"
+                      (input)="onCausalNodeLabelChange(node.id, $event)"
+                    />
                     <span>{{ node.feature }}</span>
                     <div class="causal-node-controls">
-                      <select [value]="node.role" (change)="onCausalNodeRoleChange(node.id, $event)">
+                      <select
+                        [value]="node.role"
+                        (change)="onCausalNodeRoleChange(node.id, $event)"
+                      >
                         <option value="observable">Observable</option>
                         <option value="outcome">Outcome</option>
                       </select>
-                      <select [value]="node.operation" (change)="onCausalOperationChange(node.id, $event)">
+                      <select
+                        [value]="node.operation"
+                        (change)="onCausalOperationChange(node.id, $event)"
+                      >
                         @for (operation of causalOperations; track operation.id) {
                           <option [value]="operation.id">{{ operation.label }}</option>
                         }
                       </select>
-                      <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">Remove</button>
+                      <button type="button" class="mini-button" (click)="removeCausalNode(node.id)">
+                        Remove
+                      </button>
                     </div>
                   </article>
                 }
@@ -776,22 +813,41 @@
                 aria-label="Fitted causal model"
               >
                 <defs>
-                  <marker id="causal-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                  <marker
+                    id="causal-arrow"
+                    viewBox="0 0 10 10"
+                    refX="8"
+                    refY="5"
+                    markerWidth="5"
+                    markerHeight="5"
+                    orient="auto"
+                  >
                     <path d="M 0 0 L 10 5 L 0 10 z"></path>
                   </marker>
                 </defs>
                 @for (edge of graph.edges; track edge.id) {
-                  <path class="causal-fit-edge" [attr.d]="edge.path" marker-end="url(#causal-arrow)"></path>
+                  <path
+                    class="causal-fit-edge"
+                    [attr.d]="edge.path"
+                    marker-end="url(#causal-arrow)"
+                  ></path>
                   <text class="causal-fit-edge-label" [attr.x]="edge.labelX" [attr.y]="edge.labelY">
                     I={{ edge.edge.intensity }} / p={{ edge.edge.p_value }}
                   </text>
                 }
                 @for (node of graph.nodes; track node.id) {
                   <g [attr.class]="'causal-fit-node causal-fit-node-' + node.role">
-                    <rect [attr.x]="node.x" [attr.y]="node.y" [attr.width]="node.width" [attr.height]="node.height"></rect>
+                    <rect
+                      [attr.x]="node.x"
+                      [attr.y]="node.y"
+                      [attr.width]="node.width"
+                      [attr.height]="node.height"
+                    ></rect>
                     <text [attr.x]="node.x + node.width / 2" [attr.y]="node.y + 24">
                       @for (line of node.lines; track $index) {
-                        <tspan [attr.x]="node.x + node.width / 2" [attr.dy]="$first ? 0 : 14">{{ line }}</tspan>
+                        <tspan [attr.x]="node.x + node.width / 2" [attr.dy]="$first ? 0 : 14">
+                          {{ line }}
+                        </tspan>
                       }
                     </text>
                   </g>
@@ -824,10 +880,16 @@
             <h2 id="state-detection-cell-title">{{ detail.cell.label }}</h2>
             <p>{{ detail.cell.count }} windows / {{ detail.cell.color_label }}</p>
           </div>
-          <button type="button" class="ghost-button" (click)="closeStateDetectionCell()">Close</button>
+          <button type="button" class="ghost-button" (click)="closeStateDetectionCell()">
+            Close
+          </button>
         </header>
 
-        <div class="pattern-tabs state-detection-cell-tabs" role="tablist" aria-label="SOM cell detail">
+        <div
+          class="pattern-tabs state-detection-cell-tabs"
+          role="tablist"
+          aria-label="SOM cell detail"
+        >
           <button
             type="button"
             class="pattern-tab-button"
@@ -961,9 +1023,7 @@
               <button type="button" class="ghost-button" (click)="selectAllDraftDfNodes()">
                 All
               </button>
-              <button type="button" class="ghost-button" (click)="clearDraftDfNodes()">
-                None
-              </button>
+              <button type="button" class="ghost-button" (click)="clearDraftDfNodes()">None</button>
             </div>
             <div class="filter-options">
               @for (eventType of filterOptions().event_types; track eventType) {
@@ -982,9 +1042,7 @@
               <button type="button" class="ghost-button" (click)="selectAllDraftDfEdges()">
                 All
               </button>
-              <button type="button" class="ghost-button" (click)="clearDraftDfEdges()">
-                None
-              </button>
+              <button type="button" class="ghost-button" (click)="clearDraftDfEdges()">None</button>
             </div>
             <div class="filter-options">
               @for (edge of dfEdgeOptions(); track edge.label) {
@@ -1008,7 +1066,10 @@
                 [value]="draftTextAttributeKey()"
                 (change)="onDraftTextAttributeChange($event)"
               >
-                @for (attribute of filterOptions().text_attributes; track attribute.scope + attribute.name) {
+                @for (
+                  attribute of filterOptions().text_attributes;
+                  track attribute.scope + attribute.name
+                ) {
                   <option [value]="attribute.scope + '::' + attribute.name">
                     {{ attribute.scope }}.{{ attribute.name }}
                   </option>
@@ -1016,7 +1077,11 @@
               </select>
             </label>
             <div class="filter-actions">
-              <button type="button" class="ghost-button" (click)="selectAllDraftTextAttributeValues()">
+              <button
+                type="button"
+                class="ghost-button"
+                (click)="selectAllDraftTextAttributeValues()"
+              >
                 All
               </button>
               <button type="button" class="ghost-button" (click)="clearDraftTextAttributeValues()">
@@ -1092,7 +1157,12 @@
         </div>
 
         <footer class="state-modal-footer">
-          <button type="button" class="ghost-button" (click)="testLlmConfig()" [disabled]="isTestingLlm()">
+          <button
+            type="button"
+            class="ghost-button"
+            (click)="testLlmConfig()"
+            [disabled]="isTestingLlm()"
+          >
             @if (isTestingLlm()) {
               Testing
             } @else {
@@ -1112,6 +1182,18 @@
         <div>
           <span>{{ patterns.intra.length }} intra-state</span>
           <span>{{ patterns.inter.length }} inter-state</span>
+          <button
+            type="button"
+            class="ghost-button pattern-explorer-toggle"
+            [attr.aria-expanded]="isPatternExplorerOpen()"
+            (click)="togglePatternExplorer()"
+          >
+            @if (isPatternExplorerOpen()) {
+              Hide table
+            } @else {
+              Explore all
+            }
+          </button>
         </div>
       </header>
 
@@ -1137,6 +1219,115 @@
           Inter-State <span>{{ patterns.inter.length }}</span>
         </button>
       </div>
+
+      @if (isPatternExplorerOpen()) {
+        <section class="pattern-explorer" aria-label="All state patterns">
+          <div class="pattern-explorer-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Frequency</th>
+                  <th>Graph</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of patternExplorerRows(); track row.pattern.id) {
+                  <tr>
+                    <th>
+                      <strong>{{ row.pattern.support.toLocaleString() }}</strong>
+                      <span>{{ patternFamilyLabel(row.pattern) }}</span>
+                      <em>{{ patternStateLabel(row.pattern) }}</em>
+                      <small>{{ row.pattern.leading_object_type }}</small>
+                      <button
+                        type="button"
+                        class="mini-button"
+                        (click)="openFullScreenGraph(row.pattern)"
+                      >
+                        Open
+                      </button>
+                    </th>
+                    <td>
+                      <div class="pattern-table-graph-scroll">
+                        <svg
+                          class="pattern-graph pattern-graph-compact"
+                          [attr.viewBox]="'0 0 ' + row.graph.width + ' ' + row.graph.height"
+                          [attr.width]="row.graph.width"
+                          [attr.height]="row.graph.height"
+                          role="img"
+                        >
+                          <defs>
+                            <marker
+                              [attr.id]="row.pattern.id + '-explorer-arrowhead'"
+                              viewBox="0 0 10 10"
+                              refX="8"
+                              refY="5"
+                              markerWidth="4"
+                              markerHeight="4"
+                              orient="auto-start-reverse"
+                            >
+                              <path d="M 0 0 L 10 5 L 0 10 z"></path>
+                            </marker>
+                          </defs>
+                          @for (edge of row.graph.edges; track edge.id) {
+                            <line
+                              [attr.class]="'graph-edge graph-edge-' + edge.kind"
+                              [attr.x1]="edge.x1"
+                              [attr.y1]="edge.y1"
+                              [attr.x2]="edge.x2"
+                              [attr.y2]="edge.y2"
+                              [attr.marker-end]="
+                                edge.kind === 'oo'
+                                  ? null
+                                  : 'url(#' + row.pattern.id + '-explorer-arrowhead)'
+                              "
+                            ></line>
+                            <text
+                              class="graph-edge-label"
+                              [attr.x]="(edge.x1 + edge.x2) / 2"
+                              [attr.y]="(edge.y1 + edge.y2) / 2 - 4"
+                            >
+                              {{ edge.label }}
+                            </text>
+                          }
+                          @for (node of row.graph.nodes; track node.id) {
+                            <g [attr.class]="'graph-node graph-node-' + node.kind">
+                              <title>{{ node.title }}</title>
+                              <rect
+                                [attr.x]="node.x"
+                                [attr.y]="node.y"
+                                [attr.width]="row.graph.nodeWidth"
+                                [attr.height]="row.graph.nodeHeight"
+                              ></rect>
+                              <text
+                                [attr.x]="node.x + row.graph.nodeWidth / 2"
+                                [attr.y]="
+                                  node.y +
+                                  row.graph.nodeHeight / 2 -
+                                  (node.lines.length - 1) * 6 +
+                                  4
+                                "
+                              >
+                                @for (line of node.lines; track $index) {
+                                  <tspan
+                                    [attr.x]="node.x + row.graph.nodeWidth / 2"
+                                    [attr.dy]="$first ? 0 : 12"
+                                  >
+                                    {{ line }}
+                                  </tspan>
+                                }
+                              </text>
+                            </g>
+                          }
+                        </svg>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
 
       @if (activePatternTab() === 'intra') {
         <section class="pattern-panel" aria-label="Intra-state patterns">
@@ -1621,7 +1812,10 @@
   }
 
   @if (activeFeature() === 'stateAwareOcdfg' && stateAwareOcdfg(); as graph) {
-    <section class="process-graph-section feature-panel" aria-label="State-aware object-centric graph">
+    <section
+      class="process-graph-section feature-panel"
+      aria-label="State-aware object-centric graph"
+    >
       <app-process-graph
         [graph]="graph"
         [objectTypes]="selectedObjectTypes()"
@@ -1632,7 +1826,10 @@
   }
 
   @if (activeFeature() === 'ocdfg' && traditionalOcdfg(); as graph) {
-    <section class="process-graph-section feature-panel" aria-label="Traditional object-centric graph">
+    <section
+      class="process-graph-section feature-panel"
+      aria-label="Traditional object-centric graph"
+    >
       <app-process-graph
         [graph]="graph"
         [objectTypes]="selectedObjectTypes()"
@@ -1661,7 +1858,10 @@
       } @else {
         <span>Directly-follows edge</span>
         <strong>{{ menu.source }} -> {{ menu.target }}</strong>
-        <button type="button" (click)="applyGraphEdgeFilter({ source: menu.source, target: menu.target })">
+        <button
+          type="button"
+          (click)="applyGraphEdgeFilter({ source: menu.source, target: menu.target })"
+        >
           Filter objects containing this edge
         </button>
       }
@@ -1785,10 +1985,19 @@
                 </p>
                 <ul>
                   <li><code>WHEN condition THEN 'State label'</code> assigns a state.</li>
-                  <li><code>ELSE 'State label'</code> is optional, but useful for complete coverage.</li>
-                  <li>Reference fields with <code>event.type</code>, <code>event.attribute</code>, or <code>object.attribute</code>.</li>
+                  <li>
+                    <code>ELSE 'State label'</code> is optional, but useful for complete coverage.
+                  </li>
+                  <li>
+                    Reference fields with <code>event.type</code>, <code>event.attribute</code>, or
+                    <code>object.attribute</code>.
+                  </li>
                   <li>Quote spaced names like <code>event."Stock After"</code>.</li>
-                  <li>Use <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>LIKE</code>, <code>IS NULL</code>, <code>AND</code>, <code>OR</code>, and parentheses.</li>
+                  <li>
+                    Use <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
+                    <code>&gt;</code>, <code>&gt;=</code>, <code>LIKE</code>, <code>IS NULL</code>,
+                    <code>AND</code>, <code>OR</code>, and parentheses.
+                  </li>
                 </ul>
               </section>
             </div>

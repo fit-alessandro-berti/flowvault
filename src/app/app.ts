@@ -167,6 +167,11 @@ interface PatternGraph {
   edges: PatternGraphEdge[];
 }
 
+interface PatternExplorerRow {
+  pattern: StatePattern;
+  graph: PatternGraph;
+}
+
 interface StaticSampleLog {
   label: string;
   detail: string;
@@ -237,7 +242,9 @@ export class App {
   protected readonly selectedPresetId = signal('');
   protected readonly selectedLeadingObjectType = signal('');
   protected readonly stateQueryDraft = signal('');
-  protected readonly persistedStateExpression = signal(readStoredString(STATE_EXPRESSION_STORAGE_KEY));
+  protected readonly persistedStateExpression = signal(
+    readStoredString(STATE_EXPRESSION_STORAGE_KEY),
+  );
   protected readonly llmProviders = LLM_PROVIDERS;
   protected readonly llmProvider = signal<LlmProviderId>(loadLlmConfig().provider);
   protected readonly llmModel = signal(loadLlmConfig().model);
@@ -275,8 +282,9 @@ export class App {
   protected readonly stateDetectionSomWidth = signal(3);
   protected readonly stateDetectionSomHeight = signal(3);
   protected readonly stateDetectionColorAttribute = signal('__window_count');
-  protected readonly stateDetectionColorOptions =
-    signal<StateDetectionColorOption[]>(DEFAULT_STATE_DETECTION_COLOR_OPTIONS);
+  protected readonly stateDetectionColorOptions = signal<StateDetectionColorOption[]>(
+    DEFAULT_STATE_DETECTION_COLOR_OPTIONS,
+  );
   protected readonly stateDetectionAnalysis = signal<StateDetectionResult | null>(null);
   protected readonly stateDetectionCellDetail = signal<StateDetectionCellDetail | null>(null);
   protected readonly stateDetectionCellTab = signal<StateDetectionCellTab>('dfg');
@@ -299,6 +307,7 @@ export class App {
   protected readonly activePatternTab = signal<PatternTab>('intra');
   protected readonly intraVisualization = signal<PatternVisualization>('text');
   protected readonly interVisualization = signal<PatternVisualization>('text');
+  protected readonly isPatternExplorerOpen = signal(false);
   protected readonly fullScreenPattern = signal<StatePattern | null>(null);
   protected readonly activeFeature = signal<FeaturePage>('statistics');
   protected readonly hasDocument = computed(() => this.summary() !== null);
@@ -315,7 +324,9 @@ export class App {
       this.selectedPatternFilters().length > 0,
   );
   protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
-  protected readonly isLlmStateMode = computed(() => this.selectedPresetId() === LLM_STATE_PRESET_ID);
+  protected readonly isLlmStateMode = computed(
+    () => this.selectedPresetId() === LLM_STATE_PRESET_ID,
+  );
   protected readonly leadingObjectTypeOptions = computed(() => {
     const selected = this.selectedObjectTypes();
     return selected.length > 0 ? selected : this.filterOptions().object_types;
@@ -423,6 +434,19 @@ export class App {
   );
   protected readonly selectedInterPattern = computed(() =>
     selectedPattern(this.interPatterns(), this.selectedInterPatternId()),
+  );
+  protected readonly patternExplorerRows = computed<PatternExplorerRow[]>(() =>
+    [...this.intraPatterns(), ...this.interPatterns()]
+      .sort(
+        (left, right) =>
+          right.support - left.support ||
+          right.mass - left.mass ||
+          left.label.localeCompare(right.label),
+      )
+      .map((pattern) => ({
+        pattern,
+        graph: this.patternGraph(pattern, 'compact'),
+      })),
   );
   protected readonly summaryCards = computed<SummaryCard[]>(() => {
     const summary = this.summary();
@@ -722,7 +746,9 @@ export class App {
     try {
       const result = JSON.parse(this.documentHandle.applyStateQuery(query)) as StateQueryResult;
       this.persistStateExpression(query);
-      this.filterOptions.set(JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions);
+      this.filterOptions.set(
+        JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions,
+      );
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
@@ -1209,7 +1235,9 @@ export class App {
   }
 
   protected onStateDetectionWindowSizeChange(event: Event): void {
-    this.stateDetectionWindowSize.set(clampInteger((event.target as HTMLInputElement).value, 1, 30));
+    this.stateDetectionWindowSize.set(
+      clampInteger((event.target as HTMLInputElement).value, 1, 30),
+    );
     this.stateDetectionAnalysis.set(null);
   }
 
@@ -1219,9 +1247,7 @@ export class App {
   }
 
   protected onStateDetectionSomHeightChange(event: Event): void {
-    this.stateDetectionSomHeight.set(
-      clampInteger((event.target as HTMLInputElement).value, 2, 12),
-    );
+    this.stateDetectionSomHeight.set(clampInteger((event.target as HTMLInputElement).value, 2, 12));
     this.stateDetectionAnalysis.set(null);
   }
 
@@ -1244,7 +1270,9 @@ export class App {
       const result = JSON.parse(
         this.documentHandle.applyStateDetection(this.stateDetectionRequestJson()),
       ) as StateQueryResult;
-      this.filterOptions.set(JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions);
+      this.filterOptions.set(
+        JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions,
+      );
       this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
       this.originalSummary.set(
         JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
@@ -1399,7 +1427,8 @@ export class App {
   }
 
   protected stateDetectionCellGraphSettings(): ProcessGraphSettings {
-    const objectType = this.stateDetectionAnalysis()?.object_type ?? this.stateDetectionObjectType();
+    const objectType =
+      this.stateDetectionAnalysis()?.object_type ?? this.stateDetectionObjectType();
     return {
       object_types: objectType ? [objectType] : [],
       min_activity_frequency: 1,
@@ -1408,7 +1437,8 @@ export class App {
   }
 
   protected stateDetectionCellObjectTypes(): string[] {
-    const objectType = this.stateDetectionAnalysis()?.object_type ?? this.stateDetectionObjectType();
+    const objectType =
+      this.stateDetectionAnalysis()?.object_type ?? this.stateDetectionObjectType();
     return objectType ? [objectType] : [];
   }
 
@@ -1502,7 +1532,8 @@ export class App {
   }
 
   protected addCausalLatent(): void {
-    const label = this.causalLatentDraft().trim() || `Latent ${this.causalLatentNodes().length + 1}`;
+    const label =
+      this.causalLatentDraft().trim() || `Latent ${this.causalLatentNodes().length + 1}`;
     const node: CausalModelNode = {
       id: nextCausalNodeId('latent', this.causalNodes()),
       label,
@@ -1656,6 +1687,10 @@ export class App {
     this.activePatternTab.set(tab);
   }
 
+  protected togglePatternExplorer(): void {
+    this.isPatternExplorerOpen.update((isOpen) => !isOpen);
+  }
+
   protected openFullScreenGraph(pattern: StatePattern): void {
     this.fullScreenPattern.set(pattern);
   }
@@ -1722,6 +1757,16 @@ export class App {
     return `${pattern.support.toLocaleString()}x | ${pattern.label}`;
   }
 
+  protected patternFamilyLabel(pattern: StatePattern): string {
+    return pattern.family === 'inter' ? 'Inter-state' : 'Intra-state';
+  }
+
+  protected patternStateLabel(pattern: StatePattern): string {
+    return pattern.family === 'inter'
+      ? `${pattern.from_state ?? '?'} -> ${pattern.to_state ?? '?'}`
+      : (pattern.state ?? '?');
+  }
+
   protected topEdges(edges: StatePatternEdge[], limit = 12): StatePatternEdge[] {
     return [...edges]
       .sort((left, right) => right.weight - left.weight || left.source.localeCompare(right.source))
@@ -1732,16 +1777,18 @@ export class App {
     return Math.max(edges.length - limit, 0);
   }
 
-  protected patternGraph(pattern: StatePattern, expanded = false): PatternGraph {
-    const nodeWidth = expanded ? 260 : 190;
-    const nodeHeight = expanded ? 92 : 68;
-    const controlGap = expanded ? 330 : 238;
-    const controlStartX = expanded ? 120 : 86;
-    const objectStartY = expanded ? 380 : 292;
-    const objectColumnGap = expanded ? 330 : 236;
-    const objectRowGap = expanded ? 140 : 104;
+  protected patternGraph(pattern: StatePattern, mode: boolean | 'compact' = false): PatternGraph {
+    const expanded = mode === true;
+    const compact = mode === 'compact';
+    const nodeWidth = compact ? 150 : expanded ? 260 : 190;
+    const nodeHeight = compact ? 54 : expanded ? 92 : 68;
+    const controlGap = compact ? 188 : expanded ? 330 : 238;
+    const controlStartX = compact ? 52 : expanded ? 120 : 86;
+    const objectStartY = compact ? 186 : expanded ? 380 : 292;
+    const objectColumnGap = compact ? 188 : expanded ? 330 : 236;
+    const objectRowGap = compact ? 82 : expanded ? 140 : 104;
     const width = Math.max(
-      expanded ? 1320 : 960,
+      compact ? 620 : expanded ? 1320 : 960,
       controlStartX * 2 + Math.max(pattern.sequence.length - 1, 0) * controlGap + nodeWidth,
     );
     const objectColumns = Math.max(1, Math.floor((width - 120) / objectColumnGap));
@@ -1750,7 +1797,11 @@ export class App {
 
     const controlNodes = pattern.sequence.map((label, index) => ({
       id: `control-${index}`,
-      lines: wrapGraphLabel(label, expanded ? 31 : 22, expanded ? 5 : 4),
+      lines: wrapGraphLabel(
+        label,
+        compact ? 17 : expanded ? 31 : 22,
+        compact ? 3 : expanded ? 5 : 4,
+      ),
       title: label,
       x: controlStartX + index * controlGap,
       y: 52,
@@ -1758,7 +1809,11 @@ export class App {
     }));
     const objectNodes = pattern.object_types.map((objectType, index) => ({
       id: `object-${index}`,
-      lines: wrapGraphLabel(objectType, expanded ? 31 : 22, expanded ? 5 : 4),
+      lines: wrapGraphLabel(
+        objectType,
+        compact ? 17 : expanded ? 31 : 22,
+        compact ? 3 : expanded ? 5 : 4,
+      ),
       title: objectType,
       x: controlStartX + (index % objectColumns) * objectColumnGap,
       y: objectStartY + Math.floor(index / objectColumns) * objectRowGap,
@@ -1968,7 +2023,10 @@ export class App {
     const stateDetectionMetadata = stateDetection
       ? `
 State Detection feature columns for ${stateDetection.object_type}:
-${stateDetection.feature_columns.slice(0, 30).map((column) => `- ${column}`).join('\n')}
+${stateDetection.feature_columns
+  .slice(0, 30)
+  .map((column) => `- ${column}`)
+  .join('\n')}
 `
       : '';
 
@@ -2005,7 +2063,10 @@ Return only one valid Flowvault state expression.`;
 
   private buildLlmCausalPrompt(table: CausalFeatureTableResult): string {
     const summary = this.summary();
-    const features = table.feature_columns.slice(0, 160).map((feature) => `- ${feature}`).join('\n');
+    const features = table.feature_columns
+      .slice(0, 160)
+      .map((feature) => `- ${feature}`)
+      .join('\n');
     const omitted = Math.max(table.feature_columns.length - 160, 0);
 
     return `Create a small DAG causal model for Flowvault.
@@ -2484,7 +2545,11 @@ function sameEdge(left: DfEdgeFilterRequest, right: DfEdgeFilterRequest): boolea
   return left.source === right.source && left.target === right.target;
 }
 
-function uniqueEdges(edge: DfEdgeFilterRequest, index: number, edges: DfEdgeFilterRequest[]): boolean {
+function uniqueEdges(
+  edge: DfEdgeFilterRequest,
+  index: number,
+  edges: DfEdgeFilterRequest[],
+): boolean {
   return edges.findIndex((candidate) => sameEdge(candidate, edge)) === index;
 }
 
@@ -2598,7 +2663,9 @@ function readJsonObject(jsonText: string): Record<string, unknown> {
 }
 
 function normalizeCausalRole(value: unknown): CausalNodeRole | null {
-  const role = String(value ?? '').trim().toLowerCase();
+  const role = String(value ?? '')
+    .trim()
+    .toLowerCase();
   if (role === 'observable' || role === 'latent' || role === 'outcome') {
     return role;
   }
@@ -2606,7 +2673,9 @@ function normalizeCausalRole(value: unknown): CausalNodeRole | null {
 }
 
 function normalizeCausalOperation(value: unknown): CausalOperation {
-  const operation = String(value ?? '').trim().toLowerCase();
+  const operation = String(value ?? '')
+    .trim()
+    .toLowerCase();
   if (operation === 'log_10' || operation === 'log10') {
     return 'log10';
   }
@@ -2797,7 +2866,12 @@ function clampInteger(value: string, min: number, max: number): number {
 }
 
 function safeFilePart(value: string): string {
-  return value.trim().replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-|-$/g, '') || 'objects';
+  return (
+    value
+      .trim()
+      .replace(/[^A-Za-z0-9_-]+/g, '-')
+      .replace(/^-|-$/g, '') || 'objects'
+  );
 }
 
 function withLeadingObjectTypeClause(query: string, leadingObjectType: string): string {
