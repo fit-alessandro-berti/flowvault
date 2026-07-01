@@ -35,6 +35,16 @@ import {
   TimePerformanceSample,
   TimePerformanceSpectrum,
   TimePerspectiveResult,
+  StateTransitionKpiResult,
+  StateTransitionKpiRow,
+  StateDwellKpiRow,
+  StuckStateRow,
+  ObjectSearchHit,
+  ObjectSearchResult,
+  ObjectLifecycleDetail,
+  LifecycleEventDetail,
+  LifecycleStateBand,
+  LifecycleStockPoint,
   CausalFitResult,
   CausalFitNode,
   CausalFitEdge,
@@ -133,6 +143,8 @@ type FeaturePage =
   | 'ocdfg'
   | 'patterns'
   | 'correlation'
+  | 'transitionKpis'
+  | 'lifecycle'
   | 'timePerspective'
   | 'stateAwareOcdfg';
 type CausalNodeRole = 'observable' | 'latent' | 'outcome';
@@ -278,6 +290,47 @@ interface PerformanceSpectrumChart {
   xTicks: { label: string; x: number }[];
 }
 
+interface TransitionMatrixCell {
+  fromState: string;
+  toState: string;
+  count: number;
+  objectCount: number;
+  medianDurationMs?: number;
+  intensity: number;
+}
+
+interface TransitionMatrixView {
+  states: string[];
+  maxCount: number;
+  rows: Array<{
+    state: string;
+    cells: TransitionMatrixCell[];
+  }>;
+}
+
+interface LifecycleBandView extends LifecycleStateBand {
+  x: number;
+  width: number;
+}
+
+interface LifecycleStockSeries {
+  name: string;
+  color: string;
+  path: string;
+  points: Array<LifecycleStockPoint & { x: number; y: number }>;
+}
+
+interface LifecycleTimelineView {
+  width: number;
+  height: number;
+  startLabel: string;
+  endLabel: string;
+  bands: LifecycleBandView[];
+  stockSeries: LifecycleStockSeries[];
+  yMin: number;
+  yMax: number;
+}
+
 @Component({
   selector: 'app-root',
   imports: [ProcessGraphComponent],
@@ -367,6 +420,13 @@ export class App {
   protected readonly timePerspectiveFromState = signal('');
   protected readonly timePerspectiveToState = signal('');
   protected readonly timePerspectiveRoundtrip = signal(false);
+  protected readonly stateTransitionKpis = signal<StateTransitionKpiResult | null>(null);
+  protected readonly stateTransitionObjectType = signal('');
+  protected readonly lifecycleObjectType = signal('');
+  protected readonly lifecycleSearchQuery = signal('');
+  protected readonly lifecycleSearchResults = signal<ObjectSearchHit[]>([]);
+  protected readonly selectedLifecycleObjectId = signal('');
+  protected readonly lifecycleDetail = signal<ObjectLifecycleDetail | null>(null);
   protected readonly stateAwareOcdfg = signal<ProcessGraph | null>(null);
   protected readonly traditionalOcdfg = signal<ProcessGraph | null>(null);
   protected readonly stateAwareOcdfgSettings = signal<ProcessGraphSettings>(emptyGraphSettings());
@@ -588,6 +648,14 @@ export class App {
       ? performanceSpectrumChart(analysis.performance, analysis.event_min_ms, analysis.event_max_ms)
       : null;
   });
+  protected readonly transitionMatrixView = computed(() => {
+    const analysis = this.stateTransitionKpis();
+    return analysis ? transitionMatrixView(analysis) : null;
+  });
+  protected readonly lifecycleTimelineView = computed(() => {
+    const detail = this.lifecycleDetail();
+    return detail ? lifecycleTimelineView(detail) : null;
+  });
   protected readonly timePerspectiveToStateOptions = computed(() => {
     const analysis = this.timePerspective();
     return analysis
@@ -712,6 +780,8 @@ export class App {
     if (
       (feature === 'patterns' ||
         feature === 'correlation' ||
+        feature === 'transitionKpis' ||
+        feature === 'lifecycle' ||
         feature === 'timePerspective' ||
         feature === 'stateAwareOcdfg') &&
       !this.hasAppliedState()
@@ -729,6 +799,12 @@ export class App {
     }
     if (feature === 'correlation' && !this.stateCorrelation()) {
       this.loadStateCorrelation();
+    }
+    if (feature === 'transitionKpis' && !this.stateTransitionKpis()) {
+      this.loadStateTransitionKpis();
+    }
+    if (feature === 'lifecycle' && this.lifecycleSearchResults().length === 0) {
+      this.loadLifecycleSearch();
     }
     if (feature === 'timePerspective' && !this.timePerspective()) {
       this.loadTimePerspective();
@@ -865,6 +941,8 @@ export class App {
       );
       this.stateCorrelation.set(null);
       this.timePerspective.set(null);
+      this.stateTransitionKpis.set(null);
+      this.lifecycleDetail.set(null);
       this.loadStatePatterns();
       this.activeFeature.set('patterns');
       this.stateMessage.set(
@@ -969,6 +1047,13 @@ export class App {
       this.timePerspectiveFromState.set('');
       this.timePerspectiveToState.set('');
       this.timePerspectiveRoundtrip.set(false);
+      this.stateTransitionKpis.set(null);
+      this.stateTransitionObjectType.set(imported.filterOptions.object_types[0] ?? '');
+      this.lifecycleObjectType.set(imported.filterOptions.object_types[0] ?? '');
+      this.lifecycleSearchQuery.set('');
+      this.lifecycleSearchResults.set([]);
+      this.selectedLifecycleObjectId.set('');
+      this.lifecycleDetail.set(null);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
       this.stateDetectionAnalysis.set(null);
@@ -1039,6 +1124,13 @@ export class App {
       this.timePerspectiveFromState.set('');
       this.timePerspectiveToState.set('');
       this.timePerspectiveRoundtrip.set(false);
+      this.stateTransitionKpis.set(null);
+      this.stateTransitionObjectType.set('');
+      this.lifecycleObjectType.set('');
+      this.lifecycleSearchQuery.set('');
+      this.lifecycleSearchResults.set([]);
+      this.selectedLifecycleObjectId.set('');
+      this.lifecycleDetail.set(null);
       this.stateAwareOcdfg.set(null);
       this.traditionalOcdfg.set(null);
       this.stateDetectionAnalysis.set(null);
@@ -1508,6 +1600,8 @@ export class App {
       );
       this.stateCorrelation.set(null);
       this.timePerspective.set(null);
+      this.stateTransitionKpis.set(null);
+      this.lifecycleDetail.set(null);
       this.loadStatePatterns();
       this.loadStateAwareOcdfg();
       this.stateDetectionCellDetail.set(null);
@@ -1620,6 +1714,89 @@ export class App {
 
   protected reloadTimePerspective(): void {
     this.loadTimePerspective();
+  }
+
+  protected reloadStateTransitionKpis(): void {
+    this.loadStateTransitionKpis();
+  }
+
+  protected onStateTransitionObjectTypeChange(event: Event): void {
+    this.stateTransitionObjectType.set((event.target as HTMLSelectElement).value);
+    this.loadStateTransitionKpis();
+  }
+
+  protected transitionCount(analysis: StateTransitionKpiResult): number {
+    return analysis.transitions.reduce((total, transition) => total + transition.count, 0);
+  }
+
+  protected topTransitionRows(analysis: StateTransitionKpiResult, limit = 12): StateTransitionKpiRow[] {
+    return analysis.transitions.slice(0, limit);
+  }
+
+  protected topDwellRows(analysis: StateTransitionKpiResult, limit = 8): StateDwellKpiRow[] {
+    return analysis.dwell.slice(0, limit);
+  }
+
+  protected topRecoveryRows(analysis: StateTransitionKpiResult, limit = 8): StateTransitionKpiRow[] {
+    return analysis.recovery.slice(0, limit);
+  }
+
+  protected topStuckRows(analysis: StateTransitionKpiResult, limit = 12): StuckStateRow[] {
+    return analysis.stuck.slice(0, limit);
+  }
+
+  protected matrixCellStyle(cell: TransitionMatrixCell): string {
+    const lightness = Math.round(96 - cell.intensity * 48);
+    return `background: hsl(176 46% ${lightness}%);`;
+  }
+
+  protected onLifecycleObjectTypeChange(event: Event): void {
+    this.lifecycleObjectType.set((event.target as HTMLSelectElement).value);
+    this.selectedLifecycleObjectId.set('');
+    this.lifecycleDetail.set(null);
+    this.loadLifecycleSearch();
+  }
+
+  protected onLifecycleSearchQueryChange(event: Event): void {
+    this.lifecycleSearchQuery.set((event.target as HTMLInputElement).value);
+    this.loadLifecycleSearch();
+  }
+
+  protected selectLifecycleObject(objectId: string): void {
+    this.selectedLifecycleObjectId.set(objectId);
+    this.loadLifecycleDetail(objectId);
+  }
+
+  protected loadSelectedLifecycleObject(): void {
+    const objectId = this.selectedLifecycleObjectId().trim() || this.lifecycleSearchQuery().trim();
+    if (!objectId) {
+      return;
+    }
+    this.selectedLifecycleObjectId.set(objectId);
+    this.loadLifecycleDetail(objectId);
+  }
+
+  protected visibleLifecycleEvents(detail: ObjectLifecycleDetail, limit = 140): LifecycleEventDetail[] {
+    return detail.events.slice(0, limit);
+  }
+
+  protected lifecycleHiddenEventCount(detail: ObjectLifecycleDetail, limit = 140): number {
+    return Math.max(detail.events.length - limit, 0);
+  }
+
+  protected lifecycleAttributeLabel(event: LifecycleEventDetail, limit = 3): string {
+    return event.attributes
+      .slice(0, limit)
+      .map((attribute) => `${attribute.name}: ${String(attribute.value)}`)
+      .join(' | ');
+  }
+
+  protected lifecycleRelatedLabel(event: LifecycleEventDetail, limit = 3): string {
+    const related = event.related_objects.slice(0, limit);
+    const suffix = event.related_objects.length > limit ? ` +${event.related_objects.length - limit}` : '';
+    return related
+      .map((object) => `${object.object_type} ${object.object_id}`)
+      .join(', ') + suffix;
   }
 
   protected onTimePerspectiveObjectTypeChange(event: Event): void {
@@ -2494,6 +2671,106 @@ Rules:
     }
   }
 
+  private loadStateTransitionKpis(): void {
+    if (!this.documentHandle) {
+      this.stateTransitionKpis.set(null);
+      return;
+    }
+
+    try {
+      this.ensureStateTransitionObjectType();
+      const analysis = JSON.parse(
+        this.documentHandle.stateTransitionKpisJson(this.stateTransitionKpisRequestJson()),
+      ) as StateTransitionKpiResult;
+      this.stateTransitionKpis.set(analysis);
+      this.stateTransitionObjectType.set(analysis.object_type);
+      this.errorMessage.set('');
+    } catch (error) {
+      this.stateTransitionKpis.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  private ensureStateTransitionObjectType(): void {
+    const selected = this.selectedObjectTypes();
+    const current = this.stateTransitionObjectType();
+    if (current && selected.includes(current)) {
+      return;
+    }
+    this.stateTransitionObjectType.set(
+      selected[0] ?? this.filterOptions().object_types[0] ?? '',
+    );
+  }
+
+  private stateTransitionKpisRequestJson(): string {
+    return JSON.stringify({
+      object_type: this.stateTransitionObjectType() || undefined,
+      stuck_limit: 25,
+    });
+  }
+
+  protected loadLifecycleSearch(): void {
+    if (!this.documentHandle) {
+      this.lifecycleSearchResults.set([]);
+      return;
+    }
+
+    try {
+      this.ensureLifecycleObjectType();
+      const result = JSON.parse(
+        this.documentHandle.objectSearchJson(this.lifecycleSearchRequestJson()),
+      ) as ObjectSearchResult;
+      this.lifecycleSearchResults.set(result.objects);
+      if (
+        result.objects.length > 0 &&
+        !result.objects.some((object) => object.object_id === this.selectedLifecycleObjectId())
+      ) {
+        this.selectLifecycleObject(result.objects[0].object_id);
+      } else if (result.objects.length === 0) {
+        this.selectedLifecycleObjectId.set('');
+        this.lifecycleDetail.set(null);
+      }
+      this.errorMessage.set('');
+    } catch (error) {
+      this.lifecycleSearchResults.set([]);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  private loadLifecycleDetail(objectId: string): void {
+    if (!this.documentHandle) {
+      this.lifecycleDetail.set(null);
+      return;
+    }
+
+    try {
+      this.lifecycleDetail.set(
+        JSON.parse(this.documentHandle.objectLifecycleDetailJson(objectId)) as ObjectLifecycleDetail,
+      );
+      this.errorMessage.set('');
+    } catch (error) {
+      this.lifecycleDetail.set(null);
+      this.errorMessage.set(errorToMessage(error));
+    }
+  }
+
+  private ensureLifecycleObjectType(): void {
+    const selected = this.selectedObjectTypes();
+    const current = this.lifecycleObjectType();
+    if (current && selected.includes(current)) {
+      return;
+    }
+    this.lifecycleObjectType.set(selected[0] ?? this.filterOptions().object_types[0] ?? '');
+  }
+
+  private lifecycleSearchRequestJson(): string {
+    return JSON.stringify({
+      object_type: this.lifecycleObjectType() || undefined,
+      query: this.lifecycleSearchQuery() || undefined,
+      limit: 40,
+    });
+  }
+
   private ensureTimePerspectiveObjectType(): void {
     const selected = this.selectedObjectTypes();
     const current = this.timePerspectiveObjectType();
@@ -2608,10 +2885,18 @@ Rules:
 
       this.stateCorrelation.set(null);
       this.timePerspective.set(null);
+      this.stateTransitionKpis.set(null);
+      this.lifecycleDetail.set(null);
       if (nextSummary.stateful_events > 0) {
         this.loadStatePatterns(true);
         if (this.activeFeature() === 'correlation') {
           this.loadStateCorrelation();
+        }
+        if (this.activeFeature() === 'transitionKpis') {
+          this.loadStateTransitionKpis();
+        }
+        if (this.activeFeature() === 'lifecycle') {
+          this.loadLifecycleSearch();
         }
         if (this.activeFeature() === 'timePerspective') {
           this.loadTimePerspective();
@@ -2620,6 +2905,10 @@ Rules:
         this.patternAnalysis.set(null);
         this.stateCorrelation.set(null);
         this.timePerspective.set(null);
+        this.stateTransitionKpis.set(null);
+        this.lifecycleSearchResults.set([]);
+        this.selectedLifecycleObjectId.set('');
+        this.lifecycleDetail.set(null);
         this.stateAwareOcdfg.set(null);
         this.selectedIntraPatternId.set('');
         this.selectedInterPatternId.set('');
@@ -3452,6 +3741,104 @@ function timeFrequencyChart(
     endLabel: formatShortDate(buckets[buckets.length - 1].end_ms),
     yTicks: [0, 25, 50, 75, 100],
     series,
+  };
+}
+
+function transitionMatrixView(analysis: StateTransitionKpiResult): TransitionMatrixView {
+  const maxCount = Math.max(...analysis.transitions.map((transition) => transition.count), 0);
+  const byPair = new Map(
+    analysis.transitions.map((transition) => [
+      `${transition.from_state}\u0000${transition.to_state}`,
+      transition,
+    ]),
+  );
+  const rows = analysis.states.map((fromState) => ({
+    state: fromState,
+    cells: analysis.states.map((toState) => {
+      const transition = byPair.get(`${fromState}\u0000${toState}`);
+      const count = transition?.count ?? 0;
+      return {
+        fromState,
+        toState,
+        count,
+        objectCount: transition?.object_count ?? 0,
+        medianDurationMs: transition?.median_duration_ms,
+        intensity: maxCount > 0 ? count / maxCount : 0,
+      };
+    }),
+  }));
+
+  return {
+    states: analysis.states,
+    maxCount,
+    rows,
+  };
+}
+
+function lifecycleTimelineView(detail: ObjectLifecycleDetail): LifecycleTimelineView | null {
+  const minTime = detail.event_min_ms ?? detail.events[0]?.time_ms;
+  const maxTime = detail.event_max_ms ?? detail.events[detail.events.length - 1]?.time_ms;
+  if (minTime === undefined || maxTime === undefined) {
+    return null;
+  }
+
+  const width = 820;
+  const height = detail.stock_points.length > 0 ? 260 : 150;
+  const plot = { left: 58, right: 790, top: 32, bandTop: 34, bandHeight: 48, stockTop: 112, bottom: 220 };
+  const timeSpan = Math.max(maxTime - minTime, 1);
+  const xForTime = (timeMs: number) =>
+    plot.left + ((timeMs - minTime) / timeSpan) * (plot.right - plot.left);
+
+  const bands = detail.state_bands.map((band) => {
+    const x = xForTime(band.start_time_ms);
+    const endX = xForTime(band.end_time_ms);
+    return {
+      ...band,
+      x,
+      width: Math.max(endX - x, 3),
+    };
+  });
+
+  const values = detail.stock_points.map((point) => point.value);
+  let yMin = Math.min(...values, 0);
+  let yMax = Math.max(...values, 1);
+  if (Math.abs(yMax - yMin) <= Number.EPSILON) {
+    yMin -= 1;
+    yMax += 1;
+  }
+  const yForValue = (value: number) =>
+    plot.bottom - ((value - yMin) / (yMax - yMin)) * (plot.bottom - plot.stockTop);
+  const pointsByName = new Map<string, LifecycleStockPoint[]>();
+  for (const point of detail.stock_points) {
+    const points = pointsByName.get(point.name) ?? [];
+    points.push(point);
+    pointsByName.set(point.name, points);
+  }
+  const stockSeries = [...pointsByName.entries()].map(([name, points], index) => {
+    const positioned = points
+      .sort((left, right) => left.time_ms - right.time_ms)
+      .map((point) => ({
+        ...point,
+        x: xForTime(point.time_ms),
+        y: yForValue(point.value),
+      }));
+    return {
+      name,
+      color: CHART_COLORS[index % CHART_COLORS.length],
+      path: smoothPath(positioned),
+      points: positioned,
+    };
+  });
+
+  return {
+    width,
+    height,
+    startLabel: formatShortDate(minTime),
+    endLabel: formatShortDate(maxTime),
+    bands,
+    stockSeries,
+    yMin,
+    yMax,
   };
 }
 

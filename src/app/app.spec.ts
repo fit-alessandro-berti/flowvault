@@ -183,6 +183,123 @@ const stateCorrelationAnalysis: StateCorrelationResult = {
   ],
 };
 
+const transitionKpisAnalysis = {
+  object_type: 'Order',
+  object_count: 10,
+  stateful_object_count: 8,
+  state_count: 2,
+  states: ['Open', 'Closed'],
+  transitions: [
+    {
+      from_state: 'Open',
+      to_state: 'Closed',
+      count: 6,
+      object_count: 5,
+      min_duration_ms: 60_000,
+      median_duration_ms: 120_000,
+      avg_duration_ms: 150_000,
+      max_duration_ms: 240_000,
+    },
+  ],
+  dwell: [
+    {
+      state: 'Open',
+      episode_count: 7,
+      object_count: 6,
+      total_duration_ms: 600_000,
+      min_duration_ms: 60_000,
+      median_duration_ms: 120_000,
+      avg_duration_ms: 140_000,
+      max_duration_ms: 300_000,
+    },
+  ],
+  recovery: [
+    {
+      from_state: 'Open',
+      to_state: 'Closed',
+      count: 6,
+      object_count: 5,
+      min_duration_ms: 60_000,
+      median_duration_ms: 120_000,
+      avg_duration_ms: 150_000,
+      max_duration_ms: 240_000,
+    },
+  ],
+  stuck: [
+    {
+      object_id: 'O1',
+      state: 'Open',
+      entered_time_ms: 0,
+      last_time_ms: 240_000,
+      duration_ms: 240_000,
+      event_count: 3,
+    },
+  ],
+};
+
+const objectSearchResult = {
+  objects: [{ object_id: 'O1', object_type: 'Order', event_count: 3 }],
+};
+
+const lifecycleDetail = {
+  object_id: 'O1',
+  object_type: 'Order',
+  event_count: 3,
+  event_min_ms: 0,
+  event_max_ms: 240_000,
+  state_bands: [
+    {
+      state: 'Open',
+      start_time_ms: 0,
+      end_time_ms: 120_000,
+      event_count: 2,
+      start_event_id: 'e1',
+      end_event_id: 'e2',
+    },
+    {
+      state: 'Closed',
+      start_time_ms: 240_000,
+      end_time_ms: 240_000,
+      event_count: 1,
+      start_event_id: 'e3',
+      end_event_id: 'e3',
+    },
+  ],
+  stock_points: [
+    { name: 'Stock After', time_ms: 0, value: 10, event_id: 'e1' },
+    { name: 'Stock After', time_ms: 240_000, value: 20, event_id: 'e3' },
+  ],
+  related_objects: [
+    { object_id: 'I1', object_type: 'Item', qualifier: 'contains', event_count: 2 },
+  ],
+  events: [
+    {
+      event_id: 'e1',
+      event_type: 'Create Order',
+      time_ms: 0,
+      state: 'Open',
+      attributes: [{ name: 'Stock After', value: 10 }],
+      related_objects: [{ object_id: 'I1', object_type: 'Item', qualifier: 'contains' }],
+    },
+    {
+      event_id: 'e2',
+      event_type: 'Pick Item',
+      time_ms: 120_000,
+      state: 'Open',
+      attributes: [],
+      related_objects: [{ object_id: 'I1', object_type: 'Item', qualifier: 'contains' }],
+    },
+    {
+      event_id: 'e3',
+      event_type: 'Close Order',
+      time_ms: 240_000,
+      state: 'Closed',
+      attributes: [{ name: 'Stock After', value: 20 }],
+      related_objects: [],
+    },
+  ],
+};
+
 const traditionalProcessGraph: ProcessGraph = {
   ...processGraph,
   title: 'Object-Centric Directly-Follows Graph',
@@ -1135,6 +1252,74 @@ describe('App', () => {
     native.querySelector<HTMLButtonElement>('.correlation-header .ghost-button')?.click();
     fixture.detectChanges();
     expect(correlationRequests).toBe(2);
+  });
+
+  it('renders transition KPIs and object lifecycle timelines', () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance as unknown as {
+      documentHandle: unknown;
+      fileName: { set(value: string): void };
+      summary: { set(value: unknown): void };
+      originalSummary: { set(value: unknown): void };
+      filterOptions: { set(value: unknown): void };
+      selectedObjectTypes: { set(value: string[]): void };
+      selectedEventTypes: { set(value: string[]): void };
+    };
+    let kpiRequests = 0;
+    let searchRequests = 0;
+    let lifecycleRequests = 0;
+
+    component.documentHandle = {
+      stateTransitionKpisJson: () => {
+        kpiRequests += 1;
+        return JSON.stringify(transitionKpisAnalysis);
+      },
+      objectSearchJson: () => {
+        searchRequests += 1;
+        return JSON.stringify(objectSearchResult);
+      },
+      objectLifecycleDetailJson: (objectId: string) => {
+        lifecycleRequests += 1;
+        expect(objectId).toBe('O1');
+        return JSON.stringify(lifecycleDetail);
+      },
+    };
+    component.fileName.set('orders.json');
+    component.summary.set(statefulSummary);
+    component.originalSummary.set(statefulSummary);
+    component.filterOptions.set({
+      event_types: ['Create Order', 'Close Order'],
+      object_types: ['Order', 'Item'],
+      text_attributes: [{ scope: 'event', name: 'state', values: ['Open', 'Closed'] }],
+    });
+    component.selectedEventTypes.set(['Create Order', 'Close Order']);
+    component.selectedObjectTypes.set(['Order', 'Item']);
+    fixture.detectChanges();
+
+    const native = fixture.nativeElement as HTMLElement;
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.feature-button'))
+      .find((button) => button.textContent?.includes('Transition KPIs'))
+      ?.click();
+    fixture.detectChanges();
+
+    expect(kpiRequests).toBe(1);
+    expect(native.textContent).toContain('Transition Matrix');
+    expect(native.textContent).toContain('Open -> Closed');
+    expect(native.textContent).toContain('Stuck In State');
+    expect(native.textContent).toContain('O1');
+
+    Array.from(native.querySelectorAll<HTMLButtonElement>('.feature-button'))
+      .find((button) => button.textContent?.includes('Lifecycle Timeline'))
+      ?.click();
+    fixture.detectChanges();
+
+    expect(searchRequests).toBe(1);
+    expect(lifecycleRequests).toBe(1);
+    expect(native.textContent).toContain('Lifecycle Timeline');
+    expect(native.textContent).toContain('Create Order');
+    expect(native.textContent).toContain('Stock After');
+    expect(native.textContent).toContain('Related Objects');
+    expect(native.querySelector('.lifecycle-timeline')).toBeTruthy();
   });
 
   it('saves and tests LLM configuration', async () => {

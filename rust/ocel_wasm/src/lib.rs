@@ -365,6 +365,24 @@ struct TimePerspectiveRequest {
 }
 
 #[derive(Deserialize)]
+struct StateTransitionKpiRequest {
+    #[serde(default)]
+    object_type: Option<String>,
+    #[serde(default)]
+    stuck_limit: Option<usize>,
+}
+
+#[derive(Deserialize)]
+struct ObjectSearchRequest {
+    #[serde(default)]
+    object_type: Option<String>,
+    #[serde(default)]
+    query: Option<String>,
+    #[serde(default)]
+    limit: Option<usize>,
+}
+
+#[derive(Deserialize)]
 struct CausalModelFitRequest {
     object_type: String,
     #[serde(default)]
@@ -1236,6 +1254,28 @@ impl CompactOcelLog {
             .map_err(|err| OcelError::new(format!("could not serialize time perspective: {err}")))
     }
 
+    fn state_transition_kpis_json(
+        &self,
+        request: &StateTransitionKpiRequest,
+    ) -> OcelResult<String> {
+        let analysis = self.state_transition_kpis(request)?;
+        serde_json::to_string(&analysis).map_err(|err| {
+            OcelError::new(format!("could not serialize state transition KPIs: {err}"))
+        })
+    }
+
+    fn object_search_json(&self, request: &ObjectSearchRequest) -> OcelResult<String> {
+        let result = self.object_search(request);
+        serde_json::to_string(&result)
+            .map_err(|err| OcelError::new(format!("could not serialize object search: {err}")))
+    }
+
+    fn object_lifecycle_detail_json(&self, object_id: &str) -> OcelResult<String> {
+        let detail = self.object_lifecycle_detail(object_id)?;
+        serde_json::to_string(&detail)
+            .map_err(|err| OcelError::new(format!("could not serialize object lifecycle: {err}")))
+    }
+
     fn causal_feature_table_json(&self, request: &CausalFeatureTableRequest) -> OcelResult<String> {
         let table = self.state_feature_table(&request.object_type)?;
         let result = CausalFeatureTableResult {
@@ -1260,6 +1300,344 @@ impl CompactOcelLog {
     fn causal_feature_table_csv(&self, request: &CausalFeatureTableRequest) -> OcelResult<String> {
         let table = self.state_feature_table(&request.object_type)?;
         Ok(feature_table_to_csv(&table))
+    }
+
+    fn state_transition_kpis(
+        &self,
+        request: &StateTransitionKpiRequest,
+    ) -> OcelResult<StateTransitionKpiResult> {
+        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+            OcelError::new("event state attribute is missing; apply a state query first")
+        })?;
+        let object_type_symbol = request
+            .object_type
+            .as_deref()
+            .and_then(|object_type| self.symbol_for_value(object_type))
+            .or(self.state_leading_object_type)
+            .or_else(|| self.objects.first().map(|object| object.type_name))
+            .ok_or_else(|| OcelError::new("no object type is available for transition KPIs"))?;
+        let object_type = self.pool.resolve(object_type_symbol).to_owned();
+        let stuck_limit = request.stuck_limit.unwrap_or(15).clamp(1, 100);
+
+        let mut states = BTreeSet::<String>::new();
+        let mut transition_counts = BTreeMap::<(String, String), TransitionAccumulator>::new();
+        let mut transition_objects = BTreeMap::<(String, String), BTreeSet<String>>::new();
+        let mut dwell_durations = BTreeMap::<String, Vec<i64>>::new();
+        let mut dwell_objects = BTreeMap::<String, BTreeSet<String>>::new();
+        let mut stateful_object_count = 0usize;
+        let mut stuck = Vec::<StuckStateRow>::new();
+
+        for object in self
+            .objects
+            .iter()
+            .filter(|object| object.type_name == object_type_symbol)
+        {
+            let object_id = self.pool.resolve(object.id).to_owned();
+            let stateful_lifecycle = self.stateful_lifecycle(object, state_attribute);
+            if stateful_lifecycle.is_empty() {
+                continue;
+            }
+            stateful_object_count += 1;
+            for (_, state) in &stateful_lifecycle {
+                states.insert(state.clone());
+            }
+
+            let episodes = state_episodes(&stateful_lifecycle);
+            for (episode_index, episode) in episodes.iter().enumerate() {
+                let start_event_index = stateful_lifecycle[episode.start].0;
+                let end_event_index = stateful_lifecycle[episode.end].0;
+                let next_event_index = episodes
+                    .get(episode_index + 1)
+                    .map(|next| stateful_lifecycle[next.start].0);
+                let start_time_ms = self.events[start_event_index].time_ms;
+                let end_time_ms = next_event_index
+                    .map(|index| self.events[index].time_ms)
+                    .unwrap_or(self.events[end_event_index].time_ms);
+                let duration_ms = (end_time_ms - start_time_ms).max(0);
+                dwell_durations
+                    .entry(episode.state.clone())
+                    .or_default()
+                    .push(duration_ms);
+                dwell_objects
+                    .entry(episode.state.clone())
+                    .or_default()
+                    .insert(object_id.clone());
+
+                if episode_index + 1 == episodes.len() {
+                    stuck.push(StuckStateRow {
+                        object_id: object_id.clone(),
+                        state: episode.state.clone(),
+                        entered_time_ms: start_time_ms,
+                        last_time_ms: self.events[end_event_index].time_ms,
+                        duration_ms,
+                        event_count: episode.end - episode.start + 1,
+                    });
+                }
+            }
+
+            for pair in episodes.windows(2) {
+                let from = &pair[0];
+                let to = &pair[1];
+                let from_start_index = stateful_lifecycle[from.start].0;
+                let to_start_index = stateful_lifecycle[to.start].0;
+                let duration_ms = (self.events[to_start_index].time_ms
+                    - self.events[from_start_index].time_ms)
+                    .max(0);
+                let key = (from.state.clone(), to.state.clone());
+                transition_counts
+                    .entry(key.clone())
+                    .or_default()
+                    .durations
+                    .push(duration_ms);
+                transition_objects
+                    .entry(key)
+                    .or_default()
+                    .insert(object_id.clone());
+            }
+        }
+
+        let mut transitions = transition_counts
+            .into_iter()
+            .map(|((from_state, to_state), accumulator)| {
+                let stats = duration_stats(accumulator.durations);
+                let object_count = transition_objects
+                    .get(&(from_state.clone(), to_state.clone()))
+                    .map_or(0, BTreeSet::len);
+                StateTransitionKpiRow {
+                    from_state,
+                    to_state,
+                    count: stats.sample_count,
+                    object_count,
+                    min_duration_ms: stats.min_duration_ms,
+                    median_duration_ms: stats.median_duration_ms,
+                    avg_duration_ms: stats.avg_duration_ms,
+                    max_duration_ms: stats.max_duration_ms,
+                }
+            })
+            .collect::<Vec<_>>();
+        transitions.sort_by(|left, right| {
+            right
+                .count
+                .cmp(&left.count)
+                .then_with(|| left.from_state.cmp(&right.from_state))
+                .then_with(|| left.to_state.cmp(&right.to_state))
+        });
+
+        let mut dwell = dwell_durations
+            .into_iter()
+            .map(|(state, durations)| {
+                let total_duration_ms = durations.iter().sum::<i64>();
+                let stats = duration_stats(durations);
+                StateDwellKpiRow {
+                    state: state.clone(),
+                    episode_count: stats.sample_count,
+                    object_count: dwell_objects.get(&state).map_or(0, BTreeSet::len),
+                    total_duration_ms,
+                    min_duration_ms: stats.min_duration_ms,
+                    median_duration_ms: stats.median_duration_ms,
+                    avg_duration_ms: stats.avg_duration_ms,
+                    max_duration_ms: stats.max_duration_ms,
+                }
+            })
+            .collect::<Vec<_>>();
+        dwell.sort_by(|left, right| {
+            right
+                .total_duration_ms
+                .cmp(&left.total_duration_ms)
+                .then_with(|| left.state.cmp(&right.state))
+        });
+
+        let mut recovery = transitions
+            .iter()
+            .filter(|transition| {
+                is_recovery_transition(&transition.from_state, &transition.to_state)
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+        recovery.sort_by(|left, right| {
+            right
+                .median_duration_ms
+                .unwrap_or(0)
+                .cmp(&left.median_duration_ms.unwrap_or(0))
+                .then_with(|| right.count.cmp(&left.count))
+        });
+
+        stuck.sort_by(|left, right| {
+            right
+                .duration_ms
+                .cmp(&left.duration_ms)
+                .then_with(|| left.object_id.cmp(&right.object_id))
+        });
+        stuck.truncate(stuck_limit);
+
+        let object_count = self
+            .objects
+            .iter()
+            .filter(|object| object.type_name == object_type_symbol)
+            .count();
+
+        Ok(StateTransitionKpiResult {
+            object_type,
+            object_count,
+            stateful_object_count,
+            state_count: states.len(),
+            states: states.into_iter().collect(),
+            transitions,
+            dwell,
+            recovery,
+            stuck,
+        })
+    }
+
+    fn object_search(&self, request: &ObjectSearchRequest) -> ObjectSearchResult {
+        let query = request
+            .query
+            .as_deref()
+            .unwrap_or("")
+            .trim()
+            .to_ascii_lowercase();
+        let object_type_symbol = request
+            .object_type
+            .as_deref()
+            .and_then(|object_type| self.symbol_for_value(object_type));
+        let limit = request.limit.unwrap_or(30).clamp(1, 200);
+        let mut matches = Vec::new();
+
+        for object in &self.objects {
+            if object_type_symbol.is_some_and(|symbol| object.type_name != symbol) {
+                continue;
+            }
+            let object_id = self.pool.resolve(object.id);
+            if !query.is_empty() && !object_id.to_ascii_lowercase().contains(&query) {
+                continue;
+            }
+            matches.push(ObjectSearchHit {
+                object_id: object_id.to_owned(),
+                object_type: self.pool.resolve(object.type_name).to_owned(),
+                event_count: object.lifecycle.len(),
+            });
+            if matches.len() >= limit {
+                break;
+            }
+        }
+
+        ObjectSearchResult { objects: matches }
+    }
+
+    fn object_lifecycle_detail(&self, object_id: &str) -> OcelResult<ObjectLifecycleDetail> {
+        let lookup = self
+            .symbol_for_value(object_id)
+            .and_then(|symbol| self.object_index.get(&symbol).copied());
+        let object_index = lookup.ok_or_else(|| {
+            OcelError::new(format!(
+                "object id '{object_id}' was not found in the active log"
+            ))
+        })?;
+        let object = &self.objects[object_index];
+        let state_attribute = self.symbol_for_value("state");
+        let mut events = Vec::new();
+        let mut stock_points = Vec::new();
+        let mut related = BTreeMap::<(Symbol, String), LifecycleRelatedObjectAccumulator>::new();
+
+        for event_index in &object.lifecycle {
+            let event = &self.events[*event_index];
+            let state = state_attribute.and_then(|symbol| self.event_state(event, symbol));
+            let mut related_objects = Vec::new();
+            for relationship in &event.relationships {
+                if relationship.object_id == object.id {
+                    continue;
+                }
+                let Some(related_index) = self.object_index.get(&relationship.object_id).copied()
+                else {
+                    continue;
+                };
+                let related_object = &self.objects[related_index];
+                let qualifier = self.pool.resolve(relationship.qualifier).to_owned();
+                related_objects.push(LifecycleRelatedObject {
+                    object_id: self.pool.resolve(relationship.object_id).to_owned(),
+                    object_type: self.pool.resolve(related_object.type_name).to_owned(),
+                    qualifier: qualifier.clone(),
+                });
+                let entry = related
+                    .entry((relationship.object_id, qualifier.clone()))
+                    .or_insert_with(|| LifecycleRelatedObjectAccumulator {
+                        object_type: self.pool.resolve(related_object.type_name).to_owned(),
+                        qualifier,
+                        event_count: 0,
+                    });
+                entry.event_count += 1;
+            }
+
+            for attribute in &event.attributes {
+                let name = self.pool.resolve(attribute.name);
+                if !name.to_ascii_lowercase().contains("stock") {
+                    continue;
+                }
+                if let Some(value) = numeric_attr_value(&attribute.value) {
+                    stock_points.push(LifecycleStockPoint {
+                        name: name.to_owned(),
+                        time_ms: event.time_ms,
+                        value,
+                        event_id: self.pool.resolve(event.id).to_owned(),
+                    });
+                }
+            }
+
+            events.push(LifecycleEventDetail {
+                event_id: self.pool.resolve(event.id).to_owned(),
+                event_type: self.pool.resolve(event.type_name).to_owned(),
+                time_ms: event.time_ms,
+                state: state.map(str::to_owned),
+                attributes: event
+                    .attributes
+                    .iter()
+                    .map(|attribute| {
+                        Ok(LifecycleAttribute {
+                            name: self.pool.resolve(attribute.name).to_owned(),
+                            value: self.attr_value_to_json(&attribute.value)?,
+                        })
+                    })
+                    .collect::<OcelResult<Vec<_>>>()?,
+                related_objects,
+            });
+        }
+
+        let state_bands = lifecycle_state_bands(&events);
+        let related_objects = related
+            .into_iter()
+            .map(
+                |((object_symbol, _), accumulator)| LifecycleRelatedObjectSummary {
+                    object_id: self.pool.resolve(object_symbol).to_owned(),
+                    object_type: accumulator.object_type,
+                    qualifier: accumulator.qualifier,
+                    event_count: accumulator.event_count,
+                },
+            )
+            .collect::<Vec<_>>();
+
+        Ok(ObjectLifecycleDetail {
+            object_id: self.pool.resolve(object.id).to_owned(),
+            object_type: self.pool.resolve(object.type_name).to_owned(),
+            event_count: events.len(),
+            event_min_ms: events.first().map(|event| event.time_ms),
+            event_max_ms: events.last().map(|event| event.time_ms),
+            events,
+            state_bands,
+            stock_points,
+            related_objects,
+        })
+    }
+
+    fn stateful_lifecycle(&self, object: &Object, state_attribute: Symbol) -> Vec<(usize, String)> {
+        object
+            .lifecycle
+            .iter()
+            .filter_map(|event_index| {
+                let event = &self.events[*event_index];
+                self.event_state(event, state_attribute)
+                    .map(|state| (*event_index, state.to_owned()))
+            })
+            .collect()
     }
 
     fn time_perspective(
@@ -3714,6 +4092,159 @@ struct TimePerformanceSample {
 
 #[derive(Serialize)]
 #[cfg_attr(test, derive(Debug))]
+struct StateTransitionKpiResult {
+    object_type: String,
+    object_count: usize,
+    stateful_object_count: usize,
+    state_count: usize,
+    states: Vec<String>,
+    transitions: Vec<StateTransitionKpiRow>,
+    dwell: Vec<StateDwellKpiRow>,
+    recovery: Vec<StateTransitionKpiRow>,
+    stuck: Vec<StuckStateRow>,
+}
+
+#[derive(Clone, Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateTransitionKpiRow {
+    from_state: String,
+    to_state: String,
+    count: usize,
+    object_count: usize,
+    min_duration_ms: Option<i64>,
+    median_duration_ms: Option<i64>,
+    avg_duration_ms: Option<f64>,
+    max_duration_ms: Option<i64>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateDwellKpiRow {
+    state: String,
+    episode_count: usize,
+    object_count: usize,
+    total_duration_ms: i64,
+    min_duration_ms: Option<i64>,
+    median_duration_ms: Option<i64>,
+    avg_duration_ms: Option<f64>,
+    max_duration_ms: Option<i64>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StuckStateRow {
+    object_id: String,
+    state: String,
+    entered_time_ms: i64,
+    last_time_ms: i64,
+    duration_ms: i64,
+    event_count: usize,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct ObjectSearchResult {
+    objects: Vec<ObjectSearchHit>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct ObjectSearchHit {
+    object_id: String,
+    object_type: String,
+    event_count: usize,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct ObjectLifecycleDetail {
+    object_id: String,
+    object_type: String,
+    event_count: usize,
+    event_min_ms: Option<i64>,
+    event_max_ms: Option<i64>,
+    events: Vec<LifecycleEventDetail>,
+    state_bands: Vec<LifecycleStateBand>,
+    stock_points: Vec<LifecycleStockPoint>,
+    related_objects: Vec<LifecycleRelatedObjectSummary>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LifecycleEventDetail {
+    event_id: String,
+    event_type: String,
+    time_ms: i64,
+    state: Option<String>,
+    attributes: Vec<LifecycleAttribute>,
+    related_objects: Vec<LifecycleRelatedObject>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LifecycleAttribute {
+    name: String,
+    value: Value,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LifecycleRelatedObject {
+    object_id: String,
+    object_type: String,
+    qualifier: String,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LifecycleRelatedObjectSummary {
+    object_id: String,
+    object_type: String,
+    qualifier: String,
+    event_count: usize,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LifecycleStateBand {
+    state: String,
+    start_time_ms: i64,
+    end_time_ms: i64,
+    event_count: usize,
+    start_event_id: String,
+    end_event_id: String,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct LifecycleStockPoint {
+    name: String,
+    time_ms: i64,
+    value: f64,
+    event_id: String,
+}
+
+#[derive(Default)]
+struct TransitionAccumulator {
+    durations: Vec<i64>,
+}
+
+struct DurationStats {
+    sample_count: usize,
+    min_duration_ms: Option<i64>,
+    median_duration_ms: Option<i64>,
+    avg_duration_ms: Option<f64>,
+    max_duration_ms: Option<i64>,
+}
+
+struct LifecycleRelatedObjectAccumulator {
+    object_type: String,
+    qualifier: String,
+    event_count: usize,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
 struct StateCorrelationResult {
     object_type: String,
     object_count: usize,
@@ -5224,6 +5755,98 @@ fn squared_distance(left: (f64, f64), right: (f64, f64)) -> f64 {
     dx * dx + dy * dy
 }
 
+fn duration_stats(mut durations: Vec<i64>) -> DurationStats {
+    durations.sort_unstable();
+    let sample_count = durations.len();
+    let avg_duration_ms = if durations.is_empty() {
+        None
+    } else {
+        Some(round_f64(
+            durations
+                .iter()
+                .map(|duration| *duration as f64)
+                .sum::<f64>()
+                / durations.len() as f64,
+        ))
+    };
+
+    DurationStats {
+        sample_count,
+        min_duration_ms: durations.first().copied(),
+        median_duration_ms: durations.get(durations.len() / 2).copied(),
+        avg_duration_ms,
+        max_duration_ms: durations.last().copied(),
+    }
+}
+
+fn is_recovery_transition(from_state: &str, to_state: &str) -> bool {
+    if from_state == to_state {
+        return false;
+    }
+    let to = to_state.to_ascii_lowercase();
+    to.contains("normal") || to.contains("available") || to.contains("standard")
+}
+
+fn lifecycle_state_bands(events: &[LifecycleEventDetail]) -> Vec<LifecycleStateBand> {
+    let mut bands = Vec::new();
+    let mut start_index = None::<usize>;
+    let mut current_state = None::<String>;
+
+    for (index, event) in events.iter().enumerate() {
+        let Some(state) = &event.state else {
+            if let Some(start) = start_index.take() {
+                if let Some(state) = current_state.take() {
+                    bands.push(lifecycle_state_band(&events[start..index], state));
+                }
+            }
+            continue;
+        };
+
+        if current_state.as_ref() != Some(state) {
+            if let Some(start) = start_index.replace(index) {
+                if let Some(previous_state) = current_state.replace(state.clone()) {
+                    bands.push(lifecycle_state_band(&events[start..index], previous_state));
+                }
+            } else {
+                current_state = Some(state.clone());
+            }
+        }
+    }
+
+    if let Some(start) = start_index {
+        if let Some(state) = current_state {
+            bands.push(lifecycle_state_band(&events[start..], state));
+        }
+    }
+
+    bands
+}
+
+fn lifecycle_state_band(events: &[LifecycleEventDetail], state: String) -> LifecycleStateBand {
+    let first = events
+        .first()
+        .expect("state band cannot be built from an empty event slice");
+    let last = events
+        .last()
+        .expect("state band cannot be built from an empty event slice");
+    LifecycleStateBand {
+        state,
+        start_time_ms: first.time_ms,
+        end_time_ms: last.time_ms,
+        event_count: events.len(),
+        start_event_id: first.event_id.clone(),
+        end_event_id: last.event_id.clone(),
+    }
+}
+
+fn numeric_attr_value(value: &AttrValue) -> Option<f64> {
+    match value {
+        AttrValue::Integer(number) => Some(*number as f64),
+        AttrValue::Float(number) if number.is_finite() => Some(*number),
+        _ => None,
+    }
+}
+
 fn round_f64(value: f64) -> f64 {
     if value.is_finite() {
         (value * 1_000_000.0).round() / 1_000_000.0
@@ -5693,6 +6316,37 @@ impl OcelDocument {
             })?;
         self.log
             .time_perspective_json(&request)
+            .map_err(JsValue::from)
+    }
+
+    /// Returns transition matrix inputs, dwell times, recovery rows, and stuck-state rankings.
+    #[wasm_bindgen(js_name = stateTransitionKpisJson)]
+    pub fn state_transition_kpis_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request =
+            serde_json::from_str::<StateTransitionKpiRequest>(request_json).map_err(|err| {
+                JsValue::from_str(&format!(
+                    "could not parse state transition KPI request: {err}"
+                ))
+            })?;
+        self.log
+            .state_transition_kpis_json(&request)
+            .map_err(JsValue::from)
+    }
+
+    /// Searches active-log object IDs for lifecycle inspection.
+    #[wasm_bindgen(js_name = objectSearchJson)]
+    pub fn object_search_json(&self, request_json: &str) -> Result<String, JsValue> {
+        let request = serde_json::from_str::<ObjectSearchRequest>(request_json).map_err(|err| {
+            JsValue::from_str(&format!("could not parse object search request: {err}"))
+        })?;
+        self.log.object_search_json(&request).map_err(JsValue::from)
+    }
+
+    /// Returns rich event, state, stock, and related-object timeline data for one object.
+    #[wasm_bindgen(js_name = objectLifecycleDetailJson)]
+    pub fn object_lifecycle_detail_json(&self, object_id: &str) -> Result<String, JsValue> {
+        self.log
+            .object_lifecycle_detail_json(object_id)
             .map_err(JsValue::from)
     }
 
@@ -7931,6 +8585,106 @@ mod tests {
         assert_eq!(other["state"], Value::from("High"));
         assert_eq!(other["correlation"], Value::from(-1.0));
         assert_eq!(other["strength"], Value::from(1.0));
+    }
+
+    #[test]
+    fn exposes_transition_kpis_and_lifecycle_details() {
+        let input = r#"{
+          "eventTypes": [
+            {"name": "Issue", "attributes": [
+              {"name": "Stock After", "type": "integer"}
+            ]},
+            {"name": "Receipt", "attributes": [
+              {"name": "Stock After", "type": "integer"}
+            ]}
+          ],
+          "objectTypes": [
+            {"name": "Material", "attributes": []},
+            {"name": "Purchase Order Item", "attributes": []}
+          ],
+          "events": [
+            {
+              "id": "e1",
+              "type": "Issue",
+              "time": "1970-01-01T00:00:00Z",
+              "attributes": [{"name": "Stock After", "value": 40}],
+              "relationships": [{"objectId": "m1", "qualifier": "material"}]
+            },
+            {
+              "id": "e2",
+              "type": "Issue",
+              "time": "1970-01-02T00:00:00Z",
+              "attributes": [{"name": "Stock After", "value": 10}],
+              "relationships": [{"objectId": "m1", "qualifier": "material"}]
+            },
+            {
+              "id": "e3",
+              "type": "Receipt",
+              "time": "1970-01-05T00:00:00Z",
+              "attributes": [{"name": "Stock After", "value": 80}],
+              "relationships": [
+                {"objectId": "m1", "qualifier": "material"},
+                {"objectId": "po1", "qualifier": "receipt"}
+              ]
+            }
+          ],
+          "objects": [
+            {"id": "m1", "type": "Material"},
+            {"id": "po1", "type": "Purchase Order Item"}
+          ]
+        }"#;
+        let mut log = CompactOcelLog::from_input(input, Some("json")).unwrap();
+        log.apply_state_query(
+            r#"
+            STATE state FOR LEADING OBJECT TYPE 'Material' AS CASE
+              WHEN event."Stock After" < 30 THEN 'Understock'
+              ELSE 'Normal'
+            END
+            "#,
+        )
+        .unwrap();
+
+        let kpis: Value = serde_json::from_str(
+            &log.state_transition_kpis_json(&StateTransitionKpiRequest {
+                object_type: Some("Material".to_owned()),
+                stuck_limit: Some(5),
+            })
+            .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(kpis["object_type"], Value::from("Material"));
+        assert_eq!(kpis["stateful_object_count"], Value::from(1));
+        assert!(kpis["transitions"].as_array().unwrap().iter().any(|row| {
+            row["from_state"] == Value::from("Normal")
+                && row["to_state"] == Value::from("Understock")
+                && row["count"] == Value::from(1)
+        }));
+        assert!(kpis["recovery"].as_array().unwrap().iter().any(|row| {
+            row["from_state"] == Value::from("Understock")
+                && row["to_state"] == Value::from("Normal")
+        }));
+        assert_eq!(kpis["stuck"][0]["state"], Value::from("Normal"));
+
+        let search: Value = serde_json::from_str(
+            &log.object_search_json(&ObjectSearchRequest {
+                object_type: Some("Material".to_owned()),
+                query: Some("m".to_owned()),
+                limit: Some(10),
+            })
+            .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(search["objects"][0]["object_id"], Value::from("m1"));
+
+        let lifecycle: Value =
+            serde_json::from_str(&log.object_lifecycle_detail_json("m1").unwrap()).unwrap();
+        assert_eq!(lifecycle["object_id"], Value::from("m1"));
+        assert_eq!(lifecycle["state_bands"].as_array().unwrap().len(), 3);
+        assert_eq!(lifecycle["stock_points"].as_array().unwrap().len(), 3);
+        assert_eq!(
+            lifecycle["related_objects"][0]["object_id"],
+            Value::from("po1")
+        );
     }
 
     #[test]

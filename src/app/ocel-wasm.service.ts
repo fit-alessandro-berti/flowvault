@@ -29,6 +29,9 @@ export interface OcelDocumentHandle {
   stateFeatureTableCsv(requestJson: string): string;
   stateCorrelationsJson(): string;
   timePerspectiveJson(requestJson: string): string;
+  stateTransitionKpisJson(requestJson: string): string;
+  objectSearchJson(requestJson: string): string;
+  objectLifecycleDetailJson(objectId: string): string;
   causalFeatureTableJson(requestJson: string): string;
   causalFeatureTableCsv(requestJson: string): string;
   fitCausalModelJson(requestJson: string): string;
@@ -151,6 +154,114 @@ export interface TimePerformanceSample {
   middle_time_ms: number;
   end_time_ms?: number;
   duration_ms: number;
+}
+
+export interface StateTransitionKpiResult {
+  object_type: string;
+  object_count: number;
+  stateful_object_count: number;
+  state_count: number;
+  states: string[];
+  transitions: StateTransitionKpiRow[];
+  dwell: StateDwellKpiRow[];
+  recovery: StateTransitionKpiRow[];
+  stuck: StuckStateRow[];
+}
+
+export interface StateTransitionKpiRow {
+  from_state: string;
+  to_state: string;
+  count: number;
+  object_count: number;
+  min_duration_ms?: number;
+  median_duration_ms?: number;
+  avg_duration_ms?: number;
+  max_duration_ms?: number;
+}
+
+export interface StateDwellKpiRow {
+  state: string;
+  episode_count: number;
+  object_count: number;
+  total_duration_ms: number;
+  min_duration_ms?: number;
+  median_duration_ms?: number;
+  avg_duration_ms?: number;
+  max_duration_ms?: number;
+}
+
+export interface StuckStateRow {
+  object_id: string;
+  state: string;
+  entered_time_ms: number;
+  last_time_ms: number;
+  duration_ms: number;
+  event_count: number;
+}
+
+export interface ObjectSearchResult {
+  objects: ObjectSearchHit[];
+}
+
+export interface ObjectSearchHit {
+  object_id: string;
+  object_type: string;
+  event_count: number;
+}
+
+export interface ObjectLifecycleDetail {
+  object_id: string;
+  object_type: string;
+  event_count: number;
+  event_min_ms?: number;
+  event_max_ms?: number;
+  events: LifecycleEventDetail[];
+  state_bands: LifecycleStateBand[];
+  stock_points: LifecycleStockPoint[];
+  related_objects: LifecycleRelatedObjectSummary[];
+}
+
+export interface LifecycleEventDetail {
+  event_id: string;
+  event_type: string;
+  time_ms: number;
+  state?: string;
+  attributes: LifecycleAttribute[];
+  related_objects: LifecycleRelatedObject[];
+}
+
+export interface LifecycleAttribute {
+  name: string;
+  value: string | number | boolean;
+}
+
+export interface LifecycleRelatedObject {
+  object_id: string;
+  object_type: string;
+  qualifier: string;
+}
+
+export interface LifecycleRelatedObjectSummary {
+  object_id: string;
+  object_type: string;
+  qualifier: string;
+  event_count: number;
+}
+
+export interface LifecycleStateBand {
+  state: string;
+  start_time_ms: number;
+  end_time_ms: number;
+  event_count: number;
+  start_event_id: string;
+  end_event_id: string;
+}
+
+export interface LifecycleStockPoint {
+  name: string;
+  time_ms: number;
+  value: number;
+  event_id: string;
 }
 
 export interface StateCorrelationStateCount {
