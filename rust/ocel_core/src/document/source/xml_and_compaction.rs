@@ -177,6 +177,7 @@ fn compact_timed_attributes(
             Ok(TimedAttribute {
                 name: pool.intern(&source_attribute.name),
                 time_ms: parse_timestamp_ms(&source_attribute.time)?,
+                time_micros: parse_timestamp_micros(&source_attribute.time)?,
                 value: compact_value(&source_attribute.value, attr_type, pool)?,
             })
         })

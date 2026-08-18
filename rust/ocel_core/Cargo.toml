@@ -2,12 +2,17 @@
 name = "ocel_core"
 version = "0.1.0"
 edition = "2021"
-description = "OCEL 2.0 JSON/XML import, export, filtering, and analysis core."
+description = "OCEL 2.0 JSON/XML/SQLite/CSV/Parquet import, export, filtering, and analysis core."
 license = "MIT"
 
 [dependencies]
+bytes = "1"
 chrono = { version = "0.4", default-features = false, features = ["std"] }
+csv = "1.4"
 flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+parquet = { version = "59.2", default-features = false, features = ["snap"] }
 roxmltree = "0.21"
+rusqlite = { version = "0.40", features = ["bundled", "serialize"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+zip = { version = "6", default-features = false, features = ["deflate-flate2-zlib-rs"] }

@@ -62,7 +62,7 @@ fn cell_label(x: usize, y: usize) -> String {
 fn attr_value_to_f64(value: &AttrValue) -> Option<f64> {
     match value {
         AttrValue::String(_) => None,
-        AttrValue::Time(value) => Some(*value as f64),
+        AttrValue::Time(value) => Some(*value as f64 / 1_000.0),
         AttrValue::Integer(value) => Some(*value as f64),
         AttrValue::Float(value) if value.is_finite() => Some(*value),
         AttrValue::Float(_) => None,

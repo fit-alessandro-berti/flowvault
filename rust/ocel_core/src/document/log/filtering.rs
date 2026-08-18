@@ -80,6 +80,7 @@ impl CompactOcelLog {
                 id: event.id,
                 type_name: event.type_name,
                 time_ms: event.time_ms,
+                time_micros: event.time_micros,
                 attributes: event.attributes.clone(),
                 relationships,
             });
@@ -119,7 +120,7 @@ impl CompactOcelLog {
         for object in &mut objects {
             object
                 .lifecycle
-                .sort_by_key(|event_index| (retained_events[*event_index].time_ms, *event_index));
+                .sort_by_key(|event_index| (retained_events[*event_index].time_micros, *event_index));
         }
 
         let retained_event_types = retained_events

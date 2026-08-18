@@ -139,7 +139,7 @@ impl EvalContext<'_> {
             AttrValue::String(symbol) => {
                 QueryValue::String(self.log.pool.resolve(*symbol).to_owned())
             }
-            AttrValue::Time(ms) => QueryValue::Number(*ms as f64),
+            AttrValue::Time(micros) => QueryValue::Number(*micros as f64 / 1_000.0),
             AttrValue::Integer(value) => QueryValue::Number(*value as f64),
             AttrValue::Float(value) => QueryValue::Number(*value),
             AttrValue::Boolean(value) => QueryValue::Boolean(*value),

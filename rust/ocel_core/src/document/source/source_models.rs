@@ -11,7 +11,7 @@ struct SourceType {
     attributes: Vec<SourceAttributeDef>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct SourceAttributeDef {
     name: String,
     attr_type: String,
@@ -47,13 +47,13 @@ struct SourceTimedAttribute {
     value: SourceValue,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct SourceRelationship {
     object_id: String,
     qualifier: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 enum SourceValue {
     String(String),
     Integer(i64),

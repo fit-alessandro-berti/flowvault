@@ -23,7 +23,7 @@ impl CompactOcelLog {
                 "    <event id=\"{}\" type=\"{}\" time=\"{}\">",
                 escape_xml_attr(self.pool.resolve(event.id)),
                 escape_xml_attr(self.pool.resolve(event.type_name)),
-                format_timestamp_ms(event.time_ms)?
+                format_timestamp_micros(event.time_micros)?
             )
             .expect("writing to String cannot fail");
             self.write_attributes_xml(&mut output, &event.attributes, 6)?;
@@ -126,7 +126,7 @@ impl CompactOcelLog {
                 output,
                 "{pad}  <attribute name=\"{}\" time=\"{}\">{}</attribute>",
                 escape_xml_attr(self.pool.resolve(attribute.name)),
-                format_timestamp_ms(attribute.time_ms)?,
+                format_timestamp_micros(attribute.time_micros)?,
                 escape_xml_text(&self.attr_value_to_xml_text(&attribute.value)?)
             )
             .expect("writing to String cannot fail");
@@ -162,7 +162,7 @@ impl CompactOcelLog {
     fn attr_value_to_xml_text(&self, value: &AttrValue) -> OcelResult<String> {
         match value {
             AttrValue::String(symbol) => Ok(self.pool.resolve(*symbol).to_owned()),
-            AttrValue::Time(ms) => format_timestamp_ms(*ms),
+            AttrValue::Time(micros) => format_timestamp_micros(*micros),
             AttrValue::Integer(number) => Ok(number.to_string()),
             AttrValue::Float(number) => {
                 if !number.is_finite() {

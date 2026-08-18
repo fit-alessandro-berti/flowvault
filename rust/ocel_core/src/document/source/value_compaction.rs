@@ -49,7 +49,7 @@ fn source_value_as_string(source_value: &SourceValue) -> String {
 
 fn parse_time_value(source_value: &SourceValue) -> OcelResult<i64> {
     match source_value {
-        SourceValue::String(value) => parse_timestamp_ms(value),
+        SourceValue::String(value) => parse_timestamp_micros(value),
         _ => Err(OcelError::new("time attributes must be ISO 8601 strings")),
     }
 }
@@ -104,32 +104,22 @@ fn parse_boolean_value(source_value: &SourceValue) -> OcelResult<bool> {
     }
 }
 
-fn decode_ocel_bytes(input: &[u8]) -> OcelResult<String> {
-    let bytes = if input.starts_with(&[0x1f, 0x8b]) {
+fn decode_ocel_bytes(input: &[u8]) -> OcelResult<Vec<u8>> {
+    if input.starts_with(&[0x1f, 0x8b]) {
         let mut decoder = GzDecoder::new(input);
         let mut decoded = Vec::new();
         decoder
             .read_to_end(&mut decoded)
             .map_err(|err| OcelError::new(format!("could not decompress gzip OCEL file: {err}")))?;
-        decoded
+        Ok(decoded)
     } else {
-        input.to_vec()
-    };
-
-    String::from_utf8(bytes)
-        .map_err(|err| OcelError::new(format!("OCEL input is not valid UTF-8: {err}")))
+        Ok(input.to_vec())
+    }
 }
 
 fn detect_format(input: &str, hint: Option<&str>) -> OcelResult<OcelFormat> {
-    if let Some(hint) = hint {
-        let hint = hint.to_ascii_lowercase();
-        let hint = hint.strip_suffix(".gz").unwrap_or(&hint);
-        if hint.ends_with(".json") || hint.ends_with(".jsonocel") || hint == "json" {
-            return Ok(OcelFormat::Json);
-        }
-        if hint.ends_with(".xml") || hint.ends_with(".xmlocel") || hint == "xml" {
-            return Ok(OcelFormat::Xml);
-        }
+    if let Some(format) = detect_format_hint(hint) {
+        return Ok(format);
     }
 
     let first = input
@@ -140,22 +130,64 @@ fn detect_format(input: &str, hint: Option<&str>) -> OcelResult<OcelFormat> {
     match first {
         '{' => Ok(OcelFormat::Json),
         '<' => Ok(OcelFormat::Xml),
+        _ if looks_like_ocel_csv(input) => Ok(OcelFormat::Csv),
         _ => Err(OcelError::new(
-            "could not detect OCEL format; expected JSON or XML input",
+            "could not detect OCEL format; expected JSON, XML, CSV, SQLite, or bundled input",
         )),
     }
 }
 
+fn detect_format_hint(hint: Option<&str>) -> Option<OcelFormat> {
+    let hint = hint?.trim().to_ascii_lowercase();
+    let hint = hint.strip_suffix(".gz").unwrap_or(&hint);
+    if hint.ends_with(".json") || hint.ends_with(".jsonocel") || hint == "json" {
+        Some(OcelFormat::Json)
+    } else if hint.ends_with(".xml") || hint.ends_with(".xmlocel") || hint == "xml" {
+        Some(OcelFormat::Xml)
+    } else if hint.ends_with(".ocel.csv") || hint == "csv" {
+        Some(OcelFormat::Csv)
+    } else if hint.ends_with(".sqlite") || hint.ends_with(".sqlite3") || hint == "sqlite" {
+        Some(OcelFormat::Sqlite)
+    } else if hint.ends_with(".ocel.zip") || hint == "bundle" || hint == "parquet" {
+        Some(OcelFormat::Bundle)
+    } else {
+        None
+    }
+}
+
+fn looks_like_ocel_csv(input: &str) -> bool {
+    let header = input.lines().next().unwrap_or_default().trim_end_matches('\r');
+    let mut reader = csv::ReaderBuilder::new()
+        .has_headers(false)
+        .from_reader(header.as_bytes());
+    reader.records().next().is_some_and(|record| {
+        record.is_ok_and(|record| {
+            let fields = record.iter().collect::<HashSet<_>>();
+            fields.contains("id") && fields.contains("activity") && fields.contains("timestamp")
+        })
+    })
+}
+
+fn is_zip_bytes(input: &[u8]) -> bool {
+    input.starts_with(b"PK\x03\x04")
+        || input.starts_with(b"PK\x05\x06")
+        || input.starts_with(b"PK\x07\x08")
+}
+
 fn parse_timestamp_ms(input: &str) -> OcelResult<i64> {
+    Ok(parse_timestamp_micros(input)?.div_euclid(1_000))
+}
+
+fn parse_timestamp_micros(input: &str) -> OcelResult<i64> {
     let value = input.trim();
     if let Ok(timestamp) = DateTime::parse_from_rfc3339(value) {
-        return Ok(timestamp.timestamp_millis());
+        return Ok(timestamp.timestamp_micros());
     }
 
     for format in ["%Y-%m-%dT%H:%M:%S%.f", "%Y-%m-%d %H:%M:%S%.f"] {
         if let Ok(timestamp) = NaiveDateTime::parse_from_str(value, format) {
             return Ok(
-                DateTime::<Utc>::from_naive_utc_and_offset(timestamp, Utc).timestamp_millis()
+                DateTime::<Utc>::from_naive_utc_and_offset(timestamp, Utc).timestamp_micros()
             );
         }
     }
@@ -164,7 +196,7 @@ fn parse_timestamp_ms(input: &str) -> OcelResult<i64> {
         let timestamp = date
             .and_hms_opt(0, 0, 0)
             .ok_or_else(|| OcelError::new(format!("invalid date '{value}'")))?;
-        return Ok(DateTime::<Utc>::from_naive_utc_and_offset(timestamp, Utc).timestamp_millis());
+        return Ok(DateTime::<Utc>::from_naive_utc_and_offset(timestamp, Utc).timestamp_micros());
     }
 
     Err(OcelError::new(format!(
@@ -172,14 +204,16 @@ fn parse_timestamp_ms(input: &str) -> OcelResult<i64> {
     )))
 }
 
-fn format_timestamp_ms(timestamp_ms: i64) -> OcelResult<String> {
-    let timestamp = DateTime::<Utc>::from_timestamp_millis(timestamp_ms).ok_or_else(|| {
-        OcelError::new(format!("timestamp {timestamp_ms} is outside chrono range"))
+fn format_timestamp_micros(timestamp_micros: i64) -> OcelResult<String> {
+    let timestamp = DateTime::<Utc>::from_timestamp_micros(timestamp_micros).ok_or_else(|| {
+        OcelError::new(format!("timestamp {timestamp_micros} is outside chrono range"))
     })?;
-    let precision = if timestamp_ms % 1000 == 0 {
+    let precision = if timestamp_micros % 1_000_000 == 0 {
         SecondsFormat::Secs
-    } else {
+    } else if timestamp_micros % 1_000 == 0 {
         SecondsFormat::Millis
+    } else {
+        SecondsFormat::Micros
     };
     Ok(timestamp.to_rfc3339_opts(precision, true))
 }

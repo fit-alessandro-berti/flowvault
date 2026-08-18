@@ -33,7 +33,7 @@
       <label class="toolbar-button">
         <input
           type="file"
-          accept=".json,.jsonocel,.xml,.xmlocel,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,application/gzip,application/x-gzip"
+          accept=".json,.jsonocel,.xml,.xmlocel,.ocel.csv,.sqlite,.sqlite3,.ocel.zip,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,text/csv,application/vnd.sqlite3,application/zip,application/gzip,application/x-gzip"
           (change)="vm.onFileSelected($event)"
         />
         Import
@@ -46,6 +46,9 @@
           <section class="toolbar-popover export-menu" aria-label="Export menu">
             <button type="button" (click)="vm.exportJson()">JSON</button>
             <button type="button" (click)="vm.exportXml()">XML</button>
+            <button type="button" (click)="vm.exportCsv()">CSV</button>
+            <button type="button" (click)="vm.exportSqlite()">SQLite</button>
+            <button type="button" (click)="vm.exportBundle()">Bundle (Parquet)</button>
           </section>
         }
       </div>
@@ -59,7 +62,9 @@
             <button type="button" (click)="vm.openDfNodeFilterDialog()">OC-DFG Nodes</button>
             <button type="button" (click)="vm.openDfEdgeFilterDialog()">OC-DFG Edges</button>
             <button type="button" (click)="vm.openTimeframeFilterDialog()">Timeframe</button>
-            <button type="button" (click)="vm.openTextAttributeFilterDialog()">Text Attributes</button>
+            <button type="button" (click)="vm.openTextAttributeFilterDialog()">
+              Text Attributes
+            </button>
           </section>
         }
       </div>

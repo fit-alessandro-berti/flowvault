@@ -2,9 +2,23 @@ import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { App } from './app';
 import type { ProcessGraph } from './ocel-wasm.service';
-import { importedSummary, patternAnalysis, processGraph, statefulSummary, traditionalProcessGraph } from './testing/core-fixtures';
-import { lifecycleDetail, objectSearchResult, stateCorrelationAnalysis, transitionKpisAnalysis } from './testing/dashboard-fixtures';
-import { stateDetectionAnalysis, stateDetectionCellDetail } from './testing/state-detection-fixtures';
+import {
+  importedSummary,
+  patternAnalysis,
+  processGraph,
+  statefulSummary,
+  traditionalProcessGraph,
+} from './testing/core-fixtures';
+import {
+  lifecycleDetail,
+  objectSearchResult,
+  stateCorrelationAnalysis,
+  transitionKpisAnalysis,
+} from './testing/dashboard-fixtures';
+import {
+  stateDetectionAnalysis,
+  stateDetectionCellDetail,
+} from './testing/state-detection-fixtures';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -21,9 +35,7 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
     const native = fixture.nativeElement as HTMLElement;
     expect(native.querySelector('.toolbar-left strong')?.textContent).toContain('FLOWVAULT');
-    expect(native.querySelector('.drop-title')?.textContent).toContain(
-      'Drop an OCEL 2.0 JSON/XML file',
-    );
+    expect(native.querySelector('.drop-title')?.textContent).toContain('Drop an OCEL 2.0 file');
   });
 
   it('keeps document actions hidden before import', () => {
@@ -39,7 +51,7 @@ describe('App', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Export JSON');
   });
 
-  it('exports JSON and XML from a single export menu', () => {
+  it('exports every supported format from a single export menu', () => {
     const fixture = TestBed.createComponent(App);
     const component = fixture.componentInstance as unknown as {
       documentHandle: unknown;
@@ -49,11 +61,16 @@ describe('App', () => {
     };
     const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:export');
     const revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
-    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
+    const clickSpy = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => undefined);
 
     component.documentHandle = {
       exportJson: () => '{"events":[]}',
       exportXml: () => '<log />',
+      exportCsv: () => 'id,activity,timestamp\r\n',
+      exportSqlite: () => new Uint8Array([1, 2, 3]),
+      exportBundle: () => new Uint8Array([4, 5, 6]),
     };
     component.fileName.set('orders.json');
     component.summary.set(importedSummary);
@@ -62,7 +79,9 @@ describe('App', () => {
 
     const native = fixture.nativeElement as HTMLElement;
     const topbarButtons = Array.from(
-      native.querySelectorAll<HTMLButtonElement>('.toolbar-actions > button, .toolbar-actions > .toolbar-popover-anchor > button'),
+      native.querySelectorAll<HTMLButtonElement>(
+        '.toolbar-actions > button, .toolbar-actions > .toolbar-popover-anchor > button',
+      ),
     ).map((button) => button.textContent?.trim());
     expect(topbarButtons).toContain('Export');
     expect(topbarButtons).not.toContain('Export JSON');
@@ -74,9 +93,12 @@ describe('App', () => {
       ?.click();
     fixture.detectChanges();
 
-    expect(native.querySelectorAll('.export-menu button').length).toBe(2);
+    expect(native.querySelectorAll('.export-menu button').length).toBe(5);
     expect(native.textContent).toContain('JSON');
     expect(native.textContent).toContain('XML');
+    expect(native.textContent).toContain('CSV');
+    expect(native.textContent).toContain('SQLite');
+    expect(native.textContent).toContain('Bundle (Parquet)');
 
     native.querySelector<HTMLButtonElement>('.export-menu button')?.click();
     fixture.detectChanges();
@@ -91,8 +113,17 @@ describe('App', () => {
     native.querySelectorAll<HTMLButtonElement>('.export-menu button')[1]?.click();
     fixture.detectChanges();
 
-    expect(clickSpy).toHaveBeenCalledTimes(2);
-    expect(createObjectUrl).toHaveBeenCalledTimes(2);
+    for (const exportIndex of [2, 3, 4]) {
+      Array.from(native.querySelectorAll<HTMLButtonElement>('.toolbar-actions button'))
+        .find((button) => button.textContent?.trim() === 'Export')
+        ?.click();
+      fixture.detectChanges();
+      native.querySelectorAll<HTMLButtonElement>('.export-menu button')[exportIndex]?.click();
+      fixture.detectChanges();
+    }
+
+    expect(clickSpy).toHaveBeenCalledTimes(5);
+    expect(createObjectUrl).toHaveBeenCalledTimes(5);
 
     createObjectUrl.mockRestore();
     revokeObjectUrl.mockRestore();
@@ -153,7 +184,9 @@ describe('App', () => {
 
     try {
       fixture.detectChanges();
-      (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.sample-button')?.click();
+      (fixture.nativeElement as HTMLElement)
+        .querySelector<HTMLButtonElement>('.sample-button')
+        ?.click();
       await fixture.whenStable();
       fixture.detectChanges();
     } finally {

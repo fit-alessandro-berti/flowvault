@@ -1,10 +1,8 @@
 
 impl OcelDocumentCore {
-    /// Imports an OCEL 2.0 JSON or XML string.
+    /// Imports an OCEL 2.0 JSON, XML, or CSV string.
     ///
-    /// `format_hint` may be `"json"`, `"xml"`, a filename, or `None`.
-    /// When omitted, the parser detects JSON/XML from the first non-whitespace
-    /// character.
+    /// `format_hint` may be `"json"`, `"xml"`, `"csv"`, a filename, or `None`.
     pub fn new(input: &str, format_hint: Option<&str>) -> OcelResult<Self> {
         let log = CompactOcelLog::from_input(input, format_hint)?;
         let current_filter = OcelFilterRequest::all_for(&log);
@@ -15,10 +13,10 @@ impl OcelDocumentCore {
         })
     }
 
-    /// Imports an OCEL 2.0 JSON/XML file from raw bytes.
+    /// Imports any supported OCEL 2 file from raw bytes.
     ///
-    /// The byte input may be plain UTF-8 JSON/XML or a gzip-compressed `.gz`
-    /// file containing UTF-8 JSON/XML.
+    /// JSON, XML, CSV, SQLite, Parquet bundles, and gzip-compressed textual
+    /// inputs are supported. A filename is accepted as the format hint.
     pub fn from_bytes(input: &[u8], format_hint: Option<&str>) -> OcelResult<Self> {
         let log = CompactOcelLog::from_bytes(input, format_hint)?;
         let current_filter = OcelFilterRequest::all_for(&log);
@@ -62,6 +60,21 @@ impl OcelDocumentCore {
     /// Exports the document as OCEL 2.0 XML.
     pub fn export_xml(&self) -> OcelResult<String> {
         self.log.export_xml()
+    }
+
+    /// Exports the document as the OCEL 2 CSV exchange format.
+    pub fn export_csv(&self) -> OcelResult<String> {
+        self.log.export_csv()
+    }
+
+    /// Exports the document as the OCEL 2 SQLite exchange format.
+    pub fn export_sqlite(&self) -> OcelResult<Vec<u8>> {
+        self.log.export_sqlite()
+    }
+
+    /// Exports the document as an OCEL 2 Parquet bundle (`.ocel.zip`).
+    pub fn export_bundle(&self) -> OcelResult<Vec<u8>> {
+        self.log.export_bundle()
     }
 
     /// Returns the ordered event IDs related to an object ID as a JSON array.

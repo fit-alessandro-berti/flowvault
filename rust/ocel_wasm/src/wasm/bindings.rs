@@ -1,21 +1,19 @@
 
 #[wasm_bindgen]
 impl OcelDocument {
-    /// Imports an OCEL 2.0 JSON or XML string.
+    /// Imports an OCEL 2.0 JSON, XML, or CSV string.
     ///
-    /// `format_hint` may be `"json"`, `"xml"`, a filename, or `undefined`.
-    /// When omitted, the parser detects JSON/XML from the first non-whitespace
-    /// character.
+    /// `format_hint` may be a format name, filename, or `undefined`.
     #[wasm_bindgen(constructor)]
     pub fn new(input: &str, format_hint: Option<String>) -> Result<OcelDocument, JsValue> {
         let inner = into_js_result(OcelDocumentCore::new(input, format_hint.as_deref()))?;
         Ok(Self { inner })
     }
 
-    /// Imports an OCEL 2.0 JSON/XML file from raw bytes.
+    /// Imports any supported OCEL 2 file from raw bytes.
     ///
-    /// The byte input may be plain UTF-8 JSON/XML or a gzip-compressed `.gz`
-    /// file containing UTF-8 JSON/XML.
+    /// JSON, XML, CSV, SQLite, Parquet bundles, and gzip-compressed textual
+    /// inputs are supported.
     #[wasm_bindgen(js_name = fromBytes)]
     pub fn from_bytes(input: &[u8], format_hint: Option<String>) -> Result<OcelDocument, JsValue> {
         let inner = into_js_result(OcelDocumentCore::from_bytes(input, format_hint.as_deref()))?;
@@ -56,6 +54,24 @@ impl OcelDocument {
     #[wasm_bindgen(js_name = exportXml)]
     pub fn export_xml(&self) -> Result<String, JsValue> {
         into_js_result(self.inner.export_xml())
+    }
+
+    /// Exports the document as OCEL 2 CSV.
+    #[wasm_bindgen(js_name = exportCsv)]
+    pub fn export_csv(&self) -> Result<String, JsValue> {
+        into_js_result(self.inner.export_csv())
+    }
+
+    /// Exports the document as OCEL 2 SQLite bytes.
+    #[wasm_bindgen(js_name = exportSqlite)]
+    pub fn export_sqlite(&self) -> Result<Vec<u8>, JsValue> {
+        into_js_result(self.inner.export_sqlite())
+    }
+
+    /// Exports the document as an OCEL 2 Parquet bundle (`.ocel.zip`).
+    #[wasm_bindgen(js_name = exportBundle)]
+    pub fn export_bundle(&self) -> Result<Vec<u8>, JsValue> {
+        into_js_result(self.inner.export_bundle())
     }
 
     /// Returns the ordered event IDs related to an object ID as a JSON array.

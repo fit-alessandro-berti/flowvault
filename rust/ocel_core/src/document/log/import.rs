@@ -4,12 +4,28 @@ impl CompactOcelLog {
         let source = match format {
             OcelFormat::Json => parse_json(input)?,
             OcelFormat::Xml => parse_xml(input)?,
+            OcelFormat::Csv => parse_csv(input)?,
+            OcelFormat::Sqlite | OcelFormat::Bundle => {
+                return Err(OcelError::new(format!(
+                    "{} OCEL input is binary; import it with from_bytes",
+                    format.as_str()
+                )))
+            }
         };
         Self::from_source(source, format)
     }
 
     fn from_bytes(input: &[u8], format_hint: Option<&str>) -> OcelResult<Self> {
-        let text = decode_ocel_bytes(input)?;
+        let bytes = decode_ocel_bytes(input)?;
+        let hinted_format = detect_format_hint(format_hint);
+        if hinted_format == Some(OcelFormat::Sqlite) || bytes.starts_with(b"SQLite format 3\0") {
+            return Self::from_source(parse_sqlite(&bytes)?, OcelFormat::Sqlite);
+        }
+        if hinted_format == Some(OcelFormat::Bundle) || is_zip_bytes(&bytes) {
+            return Self::from_source(parse_bundle(&bytes)?, OcelFormat::Bundle);
+        }
+        let text = String::from_utf8(bytes)
+            .map_err(|err| OcelError::new(format!("OCEL input is not valid UTF-8: {err}")))?;
         Self::from_input(&text, format_hint)
     }
 
@@ -122,10 +138,12 @@ impl CompactOcelLog {
         let mut events = Vec::with_capacity(source.events.len());
         for source_event in &source.events {
             let time_ms = parse_timestamp_ms(&source_event.time)?;
+            let time_micros = parse_timestamp_micros(&source_event.time)?;
             let event = Event {
                 id: pool.intern(&source_event.id),
                 type_name: pool.intern(&source_event.type_name),
                 time_ms,
+                time_micros,
                 attributes: compact_attributes(
                     &source_event.attributes,
                     &source_event.type_name,
@@ -148,7 +166,7 @@ impl CompactOcelLog {
         for object in &mut objects {
             object
                 .lifecycle
-                .sort_by_key(|event_index| (events[*event_index].time_ms, *event_index));
+                .sort_by_key(|event_index| (events[*event_index].time_micros, *event_index));
         }
 
         Ok(Self {

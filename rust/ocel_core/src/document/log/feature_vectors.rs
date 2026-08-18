@@ -101,7 +101,7 @@ impl CompactOcelLog {
     fn attr_value_label(&self, value: &AttrValue) -> String {
         match value {
             AttrValue::String(symbol) => self.pool.resolve(*symbol).to_owned(),
-            AttrValue::Time(ms) => ms.to_string(),
+            AttrValue::Time(micros) => micros.div_euclid(1_000).to_string(),
             AttrValue::Integer(value) => value.to_string(),
             AttrValue::Float(value) => value.to_string(),
             AttrValue::Boolean(value) => value.to_string(),

@@ -1,8 +1,8 @@
 # Flowvault
 
-Flowvault is a mixed Angular and Rust/WebAssembly OCEL 2.0 inspector. It imports OCEL 2.0 JSON/XML files in the browser, including gzip-compressed `.json.gz` and `.xml.gz` files, stores them in a compact Rust data structure, shows event/object/E2O/O2O counts, and exports the loaded log back to OCEL 2.0 JSON or XML.
+Flowvault is a mixed Angular and Rust/WebAssembly OCEL 2.0 inspector. It imports JSON, XML, CSV, SQLite, and bundled Parquet OCEL files directly in the browser, stores them in a compact Rust data structure, shows event/object/E2O/O2O counts, and exports the active log to any of those formats. Gzip-compressed JSON, XML, and CSV inputs are also supported.
 
-The implementation follows the official OCEL 2.0 JSON and XML format shape: top-level event type, object type, event, and object collections; scalar attributes; ISO 8601 timestamps; Event-to-Object relationships; and Object-to-Object relationships.
+The implementation follows the official OCEL formats, including typed scalar attributes, ISO 8601 timestamps, Event-to-Object relationships, Object-to-Object relationships, object attribute histories, SQLite type mappings, CSV reconstruction rules, and bundled Parquet metadata/table schemas.
 
 ## Project Layout
 
@@ -14,7 +14,7 @@ rust/Cargo.toml          Rust workspace
 rust/ocel_core/          Rust OCEL parser/exporter/filtering/analysis core
 rust/ocel_core/tests/    Rust integration tests for the public core API
 rust/ocel_wasm/          Thin wasm-bindgen adapter compiled with wasm-pack
-files/ocel2/             Example OCEL 2.0 JSON/XML files
+files/ocel2/             Example OCEL 2.0 files in every supported format
 public/wasm/             Generated wasm-pack output during builds
 dist/flowvault/browser/  Static production build output
 ```
@@ -25,12 +25,12 @@ The Rust core parses standard OCEL 2.0 files into a memory-oriented representati
 
 - repeated strings are interned once in a string pool;
 - event IDs, object IDs, type names, attribute names, and qualifiers are stored as integer symbols;
-- event timestamps and object attribute timestamps are stored as Unix timestamps in milliseconds;
+- event timestamps and object attribute timestamps retain Unix-microsecond precision;
 - attribute values are stored as typed values: string symbol, timestamp, integer, float, or boolean;
 - relationships store object references as symbols rather than repeated strings;
 - every object owns a timestamp-ordered lifecycle index of related event positions.
 
-This keeps large logs more compact in memory while preserving standard JSON/XML export.
+This keeps large logs more compact in memory while preserving standard multi-format export.
 
 The WebAssembly document keeps two compact logs in memory after import: the original log and the active log. Activity and object-type filters rebuild the active log from the original log, so changing a filter also clears derived event states and state-pattern results.
 
@@ -38,17 +38,23 @@ The WebAssembly document keeps two compact logs in memory after import: the orig
 
 - JSON extensions: `.json`, `.jsonocel`
 - XML extensions: `.xml`, `.xmlocel`
+- CSV extension: `.ocel.csv`
+- SQLite extensions: `.sqlite`, `.sqlite3`
+- Bundled Parquet extension: `.ocel.zip`
 - Attribute types: `string`, `time`, `integer`, `float`, `boolean`
+- CSV uses UTF-8/RFC 4180, reconstructs its implicit schemas per attribute scope, and preserves object histories through declaration and attribute rows
+- SQLite uses the general, type-map, type-specific, and relationship tables defined by OCEL
+- Parquet bundles contain authoritative `ocel-meta.json` metadata, typed per-type tables, change tables, and relation tables
 - XML boolean values are exported as `1` or `0`
 - ISO 8601 timestamps with offsets are normalized to UTC on export
 - ISO 8601 timestamps without offsets are treated as UTC
 - XML relationships accept `qualifier` and the older/example `relationship` attribute name on import; export uses `qualifier`
 
-The importer validates duplicate IDs/types, declared attribute types, unknown event/object types, unknown relationship targets, scalar JSON attributes, and timestamp parsing.
+The importer validates duplicate IDs/types, declared attribute types, unknown relationship targets, CSV row/reference rules, SQLite mappings and table schemas, safe bundle paths, Parquet physical/logical types and nullability, object-change consistency, scalar values, and timestamps.
 
 ## Activity and Object-Type Filtering
 
-The first screen is intentionally minimal: it asks for an OCEL 2.0 JSON/XML upload, either plain text or gzip-compressed, and also offers bundled compressed sample logs served from `public/static/ocel2_compressed`. After importing a log, Flowvault switches to a workspace with a persistent black toolbar and a left-side feature selector. The toolbar contains import/export/state actions and a filter menu for activities and object types. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. When filters are active, the toolbar shows the number of filters; opening it reveals the filter chain and removal controls. The `Statistics` page shows plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
+The first screen is intentionally minimal: it asks for any supported OCEL 2.0 file and also offers bundled compressed sample logs served from `public/static/ocel2_compressed`. After importing a log, Flowvault switches to a workspace with a persistent black toolbar and a left-side feature selector. The toolbar contains import/export/state actions and a filter menu for activities and object types. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. When filters are active, the toolbar shows the number of filters; opening it reveals the filter chain and removal controls. The `Statistics` page shows plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
 
 Filtered exports use the active filtered log. Changing any filter resets derived state enrichment and pattern analysis because those results belong to the previous active log.
 
@@ -181,7 +187,7 @@ The npm scripts set `CARGO_HOME=$PWD/.cargo-home` so Cargo does not need to writ
 
 `npm test` runs:
 
-- Rust workspace tests, including integration tests in `rust/ocel_core/tests` for JSON/XML imports, relationship counts, object lifecycles, validation errors, state enrichment, filtering, graph endpoints, execution-state detection, causal feature tables, compressed imports, fixture imports, and JSON/XML round trips;
+- Rust workspace tests, including integration tests in `rust/ocel_core/tests` for all five formats, checked-in fixture equivalence, typed values, microsecond timestamps, escaped CSV references, relationship counts, object histories, validation errors, state enrichment, filtering, graph endpoints, execution-state detection, causal feature tables, compressed imports, and round trips;
 - Angular unit tests for the app shell, file helper behavior, state preset dialog, state pattern text/graph rendering, and the State Detection page.
 
 The bundled examples in `files/ocel2/` are used by the Rust tests.
@@ -208,5 +214,8 @@ No server-side API is required. The OCEL file is parsed locally in the browser b
 
 - OCEL 2.0 JSON format: https://www.ocel-standard.org/specification/formats/json/
 - OCEL 2.0 XML format: https://www.ocel-standard.org/specification/formats/xml/
+- OCEL SQLite format: https://www.ocel-standard.org/specification/formats/sqlite/
+- OCEL CSV format: https://www.ocel-standard.org/specification/formats/csv/
+- OCEL bundled CSV/Parquet format: https://www.ocel-standard.org/specification/formats/bundled/
 - OCEL 2.0 specification: https://www.ocel-standard.org/2.0/ocel20_specification.pdf
 - State-Aware Object-Centric Process Mining: Enhancing OCEL 2.0 with Explicit State Transitions: https://www.alessandroberti.it/new_papers/2025_Dina_SAOCPM.pdf

@@ -126,7 +126,7 @@ impl CompactOcelLog {
         Ok(json!({
             "id": self.pool.resolve(event.id),
             "type": self.pool.resolve(event.type_name),
-            "time": format_timestamp_ms(event.time_ms)?,
+            "time": format_timestamp_micros(event.time_micros)?,
             "attributes": event.attributes.iter().map(|attribute| {
                 self.attribute_to_json(attribute)
             }).collect::<OcelResult<Vec<_>>>()?,
@@ -155,7 +155,7 @@ impl CompactOcelLog {
     fn timed_attribute_to_json(&self, attribute: &TimedAttribute) -> OcelResult<Value> {
         Ok(json!({
             "name": self.pool.resolve(attribute.name),
-            "time": format_timestamp_ms(attribute.time_ms)?,
+            "time": format_timestamp_micros(attribute.time_micros)?,
             "value": self.attr_value_to_json(&attribute.value)?,
         }))
     }
@@ -177,7 +177,7 @@ impl CompactOcelLog {
     fn attr_value_to_json(&self, value: &AttrValue) -> OcelResult<Value> {
         match value {
             AttrValue::String(symbol) => Ok(Value::String(self.pool.resolve(*symbol).to_owned())),
-            AttrValue::Time(ms) => Ok(Value::String(format_timestamp_ms(*ms)?)),
+            AttrValue::Time(micros) => Ok(Value::String(format_timestamp_micros(*micros)?)),
             AttrValue::Integer(number) => Ok(Value::Number(Number::from(*number))),
             AttrValue::Float(number) => Number::from_f64(*number)
                 .map(Value::Number)

@@ -1,7 +1,7 @@
 import type { OcelFilterOptions } from './filter-options.models';
 
 export interface OcelSummary {
-  source_format: 'json' | 'xml';
+  source_format: 'json' | 'xml' | 'csv' | 'sqlite' | 'bundle';
   event_types: number;
   object_types: number;
   events: number;
@@ -20,6 +20,9 @@ export interface OcelDocumentHandle {
   applyFilter(filterJson: string): string;
   exportJson(): string;
   exportXml(): string;
+  exportCsv(): string;
+  exportSqlite(): Uint8Array;
+  exportBundle(): Uint8Array;
   objectLifecycleJson(objectId: string): string;
   applyStateQuery(query: string): string;
   applyStateDetection(requestJson: string): string;

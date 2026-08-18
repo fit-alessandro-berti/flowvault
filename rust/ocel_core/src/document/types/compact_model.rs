@@ -2,6 +2,9 @@
 enum OcelFormat {
     Json,
     Xml,
+    Sqlite,
+    Csv,
+    Bundle,
 }
 
 impl OcelFormat {
@@ -9,6 +12,9 @@ impl OcelFormat {
         match self {
             Self::Json => "json",
             Self::Xml => "xml",
+            Self::Sqlite => "sqlite",
+            Self::Csv => "csv",
+            Self::Bundle => "bundle",
         }
     }
 }
@@ -124,6 +130,7 @@ struct Attribute {
 struct TimedAttribute {
     name: Symbol,
     time_ms: i64,
+    time_micros: i64,
     value: AttrValue,
 }
 
@@ -138,6 +145,7 @@ struct Event {
     id: Symbol,
     type_name: Symbol,
     time_ms: i64,
+    time_micros: i64,
     attributes: Vec<Attribute>,
     relationships: Vec<Relationship>,
 }

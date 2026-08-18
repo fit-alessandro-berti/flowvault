@@ -68,6 +68,29 @@ pub fn compressed_ocel_fixture_paths() -> Vec<PathBuf> {
     paths
 }
 
+pub fn structured_ocel_fixture_paths() -> Vec<PathBuf> {
+    let mut paths = fs::read_dir(fixture_dir("ocel2"))
+        .expect("failed to read OCEL fixture directory")
+        .map(|entry| {
+            entry
+                .expect("failed to read fixture directory entry")
+                .path()
+        })
+        .filter(|path| {
+            path.file_name()
+                .and_then(|name| name.to_str())
+                .map(|name| {
+                    name.ends_with(".ocel.csv")
+                        || name.ends_with(".sqlite")
+                        || name.ends_with(".ocel.zip")
+                })
+                .unwrap_or(false)
+        })
+        .collect::<Vec<_>>();
+    paths.sort();
+    paths
+}
+
 pub fn fixture_dir(name: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../files")
