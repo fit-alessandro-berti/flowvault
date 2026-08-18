@@ -1,0 +1,1211 @@
+id,activity,timestamp,ot:CUSTOMER,ot:MAT,ot:MAT_PLA,ot:PLA,ot:PO_ITEM,ot:SO_ITEM,ot:SUPPLIER,Stock Before,Stock After
+e912,Create Purchase Order Item,2023-09-28T00:00:00+00:00,,MAT-69#None,MAT-69_Plant1#None,Plant1#None,PO_ITEM--128-1#None,,SUPPLIER--3#None,109.0,109.0
+e997,Create Purchase Order Item,2023-09-29T00:00:00+00:00,,MAT-75#None,MAT-75_Plant1#None,Plant1#None,PO_ITEM--29-2#None,,SUPPLIER--29#None,45.0,45.0
+e1144,Create Purchase Order Item,2023-09-29T00:00:00+00:00,,MAT-87#None,MAT-87_Plant4#None,Plant4#None,PO_ITEM--29-1#None,,SUPPLIER--29#None,0.0,0.0
+e1295,Create Purchase Order Item,2023-09-30T00:00:00+00:00,,MAT-99#None,MAT-99_Plant2#None,Plant2#None,PO_ITEM--104-4#None,,SUPPLIER--11#None,0.0,0.0
+e1296,Create Purchase Order Item,2023-09-30T00:00:00+00:00,,MAT-99#None,MAT-99_Plant3#None,Plant3#None,PO_ITEM--104-5#None,,SUPPLIER--11#None,0.0,0.0
+e548,Create Purchase Order Item,2023-10-01T00:00:00+00:00,,MAT-44#None,MAT-44_Plant5#None,Plant5#None,PO_ITEM--65-1#None,,SUPPLIER--24#None,26.0,26.0
+e549,Create Sales Order Item,2023-10-01T00:00:00+00:00,CUSTOMER--26#None,MAT-44#None,MAT-44_Plant1#None,Plant1#None,,SO_ITEM--107-4#None,,71.0,71.0
+e1145,Create Purchase Order Item,2023-10-01T00:00:00+00:00,,MAT-87#None,MAT-87_Plant3#None,Plant3#None,PO_ITEM--65-3#None,,SUPPLIER--24#None,0.0,0.0
+e1206,Create Purchase Suggestion Item,2023-10-01T00:00:00+00:00,,MAT-92#None,MAT-92_Plant2#None,Plant2#None,,,,0.0,0.0
+e1012,Create Purchase Order Item,2023-10-03T00:00:00+00:00,,MAT-76#None,MAT-76_Plant4#None,Plant4#None,PO_ITEM--35-3#None,,SUPPLIER--24#None,96.0,96.0
+e723,Create Sales Order Item,2023-10-05T00:00:00+00:00,CUSTOMER--43#None,MAT-55#None,MAT-55_Plant1#None,Plant1#None,,SO_ITEM--16-1#None,,0.0,0.0
+e840,Create Sales Order Item,2023-10-05T00:00:00+00:00,CUSTOMER--43#None,MAT-64#None,MAT-64_Plant4#None,Plant4#None,,SO_ITEM--16-5#None,,0.0,0.0
+e1074,Create Sales Order Item,2023-10-05T00:00:00+00:00,CUSTOMER--43#None,MAT-81#None,MAT-81_Plant4#None,Plant4#None,,SO_ITEM--16-3#None,,0.0,0.0
+e675,Create Purchase Order Item,2023-10-06T00:00:00+00:00,,MAT-52#None,MAT-52_Plant1#None,Plant1#None,PO_ITEM--141-1#None,,SUPPLIER--10#None,0.0,0.0
+e784,Create Purchase Order Item,2023-10-06T00:00:00+00:00,,MAT-60#None,MAT-60_Plant2#None,Plant2#None,PO_ITEM--141-4#None,,SUPPLIER--10#None,129.0,129.0
+e687,Create Purchase Order Item,2023-10-08T00:00:00+00:00,,MAT-53#None,MAT-53_Plant5#None,Plant5#None,PO_ITEM--62-4#None,,SUPPLIER--15#None,0.0,0.0
+e942,Create Purchase Order Item,2023-10-08T00:00:00+00:00,,MAT-71#None,MAT-71_Plant4#None,Plant4#None,PO_ITEM--62-3#None,,SUPPLIER--15#None,0.0,0.0
+e998,Create Purchase Order Item,2023-10-08T00:00:00+00:00,,MAT-75#None,MAT-75_Plant2#None,Plant2#None,PO_ITEM--62-1#None,,SUPPLIER--15#None,45.0,45.0
+e210,Create Purchase Suggestion Item,2023-10-09T00:00:00+00:00,,MAT-18#None,MAT-18_Plant4#None,Plant4#None,,,,88.0,88.0
+e688,Create Sales Order Item,2023-10-09T00:00:00+00:00,CUSTOMER--47#None,MAT-53#None,MAT-53_Plant4#None,Plant4#None,,SO_ITEM--120-1#None,,44.0,44.0
+e806,Create Purchase Order Item,2023-10-09T00:00:00+00:00,,MAT-62#None,MAT-62_Plant2#None,Plant2#None,PO_ITEM--99-3#None,,SUPPLIER--4#None,0.0,0.0
+e943,Create Sales Order Item,2023-10-09T00:00:00+00:00,CUSTOMER--9#None,MAT-71#None,MAT-71_Plant3#None,Plant3#None,,SO_ITEM--3-1#None,,0.0,0.0
+e1146,Create Purchase Order Item,2023-10-09T00:00:00+00:00,,MAT-87#None,MAT-87_Plant5#None,Plant5#None,PO_ITEM--99-4#None,,SUPPLIER--4#None,0.0,0.0
+e724,Create Purchase Suggestion Item,2023-10-10T00:00:00+00:00,,MAT-55#None,MAT-55_Plant2#None,Plant2#None,,,,0.0,0.0
+e1147,Create Purchase Suggestion Item,2023-10-11T00:00:00+00:00,,MAT-87#None,MAT-87_Plant3#None,Plant3#None,,,,0.0,0.0
+e197,Create Sales Order Item,2023-10-12T00:00:00+00:00,CUSTOMER--10#None,MAT-16#None,MAT-16_Plant1#None,Plant1#None,,SO_ITEM--96-2#None,,0.0,0.0
+e1013,Goods Issue,2023-10-12T00:00:00+00:00,CUSTOMER--942282#None,MAT-76#None,MAT-76_Plant5#None,Plant5#None,,,,96.0,0.0
+e1061,Create Sales Order Item,2023-10-12T00:00:00+00:00,CUSTOMER--10#None,MAT-80#None,MAT-80_Plant2#None,Plant2#None,,SO_ITEM--96-3#None,,0.0,0.0
+e1230,Create Sales Order Item,2023-10-12T00:00:00+00:00,CUSTOMER--10#None,MAT-94#None,MAT-94_Plant3#None,Plant3#None,,SO_ITEM--96-1#None,,0.0,0.0
+e198,Create Sales Order Item,2023-10-13T00:00:00+00:00,CUSTOMER--7#None,MAT-16#None,MAT-16_Plant5#None,Plant5#None,,SO_ITEM--27-1#None,,0.0,0.0
+e1,Create Sales Order Item,2023-10-15T00:00:00+00:00,CUSTOMER--17#None,MAT-1#None,MAT-1_Plant2#None,Plant2#None,,SO_ITEM--72-4#None,,0.0,0.0
+e627,Create Purchase Order Item,2023-10-15T00:00:00+00:00,,MAT-49#None,MAT-49_Plant5#None,Plant5#None,PO_ITEM--80-1#None,,SUPPLIER--16#None,36.0,36.0
+e967,Goods Receipt,2023-10-16T00:00:00+00:00,,MAT-73#None,MAT-73_Plant2#None,Plant2#None,PO_ITEM--66-5#None,,SUPPLIER--27#None,86.0,112.0
+e1075,Create Sales Order Item,2023-10-16T00:00:00+00:00,CUSTOMER--24#None,MAT-81#None,MAT-81_Plant3#None,Plant3#None,,SO_ITEM--144-2#None,,89.0,89.0
+e163,Create Sales Order Item,2023-10-17T00:00:00+00:00,CUSTOMER--5#None,MAT-14#None,MAT-14_Plant1#None,Plant1#None,,SO_ITEM--194-1#None,,106.0,106.0
+e356,Create Sales Order Item,2023-10-19T00:00:00+00:00,CUSTOMER--31#None,MAT-29#None,MAT-29_Plant1#None,Plant1#None,,SO_ITEM--12-3#None,,0.0,0.0
+e1014,Create Sales Order Item,2023-10-19T00:00:00+00:00,CUSTOMER--31#None,MAT-76#None,MAT-76_Plant2#None,Plant2#None,,SO_ITEM--12-2#None,,0.0,0.0
+e1035,Create Sales Order Item,2023-10-19T00:00:00+00:00,CUSTOMER--10#None,MAT-78#None,MAT-78_Plant3#None,Plant3#None,,SO_ITEM--153-1#None,,50.0,50.0
+e1200,Create Sales Order Item,2023-10-19T00:00:00+00:00,CUSTOMER--31#None,MAT-91#None,MAT-91_Plant5#None,Plant5#None,,SO_ITEM--12-5#None,,67.0,67.0
+e263,Create Sales Order Item,2023-10-21T00:00:00+00:00,CUSTOMER--41#None,MAT-22#None,MAT-22_Plant4#None,Plant4#None,,SO_ITEM--23-2#None,,0.0,0.0
+e330,Create Sales Order Item,2023-10-21T00:00:00+00:00,CUSTOMER--41#None,MAT-27#None,MAT-27_Plant2#None,Plant2#None,,SO_ITEM--23-1#None,,0.0,0.0
+e762,Create Purchase Order Item,2023-10-21T00:00:00+00:00,,MAT-58#None,MAT-58_Plant2#None,Plant2#None,PO_ITEM--149-1#None,,SUPPLIER--10#None,58.0,58.0
+e899,Create Sales Order Item,2023-10-21T00:00:00+00:00,CUSTOMER--41#None,MAT-68#None,MAT-68_Plant3#None,Plant3#None,,SO_ITEM--23-3#None,,0.0,0.0
+e1168,Goods Issue,2023-10-21T00:00:00+00:00,CUSTOMER--949206#None,MAT-89#None,MAT-89_Plant5#None,Plant5#None,,,,87.0,40.0
+e229,Create Sales Order Item,2023-10-23T00:00:00+00:00,CUSTOMER--34#None,MAT-19#None,MAT-19_Plant5#None,Plant5#None,,SO_ITEM--38-1#None,,0.0,0.0
+e628,Create Sales Order Item,2023-10-23T00:00:00+00:00,CUSTOMER--49#None,MAT-49#None,MAT-49_Plant1#None,Plant1#None,,SO_ITEM--88-3#None,,0.0,0.0
+e900,Create Sales Order Item,2023-10-23T00:00:00+00:00,CUSTOMER--49#None,MAT-68#None,MAT-68_Plant1#None,Plant1#None,,SO_ITEM--88-2#None,,0.0,0.0
+e1148,Create Sales Order Item,2023-10-23T00:00:00+00:00,CUSTOMER--34#None,MAT-87#None,MAT-87_Plant5#None,Plant5#None,,SO_ITEM--38-2#None,,0.0,0.0
+e1169,Create Sales Order Item,2023-10-23T00:00:00+00:00,CUSTOMER--49#None,MAT-89#None,MAT-89_Plant2#None,Plant2#None,,SO_ITEM--88-4#None,,40.0,40.0
+e241,Create Sales Order Item,2023-10-25T00:00:00+00:00,CUSTOMER--39#None,MAT-20#None,MAT-20_Plant5#None,Plant5#None,,SO_ITEM--30-2#None,,0.0,0.0
+e588,Goods Receipt,2023-10-25T00:00:00+00:00,,MAT-47#None,MAT-47_Plant3#None,Plant3#None,PO_ITEM--50-4#None,,SUPPLIER--29#None,86.0,89.0
+e124,Create Sales Order Item,2023-10-26T00:00:00+00:00,CUSTOMER--49#None,MAT-11#None,MAT-11_Plant4#None,Plant4#None,,SO_ITEM--129-1#None,,0.0,0.0
+e242,Create Purchase Suggestion Item,2023-10-26T00:00:00+00:00,,MAT-20#None,MAT-20_Plant4#None,Plant4#None,,,,0.0,0.0
+e565,Create Sales Order Item,2023-10-26T00:00:00+00:00,CUSTOMER--3#None,MAT-45#None,MAT-45_Plant5#None,Plant5#None,,SO_ITEM--158-1#None,,0.0,0.0
+e612,Goods Issue,2023-10-26T00:00:00+00:00,CUSTOMER--706744#None,MAT-48#None,MAT-48_Plant1#None,Plant1#None,,,,28.0,0.0
+e181,Create Sales Order Item,2023-10-27T00:00:00+00:00,CUSTOMER--49#None,MAT-15#None,MAT-15_Plant2#None,Plant2#None,,SO_ITEM--2-1#None,,0.0,0.0
+e182,Create Sales Order Item,2023-10-27T00:00:00+00:00,CUSTOMER--49#None,MAT-15#None,MAT-15_Plant5#None,Plant5#None,,SO_ITEM--2-2#None,,0.0,0.0
+e629,Create Purchase Suggestion Item,2023-10-27T00:00:00+00:00,,MAT-49#None,MAT-49_Plant2#None,Plant2#None,,,,65.0,65.0
+e630,Create Sales Order Item,2023-10-27T00:00:00+00:00,CUSTOMER--16#None,MAT-49#None,MAT-49_Plant3#None,Plant3#None,,SO_ITEM--59-5#None,,65.0,65.0
+e944,Create Sales Order Item,2023-10-27T00:00:00+00:00,CUSTOMER--49#None,MAT-71#None,MAT-71_Plant3#None,Plant3#None,,SO_ITEM--2-3#None,,0.0,0.0
+e999,Goods Issue,2023-10-27T00:00:00+00:00,CUSTOMER--925830#None,MAT-75#None,MAT-75_Plant2#None,Plant2#None,,,,45.0,0.0
+e1015,Create Sales Order Item,2023-10-27T00:00:00+00:00,CUSTOMER--16#None,MAT-76#None,MAT-76_Plant1#None,Plant1#None,,SO_ITEM--59-2#None,,0.0,0.0
+e477,Goods Receipt,2023-10-28T00:00:00+00:00,,MAT-38#None,MAT-38_Plant5#None,Plant5#None,PO_ITEM--74-2#None,,SUPPLIER--2#None,0.0,61.0
+e331,Create Purchase Suggestion Item,2023-10-31T00:00:00+00:00,,MAT-27#None,MAT-27_Plant3#None,Plant3#None,,,,41.0,41.0
+e663,Goods Issue,2023-10-31T00:00:00+00:00,CUSTOMER--790421#None,MAT-51#None,MAT-51_Plant2#None,Plant2#None,,,,75.0,0.0
+e707,Create Sales Order Item,2023-10-31T00:00:00+00:00,CUSTOMER--14#None,MAT-54#None,MAT-54_Plant1#None,Plant1#None,,SO_ITEM--138-1#None,,0.0,0.0
+e589,Create Sales Order Item,2023-11-01T00:00:00+00:00,CUSTOMER--6#None,MAT-47#None,MAT-47_Plant3#None,Plant3#None,,SO_ITEM--15-1#None,,89.0,89.0
+e968,Create Sales Order Item,2023-11-01T00:00:00+00:00,CUSTOMER--6#None,MAT-73#None,MAT-73_Plant2#None,Plant2#None,,SO_ITEM--15-2#None,,112.0,112.0
+e969,Create Sales Order Item,2023-11-02T00:00:00+00:00,CUSTOMER--12#None,MAT-73#None,MAT-73_Plant3#None,Plant3#None,,SO_ITEM--190-1#None,,61.0,61.0
+e381,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-31#None,MAT-31_Plant5#None,Plant5#None,PO_ITEM--48-4#None,,SUPPLIER--1#None,0.0,0.0
+e433,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-35#None,MAT-35_Plant2#None,Plant2#None,PO_ITEM--113-1#None,,SUPPLIER--22#None,0.0,0.0
+e522,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-42#None,MAT-42_Plant3#None,Plant3#None,PO_ITEM--48-5#None,,SUPPLIER--1#None,36.0,36.0
+e590,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-47#None,MAT-47_Plant3#None,Plant3#None,PO_ITEM--48-2#None,,SUPPLIER--1#None,89.0,89.0
+e763,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-58#None,MAT-58_Plant2#None,Plant2#None,PO_ITEM--48-1#None,,SUPPLIER--1#None,58.0,58.0
+e785,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-60#None,MAT-60_Plant2#None,Plant2#None,PO_ITEM--44-1#None,,SUPPLIER--11#None,129.0,129.0
+e841,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-64#None,MAT-64_Plant5#None,Plant5#None,PO_ITEM--48-3#None,,SUPPLIER--1#None,0.0,0.0
+e883,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-67#None,MAT-67_Plant1#None,Plant1#None,PO_ITEM--44-5#None,,SUPPLIER--11#None,20.0,20.0
+e1016,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-76#None,MAT-76_Plant3#None,Plant3#None,PO_ITEM--44-2#None,,SUPPLIER--11#None,0.0,0.0
+e1170,Create Purchase Order Item,2023-11-05T00:00:00+00:00,,MAT-89#None,MAT-89_Plant1#None,Plant1#None,PO_ITEM--44-3#None,,SUPPLIER--11#None,40.0,40.0
+e2,Create Purchase Order Item,2023-11-06T00:00:00+00:00,,MAT-1#None,MAT-1_Plant2#None,Plant2#None,PO_ITEM--130-3#None,,SUPPLIER--26#None,0.0,0.0
+e149,Create Sales Order Item,2023-11-06T00:00:00+00:00,CUSTOMER--8#None,MAT-13#None,MAT-13_Plant3#None,Plant3#None,,SO_ITEM--118-2#None,,0.0,0.0
+e183,Create Purchase Order Item,2023-11-06T00:00:00+00:00,,MAT-15#None,MAT-15_Plant4#None,Plant4#None,PO_ITEM--130-4#None,,SUPPLIER--26#None,0.0,0.0
+e382,Create Purchase Order Item,2023-11-06T00:00:00+00:00,,MAT-31#None,MAT-31_Plant2#None,Plant2#None,PO_ITEM--130-1#None,,SUPPLIER--26#None,39.0,39.0
+e460,Create Purchase Order Item,2023-11-06T00:00:00+00:00,,MAT-37#None,MAT-37_Plant1#None,Plant1#None,PO_ITEM--121-2#None,,SUPPLIER--16#None,39.0,39.0
+e689,Create Purchase Order Item,2023-11-06T00:00:00+00:00,,MAT-53#None,MAT-53_Plant5#None,Plant5#None,PO_ITEM--130-2#None,,SUPPLIER--26#None,0.0,0.0
+e807,Create Sales Order Item,2023-11-06T00:00:00+00:00,CUSTOMER--8#None,MAT-62#None,MAT-62_Plant1#None,Plant1#None,,SO_ITEM--118-1#None,,0.0,0.0
+e901,Create Purchase Order Item,2023-11-06T00:00:00+00:00,,MAT-68#None,MAT-68_Plant1#None,Plant1#None,PO_ITEM--121-1#None,,SUPPLIER--16#None,0.0,0.0
+e93,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-9#None,MAT-9_Plant2#None,Plant2#None,PO_ITEM--45-4#None,,SUPPLIER--15#None,0.0,0.0
+e125,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-11#None,MAT-11_Plant2#None,Plant2#None,PO_ITEM--135-3#None,,SUPPLIER--6#None,0.0,0.0
+e164,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-14#None,MAT-14_Plant2#None,Plant2#None,PO_ITEM--135-4#None,,SUPPLIER--6#None,0.0,0.0
+e184,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-15#None,MAT-15_Plant1#None,Plant1#None,PO_ITEM--45-1#None,,SUPPLIER--15#None,0.0,0.0
+e357,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-29#None,MAT-29_Plant2#None,Plant2#None,PO_ITEM--135-2#None,,SUPPLIER--6#None,0.0,0.0
+e797,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-61#None,MAT-61_Plant5#None,Plant5#None,PO_ITEM--45-2#None,,SUPPLIER--15#None,0.0,0.0
+e1187,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-90#None,MAT-90_Plant1#None,Plant1#None,PO_ITEM--45-3#None,,SUPPLIER--15#None,0.0,0.0
+e1244,Create Purchase Order Item,2023-11-07T00:00:00+00:00,,MAT-95#None,MAT-95_Plant4#None,Plant4#None,PO_ITEM--135-5#None,,SUPPLIER--6#None,0.0,0.0
+e434,Create Sales Order Item,2023-11-08T00:00:00+00:00,CUSTOMER--21#None,MAT-35#None,MAT-35_Plant1#None,Plant1#None,,SO_ITEM--105-1#None,,0.0,0.0
+e725,Create Sales Order Item,2023-11-08T00:00:00+00:00,CUSTOMER--21#None,MAT-55#None,MAT-55_Plant5#None,Plant5#None,,SO_ITEM--105-2#None,,0.0,0.0
+e550,Goods Issue,2023-11-09T00:00:00+00:00,CUSTOMER--779187#None,MAT-44#None,MAT-44_Plant2#None,Plant2#None,,,,71.0,0.0
+e902,Create Purchase Order Item,2023-11-09T00:00:00+00:00,,MAT-68#None,MAT-68_Plant2#None,Plant2#None,PO_ITEM--21-2#None,,SUPPLIER--13#None,0.0,0.0
+e970,Goods Receipt,2023-11-09T00:00:00+00:00,,MAT-73#None,MAT-73_Plant5#None,Plant5#None,PO_ITEM--66-5#None,,SUPPLIER--27#None,112.0,130.0
+e126,Goods Receipt,2023-11-10T00:00:00+00:00,,MAT-11#None,MAT-11_Plant5#None,Plant5#None,PO_ITEM--137-1#None,,SUPPLIER--18#None,33.0,79.0
+e955,Create Sales Order Item,2023-11-10T00:00:00+00:00,CUSTOMER--36#None,MAT-72#None,MAT-72_Plant3#None,Plant3#None,,SO_ITEM--150-1#None,,0.0,0.0
+e690,Create Purchase Suggestion Item,2023-11-13T00:00:00+00:00,,MAT-53#None,MAT-53_Plant3#None,Plant3#None,,,,44.0,44.0
+e777,Goods Receipt,2023-11-13T00:00:00+00:00,,MAT-59#None,MAT-59_Plant2#None,Plant2#None,PO_ITEM--4-5#None,,SUPPLIER--17#None,0.0,98.0
+e420,Create Sales Order Item,2023-11-14T00:00:00+00:00,CUSTOMER--15#None,MAT-34#None,MAT-34_Plant4#None,Plant4#None,,SO_ITEM--111-1#None,,69.0,69.0
+e491,Create Sales Order Item,2023-11-14T00:00:00+00:00,CUSTOMER--15#None,MAT-39#None,MAT-39_Plant4#None,Plant4#None,,SO_ITEM--111-2#None,,73.0,73.0
+e798,Create Sales Order Item,2023-11-14T00:00:00+00:00,CUSTOMER--15#None,MAT-61#None,MAT-61_Plant3#None,Plant3#None,,SO_ITEM--111-3#None,,0.0,0.0
+e15,Create Purchase Order Item,2023-11-16T00:00:00+00:00,,MAT-2#None,MAT-2_Plant3#None,Plant3#None,PO_ITEM--83-2#None,,SUPPLIER--12#None,0.0,0.0
+e492,Create Sales Order Item,2023-11-16T00:00:00+00:00,CUSTOMER--14#None,MAT-39#None,MAT-39_Plant3#None,Plant3#None,,SO_ITEM--188-1#None,,0.0,0.0
+e591,Create Purchase Order Item,2023-11-16T00:00:00+00:00,,MAT-47#None,MAT-47_Plant5#None,Plant5#None,PO_ITEM--83-1#None,,SUPPLIER--12#None,89.0,89.0
+e842,Goods Receipt,2023-11-18T00:00:00+00:00,,MAT-64#None,MAT-64_Plant3#None,Plant3#None,PO_ITEM--44-2#None,,SUPPLIER--11#None,0.0,100.0
+e332,Create Purchase Order Item,2023-11-19T00:00:00+00:00,,MAT-27#None,MAT-27_Plant4#None,Plant4#None,PO_ITEM--12-1#None,,SUPPLIER--20#None,41.0,41.0
+e461,Create Purchase Order Item,2023-11-19T00:00:00+00:00,,MAT-37#None,MAT-37_Plant5#None,Plant5#None,PO_ITEM--12-5#None,,SUPPLIER--20#None,39.0,39.0
+e808,Create Purchase Order Item,2023-11-19T00:00:00+00:00,,MAT-62#None,MAT-62_Plant1#None,Plant1#None,PO_ITEM--12-4#None,,SUPPLIER--20#None,0.0,0.0
+e913,Goods Issue,2023-11-19T00:00:00+00:00,CUSTOMER--133496#None,MAT-69#None,MAT-69_Plant5#None,Plant5#None,,,,109.0,48.0
+e1149,Create Purchase Suggestion Item,2023-11-19T00:00:00+00:00,,MAT-87#None,MAT-87_Plant3#None,Plant3#None,,,,0.0,0.0
+e592,Create Purchase Suggestion Item,2023-11-21T00:00:00+00:00,,MAT-47#None,MAT-47_Plant5#None,Plant5#None,,,,89.0,89.0
+e664,Goods Receipt,2023-11-21T00:00:00+00:00,,MAT-51#None,MAT-51_Plant4#None,Plant4#None,PO_ITEM--145-3#None,,SUPPLIER--9#None,0.0,25.0
+e211,Goods Issue,2023-11-22T00:00:00+00:00,CUSTOMER--941633#None,MAT-18#None,MAT-18_Plant1#None,Plant1#None,,,,22.0,5.0
+e150,Create Purchase Order Item,2023-11-23T00:00:00+00:00,,MAT-13#None,MAT-13_Plant1#None,Plant1#None,PO_ITEM--138-4#None,,SUPPLIER--29#None,0.0,0.0
+e315,Create Purchase Order Item,2023-11-23T00:00:00+00:00,,MAT-26#None,MAT-26_Plant4#None,Plant4#None,PO_ITEM--138-3#None,,SUPPLIER--29#None,117.0,117.0
+e593,Create Purchase Order Item,2023-11-23T00:00:00+00:00,,MAT-47#None,MAT-47_Plant4#None,Plant4#None,PO_ITEM--138-2#None,,SUPPLIER--29#None,89.0,89.0
+e1122,Create Purchase Order Item,2023-11-23T00:00:00+00:00,,MAT-85#None,MAT-85_Plant2#None,Plant2#None,PO_ITEM--138-1#None,,SUPPLIER--29#None,0.0,0.0
+e478,Goods Receipt,2023-11-24T00:00:00+00:00,,MAT-38#None,MAT-38_Plant5#None,Plant5#None,PO_ITEM--9-2#None,,SUPPLIER--27#None,61.0,77.0
+e914,Goods Issue,2023-11-24T00:00:00+00:00,CUSTOMER--614849#None,MAT-69#None,MAT-69_Plant5#None,Plant5#None,,,,48.0,0.0
+e1086,Goods Issue,2023-11-24T00:00:00+00:00,CUSTOMER--959683#None,MAT-82#None,MAT-82_Plant5#None,Plant5#None,,,,51.0,0.0
+e1104,Goods Receipt,2023-11-24T00:00:00+00:00,,MAT-83#None,MAT-83_Plant2#None,Plant2#None,PO_ITEM--44-4#None,,SUPPLIER--11#None,0.0,38.0
+e1123,Create Purchase Order Item,2023-11-24T00:00:00+00:00,,MAT-85#None,MAT-85_Plant5#None,Plant5#None,PO_ITEM--110-2#None,,SUPPLIER--25#None,2.0,2.0
+e1304,Create Purchase Order Item,2023-11-24T00:00:00+00:00,,MAT-100#None,MAT-100_Plant5#None,Plant5#None,PO_ITEM--110-1#None,,SUPPLIER--25#None,0.0,0.0
+e94,Goods Receipt,2023-11-25T00:00:00+00:00,,MAT-9#None,MAT-9_Plant2#None,Plant2#None,PO_ITEM--11-5#None,,SUPPLIER--24#None,0.0,88.0
+e185,Create Purchase Suggestion Item,2023-11-25T00:00:00+00:00,,MAT-15#None,MAT-15_Plant3#None,Plant3#None,,,,0.0,0.0
+e316,Create Purchase Order Item,2023-11-26T00:00:00+00:00,,MAT-26#None,MAT-26_Plant4#None,Plant4#None,PO_ITEM--34-3#None,,SUPPLIER--6#None,117.0,117.0
+e513,Create Purchase Order Item,2023-11-26T00:00:00+00:00,,MAT-41#None,MAT-41_Plant3#None,Plant3#None,PO_ITEM--34-2#None,,SUPPLIER--6#None,57.0,57.0
+e1017,Create Purchase Order Item,2023-11-26T00:00:00+00:00,,MAT-76#None,MAT-76_Plant4#None,Plant4#None,PO_ITEM--34-4#None,,SUPPLIER--6#None,0.0,0.0
+e1105,Create Sales Order Item,2023-11-27T00:00:00+00:00,CUSTOMER--38#None,MAT-83#None,MAT-83_Plant3#None,Plant3#None,,SO_ITEM--199-1#None,,38.0,38.0
+e1188,Create Sales Order Item,2023-11-27T00:00:00+00:00,CUSTOMER--38#None,MAT-90#None,MAT-90_Plant5#None,Plant5#None,,SO_ITEM--199-2#None,,0.0,0.0
+e333,Create Purchase Order Item,2023-11-28T00:00:00+00:00,,MAT-27#None,MAT-27_Plant3#None,Plant3#None,PO_ITEM--134-1#None,,SUPPLIER--21#None,41.0,41.0
+e504,Create Sales Order Item,2023-11-28T00:00:00+00:00,CUSTOMER--41#None,MAT-40#None,MAT-40_Plant1#None,Plant1#None,,SO_ITEM--116-3#None,,0.0,0.0
+e708,Create Purchase Order Item,2023-11-28T00:00:00+00:00,,MAT-54#None,MAT-54_Plant1#None,Plant1#None,PO_ITEM--134-4#None,,SUPPLIER--21#None,0.0,0.0
+e1076,Create Purchase Order Item,2023-11-28T00:00:00+00:00,,MAT-81#None,MAT-81_Plant3#None,Plant3#None,PO_ITEM--134-3#None,,SUPPLIER--21#None,89.0,89.0
+e1150,Create Purchase Order Item,2023-11-28T00:00:00+00:00,,MAT-87#None,MAT-87_Plant5#None,Plant5#None,PO_ITEM--134-2#None,,SUPPLIER--21#None,0.0,0.0
+e65,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-7#None,MAT-7_Plant4#None,Plant4#None,PO_ITEM--75-2#None,,SUPPLIER--30#None,0.0,0.0
+e435,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-35#None,MAT-35_Plant5#None,Plant5#None,PO_ITEM--50-1#None,,SUPPLIER--29#None,0.0,0.0
+e566,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-45#None,MAT-45_Plant1#None,Plant1#None,PO_ITEM--50-2#None,,SUPPLIER--29#None,0.0,0.0
+e676,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-52#None,MAT-52_Plant1#None,Plant1#None,PO_ITEM--75-3#None,,SUPPLIER--30#None,0.0,0.0
+e709,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-54#None,MAT-54_Plant5#None,Plant5#None,PO_ITEM--50-4#None,,SUPPLIER--29#None,0.0,0.0
+e1018,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-76#None,MAT-76_Plant5#None,Plant5#None,PO_ITEM--75-4#None,,SUPPLIER--30#None,0.0,0.0
+e1019,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-76#None,MAT-76_Plant5#None,Plant5#None,PO_ITEM--75-5#None,,SUPPLIER--30#None,0.0,0.0
+e1124,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-85#None,MAT-85_Plant4#None,Plant4#None,PO_ITEM--50-5#None,,SUPPLIER--29#None,2.0,2.0
+e1207,Create Purchase Order Item,2023-11-29T00:00:00+00:00,,MAT-92#None,MAT-92_Plant4#None,Plant4#None,PO_ITEM--75-1#None,,SUPPLIER--30#None,0.0,0.0
+e1269,Create Purchase Suggestion Item,2023-11-30T00:00:00+00:00,,MAT-97#None,MAT-97_Plant3#None,Plant3#None,,,,0.0,0.0
+e358,Create Purchase Order Item,2023-12-01T00:00:00+00:00,,MAT-29#None,MAT-29_Plant2#None,Plant2#None,PO_ITEM--71-2#None,,SUPPLIER--20#None,0.0,0.0
+e365,Create Sales Order Item,2023-12-01T00:00:00+00:00,CUSTOMER--1#None,MAT-30#None,MAT-30_Plant2#None,Plant2#None,,SO_ITEM--135-1#None,,0.0,0.0
+e631,Create Sales Order Item,2023-12-01T00:00:00+00:00,CUSTOMER--1#None,MAT-49#None,MAT-49_Plant2#None,Plant2#None,,SO_ITEM--135-2#None,,65.0,65.0
+e1036,Create Purchase Order Item,2023-12-01T00:00:00+00:00,,MAT-78#None,MAT-78_Plant2#None,Plant2#None,PO_ITEM--71-1#None,,SUPPLIER--20#None,50.0,50.0
+e1201,Create Purchase Suggestion Item,2023-12-01T00:00:00+00:00,,MAT-91#None,MAT-91_Plant2#None,Plant2#None,,,,67.0,67.0
+e24,Goods Receipt,2023-12-02T00:00:00+00:00,,MAT-3#None,MAT-3_Plant3#None,Plant3#None,PO_ITEM--121-2#None,,SUPPLIER--16#None,0.0,92.0
+e66,Create Sales Order Item,2023-12-02T00:00:00+00:00,CUSTOMER--19#None,MAT-7#None,MAT-7_Plant4#None,Plant4#None,,SO_ITEM--143-2#None,,0.0,0.0
+e479,Create Sales Order Item,2023-12-02T00:00:00+00:00,CUSTOMER--19#None,MAT-38#None,MAT-38_Plant4#None,Plant4#None,,SO_ITEM--143-3#None,,28.0,28.0
+e287,Create Purchase Order Item,2023-12-03T00:00:00+00:00,,MAT-24#None,MAT-24_Plant3#None,Plant3#None,PO_ITEM--97-3#None,,SUPPLIER--19#None,124.0,124.0
+e567,Create Sales Order Item,2023-12-03T00:00:00+00:00,CUSTOMER--11#None,MAT-45#None,MAT-45_Plant4#None,Plant4#None,,SO_ITEM--104-3#None,,0.0,0.0
+e649,Create Purchase Suggestion Item,2023-12-03T00:00:00+00:00,,MAT-50#None,MAT-50_Plant1#None,Plant1#None,,,,0.0,0.0
+e726,Create Sales Order Item,2023-12-03T00:00:00+00:00,CUSTOMER--11#None,MAT-55#None,MAT-55_Plant4#None,Plant4#None,,SO_ITEM--104-1#None,,0.0,0.0
+e1000,Create Purchase Order Item,2023-12-03T00:00:00+00:00,,MAT-75#None,MAT-75_Plant5#None,Plant5#None,PO_ITEM--97-1#None,,SUPPLIER--19#None,0.0,0.0
+e52,Create Sales Order Item,2023-12-04T00:00:00+00:00,CUSTOMER--20#None,MAT-6#None,MAT-6_Plant4#None,Plant4#None,,SO_ITEM--81-1#None,,0.0,0.0
+e165,Create Sales Order Item,2023-12-04T00:00:00+00:00,CUSTOMER--30#None,MAT-14#None,MAT-14_Plant5#None,Plant5#None,,SO_ITEM--192-1#None,,63.0,63.0
+e264,Goods Receipt,2023-12-04T00:00:00+00:00,,MAT-22#None,MAT-22_Plant1#None,Plant1#None,PO_ITEM--66-5#None,,SUPPLIER--27#None,0.0,23.0
+e650,Create Sales Order Item,2023-12-04T00:00:00+00:00,CUSTOMER--30#None,MAT-50#None,MAT-50_Plant4#None,Plant4#None,,SO_ITEM--192-2#None,,0.0,0.0
+e809,Create Sales Order Item,2023-12-04T00:00:00+00:00,CUSTOMER--20#None,MAT-62#None,MAT-62_Plant3#None,Plant3#None,,SO_ITEM--81-2#None,,0.0,0.0
+e1001,Create Sales Order Item,2023-12-04T00:00:00+00:00,CUSTOMER--30#None,MAT-75#None,MAT-75_Plant1#None,Plant1#None,,SO_ITEM--192-3#None,,0.0,0.0
+e1171,Create Sales Order Item,2023-12-04T00:00:00+00:00,CUSTOMER--20#None,MAT-89#None,MAT-89_Plant5#None,Plant5#None,,SO_ITEM--81-3#None,,40.0,40.0
+e1189,Create Sales Order Item,2023-12-04T00:00:00+00:00,CUSTOMER--30#None,MAT-90#None,MAT-90_Plant1#None,Plant1#None,,SO_ITEM--192-4#None,,0.0,0.0
+e40,Create Purchase Order Item,2023-12-05T00:00:00+00:00,,MAT-5#None,MAT-5_Plant2#None,Plant2#None,PO_ITEM--63-1#None,,SUPPLIER--26#None,0.0,0.0
+e186,Create Purchase Order Item,2023-12-05T00:00:00+00:00,,MAT-15#None,MAT-15_Plant4#None,Plant4#None,PO_ITEM--63-2#None,,SUPPLIER--26#None,0.0,0.0
+e334,Create Purchase Order Item,2023-12-05T00:00:00+00:00,,MAT-27#None,MAT-27_Plant4#None,Plant4#None,PO_ITEM--98-1#None,,SUPPLIER--11#None,41.0,41.0
+e335,Create Purchase Order Item,2023-12-05T00:00:00+00:00,,MAT-27#None,MAT-27_Plant4#None,Plant4#None,PO_ITEM--98-5#None,,SUPPLIER--11#None,41.0,41.0
+e359,Create Purchase Order Item,2023-12-05T00:00:00+00:00,,MAT-29#None,MAT-29_Plant1#None,Plant1#None,PO_ITEM--98-2#None,,SUPPLIER--11#None,0.0,0.0
+e366,Create Sales Order Item,2023-12-05T00:00:00+00:00,CUSTOMER--14#None,MAT-30#None,MAT-30_Plant3#None,Plant3#None,,SO_ITEM--134-2#None,,0.0,0.0
+e436,Create Purchase Suggestion Item,2023-12-05T00:00:00+00:00,,MAT-35#None,MAT-35_Plant2#None,Plant2#None,,,,0.0,0.0
+e462,Create Sales Order Item,2023-12-05T00:00:00+00:00,CUSTOMER--14#None,MAT-37#None,MAT-37_Plant2#None,Plant2#None,,SO_ITEM--134-1#None,,39.0,39.0
+e463,Create Sales Order Item,2023-12-05T00:00:00+00:00,CUSTOMER--14#None,MAT-37#None,MAT-37_Plant3#None,Plant3#None,,SO_ITEM--134-3#None,,39.0,39.0
+e799,Goods Issue,2023-12-05T00:00:00+00:00,CUSTOMER--719243#None,MAT-61#None,MAT-61_Plant4#None,Plant4#None,,,,157.0,153.0
+e810,Create Purchase Order Item,2023-12-05T00:00:00+00:00,,MAT-62#None,MAT-62_Plant4#None,Plant4#None,PO_ITEM--98-4#None,,SUPPLIER--11#None,0.0,0.0
+e828,Create Sales Order Item,2023-12-05T00:00:00+00:00,CUSTOMER--14#None,MAT-63#None,MAT-63_Plant1#None,Plant1#None,,SO_ITEM--134-4#None,,0.0,0.0
+e971,Create Purchase Order Item,2023-12-05T00:00:00+00:00,,MAT-73#None,MAT-73_Plant4#None,Plant4#None,PO_ITEM--98-3#None,,SUPPLIER--11#None,44.0,44.0
+e67,Create Sales Order Item,2023-12-06T00:00:00+00:00,CUSTOMER--16#None,MAT-7#None,MAT-7_Plant2#None,Plant2#None,,SO_ITEM--164-2#None,,0.0,0.0
+e243,Create Sales Order Item,2023-12-06T00:00:00+00:00,CUSTOMER--16#None,MAT-20#None,MAT-20_Plant3#None,Plant3#None,,SO_ITEM--164-4#None,,39.0,39.0
+e336,Create Purchase Suggestion Item,2023-12-06T00:00:00+00:00,,MAT-27#None,MAT-27_Plant2#None,Plant2#None,,,,0.0,0.0
+e613,Create Sales Order Item,2023-12-06T00:00:00+00:00,CUSTOMER--16#None,MAT-48#None,MAT-48_Plant2#None,Plant2#None,,SO_ITEM--164-5#None,,0.0,0.0
+e1217,Create Sales Order Item,2023-12-06T00:00:00+00:00,CUSTOMER--16#None,MAT-93#None,MAT-93_Plant2#None,Plant2#None,,SO_ITEM--164-3#None,,0.0,0.0
+e1256,Create Sales Order Item,2023-12-06T00:00:00+00:00,CUSTOMER--16#None,MAT-96#None,MAT-96_Plant1#None,Plant1#None,,SO_ITEM--164-1#None,,0.0,0.0
+e95,Create Purchase Order Item,2023-12-07T00:00:00+00:00,,MAT-9#None,MAT-9_Plant4#None,Plant4#None,PO_ITEM--148-4#None,,SUPPLIER--30#None,88.0,88.0
+e410,Create Purchase Order Item,2023-12-07T00:00:00+00:00,,MAT-33#None,MAT-33_Plant1#None,Plant1#None,PO_ITEM--148-3#None,,SUPPLIER--30#None,0.0,0.0
+e1137,Create Purchase Order Item,2023-12-07T00:00:00+00:00,,MAT-86#None,MAT-86_Plant2#None,Plant2#None,PO_ITEM--148-2#None,,SUPPLIER--30#None,0.0,0.0
+e1270,Create Purchase Order Item,2023-12-07T00:00:00+00:00,,MAT-97#None,MAT-97_Plant1#None,Plant1#None,PO_ITEM--148-1#None,,SUPPLIER--30#None,0.0,0.0
+e41,Create Purchase Order Item,2023-12-09T00:00:00+00:00,,MAT-5#None,MAT-5_Plant2#None,Plant2#None,PO_ITEM--142-2#None,,SUPPLIER--4#None,0.0,0.0
+e551,Create Purchase Order Item,2023-12-09T00:00:00+00:00,,MAT-44#None,MAT-44_Plant2#None,Plant2#None,PO_ITEM--142-1#None,,SUPPLIER--4#None,0.0,0.0
+e1172,Create Purchase Order Item,2023-12-09T00:00:00+00:00,,MAT-89#None,MAT-89_Plant3#None,Plant3#None,PO_ITEM--142-3#None,,SUPPLIER--4#None,40.0,40.0
+e1279,Create Purchase Order Item,2023-12-09T00:00:00+00:00,,MAT-98#None,MAT-98_Plant3#None,Plant3#None,PO_ITEM--142-4#None,,SUPPLIER--4#None,84.0,84.0
+e3,Create Purchase Order Item,2023-12-10T00:00:00+00:00,,MAT-1#None,MAT-1_Plant5#None,Plant5#None,PO_ITEM--8-1#None,,SUPPLIER--26#None,0.0,0.0
+e1002,Create Purchase Order Item,2023-12-10T00:00:00+00:00,,MAT-75#None,MAT-75_Plant3#None,Plant3#None,PO_ITEM--8-2#None,,SUPPLIER--26#None,0.0,0.0
+e1280,Goods Issue,2023-12-10T00:00:00+00:00,CUSTOMER--297944#None,MAT-98#None,MAT-98_Plant3#None,Plant3#None,,,,84.0,0.0
+e1106,Create Purchase Order Item,2023-12-12T00:00:00+00:00,,MAT-83#None,MAT-83_Plant2#None,Plant2#None,PO_ITEM--14-1#None,,SUPPLIER--10#None,38.0,38.0
+e127,Create Sales Order Item,2023-12-15T00:00:00+00:00,CUSTOMER--48#None,MAT-11#None,MAT-11_Plant4#None,Plant4#None,,SO_ITEM--50-2#None,,46.0,46.0
+e480,Goods Receipt,2023-12-15T00:00:00+00:00,,MAT-38#None,MAT-38_Plant1#None,Plant1#None,PO_ITEM--145-1#None,,SUPPLIER--9#None,28.0,127.0
+e829,Create Sales Order Item,2023-12-15T00:00:00+00:00,CUSTOMER--48#None,MAT-63#None,MAT-63_Plant4#None,Plant4#None,,SO_ITEM--50-3#None,,0.0,0.0
+e982,Create Sales Order Item,2023-12-15T00:00:00+00:00,CUSTOMER--48#None,MAT-74#None,MAT-74_Plant2#None,Plant2#None,,SO_ITEM--50-1#None,,83.0,83.0
+e34,Create Sales Order Item,2023-12-16T00:00:00+00:00,CUSTOMER--44#None,MAT-4#None,MAT-4_Plant3#None,Plant3#None,,SO_ITEM--28-3#None,,0.0,0.0
+e128,Goods Issue,2023-12-16T00:00:00+00:00,CUSTOMER--183437#None,MAT-11#None,MAT-11_Plant5#None,Plant5#None,,,,79.0,0.0
+e212,Create Sales Order Item,2023-12-16T00:00:00+00:00,CUSTOMER--44#None,MAT-18#None,MAT-18_Plant4#None,Plant4#None,,SO_ITEM--28-4#None,,71.0,71.0
+e230,Create Sales Order Item,2023-12-16T00:00:00+00:00,CUSTOMER--44#None,MAT-19#None,MAT-19_Plant2#None,Plant2#None,,SO_ITEM--127-1#None,,0.0,0.0
+e764,Create Sales Order Item,2023-12-16T00:00:00+00:00,CUSTOMER--44#None,MAT-58#None,MAT-58_Plant2#None,Plant2#None,,SO_ITEM--28-1#None,,58.0,58.0
+e811,Goods Receipt,2023-12-16T00:00:00+00:00,,MAT-62#None,MAT-62_Plant3#None,Plant3#None,PO_ITEM--78-3#None,,SUPPLIER--22#None,0.0,61.0
+e983,Create Sales Order Item,2023-12-16T00:00:00+00:00,CUSTOMER--44#None,MAT-74#None,MAT-74_Plant4#None,Plant4#None,,SO_ITEM--28-2#None,,83.0,83.0
+e1107,Create Purchase Suggestion Item,2023-12-16T00:00:00+00:00,,MAT-83#None,MAT-83_Plant4#None,Plant4#None,,,,38.0,38.0
+e1190,Create Sales Order Item,2023-12-16T00:00:00+00:00,CUSTOMER--44#None,MAT-90#None,MAT-90_Plant3#None,Plant3#None,,SO_ITEM--127-2#None,,0.0,0.0
+e710,Create Purchase Order Item,2023-12-17T00:00:00+00:00,,MAT-54#None,MAT-54_Plant3#None,Plant3#None,PO_ITEM--10-1#None,,SUPPLIER--20#None,0.0,0.0
+e843,Goods Issue,2023-12-17T00:00:00+00:00,CUSTOMER--366706#None,MAT-64#None,MAT-64_Plant5#None,Plant5#None,,,,100.0,71.0
+e594,Goods Issue,2023-12-18T00:00:00+00:00,CUSTOMER--386270#None,MAT-47#None,MAT-47_Plant5#None,Plant5#None,,,,89.0,20.0
+e1037,Goods Issue,2023-12-18T00:00:00+00:00,CUSTOMER--715682#None,MAT-78#None,MAT-78_Plant4#None,Plant4#None,,,,50.0,0.0
+e53,Goods Receipt,2023-12-19T00:00:00+00:00,,MAT-6#None,MAT-6_Plant5#None,Plant5#None,PO_ITEM--37-4#None,,SUPPLIER--4#None,0.0,62.0
+e166,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-14#None,MAT-14_Plant5#None,Plant5#None,PO_ITEM--117-2#None,,SUPPLIER--20#None,63.0,63.0
+e187,Goods Receipt,2023-12-19T00:00:00+00:00,,MAT-15#None,MAT-15_Plant1#None,Plant1#None,PO_ITEM--126-5#None,,SUPPLIER--3#None,0.0,4.0
+e411,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-33#None,MAT-33_Plant2#None,Plant2#None,PO_ITEM--108-4#None,,SUPPLIER--29#None,0.0,0.0
+e421,Create Sales Order Item,2023-12-19T00:00:00+00:00,CUSTOMER--45#None,MAT-34#None,MAT-34_Plant3#None,Plant3#None,,SO_ITEM--56-2#None,,69.0,69.0
+e552,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-44#None,MAT-44_Plant1#None,Plant1#None,PO_ITEM--117-3#None,,SUPPLIER--20#None,0.0,0.0
+e727,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-55#None,MAT-55_Plant2#None,Plant2#None,PO_ITEM--108-3#None,,SUPPLIER--29#None,0.0,0.0
+e765,Goods Issue,2023-12-19T00:00:00+00:00,CUSTOMER--213312#None,MAT-58#None,MAT-58_Plant5#None,Plant5#None,,,,58.0,0.0
+e844,Goods Receipt,2023-12-19T00:00:00+00:00,,MAT-64#None,MAT-64_Plant4#None,Plant4#None,PO_ITEM--26-5#None,,SUPPLIER--16#None,71.0,161.0
+e903,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-68#None,MAT-68_Plant1#None,Plant1#None,PO_ITEM--108-5#None,,SUPPLIER--29#None,0.0,0.0
+e928,Create Sales Order Item,2023-12-19T00:00:00+00:00,CUSTOMER--45#None,MAT-70#None,MAT-70_Plant1#None,Plant1#None,,SO_ITEM--56-3#None,,0.0,0.0
+e984,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-74#None,MAT-74_Plant5#None,Plant5#None,PO_ITEM--108-2#None,,SUPPLIER--29#None,130.0,130.0
+e1218,Create Sales Order Item,2023-12-19T00:00:00+00:00,CUSTOMER--45#None,MAT-93#None,MAT-93_Plant5#None,Plant5#None,,SO_ITEM--56-1#None,,0.0,0.0
+e1257,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-96#None,MAT-96_Plant1#None,Plant1#None,PO_ITEM--108-1#None,,SUPPLIER--29#None,0.0,0.0
+e1281,Create Purchase Order Item,2023-12-19T00:00:00+00:00,,MAT-98#None,MAT-98_Plant3#None,Plant3#None,PO_ITEM--117-1#None,,SUPPLIER--20#None,0.0,0.0
+e1048,Goods Receipt,2023-12-21T00:00:00+00:00,,MAT-79#None,MAT-79_Plant1#None,Plant1#None,PO_ITEM--15-2#None,,SUPPLIER--25#None,140.0,145.0
+e244,Create Purchase Order Item,2023-12-22T00:00:00+00:00,,MAT-20#None,MAT-20_Plant4#None,Plant4#None,PO_ITEM--47-4#None,,SUPPLIER--27#None,0.0,0.0
+e493,Create Purchase Order Item,2023-12-22T00:00:00+00:00,,MAT-39#None,MAT-39_Plant3#None,Plant3#None,PO_ITEM--47-3#None,,SUPPLIER--27#None,0.0,0.0
+e614,Create Purchase Suggestion Item,2023-12-22T00:00:00+00:00,,MAT-48#None,MAT-48_Plant2#None,Plant2#None,,,,0.0,0.0
+e691,Create Purchase Order Item,2023-12-22T00:00:00+00:00,,MAT-53#None,MAT-53_Plant3#None,Plant3#None,PO_ITEM--47-2#None,,SUPPLIER--27#None,44.0,44.0
+e812,Create Purchase Suggestion Item,2023-12-22T00:00:00+00:00,,MAT-62#None,MAT-62_Plant1#None,Plant1#None,,,,61.0,61.0
+e813,Create Purchase Order Item,2023-12-22T00:00:00+00:00,,MAT-62#None,MAT-62_Plant5#None,Plant5#None,PO_ITEM--47-5#None,,SUPPLIER--27#None,61.0,61.0
+e1003,Create Purchase Order Item,2023-12-22T00:00:00+00:00,,MAT-75#None,MAT-75_Plant2#None,Plant2#None,PO_ITEM--47-1#None,,SUPPLIER--27#None,0.0,0.0
+e167,Goods Issue,2023-12-24T00:00:00+00:00,CUSTOMER--347771#None,MAT-14#None,MAT-14_Plant5#None,Plant5#None,,,,63.0,0.0
+e231,Create Purchase Suggestion Item,2023-12-24T00:00:00+00:00,,MAT-19#None,MAT-19_Plant2#None,Plant2#None,,,,0.0,0.0
+e814,Create Purchase Suggestion Item,2023-12-24T00:00:00+00:00,,MAT-62#None,MAT-62_Plant3#None,Plant3#None,,,,61.0,61.0
+e815,Goods Receipt,2023-12-24T00:00:00+00:00,,MAT-62#None,MAT-62_Plant1#None,Plant1#None,PO_ITEM--19-1#None,,SUPPLIER--12#None,61.0,110.0
+e915,Create Purchase Suggestion Item,2023-12-24T00:00:00+00:00,,MAT-69#None,MAT-69_Plant2#None,Plant2#None,,,,0.0,0.0
+e199,Create Purchase Order Item,2023-12-25T00:00:00+00:00,,MAT-16#None,MAT-16_Plant5#None,Plant5#None,PO_ITEM--122-1#None,,SUPPLIER--20#None,0.0,0.0
+e553,Create Purchase Order Item,2023-12-25T00:00:00+00:00,,MAT-44#None,MAT-44_Plant1#None,Plant1#None,PO_ITEM--122-2#None,,SUPPLIER--20#None,0.0,0.0
+e1271,Create Purchase Order Item,2023-12-25T00:00:00+00:00,,MAT-97#None,MAT-97_Plant3#None,Plant3#None,PO_ITEM--122-3#None,,SUPPLIER--20#None,0.0,0.0
+e213,Create Sales Order Item,2023-12-26T00:00:00+00:00,CUSTOMER--31#None,MAT-18#None,MAT-18_Plant4#None,Plant4#None,,SO_ITEM--123-3#None,,71.0,71.0
+e595,Create Sales Order Item,2023-12-26T00:00:00+00:00,CUSTOMER--31#None,MAT-47#None,MAT-47_Plant3#None,Plant3#None,,SO_ITEM--123-4#None,,20.0,20.0
+e929,Create Sales Order Item,2023-12-26T00:00:00+00:00,CUSTOMER--31#None,MAT-70#None,MAT-70_Plant5#None,Plant5#None,,SO_ITEM--123-2#None,,0.0,0.0
+e1028,Goods Issue,2023-12-26T00:00:00+00:00,CUSTOMER--388296#None,MAT-77#None,MAT-77_Plant5#None,Plant5#None,,,,5.0,0.0
+e1272,Create Sales Order Item,2023-12-26T00:00:00+00:00,CUSTOMER--31#None,MAT-97#None,MAT-97_Plant1#None,Plant1#None,,SO_ITEM--123-5#None,,0.0,0.0
+e204,Create Sales Order Item,2023-12-27T00:00:00+00:00,CUSTOMER--42#None,MAT-17#None,MAT-17_Plant4#None,Plant4#None,,SO_ITEM--155-3#None,,0.0,0.0
+e265,Create Sales Order Item,2023-12-27T00:00:00+00:00,CUSTOMER--42#None,MAT-22#None,MAT-22_Plant1#None,Plant1#None,,SO_ITEM--155-2#None,,23.0,23.0
+e728,Goods Receipt,2023-12-27T00:00:00+00:00,,MAT-55#None,MAT-55_Plant2#None,Plant2#None,PO_ITEM--100-1#None,,SUPPLIER--15#None,0.0,96.0
+e1087,Create Sales Order Item,2023-12-27T00:00:00+00:00,CUSTOMER--42#None,MAT-82#None,MAT-82_Plant1#None,Plant1#None,,SO_ITEM--155-1#None,,0.0,0.0
+e151,Create Purchase Order Item,2023-12-28T00:00:00+00:00,,MAT-13#None,MAT-13_Plant2#None,Plant2#None,PO_ITEM--76-1#None,,SUPPLIER--13#None,0.0,0.0
+e1125,Create Purchase Order Item,2023-12-28T00:00:00+00:00,,MAT-85#None,MAT-85_Plant4#None,Plant4#None,PO_ITEM--76-2#None,,SUPPLIER--13#None,2.0,2.0
+e266,Create Purchase Suggestion Item,2023-12-29T00:00:00+00:00,,MAT-22#None,MAT-22_Plant2#None,Plant2#None,,,,23.0,23.0
+e437,Create Purchase Suggestion Item,2023-12-29T00:00:00+00:00,,MAT-35#None,MAT-35_Plant4#None,Plant4#None,,,,0.0,0.0
+e845,Create Purchase Suggestion Item,2023-12-30T00:00:00+00:00,,MAT-64#None,MAT-64_Plant1#None,Plant1#None,,,,161.0,161.0
+e4,Create Purchase Order Item,2023-12-31T00:00:00+00:00,,MAT-1#None,MAT-1_Plant4#None,Plant4#None,PO_ITEM--96-1#None,,SUPPLIER--17#None,0.0,0.0
+e96,Create Sales Order Item,2023-12-31T00:00:00+00:00,CUSTOMER--49#None,MAT-9#None,MAT-9_Plant5#None,Plant5#None,,SO_ITEM--101-3#None,,88.0,88.0
+e464,Create Sales Order Item,2023-12-31T00:00:00+00:00,CUSTOMER--49#None,MAT-37#None,MAT-37_Plant2#None,Plant2#None,,SO_ITEM--101-1#None,,39.0,39.0
+e711,Create Purchase Suggestion Item,2023-12-31T00:00:00+00:00,,MAT-54#None,MAT-54_Plant1#None,Plant1#None,,,,0.0,0.0
+e786,Goods Issue,2023-12-31T00:00:00+00:00,CUSTOMER--464618#None,MAT-60#None,MAT-60_Plant1#None,Plant1#None,,,,119.0,96.0
+e830,Create Purchase Order Item,2023-12-31T00:00:00+00:00,,MAT-63#None,MAT-63_Plant4#None,Plant4#None,PO_ITEM--96-2#None,,SUPPLIER--17#None,0.0,0.0
+e930,Goods Receipt,2023-12-31T00:00:00+00:00,,MAT-70#None,MAT-70_Plant4#None,Plant4#None,PO_ITEM--30-4#None,,SUPPLIER--1#None,0.0,26.0
+e931,Create Sales Order Item,2023-12-31T00:00:00+00:00,CUSTOMER--49#None,MAT-70#None,MAT-70_Plant2#None,Plant2#None,,SO_ITEM--101-2#None,,26.0,26.0
+e1108,Create Purchase Order Item,2023-12-31T00:00:00+00:00,,MAT-83#None,MAT-83_Plant4#None,Plant4#None,PO_ITEM--96-3#None,,SUPPLIER--17#None,38.0,38.0
+e80,Create Purchase Order Item,2024-01-02T00:00:00+00:00,,MAT-8#None,MAT-8_Plant3#None,Plant3#None,PO_ITEM--17-5#None,,SUPPLIER--12#None,0.0,0.0
+e108,Create Purchase Order Item,2024-01-02T00:00:00+00:00,,MAT-10#None,MAT-10_Plant1#None,Plant1#None,PO_ITEM--17-1#None,,SUPPLIER--12#None,0.0,0.0
+e168,Create Purchase Order Item,2024-01-02T00:00:00+00:00,,MAT-14#None,MAT-14_Plant4#None,Plant4#None,PO_ITEM--67-1#None,,SUPPLIER--26#None,129.0,129.0
+e568,Create Sales Order Item,2024-01-02T00:00:00+00:00,CUSTOMER--38#None,MAT-45#None,MAT-45_Plant1#None,Plant1#None,,SO_ITEM--33-1#None,,0.0,0.0
+e677,Create Sales Order Item,2024-01-02T00:00:00+00:00,CUSTOMER--38#None,MAT-52#None,MAT-52_Plant4#None,Plant4#None,,SO_ITEM--33-2#None,,0.0,0.0
+e846,Create Purchase Order Item,2024-01-02T00:00:00+00:00,,MAT-64#None,MAT-64_Plant3#None,Plant3#None,PO_ITEM--17-3#None,,SUPPLIER--12#None,161.0,161.0
+e1004,Create Purchase Order Item,2024-01-02T00:00:00+00:00,,MAT-75#None,MAT-75_Plant5#None,Plant5#None,PO_ITEM--17-2#None,,SUPPLIER--12#None,0.0,0.0
+e1151,Create Purchase Suggestion Item,2024-01-02T00:00:00+00:00,,MAT-87#None,MAT-87_Plant5#None,Plant5#None,,,,0.0,0.0
+e1282,Create Purchase Order Item,2024-01-02T00:00:00+00:00,,MAT-98#None,MAT-98_Plant3#None,Plant3#None,PO_ITEM--17-4#None,,SUPPLIER--12#None,0.0,0.0
+e596,Create Purchase Suggestion Item,2024-01-03T00:00:00+00:00,,MAT-47#None,MAT-47_Plant2#None,Plant2#None,,,,20.0,20.0
+e129,Create Sales Order Item,2024-01-04T00:00:00+00:00,CUSTOMER--33#None,MAT-11#None,MAT-11_Plant1#None,Plant1#None,,SO_ITEM--24-1#None,,0.0,0.0
+e346,Create Sales Order Item,2024-01-04T00:00:00+00:00,CUSTOMER--33#None,MAT-28#None,MAT-28_Plant4#None,Plant4#None,,SO_ITEM--24-2#None,,55.0,55.0
+e884,Create Sales Order Item,2024-01-04T00:00:00+00:00,CUSTOMER--33#None,MAT-67#None,MAT-67_Plant1#None,Plant1#None,,SO_ITEM--24-4#None,,20.0,20.0
+e1208,Create Sales Order Item,2024-01-04T00:00:00+00:00,CUSTOMER--33#None,MAT-92#None,MAT-92_Plant2#None,Plant2#None,,SO_ITEM--24-3#None,,0.0,0.0
+e1231,Create Sales Order Item,2024-01-04T00:00:00+00:00,CUSTOMER--33#None,MAT-94#None,MAT-94_Plant5#None,Plant5#None,,SO_ITEM--24-5#None,,0.0,0.0
+e42,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--12#None,MAT-5#None,MAT-5_Plant2#None,Plant2#None,,SO_ITEM--54-1#None,,0.0,0.0
+e267,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--12#None,MAT-22#None,MAT-22_Plant3#None,Plant3#None,,SO_ITEM--54-5#None,,23.0,23.0
+e275,Create Purchase Suggestion Item,2024-01-05T00:00:00+00:00,,MAT-23#None,MAT-23_Plant4#None,Plant4#None,,,,0.0,0.0
+e288,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--6#None,MAT-24#None,MAT-24_Plant5#None,Plant5#None,,SO_ITEM--197-3#None,,184.0,184.0
+e438,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--6#None,MAT-35#None,MAT-35_Plant4#None,Plant4#None,,SO_ITEM--197-4#None,,0.0,0.0
+e554,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--12#None,MAT-44#None,MAT-44_Plant3#None,Plant3#None,,SO_ITEM--54-2#None,,0.0,0.0
+e615,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--12#None,MAT-48#None,MAT-48_Plant5#None,Plant5#None,,SO_ITEM--54-4#None,,0.0,0.0
+e692,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--6#None,MAT-53#None,MAT-53_Plant3#None,Plant3#None,,SO_ITEM--197-2#None,,44.0,44.0
+e1038,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--12#None,MAT-78#None,MAT-78_Plant2#None,Plant2#None,,SO_ITEM--54-3#None,,0.0,0.0
+e1191,Create Purchase Suggestion Item,2024-01-05T00:00:00+00:00,,MAT-90#None,MAT-90_Plant1#None,Plant1#None,,,,0.0,0.0
+e1219,Create Sales Order Item,2024-01-05T00:00:00+00:00,CUSTOMER--6#None,MAT-93#None,MAT-93_Plant4#None,Plant4#None,,SO_ITEM--197-1#None,,12.0,12.0
+e130,Goods Receipt,2024-01-07T00:00:00+00:00,,MAT-11#None,MAT-11_Plant3#None,Plant3#None,PO_ITEM--100-5#None,,SUPPLIER--15#None,0.0,82.0
+e169,Create Sales Order Item,2024-01-07T00:00:00+00:00,CUSTOMER--13#None,MAT-14#None,MAT-14_Plant4#None,Plant4#None,,SO_ITEM--173-5#None,,129.0,129.0
+e347,Goods Issue,2024-01-07T00:00:00+00:00,CUSTOMER--522666#None,MAT-28#None,MAT-28_Plant1#None,Plant1#None,,,,55.0,0.0
+e383,Create Sales Order Item,2024-01-07T00:00:00+00:00,CUSTOMER--26#None,MAT-31#None,MAT-31_Plant4#None,Plant4#None,,SO_ITEM--125-2#None,,0.0,0.0
+e597,Create Sales Order Item,2024-01-07T00:00:00+00:00,CUSTOMER--13#None,MAT-47#None,MAT-47_Plant4#None,Plant4#None,,SO_ITEM--173-4#None,,20.0,20.0
+e616,Create Sales Order Item,2024-01-07T00:00:00+00:00,CUSTOMER--13#None,MAT-48#None,MAT-48_Plant2#None,Plant2#None,,SO_ITEM--173-3#None,,0.0,0.0
+e904,Create Sales Order Item,2024-01-07T00:00:00+00:00,CUSTOMER--13#None,MAT-68#None,MAT-68_Plant3#None,Plant3#None,,SO_ITEM--173-1#None,,0.0,0.0
+e1039,Create Sales Order Item,2024-01-07T00:00:00+00:00,CUSTOMER--26#None,MAT-78#None,MAT-78_Plant5#None,Plant5#None,,SO_ITEM--125-1#None,,0.0,0.0
+e1283,Create Sales Order Item,2024-01-07T00:00:00+00:00,CUSTOMER--13#None,MAT-98#None,MAT-98_Plant5#None,Plant5#None,,SO_ITEM--173-2#None,,0.0,0.0
+e205,Create Purchase Order Item,2024-01-08T00:00:00+00:00,,MAT-17#None,MAT-17_Plant5#None,Plant5#None,PO_ITEM--84-5#None,,SUPPLIER--13#None,0.0,0.0
+e337,Create Purchase Order Item,2024-01-08T00:00:00+00:00,,MAT-27#None,MAT-27_Plant5#None,Plant5#None,PO_ITEM--84-2#None,,SUPPLIER--13#None,41.0,41.0
+e598,Create Purchase Suggestion Item,2024-01-08T00:00:00+00:00,,MAT-47#None,MAT-47_Plant3#None,Plant3#None,,,,20.0,20.0
+e729,Create Purchase Order Item,2024-01-08T00:00:00+00:00,,MAT-55#None,MAT-55_Plant1#None,Plant1#None,PO_ITEM--84-3#None,,SUPPLIER--13#None,96.0,96.0
+e816,Create Sales Order Item,2024-01-08T00:00:00+00:00,CUSTOMER--39#None,MAT-62#None,MAT-62_Plant1#None,Plant1#None,,SO_ITEM--145-2#None,,110.0,110.0
+e831,Create Sales Order Item,2024-01-08T00:00:00+00:00,CUSTOMER--49#None,MAT-63#None,MAT-63_Plant5#None,Plant5#None,,SO_ITEM--79-1#None,,0.0,0.0
+e932,Create Sales Order Item,2024-01-08T00:00:00+00:00,CUSTOMER--39#None,MAT-70#None,MAT-70_Plant3#None,Plant3#None,,SO_ITEM--145-1#None,,26.0,26.0
+e1232,Create Purchase Order Item,2024-01-08T00:00:00+00:00,,MAT-94#None,MAT-94_Plant1#None,Plant1#None,PO_ITEM--84-4#None,,SUPPLIER--13#None,0.0,0.0
+e1284,Create Purchase Order Item,2024-01-08T00:00:00+00:00,,MAT-98#None,MAT-98_Plant3#None,Plant3#None,PO_ITEM--84-1#None,,SUPPLIER--13#None,0.0,0.0
+e268,Create Sales Order Item,2024-01-09T00:00:00+00:00,CUSTOMER--46#None,MAT-22#None,MAT-22_Plant5#None,Plant5#None,,SO_ITEM--48-2#None,,23.0,23.0
+e481,Create Sales Order Item,2024-01-09T00:00:00+00:00,CUSTOMER--46#None,MAT-38#None,MAT-38_Plant1#None,Plant1#None,,SO_ITEM--48-4#None,,127.0,127.0
+e494,Create Sales Order Item,2024-01-09T00:00:00+00:00,CUSTOMER--46#None,MAT-39#None,MAT-39_Plant4#None,Plant4#None,,SO_ITEM--48-3#None,,73.0,73.0
+e945,Create Sales Order Item,2024-01-09T00:00:00+00:00,CUSTOMER--46#None,MAT-71#None,MAT-71_Plant3#None,Plant3#None,,SO_ITEM--48-5#None,,0.0,0.0
+e1245,Create Sales Order Item,2024-01-09T00:00:00+00:00,CUSTOMER--46#None,MAT-95#None,MAT-95_Plant1#None,Plant1#None,,SO_ITEM--48-1#None,,0.0,0.0
+e317,Create Purchase Order Item,2024-01-10T00:00:00+00:00,,MAT-26#None,MAT-26_Plant3#None,Plant3#None,PO_ITEM--22-1#None,,SUPPLIER--22#None,93.0,93.0
+e393,Create Purchase Order Item,2024-01-10T00:00:00+00:00,,MAT-32#None,MAT-32_Plant3#None,Plant3#None,PO_ITEM--145-1#None,,SUPPLIER--9#None,0.0,0.0
+e465,Create Purchase Order Item,2024-01-10T00:00:00+00:00,,MAT-37#None,MAT-37_Plant3#None,Plant3#None,PO_ITEM--145-3#None,,SUPPLIER--9#None,39.0,39.0
+e1246,Create Purchase Order Item,2024-01-10T00:00:00+00:00,,MAT-95#None,MAT-95_Plant1#None,Plant1#None,PO_ITEM--145-2#None,,SUPPLIER--9#None,0.0,0.0
+e449,Create Sales Order Item,2024-01-11T00:00:00+00:00,CUSTOMER--23#None,MAT-36#None,MAT-36_Plant5#None,Plant5#None,,SO_ITEM--130-3#None,,65.0,65.0
+e466,Create Sales Order Item,2024-01-11T00:00:00+00:00,CUSTOMER--23#None,MAT-37#None,MAT-37_Plant5#None,Plant5#None,,SO_ITEM--130-1#None,,39.0,39.0
+e514,Goods Issue,2024-01-11T00:00:00+00:00,CUSTOMER--436137#None,MAT-41#None,MAT-41_Plant3#None,Plant3#None,,,,57.0,0.0
+e617,Create Sales Order Item,2024-01-11T00:00:00+00:00,CUSTOMER--23#None,MAT-48#None,MAT-48_Plant3#None,Plant3#None,,SO_ITEM--130-4#None,,0.0,0.0
+e766,Create Sales Order Item,2024-01-11T00:00:00+00:00,CUSTOMER--23#None,MAT-58#None,MAT-58_Plant1#None,Plant1#None,,SO_ITEM--130-2#None,,73.0,73.0
+e1005,Create Purchase Order Item,2024-01-11T00:00:00+00:00,,MAT-75#None,MAT-75_Plant2#None,Plant2#None,PO_ITEM--28-2#None,,SUPPLIER--6#None,0.0,0.0
+e1258,Create Purchase Order Item,2024-01-11T00:00:00+00:00,,MAT-96#None,MAT-96_Plant5#None,Plant5#None,PO_ITEM--28-1#None,,SUPPLIER--6#None,0.0,0.0
+e81,Create Sales Order Item,2024-01-12T00:00:00+00:00,CUSTOMER--34#None,MAT-8#None,MAT-8_Plant2#None,Plant2#None,,SO_ITEM--68-5#None,,94.0,94.0
+e170,Create Purchase Order Item,2024-01-12T00:00:00+00:00,,MAT-14#None,MAT-14_Plant4#None,Plant4#None,PO_ITEM--146-1#None,,SUPPLIER--21#None,129.0,129.0
+e253,Create Purchase Order Item,2024-01-12T00:00:00+00:00,,MAT-21#None,MAT-21_Plant4#None,Plant4#None,PO_ITEM--146-4#None,,SUPPLIER--21#None,71.0,71.0
+e360,Create Sales Order Item,2024-01-12T00:00:00+00:00,CUSTOMER--34#None,MAT-29#None,MAT-29_Plant1#None,Plant1#None,,SO_ITEM--68-3#None,,0.0,0.0
+e578,Create Sales Order Item,2024-01-12T00:00:00+00:00,CUSTOMER--34#None,MAT-46#None,MAT-46_Plant2#None,Plant2#None,,SO_ITEM--68-2#None,,0.0,0.0
+e651,Create Sales Order Item,2024-01-12T00:00:00+00:00,CUSTOMER--34#None,MAT-50#None,MAT-50_Plant5#None,Plant5#None,,SO_ITEM--68-1#None,,0.0,0.0
+e712,Create Purchase Order Item,2024-01-12T00:00:00+00:00,,MAT-54#None,MAT-54_Plant4#None,Plant4#None,PO_ITEM--146-5#None,,SUPPLIER--21#None,0.0,0.0
+e946,Create Purchase Order Item,2024-01-12T00:00:00+00:00,,MAT-71#None,MAT-71_Plant5#None,Plant5#None,PO_ITEM--146-2#None,,SUPPLIER--21#None,0.0,0.0
+e1077,Create Purchase Order Item,2024-01-12T00:00:00+00:00,,MAT-81#None,MAT-81_Plant4#None,Plant4#None,PO_ITEM--146-3#None,,SUPPLIER--21#None,0.0,0.0
+e1126,Goods Issue,2024-01-12T00:00:00+00:00,CUSTOMER--906867#None,MAT-85#None,MAT-85_Plant5#None,Plant5#None,,,,2.0,0.0
+e1297,Create Sales Order Item,2024-01-12T00:00:00+00:00,CUSTOMER--34#None,MAT-99#None,MAT-99_Plant4#None,Plant4#None,,SO_ITEM--68-4#None,,0.0,0.0
+e303,Create Purchase Order Item,2024-01-13T00:00:00+00:00,,MAT-25#None,MAT-25_Plant3#None,Plant3#None,PO_ITEM--112-1#None,,SUPPLIER--25#None,0.0,0.0
+e482,Create Purchase Order Item,2024-01-13T00:00:00+00:00,,MAT-38#None,MAT-38_Plant5#None,Plant5#None,PO_ITEM--112-4#None,,SUPPLIER--25#None,176.0,176.0
+e505,Create Purchase Order Item,2024-01-13T00:00:00+00:00,,MAT-40#None,MAT-40_Plant4#None,Plant4#None,PO_ITEM--112-2#None,,SUPPLIER--25#None,0.0,0.0
+e787,Goods Issue,2024-01-13T00:00:00+00:00,CUSTOMER--458181#None,MAT-60#None,MAT-60_Plant3#None,Plant3#None,,,,96.0,0.0
+e985,Create Purchase Order Item,2024-01-13T00:00:00+00:00,,MAT-74#None,MAT-74_Plant2#None,Plant2#None,PO_ITEM--112-5#None,,SUPPLIER--25#None,83.0,83.0
+e1173,Create Purchase Order Item,2024-01-13T00:00:00+00:00,,MAT-89#None,MAT-89_Plant5#None,Plant5#None,PO_ITEM--112-3#None,,SUPPLIER--25#None,40.0,40.0
+e43,Create Purchase Order Item,2024-01-15T00:00:00+00:00,,MAT-5#None,MAT-5_Plant1#None,Plant1#None,PO_ITEM--72-1#None,,SUPPLIER--4#None,0.0,0.0
+e214,Create Sales Order Item,2024-01-16T00:00:00+00:00,CUSTOMER--1#None,MAT-18#None,MAT-18_Plant3#None,Plant3#None,,SO_ITEM--42-1#None,,21.0,21.0
+e885,Create Sales Order Item,2024-01-16T00:00:00+00:00,CUSTOMER--1#None,MAT-67#None,MAT-67_Plant1#None,Plant1#None,,SO_ITEM--42-2#None,,20.0,20.0
+e947,Create Purchase Suggestion Item,2024-01-16T00:00:00+00:00,,MAT-71#None,MAT-71_Plant4#None,Plant4#None,,,,0.0,0.0
+e1049,Create Sales Order Item,2024-01-16T00:00:00+00:00,CUSTOMER--1#None,MAT-79#None,MAT-79_Plant2#None,Plant2#None,,SO_ITEM--42-3#None,,113.0,113.0
+e1062,Create Sales Order Item,2024-01-16T00:00:00+00:00,CUSTOMER--1#None,MAT-80#None,MAT-80_Plant3#None,Plant3#None,,SO_ITEM--42-4#None,,56.0,56.0
+e678,Goods Receipt,2024-01-17T00:00:00+00:00,,MAT-52#None,MAT-52_Plant1#None,Plant1#None,PO_ITEM--110-3#None,,SUPPLIER--25#None,0.0,81.0
+e1152,Goods Receipt,2024-01-17T00:00:00+00:00,,MAT-87#None,MAT-87_Plant3#None,Plant3#None,PO_ITEM--112-4#None,,SUPPLIER--25#None,0.0,20.0
+e232,Create Sales Order Item,2024-01-19T00:00:00+00:00,CUSTOMER--10#None,MAT-19#None,MAT-19_Plant3#None,Plant3#None,,SO_ITEM--53-4#None,,0.0,0.0
+e412,Create Sales Order Item,2024-01-19T00:00:00+00:00,CUSTOMER--10#None,MAT-33#None,MAT-33_Plant2#None,Plant2#None,,SO_ITEM--53-2#None,,0.0,0.0
+e515,Create Sales Order Item,2024-01-19T00:00:00+00:00,CUSTOMER--10#None,MAT-41#None,MAT-41_Plant1#None,Plant1#None,,SO_ITEM--53-1#None,,74.0,74.0
+e986,Create Sales Order Item,2024-01-19T00:00:00+00:00,CUSTOMER--10#None,MAT-74#None,MAT-74_Plant1#None,Plant1#None,,SO_ITEM--53-3#None,,174.0,174.0
+e1174,Goods Issue,2024-01-21T00:00:00+00:00,CUSTOMER--316849#None,MAT-89#None,MAT-89_Plant4#None,Plant4#None,,,,40.0,26.0
+e16,Create Sales Order Item,2024-01-22T00:00:00+00:00,CUSTOMER--2#None,MAT-2#None,MAT-2_Plant5#None,Plant5#None,,SO_ITEM--159-1#None,,0.0,0.0
+e68,Create Sales Order Item,2024-01-22T00:00:00+00:00,CUSTOMER--2#None,MAT-7#None,MAT-7_Plant2#None,Plant2#None,,SO_ITEM--159-3#None,,0.0,0.0
+e109,Create Sales Order Item,2024-01-22T00:00:00+00:00,CUSTOMER--2#None,MAT-10#None,MAT-10_Plant1#None,Plant1#None,,SO_ITEM--159-2#None,,0.0,0.0
+e254,Create Purchase Order Item,2024-01-22T00:00:00+00:00,,MAT-21#None,MAT-21_Plant4#None,Plant4#None,PO_ITEM--23-1#None,,SUPPLIER--17#None,71.0,71.0
+e1020,Create Sales Order Item,2024-01-22T00:00:00+00:00,CUSTOMER--2#None,MAT-76#None,MAT-76_Plant4#None,Plant4#None,,SO_ITEM--159-5#None,,0.0,0.0
+e1233,Create Sales Order Item,2024-01-22T00:00:00+00:00,CUSTOMER--2#None,MAT-94#None,MAT-94_Plant3#None,Plant3#None,,SO_ITEM--159-4#None,,0.0,0.0
+e1273,Create Purchase Order Item,2024-01-22T00:00:00+00:00,,MAT-97#None,MAT-97_Plant3#None,Plant3#None,PO_ITEM--23-2#None,,SUPPLIER--17#None,0.0,0.0
+e188,Create Sales Order Item,2024-01-25T00:00:00+00:00,CUSTOMER--50#None,MAT-15#None,MAT-15_Plant5#None,Plant5#None,,SO_ITEM--137-2#None,,4.0,4.0
+e245,Create Sales Order Item,2024-01-25T00:00:00+00:00,CUSTOMER--50#None,MAT-20#None,MAT-20_Plant5#None,Plant5#None,,SO_ITEM--137-4#None,,0.0,0.0
+e269,Create Sales Order Item,2024-01-25T00:00:00+00:00,CUSTOMER--50#None,MAT-22#None,MAT-22_Plant1#None,Plant1#None,,SO_ITEM--137-1#None,,23.0,23.0
+e847,Create Sales Order Item,2024-01-25T00:00:00+00:00,CUSTOMER--50#None,MAT-64#None,MAT-64_Plant2#None,Plant2#None,,SO_ITEM--137-3#None,,161.0,161.0
+e1050,Goods Issue,2024-01-25T00:00:00+00:00,CUSTOMER--142113#None,MAT-79#None,MAT-79_Plant4#None,Plant4#None,,,,145.0,117.0
+e1175,Goods Issue,2024-01-25T00:00:00+00:00,CUSTOMER--727119#None,MAT-89#None,MAT-89_Plant4#None,Plant4#None,,,,26.0,0.0
+e1274,Create Sales Order Item,2024-01-25T00:00:00+00:00,CUSTOMER--50#None,MAT-97#None,MAT-97_Plant4#None,Plant4#None,,SO_ITEM--137-5#None,,0.0,0.0
+e110,Create Sales Order Item,2024-01-26T00:00:00+00:00,CUSTOMER--40#None,MAT-10#None,MAT-10_Plant3#None,Plant3#None,,SO_ITEM--95-3#None,,10.0,10.0
+e1040,Create Sales Order Item,2024-01-26T00:00:00+00:00,CUSTOMER--40#None,MAT-78#None,MAT-78_Plant3#None,Plant3#None,,SO_ITEM--95-1#None,,0.0,0.0
+e1078,Create Sales Order Item,2024-01-26T00:00:00+00:00,CUSTOMER--40#None,MAT-81#None,MAT-81_Plant3#None,Plant3#None,,SO_ITEM--95-2#None,,89.0,89.0
+e679,Create Sales Order Item,2024-01-27T00:00:00+00:00,CUSTOMER--25#None,MAT-52#None,MAT-52_Plant5#None,Plant5#None,,SO_ITEM--55-2#None,,64.0,64.0
+e948,Create Sales Order Item,2024-01-27T00:00:00+00:00,CUSTOMER--25#None,MAT-71#None,MAT-71_Plant5#None,Plant5#None,,SO_ITEM--55-3#None,,0.0,0.0
+e1285,Create Sales Order Item,2024-01-27T00:00:00+00:00,CUSTOMER--25#None,MAT-98#None,MAT-98_Plant1#None,Plant1#None,,SO_ITEM--55-1#None,,0.0,0.0
+e152,Create Sales Order Item,2024-01-28T00:00:00+00:00,CUSTOMER--12#None,MAT-13#None,MAT-13_Plant3#None,Plant3#None,,SO_ITEM--5-2#None,,0.0,0.0
+e394,Goods Receipt,2024-01-28T00:00:00+00:00,,MAT-32#None,MAT-32_Plant4#None,Plant4#None,PO_ITEM--98-1#None,,SUPPLIER--11#None,0.0,71.0
+e450,Create Sales Order Item,2024-01-28T00:00:00+00:00,CUSTOMER--12#None,MAT-36#None,MAT-36_Plant5#None,Plant5#None,,SO_ITEM--5-3#None,,65.0,65.0
+e569,Create Sales Order Item,2024-01-28T00:00:00+00:00,CUSTOMER--47#None,MAT-45#None,MAT-45_Plant1#None,Plant1#None,,SO_ITEM--9-1#None,,0.0,0.0
+e680,Create Sales Order Item,2024-01-28T00:00:00+00:00,CUSTOMER--47#None,MAT-52#None,MAT-52_Plant3#None,Plant3#None,,SO_ITEM--9-2#None,,64.0,64.0
+e738,Create Sales Order Item,2024-01-28T00:00:00+00:00,CUSTOMER--47#None,MAT-56#None,MAT-56_Plant2#None,Plant2#None,,SO_ITEM--9-3#None,,0.0,0.0
+e1029,Goods Receipt,2024-01-28T00:00:00+00:00,,MAT-77#None,MAT-77_Plant3#None,Plant3#None,PO_ITEM--118-1#None,,SUPPLIER--26#None,0.0,66.0
+e1286,Create Sales Order Item,2024-01-28T00:00:00+00:00,CUSTOMER--12#None,MAT-98#None,MAT-98_Plant5#None,Plant5#None,,SO_ITEM--5-1#None,,0.0,0.0
+e25,Create Purchase Order Item,2024-01-29T00:00:00+00:00,,MAT-3#None,MAT-3_Plant5#None,Plant5#None,PO_ITEM--39-2#None,,SUPPLIER--26#None,92.0,92.0
+e270,Create Purchase Order Item,2024-01-29T00:00:00+00:00,,MAT-22#None,MAT-22_Plant2#None,Plant2#None,PO_ITEM--56-2#None,,SUPPLIER--10#None,23.0,23.0
+e304,Create Purchase Order Item,2024-01-29T00:00:00+00:00,,MAT-25#None,MAT-25_Plant4#None,Plant4#None,PO_ITEM--58-1#None,,SUPPLIER--13#None,0.0,0.0
+e318,Create Purchase Order Item,2024-01-29T00:00:00+00:00,,MAT-26#None,MAT-26_Plant4#None,Plant4#None,PO_ITEM--56-1#None,,SUPPLIER--10#None,117.0,117.0
+e618,Create Purchase Order Item,2024-01-29T00:00:00+00:00,,MAT-48#None,MAT-48_Plant3#None,Plant3#None,PO_ITEM--39-1#None,,SUPPLIER--26#None,0.0,0.0
+e1109,Create Purchase Suggestion Item,2024-01-29T00:00:00+00:00,,MAT-83#None,MAT-83_Plant1#None,Plant1#None,,,,38.0,38.0
+e233,Create Sales Order Item,2024-01-30T00:00:00+00:00,CUSTOMER--35#None,MAT-19#None,MAT-19_Plant4#None,Plant4#None,,SO_ITEM--177-4#None,,0.0,0.0
+e305,Create Sales Order Item,2024-01-30T00:00:00+00:00,CUSTOMER--35#None,MAT-25#None,MAT-25_Plant2#None,Plant2#None,,SO_ITEM--177-1#None,,0.0,0.0
+e1063,Create Sales Order Item,2024-01-30T00:00:00+00:00,CUSTOMER--35#None,MAT-80#None,MAT-80_Plant5#None,Plant5#None,,SO_ITEM--177-3#None,,56.0,56.0
+e1298,Create Sales Order Item,2024-01-30T00:00:00+00:00,CUSTOMER--35#None,MAT-99#None,MAT-99_Plant4#None,Plant4#None,,SO_ITEM--177-2#None,,0.0,0.0
+e111,Create Sales Order Item,2024-01-31T00:00:00+00:00,CUSTOMER--38#None,MAT-10#None,MAT-10_Plant5#None,Plant5#None,,SO_ITEM--41-1#None,,0.0,0.0
+e112,Create Sales Order Item,2024-01-31T00:00:00+00:00,CUSTOMER--38#None,MAT-10#None,MAT-10_Plant3#None,Plant3#None,,SO_ITEM--41-3#None,,10.0,10.0
+e693,Create Sales Order Item,2024-01-31T00:00:00+00:00,CUSTOMER--38#None,MAT-53#None,MAT-53_Plant5#None,Plant5#None,,SO_ITEM--41-5#None,,0.0,0.0
+e916,Create Purchase Suggestion Item,2024-01-31T00:00:00+00:00,,MAT-69#None,MAT-69_Plant1#None,Plant1#None,,,,0.0,0.0
+e917,Create Sales Order Item,2024-01-31T00:00:00+00:00,CUSTOMER--38#None,MAT-69#None,MAT-69_Plant2#None,Plant2#None,,SO_ITEM--41-2#None,,0.0,0.0
+e1176,Create Sales Order Item,2024-01-31T00:00:00+00:00,CUSTOMER--38#None,MAT-89#None,MAT-89_Plant1#None,Plant1#None,,SO_ITEM--41-4#None,,0.0,0.0
+e215,Goods Issue,2024-02-01T00:00:00+00:00,CUSTOMER--883568#None,MAT-18#None,MAT-18_Plant2#None,Plant2#None,,,,71.0,62.0
+e54,Create Purchase Order Item,2024-02-02T00:00:00+00:00,,MAT-6#None,MAT-6_Plant2#None,Plant2#None,PO_ITEM--7-1#None,,SUPPLIER--19#None,62.0,62.0
+e82,Create Sales Order Item,2024-02-02T00:00:00+00:00,CUSTOMER--27#None,MAT-8#None,MAT-8_Plant3#None,Plant3#None,,SO_ITEM--109-3#None,,0.0,0.0
+e395,Create Sales Order Item,2024-02-02T00:00:00+00:00,CUSTOMER--3#None,MAT-32#None,MAT-32_Plant2#None,Plant2#None,,SO_ITEM--22-2#None,,71.0,71.0
+e555,Create Sales Order Item,2024-02-02T00:00:00+00:00,CUSTOMER--27#None,MAT-44#None,MAT-44_Plant4#None,Plant4#None,,SO_ITEM--109-4#None,,0.0,0.0
+e579,Create Sales Order Item,2024-02-02T00:00:00+00:00,CUSTOMER--27#None,MAT-46#None,MAT-46_Plant2#None,Plant2#None,,SO_ITEM--109-1#None,,0.0,0.0
+e713,Create Sales Order Item,2024-02-02T00:00:00+00:00,CUSTOMER--27#None,MAT-54#None,MAT-54_Plant1#None,Plant1#None,,SO_ITEM--109-2#None,,0.0,0.0
+e972,Create Purchase Order Item,2024-02-02T00:00:00+00:00,,MAT-73#None,MAT-73_Plant2#None,Plant2#None,PO_ITEM--7-2#None,,SUPPLIER--19#None,130.0,130.0
+e1088,Create Sales Order Item,2024-02-02T00:00:00+00:00,CUSTOMER--3#None,MAT-82#None,MAT-82_Plant5#None,Plant5#None,,SO_ITEM--22-1#None,,0.0,0.0
+e338,Create Sales Order Item,2024-02-03T00:00:00+00:00,CUSTOMER--18#None,MAT-27#None,MAT-27_Plant4#None,Plant4#None,,SO_ITEM--148-2#None,,41.0,41.0
+e396,Create Sales Order Item,2024-02-03T00:00:00+00:00,CUSTOMER--18#None,MAT-32#None,MAT-32_Plant3#None,Plant3#None,,SO_ITEM--148-1#None,,71.0,71.0
+e516,Create Sales Order Item,2024-02-03T00:00:00+00:00,CUSTOMER--9#None,MAT-41#None,MAT-41_Plant5#None,Plant5#None,,SO_ITEM--149-1#None,,74.0,74.0
+e289,Create Sales Order Item,2024-02-04T00:00:00+00:00,CUSTOMER--16#None,MAT-24#None,MAT-24_Plant2#None,Plant2#None,,SO_ITEM--49-1#None,,184.0,184.0
+e523,Create Sales Order Item,2024-02-04T00:00:00+00:00,CUSTOMER--16#None,MAT-42#None,MAT-42_Plant1#None,Plant1#None,,SO_ITEM--49-2#None,,0.0,0.0
+e886,Create Sales Order Item,2024-02-04T00:00:00+00:00,CUSTOMER--16#None,MAT-67#None,MAT-67_Plant3#None,Plant3#None,,SO_ITEM--49-4#None,,17.0,17.0
+e44,Goods Receipt,2024-02-06T00:00:00+00:00,,MAT-5#None,MAT-5_Plant5#None,Plant5#None,PO_ITEM--94-3#None,,SUPPLIER--12#None,0.0,69.0
+e113,Goods Receipt,2024-02-06T00:00:00+00:00,,MAT-10#None,MAT-10_Plant2#None,Plant2#None,PO_ITEM--110-5#None,,SUPPLIER--25#None,0.0,27.0
+e1159,Goods Issue,2024-02-08T00:00:00+00:00,CUSTOMER--956608#None,MAT-88#None,MAT-88_Plant1#None,Plant1#None,,,,75.0,0.0
+e506,Goods Receipt,2024-02-09T00:00:00+00:00,,MAT-40#None,MAT-40_Plant4#None,Plant4#None,PO_ITEM--29-4#None,,SUPPLIER--29#None,0.0,54.0
+e1287,Create Purchase Suggestion Item,2024-02-09T00:00:00+00:00,,MAT-98#None,MAT-98_Plant2#None,Plant2#None,,,,0.0,0.0
+e1288,Create Purchase Suggestion Item,2024-02-09T00:00:00+00:00,,MAT-98#None,MAT-98_Plant3#None,Plant3#None,,,,0.0,0.0
+e171,Create Purchase Order Item,2024-02-10T00:00:00+00:00,,MAT-14#None,MAT-14_Plant5#None,Plant5#None,PO_ITEM--25-4#None,,SUPPLIER--24#None,0.0,0.0
+e276,Create Purchase Order Item,2024-02-10T00:00:00+00:00,,MAT-23#None,MAT-23_Plant4#None,Plant4#None,PO_ITEM--147-1#None,,SUPPLIER--4#None,0.0,0.0
+e788,Create Purchase Order Item,2024-02-10T00:00:00+00:00,,MAT-60#None,MAT-60_Plant1#None,Plant1#None,PO_ITEM--25-2#None,,SUPPLIER--24#None,0.0,0.0
+e973,Create Purchase Order Item,2024-02-10T00:00:00+00:00,,MAT-73#None,MAT-73_Plant5#None,Plant5#None,PO_ITEM--25-1#None,,SUPPLIER--24#None,130.0,130.0
+e1247,Create Purchase Order Item,2024-02-10T00:00:00+00:00,,MAT-95#None,MAT-95_Plant2#None,Plant2#None,PO_ITEM--25-3#None,,SUPPLIER--24#None,0.0,0.0
+e665,Create Sales Order Item,2024-02-12T00:00:00+00:00,CUSTOMER--33#None,MAT-51#None,MAT-51_Plant3#None,Plant3#None,,SO_ITEM--102-1#None,,0.0,0.0
+e767,Create Sales Order Item,2024-02-12T00:00:00+00:00,CUSTOMER--33#None,MAT-58#None,MAT-58_Plant2#None,Plant2#None,,SO_ITEM--102-3#None,,0.0,0.0
+e933,Create Sales Order Item,2024-02-12T00:00:00+00:00,CUSTOMER--33#None,MAT-70#None,MAT-70_Plant5#None,Plant5#None,,SO_ITEM--102-2#None,,26.0,26.0
+e5,Create Purchase Order Item,2024-02-13T00:00:00+00:00,,MAT-1#None,MAT-1_Plant2#None,Plant2#None,PO_ITEM--5-2#None,,SUPPLIER--16#None,0.0,0.0
+e534,Create Purchase Order Item,2024-02-13T00:00:00+00:00,,MAT-43#None,MAT-43_Plant2#None,Plant2#None,PO_ITEM--5-3#None,,SUPPLIER--16#None,31.0,31.0
+e1006,Create Purchase Order Item,2024-02-13T00:00:00+00:00,,MAT-75#None,MAT-75_Plant2#None,Plant2#None,PO_ITEM--5-1#None,,SUPPLIER--16#None,0.0,0.0
+e1192,Create Purchase Suggestion Item,2024-02-13T00:00:00+00:00,,MAT-90#None,MAT-90_Plant2#None,Plant2#None,,,,0.0,0.0
+e632,Create Sales Order Item,2024-02-14T00:00:00+00:00,CUSTOMER--11#None,MAT-49#None,MAT-49_Plant4#None,Plant4#None,,SO_ITEM--25-1#None,,65.0,65.0
+e768,Create Sales Order Item,2024-02-14T00:00:00+00:00,CUSTOMER--25#None,MAT-58#None,MAT-58_Plant2#None,Plant2#None,,SO_ITEM--108-1#None,,0.0,0.0
+e987,Goods Issue,2024-02-14T00:00:00+00:00,CUSTOMER--231618#None,MAT-74#None,MAT-74_Plant2#None,Plant2#None,,,,83.0,0.0
+e1177,Create Sales Order Item,2024-02-14T00:00:00+00:00,CUSTOMER--25#None,MAT-89#None,MAT-89_Plant1#None,Plant1#None,,SO_ITEM--108-2#None,,0.0,0.0
+e26,Create Purchase Order Item,2024-02-15T00:00:00+00:00,,MAT-3#None,MAT-3_Plant4#None,Plant4#None,PO_ITEM--38-3#None,,SUPPLIER--11#None,92.0,92.0
+e348,Create Purchase Order Item,2024-02-15T00:00:00+00:00,,MAT-28#None,MAT-28_Plant1#None,Plant1#None,PO_ITEM--38-2#None,,SUPPLIER--11#None,0.0,0.0
+e694,Create Purchase Order Item,2024-02-15T00:00:00+00:00,,MAT-53#None,MAT-53_Plant4#None,Plant4#None,PO_ITEM--38-1#None,,SUPPLIER--11#None,44.0,44.0
+e864,Create Sales Order Item,2024-02-17T00:00:00+00:00,CUSTOMER--17#None,MAT-65#None,MAT-65_Plant5#None,Plant5#None,,SO_ITEM--36-2#None,,53.0,53.0
+e934,Create Purchase Order Item,2024-02-17T00:00:00+00:00,,MAT-70#None,MAT-70_Plant2#None,Plant2#None,PO_ITEM--15-1#None,,SUPPLIER--25#None,26.0,26.0
+e1007,Create Sales Order Item,2024-02-17T00:00:00+00:00,CUSTOMER--17#None,MAT-75#None,MAT-75_Plant5#None,Plant5#None,,SO_ITEM--36-1#None,,0.0,0.0
+e1064,Create Sales Order Item,2024-02-17T00:00:00+00:00,CUSTOMER--17#None,MAT-80#None,MAT-80_Plant3#None,Plant3#None,,SO_ITEM--36-3#None,,56.0,56.0
+e83,Create Sales Order Item,2024-02-18T00:00:00+00:00,CUSTOMER--14#None,MAT-8#None,MAT-8_Plant5#None,Plant5#None,,SO_ITEM--18-3#None,,94.0,94.0
+e865,Create Sales Order Item,2024-02-18T00:00:00+00:00,CUSTOMER--30#None,MAT-65#None,MAT-65_Plant3#None,Plant3#None,,SO_ITEM--80-3#None,,0.0,0.0
+e1008,Create Sales Order Item,2024-02-18T00:00:00+00:00,CUSTOMER--14#None,MAT-75#None,MAT-75_Plant2#None,Plant2#None,,SO_ITEM--18-2#None,,0.0,0.0
+e1065,Create Sales Order Item,2024-02-18T00:00:00+00:00,CUSTOMER--14#None,MAT-80#None,MAT-80_Plant3#None,Plant3#None,,SO_ITEM--18-1#None,,56.0,56.0
+e1089,Goods Receipt,2024-02-18T00:00:00+00:00,,MAT-82#None,MAT-82_Plant1#None,Plant1#None,PO_ITEM--120-4#None,,SUPPLIER--6#None,0.0,27.0
+e1138,Create Sales Order Item,2024-02-18T00:00:00+00:00,CUSTOMER--30#None,MAT-86#None,MAT-86_Plant3#None,Plant3#None,,SO_ITEM--80-2#None,,0.0,0.0
+e1178,Create Sales Order Item,2024-02-18T00:00:00+00:00,CUSTOMER--30#None,MAT-89#None,MAT-89_Plant2#None,Plant2#None,,SO_ITEM--80-1#None,,0.0,0.0
+e652,Create Purchase Suggestion Item,2024-02-20T00:00:00+00:00,,MAT-50#None,MAT-50_Plant2#None,Plant2#None,,,,0.0,0.0
+e887,Goods Issue,2024-02-20T00:00:00+00:00,CUSTOMER--643887#None,MAT-67#None,MAT-67_Plant1#None,Plant1#None,,,,20.0,0.0
+e988,Create Sales Order Item,2024-02-20T00:00:00+00:00,CUSTOMER--1#None,MAT-74#None,MAT-74_Plant5#None,Plant5#None,,SO_ITEM--139-2#None,,47.0,47.0
+e1234,Create Sales Order Item,2024-02-20T00:00:00+00:00,CUSTOMER--1#None,MAT-94#None,MAT-94_Plant4#None,Plant4#None,,SO_ITEM--139-1#None,,0.0,0.0
+e97,Create Purchase Suggestion Item,2024-02-22T00:00:00+00:00,,MAT-9#None,MAT-9_Plant3#None,Plant3#None,,,,88.0,88.0
+e817,Create Sales Order Item,2024-02-22T00:00:00+00:00,CUSTOMER--37#None,MAT-62#None,MAT-62_Plant5#None,Plant5#None,,SO_ITEM--58-1#None,,110.0,110.0
+e397,Goods Receipt,2024-02-23T00:00:00+00:00,,MAT-32#None,MAT-32_Plant3#None,Plant3#None,PO_ITEM--99-5#None,,SUPPLIER--4#None,71.0,168.0
+e422,Goods Receipt,2024-02-23T00:00:00+00:00,,MAT-34#None,MAT-34_Plant4#None,Plant4#None,PO_ITEM--29-5#None,,SUPPLIER--29#None,69.0,75.0
+e69,Create Sales Order Item,2024-02-24T00:00:00+00:00,CUSTOMER--19#None,MAT-7#None,MAT-7_Plant3#None,Plant3#None,,SO_ITEM--147-1#None,,0.0,0.0
+e98,Create Purchase Order Item,2024-02-24T00:00:00+00:00,,MAT-9#None,MAT-9_Plant5#None,Plant5#None,PO_ITEM--119-1#None,,SUPPLIER--8#None,88.0,88.0
+e216,Create Purchase Order Item,2024-02-24T00:00:00+00:00,,MAT-18#None,MAT-18_Plant3#None,Plant3#None,PO_ITEM--16-2#None,,SUPPLIER--13#None,12.0,12.0
+e277,Create Sales Order Item,2024-02-24T00:00:00+00:00,CUSTOMER--19#None,MAT-23#None,MAT-23_Plant1#None,Plant1#None,,SO_ITEM--147-2#None,,0.0,0.0
+e290,Create Purchase Order Item,2024-02-24T00:00:00+00:00,,MAT-24#None,MAT-24_Plant5#None,Plant5#None,PO_ITEM--16-1#None,,SUPPLIER--13#None,184.0,184.0
+e467,Create Sales Order Item,2024-02-24T00:00:00+00:00,CUSTOMER--19#None,MAT-37#None,MAT-37_Plant3#None,Plant3#None,,SO_ITEM--147-4#None,,39.0,39.0
+e483,Create Sales Order Item,2024-02-24T00:00:00+00:00,CUSTOMER--19#None,MAT-38#None,MAT-38_Plant5#None,Plant5#None,,SO_ITEM--147-3#None,,176.0,176.0
+e918,Create Sales Order Item,2024-02-24T00:00:00+00:00,CUSTOMER--19#None,MAT-69#None,MAT-69_Plant4#None,Plant4#None,,SO_ITEM--147-5#None,,0.0,0.0
+e137,Goods Receipt,2024-02-25T00:00:00+00:00,,MAT-12#None,MAT-12_Plant5#None,Plant5#None,PO_ITEM--43-1#None,,SUPPLIER--6#None,80.0,97.0
+e866,Goods Issue,2024-02-25T00:00:00+00:00,CUSTOMER--299078#None,MAT-65#None,MAT-65_Plant4#None,Plant4#None,,,,53.0,0.0
+e1127,Create Purchase Order Item,2024-02-25T00:00:00+00:00,,MAT-85#None,MAT-85_Plant4#None,Plant4#None,PO_ITEM--27-1#None,,SUPPLIER--10#None,0.0,0.0
+e1248,Create Sales Order Item,2024-02-25T00:00:00+00:00,CUSTOMER--7#None,MAT-95#None,MAT-95_Plant3#None,Plant3#None,,SO_ITEM--60-1#None,,0.0,0.0
+e234,Create Purchase Order Item,2024-02-26T00:00:00+00:00,,MAT-19#None,MAT-19_Plant2#None,Plant2#None,PO_ITEM--3-5#None,,SUPPLIER--12#None,0.0,0.0
+e384,Create Purchase Order Item,2024-02-26T00:00:00+00:00,,MAT-31#None,MAT-31_Plant5#None,Plant5#None,PO_ITEM--3-4#None,,SUPPLIER--12#None,0.0,0.0
+e905,Create Purchase Order Item,2024-02-26T00:00:00+00:00,,MAT-68#None,MAT-68_Plant2#None,Plant2#None,PO_ITEM--3-3#None,,SUPPLIER--12#None,0.0,0.0
+e1110,Create Purchase Order Item,2024-02-26T00:00:00+00:00,,MAT-83#None,MAT-83_Plant3#None,Plant3#None,PO_ITEM--3-1#None,,SUPPLIER--12#None,38.0,38.0
+e114,Create Purchase Order Item,2024-02-27T00:00:00+00:00,,MAT-10#None,MAT-10_Plant2#None,Plant2#None,PO_ITEM--37-3#None,,SUPPLIER--4#None,27.0,27.0
+e535,Goods Issue,2024-02-27T00:00:00+00:00,CUSTOMER--831083#None,MAT-43#None,MAT-43_Plant1#None,Plant1#None,,,,87.0,0.0
+e769,Create Purchase Order Item,2024-02-27T00:00:00+00:00,,MAT-58#None,MAT-58_Plant3#None,Plant3#None,PO_ITEM--37-2#None,,SUPPLIER--4#None,0.0,0.0
+e888,Create Purchase Order Item,2024-02-27T00:00:00+00:00,,MAT-67#None,MAT-67_Plant5#None,Plant5#None,PO_ITEM--37-1#None,,SUPPLIER--4#None,0.0,0.0
+e1235,Create Purchase Order Item,2024-02-27T00:00:00+00:00,,MAT-94#None,MAT-94_Plant4#None,Plant4#None,PO_ITEM--37-4#None,,SUPPLIER--4#None,0.0,0.0
+e451,Create Sales Order Item,2024-02-28T00:00:00+00:00,CUSTOMER--45#None,MAT-36#None,MAT-36_Plant2#None,Plant2#None,,SO_ITEM--71-5#None,,65.0,65.0
+e751,Create Sales Order Item,2024-02-28T00:00:00+00:00,CUSTOMER--45#None,MAT-57#None,MAT-57_Plant4#None,Plant4#None,,SO_ITEM--71-2#None,,0.0,0.0
+e752,Create Sales Order Item,2024-02-28T00:00:00+00:00,CUSTOMER--45#None,MAT-57#None,MAT-57_Plant5#None,Plant5#None,,SO_ITEM--71-3#None,,0.0,0.0
+e889,Create Sales Order Item,2024-02-28T00:00:00+00:00,CUSTOMER--45#None,MAT-67#None,MAT-67_Plant2#None,Plant2#None,,SO_ITEM--71-1#None,,0.0,0.0
+e1236,Create Sales Order Item,2024-02-28T00:00:00+00:00,CUSTOMER--45#None,MAT-94#None,MAT-94_Plant4#None,Plant4#None,,SO_ITEM--71-4#None,,0.0,0.0
+e115,Create Purchase Order Item,2024-03-01T00:00:00+00:00,,MAT-10#None,MAT-10_Plant4#None,Plant4#None,PO_ITEM--40-1#None,,SUPPLIER--18#None,27.0,27.0
+e291,Goods Issue,2024-03-01T00:00:00+00:00,CUSTOMER--762407#None,MAT-24#None,MAT-24_Plant1#None,Plant1#None,,,,184.0,127.0
+e580,Create Purchase Order Item,2024-03-01T00:00:00+00:00,,MAT-46#None,MAT-46_Plant5#None,Plant5#None,PO_ITEM--40-3#None,,SUPPLIER--18#None,0.0,0.0
+e848,Create Purchase Order Item,2024-03-01T00:00:00+00:00,,MAT-64#None,MAT-64_Plant4#None,Plant4#None,PO_ITEM--40-2#None,,SUPPLIER--18#None,161.0,161.0
+e1111,Create Sales Order Item,2024-03-01T00:00:00+00:00,CUSTOMER--31#None,MAT-83#None,MAT-83_Plant5#None,Plant5#None,,SO_ITEM--171-1#None,,38.0,38.0
+e1237,Goods Receipt,2024-03-02T00:00:00+00:00,,MAT-94#None,MAT-94_Plant1#None,Plant1#None,PO_ITEM--121-5#None,,SUPPLIER--16#None,0.0,50.0
+e695,Create Sales Order Item,2024-03-03T00:00:00+00:00,CUSTOMER--37#None,MAT-53#None,MAT-53_Plant1#None,Plant1#None,,SO_ITEM--44-2#None,,44.0,44.0
+e1021,Create Sales Order Item,2024-03-03T00:00:00+00:00,CUSTOMER--37#None,MAT-76#None,MAT-76_Plant2#None,Plant2#None,,SO_ITEM--44-1#None,,0.0,0.0
+e70,Create Purchase Suggestion Item,2024-03-04T00:00:00+00:00,,MAT-7#None,MAT-7_Plant2#None,Plant2#None,,,,0.0,0.0
+e423,Create Sales Order Item,2024-03-04T00:00:00+00:00,CUSTOMER--2#None,MAT-34#None,MAT-34_Plant1#None,Plant1#None,,SO_ITEM--121-1#None,,75.0,75.0
+e753,Create Sales Order Item,2024-03-04T00:00:00+00:00,CUSTOMER--2#None,MAT-57#None,MAT-57_Plant1#None,Plant1#None,,SO_ITEM--121-2#None,,0.0,0.0
+e778,Goods Issue,2024-03-04T00:00:00+00:00,CUSTOMER--695377#None,MAT-59#None,MAT-59_Plant4#None,Plant4#None,,,,98.0,31.0
+e800,Create Sales Order Item,2024-03-04T00:00:00+00:00,CUSTOMER--2#None,MAT-61#None,MAT-61_Plant2#None,Plant2#None,,SO_ITEM--121-3#None,,100.0,100.0
+e599,Goods Issue,2024-03-05T00:00:00+00:00,CUSTOMER--383297#None,MAT-47#None,MAT-47_Plant2#None,Plant2#None,,,,20.0,0.0
+e633,Create Purchase Suggestion Item,2024-03-05T00:00:00+00:00,,MAT-49#None,MAT-49_Plant1#None,Plant1#None,,,,0.0,0.0
+e874,Create Sales Order Item,2024-03-05T00:00:00+00:00,CUSTOMER--28#None,MAT-66#None,MAT-66_Plant1#None,Plant1#None,,SO_ITEM--133-1#None,,0.0,0.0
+e935,Create Sales Order Item,2024-03-05T00:00:00+00:00,CUSTOMER--28#None,MAT-70#None,MAT-70_Plant4#None,Plant4#None,,SO_ITEM--133-3#None,,26.0,26.0
+e974,Goods Issue,2024-03-05T00:00:00+00:00,CUSTOMER--128545#None,MAT-73#None,MAT-73_Plant5#None,Plant5#None,,,,130.0,51.0
+e1128,Create Sales Order Item,2024-03-05T00:00:00+00:00,CUSTOMER--28#None,MAT-85#None,MAT-85_Plant5#None,Plant5#None,,SO_ITEM--133-2#None,,0.0,0.0
+e556,Goods Receipt,2024-03-06T00:00:00+00:00,,MAT-44#None,MAT-44_Plant4#None,Plant4#None,PO_ITEM--63-1#None,,SUPPLIER--26#None,0.0,45.0
+e217,Create Purchase Order Item,2024-03-07T00:00:00+00:00,,MAT-18#None,MAT-18_Plant2#None,Plant2#None,PO_ITEM--4-3#None,,SUPPLIER--17#None,62.0,62.0
+e278,Create Purchase Order Item,2024-03-07T00:00:00+00:00,,MAT-23#None,MAT-23_Plant4#None,Plant4#None,PO_ITEM--4-2#None,,SUPPLIER--17#None,0.0,0.0
+e557,Create Purchase Order Item,2024-03-07T00:00:00+00:00,,MAT-44#None,MAT-44_Plant1#None,Plant1#None,PO_ITEM--4-1#None,,SUPPLIER--17#None,45.0,45.0
+e255,Create Purchase Order Item,2024-03-08T00:00:00+00:00,,MAT-21#None,MAT-21_Plant3#None,Plant3#None,PO_ITEM--54-2#None,,SUPPLIER--18#None,71.0,71.0
+e452,Create Purchase Order Item,2024-03-08T00:00:00+00:00,,MAT-36#None,MAT-36_Plant4#None,Plant4#None,PO_ITEM--54-3#None,,SUPPLIER--18#None,0.0,0.0
+e495,Create Purchase Order Item,2024-03-08T00:00:00+00:00,,MAT-39#None,MAT-39_Plant4#None,Plant4#None,PO_ITEM--54-1#None,,SUPPLIER--18#None,73.0,73.0
+e770,Create Purchase Order Item,2024-03-08T00:00:00+00:00,,MAT-58#None,MAT-58_Plant5#None,Plant5#None,PO_ITEM--54-5#None,,SUPPLIER--18#None,0.0,0.0
+e1249,Create Purchase Order Item,2024-03-08T00:00:00+00:00,,MAT-95#None,MAT-95_Plant3#None,Plant3#None,PO_ITEM--54-4#None,,SUPPLIER--18#None,0.0,0.0
+e1250,Goods Receipt,2024-03-08T00:00:00+00:00,,MAT-95#None,MAT-95_Plant3#None,Plant3#None,PO_ITEM--45-4#None,,SUPPLIER--15#None,0.0,42.0
+e496,Create Sales Order Item,2024-03-09T00:00:00+00:00,CUSTOMER--35#None,MAT-39#None,MAT-39_Plant4#None,Plant4#None,,SO_ITEM--77-3#None,,73.0,73.0
+e634,Create Sales Order Item,2024-03-09T00:00:00+00:00,CUSTOMER--35#None,MAT-49#None,MAT-49_Plant3#None,Plant3#None,,SO_ITEM--77-1#None,,65.0,65.0
+e1160,Create Sales Order Item,2024-03-09T00:00:00+00:00,CUSTOMER--35#None,MAT-88#None,MAT-88_Plant2#None,Plant2#None,,SO_ITEM--77-2#None,,0.0,0.0
+e754,Create Sales Order Item,2024-03-10T00:00:00+00:00,CUSTOMER--15#None,MAT-57#None,MAT-57_Plant2#None,Plant2#None,,SO_ITEM--200-3#None,,0.0,0.0
+e1030,Create Sales Order Item,2024-03-10T00:00:00+00:00,CUSTOMER--15#None,MAT-77#None,MAT-77_Plant3#None,Plant3#None,,SO_ITEM--200-1#None,,66.0,66.0
+e1299,Create Sales Order Item,2024-03-10T00:00:00+00:00,CUSTOMER--15#None,MAT-99#None,MAT-99_Plant2#None,Plant2#None,,SO_ITEM--200-2#None,,0.0,0.0
+e45,Create Purchase Order Item,2024-03-11T00:00:00+00:00,,MAT-5#None,MAT-5_Plant5#None,Plant5#None,PO_ITEM--2-1#None,,SUPPLIER--5#None,69.0,69.0
+e279,Goods Receipt,2024-03-11T00:00:00+00:00,,MAT-23#None,MAT-23_Plant2#None,Plant2#None,PO_ITEM--42-4#None,,SUPPLIER--12#None,0.0,13.0
+e536,Create Purchase Order Item,2024-03-11T00:00:00+00:00,,MAT-43#None,MAT-43_Plant1#None,Plant1#None,PO_ITEM--150-2#None,,SUPPLIER--20#None,0.0,0.0
+e949,Create Purchase Order Item,2024-03-11T00:00:00+00:00,,MAT-71#None,MAT-71_Plant4#None,Plant4#None,PO_ITEM--150-1#None,,SUPPLIER--20#None,0.0,0.0
+e398,Create Sales Order Item,2024-03-12T00:00:00+00:00,CUSTOMER--44#None,MAT-32#None,MAT-32_Plant1#None,Plant1#None,,SO_ITEM--142-1#None,,168.0,168.0
+e399,Create Sales Order Item,2024-03-12T00:00:00+00:00,CUSTOMER--44#None,MAT-32#None,MAT-32_Plant5#None,Plant5#None,,SO_ITEM--142-2#None,,168.0,168.0
+e1193,Goods Receipt,2024-03-12T00:00:00+00:00,,MAT-90#None,MAT-90_Plant3#None,Plant3#None,PO_ITEM--125-5#None,,SUPPLIER--10#None,0.0,1.0
+e55,Create Sales Order Item,2024-03-13T00:00:00+00:00,CUSTOMER--22#None,MAT-6#None,MAT-6_Plant2#None,Plant2#None,,SO_ITEM--84-2#None,,62.0,62.0
+e84,Create Sales Order Item,2024-03-13T00:00:00+00:00,CUSTOMER--22#None,MAT-8#None,MAT-8_Plant3#None,Plant3#None,,SO_ITEM--84-1#None,,0.0,0.0
+e138,Create Purchase Order Item,2024-03-13T00:00:00+00:00,,MAT-12#None,MAT-12_Plant1#None,Plant1#None,PO_ITEM--43-2#None,,SUPPLIER--6#None,17.0,17.0
+e172,Create Sales Order Item,2024-03-13T00:00:00+00:00,CUSTOMER--22#None,MAT-14#None,MAT-14_Plant1#None,Plant1#None,,SO_ITEM--84-3#None,,43.0,43.0
+e292,Create Purchase Suggestion Item,2024-03-13T00:00:00+00:00,,MAT-24#None,MAT-24_Plant2#None,Plant2#None,,,,127.0,127.0
+e424,Create Sales Order Item,2024-03-13T00:00:00+00:00,CUSTOMER--22#None,MAT-34#None,MAT-34_Plant3#None,Plant3#None,,SO_ITEM--84-5#None,,75.0,75.0
+e1079,Create Purchase Order Item,2024-03-13T00:00:00+00:00,,MAT-81#None,MAT-81_Plant1#None,Plant1#None,PO_ITEM--43-1#None,,SUPPLIER--6#None,0.0,0.0
+e1220,Create Sales Order Item,2024-03-13T00:00:00+00:00,CUSTOMER--22#None,MAT-93#None,MAT-93_Plant1#None,Plant1#None,,SO_ITEM--84-4#None,,12.0,12.0
+e27,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-3#None,MAT-3_Plant5#None,Plant5#None,PO_ITEM--49-2#None,,SUPPLIER--20#None,92.0,92.0
+e139,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-12#None,MAT-12_Plant2#None,Plant2#None,PO_ITEM--49-1#None,,SUPPLIER--20#None,17.0,17.0
+e140,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-12#None,MAT-12_Plant1#None,Plant1#None,PO_ITEM--49-3#None,,SUPPLIER--20#None,17.0,17.0
+e141,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-12#None,MAT-12_Plant2#None,Plant2#None,PO_ITEM--129-4#None,,SUPPLIER--11#None,17.0,17.0
+e497,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-39#None,MAT-39_Plant3#None,Plant3#None,PO_ITEM--129-1#None,,SUPPLIER--11#None,0.0,0.0
+e570,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-45#None,MAT-45_Plant4#None,Plant4#None,PO_ITEM--129-2#None,,SUPPLIER--11#None,0.0,0.0
+e789,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-60#None,MAT-60_Plant3#None,Plant3#None,PO_ITEM--49-4#None,,SUPPLIER--20#None,0.0,0.0
+e936,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-70#None,MAT-70_Plant2#None,Plant2#None,PO_ITEM--129-5#None,,SUPPLIER--11#None,26.0,26.0
+e1051,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-79#None,MAT-79_Plant3#None,Plant3#None,PO_ITEM--49-5#None,,SUPPLIER--20#None,0.0,0.0
+e1090,Create Purchase Order Item,2024-03-14T00:00:00+00:00,,MAT-82#None,MAT-82_Plant5#None,Plant5#None,PO_ITEM--129-3#None,,SUPPLIER--11#None,27.0,27.0
+e6,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-1#None,MAT-1_Plant2#None,Plant2#None,PO_ITEM--105-2#None,,SUPPLIER--12#None,0.0,0.0
+e116,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-10#None,MAT-10_Plant3#None,Plant3#None,PO_ITEM--92-4#None,,SUPPLIER--28#None,37.0,37.0
+e153,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-13#None,MAT-13_Plant3#None,Plant3#None,PO_ITEM--92-1#None,,SUPPLIER--28#None,0.0,0.0
+e200,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-16#None,MAT-16_Plant2#None,Plant2#None,PO_ITEM--61-2#None,,SUPPLIER--22#None,0.0,0.0
+e468,Create Purchase Suggestion Item,2024-03-16T00:00:00+00:00,,MAT-37#None,MAT-37_Plant4#None,Plant4#None,,,,39.0,39.0
+e507,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-40#None,MAT-40_Plant1#None,Plant1#None,PO_ITEM--105-1#None,,SUPPLIER--12#None,54.0,54.0
+e571,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-45#None,MAT-45_Plant5#None,Plant5#None,PO_ITEM--92-3#None,,SUPPLIER--28#None,0.0,0.0
+e653,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-50#None,MAT-50_Plant1#None,Plant1#None,PO_ITEM--61-1#None,,SUPPLIER--22#None,0.0,0.0
+e975,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-73#None,MAT-73_Plant3#None,Plant3#None,PO_ITEM--92-2#None,,SUPPLIER--28#None,0.0,0.0
+e1289,Create Purchase Order Item,2024-03-16T00:00:00+00:00,,MAT-98#None,MAT-98_Plant5#None,Plant5#None,PO_ITEM--61-3#None,,SUPPLIER--22#None,0.0,0.0
+e293,Create Purchase Order Item,2024-03-17T00:00:00+00:00,,MAT-24#None,MAT-24_Plant2#None,Plant2#None,PO_ITEM--11-2#None,,SUPPLIER--24#None,127.0,127.0
+e306,Create Purchase Order Item,2024-03-17T00:00:00+00:00,,MAT-25#None,MAT-25_Plant5#None,Plant5#None,PO_ITEM--11-1#None,,SUPPLIER--24#None,0.0,0.0
+e319,Create Purchase Order Item,2024-03-17T00:00:00+00:00,,MAT-26#None,MAT-26_Plant1#None,Plant1#None,PO_ITEM--116-1#None,,SUPPLIER--21#None,93.0,93.0
+e524,Create Purchase Order Item,2024-03-17T00:00:00+00:00,,MAT-42#None,MAT-42_Plant2#None,Plant2#None,PO_ITEM--116-2#None,,SUPPLIER--21#None,0.0,0.0
+e635,Goods Receipt,2024-03-17T00:00:00+00:00,,MAT-49#None,MAT-49_Plant2#None,Plant2#None,PO_ITEM--102-3#None,,SUPPLIER--2#None,65.0,100.0
+e739,Create Purchase Order Item,2024-03-17T00:00:00+00:00,,MAT-56#None,MAT-56_Plant1#None,Plant1#None,PO_ITEM--11-3#None,,SUPPLIER--24#None,0.0,0.0
+e1080,Goods Issue,2024-03-17T00:00:00+00:00,CUSTOMER--696190#None,MAT-81#None,MAT-81_Plant2#None,Plant2#None,,,,89.0,79.0
+e1221,Create Purchase Order Item,2024-03-19T00:00:00+00:00,,MAT-93#None,MAT-93_Plant5#None,Plant5#None,PO_ITEM--13-1#None,,SUPPLIER--26#None,0.0,0.0
+e1066,Goods Issue,2024-03-20T00:00:00+00:00,CUSTOMER--289394#None,MAT-80#None,MAT-80_Plant5#None,Plant5#None,,,,56.0,0.0
+e1251,Create Sales Order Item,2024-03-20T00:00:00+00:00,CUSTOMER--23#None,MAT-95#None,MAT-95_Plant1#None,Plant1#None,,SO_ITEM--169-1#None,,42.0,42.0
+e537,Create Sales Order Item,2024-03-21T00:00:00+00:00,CUSTOMER--36#None,MAT-43#None,MAT-43_Plant5#None,Plant5#None,,SO_ITEM--92-1#None,,0.0,0.0
+e849,Create Purchase Suggestion Item,2024-03-22T00:00:00+00:00,,MAT-64#None,MAT-64_Plant5#None,Plant5#None,,,,161.0,161.0
+e320,Create Purchase Order Item,2024-03-23T00:00:00+00:00,,MAT-26#None,MAT-26_Plant5#None,Plant5#None,PO_ITEM--126-2#None,,SUPPLIER--3#None,116.0,116.0
+e1031,Create Purchase Order Item,2024-03-23T00:00:00+00:00,,MAT-77#None,MAT-77_Plant3#None,Plant3#None,PO_ITEM--126-1#None,,SUPPLIER--3#None,66.0,66.0
+e1041,Goods Receipt,2024-03-23T00:00:00+00:00,,MAT-78#None,MAT-78_Plant1#None,Plant1#None,PO_ITEM--119-4#None,,SUPPLIER--8#None,0.0,51.0
+e1112,Goods Receipt,2024-03-23T00:00:00+00:00,,MAT-83#None,MAT-83_Plant2#None,Plant2#None,PO_ITEM--97-2#None,,SUPPLIER--19#None,38.0,56.0
+e538,Goods Receipt,2024-03-24T00:00:00+00:00,,MAT-43#None,MAT-43_Plant1#None,Plant1#None,PO_ITEM--36-1#None,,SUPPLIER--27#None,0.0,56.0
+e7,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--49#None,MAT-1#None,MAT-1_Plant3#None,Plant3#None,,SO_ITEM--63-3#None,,0.0,0.0
+e71,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--49#None,MAT-7#None,MAT-7_Plant2#None,Plant2#None,,SO_ITEM--63-4#None,,0.0,0.0
+e173,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--49#None,MAT-14#None,MAT-14_Plant4#None,Plant4#None,,SO_ITEM--63-2#None,,129.0,129.0
+e294,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--27#None,MAT-24#None,MAT-24_Plant5#None,Plant5#None,,SO_ITEM--10-3#None,,127.0,127.0
+e295,Goods Issue,2024-03-25T00:00:00+00:00,CUSTOMER--487001#None,MAT-24#None,MAT-24_Plant3#None,Plant3#None,,,,67.0,0.0
+e425,Create Purchase Suggestion Item,2024-03-25T00:00:00+00:00,,MAT-34#None,MAT-34_Plant3#None,Plant3#None,,,,75.0,75.0
+e508,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--27#None,MAT-40#None,MAT-40_Plant2#None,Plant2#None,,SO_ITEM--10-2#None,,54.0,54.0
+e572,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--49#None,MAT-45#None,MAT-45_Plant3#None,Plant3#None,,SO_ITEM--63-1#None,,95.0,95.0
+e1091,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--6#None,MAT-82#None,MAT-82_Plant4#None,Plant4#None,,SO_ITEM--46-2#None,,44.0,44.0
+e1161,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--27#None,MAT-88#None,MAT-88_Plant5#None,Plant5#None,,SO_ITEM--10-1#None,,0.0,0.0
+e1252,Create Sales Order Item,2024-03-25T00:00:00+00:00,CUSTOMER--6#None,MAT-95#None,MAT-95_Plant5#None,Plant5#None,,SO_ITEM--46-1#None,,42.0,42.0
+e142,Create Purchase Order Item,2024-03-26T00:00:00+00:00,,MAT-12#None,MAT-12_Plant1#None,Plant1#None,PO_ITEM--78-1#None,,SUPPLIER--22#None,17.0,17.0
+e154,Create Sales Order Item,2024-03-26T00:00:00+00:00,CUSTOMER--33#None,MAT-13#None,MAT-13_Plant2#None,Plant2#None,,SO_ITEM--7-3#None,,0.0,0.0
+e189,Create Sales Order Item,2024-03-26T00:00:00+00:00,CUSTOMER--33#None,MAT-15#None,MAT-15_Plant5#None,Plant5#None,,SO_ITEM--7-4#None,,4.0,4.0
+e361,Create Purchase Order Item,2024-03-26T00:00:00+00:00,,MAT-29#None,MAT-29_Plant5#None,Plant5#None,PO_ITEM--78-2#None,,SUPPLIER--22#None,0.0,0.0
+e400,Create Sales Order Item,2024-03-26T00:00:00+00:00,CUSTOMER--33#None,MAT-32#None,MAT-32_Plant4#None,Plant4#None,,SO_ITEM--7-2#None,,168.0,168.0
+e740,Create Sales Order Item,2024-03-26T00:00:00+00:00,CUSTOMER--33#None,MAT-56#None,MAT-56_Plant1#None,Plant1#None,,SO_ITEM--7-1#None,,0.0,0.0
+e1238,Create Purchase Suggestion Item,2024-03-27T00:00:00+00:00,,MAT-94#None,MAT-94_Plant1#None,Plant1#None,,,,50.0,50.0
+e362,Create Sales Order Item,2024-03-28T00:00:00+00:00,CUSTOMER--43#None,MAT-29#None,MAT-29_Plant4#None,Plant4#None,,SO_ITEM--61-3#None,,0.0,0.0
+e600,Create Sales Order Item,2024-03-28T00:00:00+00:00,CUSTOMER--43#None,MAT-47#None,MAT-47_Plant4#None,Plant4#None,,SO_ITEM--61-1#None,,0.0,0.0
+e850,Create Sales Order Item,2024-03-28T00:00:00+00:00,CUSTOMER--43#None,MAT-64#None,MAT-64_Plant4#None,Plant4#None,,SO_ITEM--61-2#None,,161.0,161.0
+e190,Create Sales Order Item,2024-03-30T00:00:00+00:00,CUSTOMER--4#None,MAT-15#None,MAT-15_Plant4#None,Plant4#None,,SO_ITEM--64-1#None,,4.0,4.0
+e296,Goods Issue,2024-03-30T00:00:00+00:00,CUSTOMER--431295#None,MAT-24#None,MAT-24_Plant1#None,Plant1#None,,,,60.0,0.0
+e385,Create Sales Order Item,2024-03-30T00:00:00+00:00,CUSTOMER--4#None,MAT-31#None,MAT-31_Plant5#None,Plant5#None,,SO_ITEM--64-3#None,,0.0,0.0
+e453,Create Sales Order Item,2024-03-30T00:00:00+00:00,CUSTOMER--4#None,MAT-36#None,MAT-36_Plant2#None,Plant2#None,,SO_ITEM--64-2#None,,65.0,65.0
+e875,Create Purchase Suggestion Item,2024-03-30T00:00:00+00:00,,MAT-66#None,MAT-66_Plant4#None,Plant4#None,,,,0.0,0.0
+e401,Goods Receipt,2024-03-31T00:00:00+00:00,,MAT-32#None,MAT-32_Plant3#None,Plant3#None,PO_ITEM--106-4#None,,SUPPLIER--15#None,168.0,225.0
+e714,Create Sales Order Item,2024-03-31T00:00:00+00:00,CUSTOMER--9#None,MAT-54#None,MAT-54_Plant2#None,Plant2#None,,SO_ITEM--82-1#None,,0.0,0.0
+e297,Create Purchase Suggestion Item,2024-04-01T00:00:00+00:00,,MAT-24#None,MAT-24_Plant5#None,Plant5#None,,,,0.0,0.0
+e851,Goods Issue,2024-04-01T00:00:00+00:00,CUSTOMER--155983#None,MAT-64#None,MAT-64_Plant1#None,Plant1#None,,,,161.0,125.0
+e402,Create Sales Order Item,2024-04-02T00:00:00+00:00,CUSTOMER--48#None,MAT-32#None,MAT-32_Plant3#None,Plant3#None,,SO_ITEM--186-1#None,,225.0,225.0
+e539,Create Sales Order Item,2024-04-02T00:00:00+00:00,CUSTOMER--48#None,MAT-43#None,MAT-43_Plant4#None,Plant4#None,,SO_ITEM--186-2#None,,0.0,0.0
+e919,Create Purchase Suggestion Item,2024-04-02T00:00:00+00:00,,MAT-69#None,MAT-69_Plant4#None,Plant4#None,,,,0.0,0.0
+e1202,Goods Issue,2024-04-02T00:00:00+00:00,CUSTOMER--920634#None,MAT-91#None,MAT-91_Plant1#None,Plant1#None,,,,67.0,0.0
+e99,Create Sales Order Item,2024-04-03T00:00:00+00:00,CUSTOMER--6#None,MAT-9#None,MAT-9_Plant5#None,Plant5#None,,SO_ITEM--40-1#None,,88.0,88.0
+e509,Create Purchase Order Item,2024-04-03T00:00:00+00:00,,MAT-40#None,MAT-40_Plant2#None,Plant2#None,PO_ITEM--103-3#None,,SUPPLIER--25#None,54.0,54.0
+e920,Create Purchase Order Item,2024-04-03T00:00:00+00:00,,MAT-69#None,MAT-69_Plant2#None,Plant2#None,PO_ITEM--103-1#None,,SUPPLIER--25#None,0.0,0.0
+e1052,Create Purchase Order Item,2024-04-03T00:00:00+00:00,,MAT-79#None,MAT-79_Plant3#None,Plant3#None,PO_ITEM--103-2#None,,SUPPLIER--25#None,0.0,0.0
+e8,Create Purchase Suggestion Item,2024-04-04T00:00:00+00:00,,MAT-1#None,MAT-1_Plant5#None,Plant5#None,,,,0.0,0.0
+e56,Create Purchase Order Item,2024-04-04T00:00:00+00:00,,MAT-6#None,MAT-6_Plant2#None,Plant2#None,PO_ITEM--95-3#None,,SUPPLIER--17#None,62.0,62.0
+e469,Create Purchase Order Item,2024-04-04T00:00:00+00:00,,MAT-37#None,MAT-37_Plant5#None,Plant5#None,PO_ITEM--95-4#None,,SUPPLIER--17#None,39.0,39.0
+e696,Create Purchase Order Item,2024-04-04T00:00:00+00:00,,MAT-53#None,MAT-53_Plant3#None,Plant3#None,PO_ITEM--95-2#None,,SUPPLIER--17#None,44.0,44.0
+e956,Create Purchase Order Item,2024-04-04T00:00:00+00:00,,MAT-72#None,MAT-72_Plant3#None,Plant3#None,PO_ITEM--95-1#None,,SUPPLIER--17#None,0.0,0.0
+e1053,Goods Issue,2024-04-04T00:00:00+00:00,CUSTOMER--621119#None,MAT-79#None,MAT-79_Plant5#None,Plant5#None,,,,31.0,0.0
+e85,Create Sales Order Item,2024-04-05T00:00:00+00:00,CUSTOMER--13#None,MAT-8#None,MAT-8_Plant5#None,Plant5#None,,SO_ITEM--140-2#None,,94.0,94.0
+e174,Create Sales Order Item,2024-04-05T00:00:00+00:00,CUSTOMER--13#None,MAT-14#None,MAT-14_Plant3#None,Plant3#None,,SO_ITEM--140-1#None,,43.0,43.0
+e403,Goods Issue,2024-04-05T00:00:00+00:00,CUSTOMER--860661#None,MAT-32#None,MAT-32_Plant3#None,Plant3#None,,,,225.0,189.0
+e989,Create Purchase Order Item,2024-04-05T00:00:00+00:00,,MAT-74#None,MAT-74_Plant5#None,Plant5#None,PO_ITEM--132-2#None,,SUPPLIER--20#None,47.0,47.0
+e1092,Create Purchase Suggestion Item,2024-04-05T00:00:00+00:00,,MAT-82#None,MAT-82_Plant4#None,Plant4#None,,,,44.0,44.0
+e1290,Create Purchase Order Item,2024-04-05T00:00:00+00:00,,MAT-98#None,MAT-98_Plant4#None,Plant4#None,PO_ITEM--132-1#None,,SUPPLIER--20#None,0.0,0.0
+e175,Create Purchase Suggestion Item,2024-04-07T00:00:00+00:00,,MAT-14#None,MAT-14_Plant5#None,Plant5#None,,,,0.0,0.0
+e218,Goods Issue,2024-04-07T00:00:00+00:00,CUSTOMER--925297#None,MAT-18#None,MAT-18_Plant4#None,Plant4#None,,,,62.0,50.0
+e307,Create Purchase Order Item,2024-04-07T00:00:00+00:00,,MAT-25#None,MAT-25_Plant1#None,Plant1#None,PO_ITEM--131-1#None,,SUPPLIER--21#None,0.0,0.0
+e540,Create Purchase Suggestion Item,2024-04-07T00:00:00+00:00,,MAT-43#None,MAT-43_Plant2#None,Plant2#None,,,,0.0,0.0
+e832,Create Purchase Order Item,2024-04-07T00:00:00+00:00,,MAT-63#None,MAT-63_Plant4#None,Plant4#None,PO_ITEM--131-2#None,,SUPPLIER--21#None,0.0,0.0
+e1067,Create Purchase Order Item,2024-04-07T00:00:00+00:00,,MAT-80#None,MAT-80_Plant4#None,Plant4#None,PO_ITEM--131-3#None,,SUPPLIER--21#None,0.0,0.0
+e1259,Create Purchase Order Item,2024-04-07T00:00:00+00:00,,MAT-96#None,MAT-96_Plant3#None,Plant3#None,PO_ITEM--81-1#None,,SUPPLIER--19#None,0.0,0.0
+e636,Goods Issue,2024-04-08T00:00:00+00:00,CUSTOMER--551898#None,MAT-49#None,MAT-49_Plant4#None,Plant4#None,,,,100.0,29.0
+e921,Create Purchase Suggestion Item,2024-04-08T00:00:00+00:00,,MAT-69#None,MAT-69_Plant4#None,Plant4#None,,,,0.0,0.0
+e1253,Goods Receipt,2024-04-08T00:00:00+00:00,,MAT-95#None,MAT-95_Plant2#None,Plant2#None,PO_ITEM--88-2#None,,SUPPLIER--30#None,42.0,142.0
+e1260,Create Purchase Suggestion Item,2024-04-09T00:00:00+00:00,,MAT-96#None,MAT-96_Plant4#None,Plant4#None,,,,0.0,0.0
+e426,Create Sales Order Item,2024-04-10T00:00:00+00:00,CUSTOMER--7#None,MAT-34#None,MAT-34_Plant1#None,Plant1#None,,SO_ITEM--78-1#None,,75.0,75.0
+e950,Create Sales Order Item,2024-04-10T00:00:00+00:00,CUSTOMER--13#None,MAT-71#None,MAT-71_Plant1#None,Plant1#None,,SO_ITEM--132-1#None,,0.0,0.0
+e1032,Create Purchase Order Item,2024-04-10T00:00:00+00:00,,MAT-77#None,MAT-77_Plant4#None,Plant4#None,PO_ITEM--19-1#None,,SUPPLIER--12#None,61.0,61.0
+e86,Create Sales Order Item,2024-04-11T00:00:00+00:00,CUSTOMER--49#None,MAT-8#None,MAT-8_Plant2#None,Plant2#None,,SO_ITEM--119-1#None,,94.0,94.0
+e235,Create Sales Order Item,2024-04-11T00:00:00+00:00,CUSTOMER--49#None,MAT-19#None,MAT-19_Plant2#None,Plant2#None,,SO_ITEM--119-3#None,,0.0,0.0
+e454,Create Sales Order Item,2024-04-11T00:00:00+00:00,CUSTOMER--49#None,MAT-36#None,MAT-36_Plant2#None,Plant2#None,,SO_ITEM--119-2#None,,65.0,65.0
+e1129,Goods Receipt,2024-04-11T00:00:00+00:00,,MAT-85#None,MAT-85_Plant3#None,Plant3#None,PO_ITEM--149-5#None,,SUPPLIER--10#None,0.0,50.0
+e470,Goods Receipt,2024-04-12T00:00:00+00:00,,MAT-37#None,MAT-37_Plant1#None,Plant1#None,PO_ITEM--60-4#None,,SUPPLIER--3#None,39.0,57.0
+e176,Goods Issue,2024-04-13T00:00:00+00:00,CUSTOMER--125404#None,MAT-14#None,MAT-14_Plant1#None,Plant1#None,,,,43.0,0.0
+e367,Goods Receipt,2024-04-13T00:00:00+00:00,,MAT-30#None,MAT-30_Plant5#None,Plant5#None,PO_ITEM--17-3#None,,SUPPLIER--12#None,0.0,41.0
+e1162,Create Sales Order Item,2024-04-14T00:00:00+00:00,CUSTOMER--34#None,MAT-88#None,MAT-88_Plant1#None,Plant1#None,,SO_ITEM--34-1#None,,0.0,0.0
+e1194,Create Sales Order Item,2024-04-14T00:00:00+00:00,CUSTOMER--34#None,MAT-90#None,MAT-90_Plant5#None,Plant5#None,,SO_ITEM--34-2#None,,1.0,1.0
+e256,Goods Issue,2024-04-15T00:00:00+00:00,CUSTOMER--804695#None,MAT-21#None,MAT-21_Plant1#None,Plant1#None,,,,71.0,0.0
+e439,Create Sales Order Item,2024-04-16T00:00:00+00:00,CUSTOMER--50#None,MAT-35#None,MAT-35_Plant5#None,Plant5#None,,SO_ITEM--183-2#None,,0.0,0.0
+e541,Create Purchase Order Item,2024-04-16T00:00:00+00:00,,MAT-43#None,MAT-43_Plant4#None,Plant4#None,PO_ITEM--33-1#None,,SUPPLIER--10#None,0.0,0.0
+e1068,Create Sales Order Item,2024-04-16T00:00:00+00:00,CUSTOMER--50#None,MAT-80#None,MAT-80_Plant1#None,Plant1#None,,SO_ITEM--183-1#None,,0.0,0.0
+e1153,Create Sales Order Item,2024-04-16T00:00:00+00:00,CUSTOMER--50#None,MAT-87#None,MAT-87_Plant5#None,Plant5#None,,SO_ITEM--183-3#None,,20.0,20.0
+e321,Goods Issue,2024-04-17T00:00:00+00:00,CUSTOMER--381070#None,MAT-26#None,MAT-26_Plant5#None,Plant5#None,,,,116.0,23.0
+e339,Goods Issue,2024-04-17T00:00:00+00:00,CUSTOMER--799051#None,MAT-27#None,MAT-27_Plant4#None,Plant4#None,,,,41.0,0.0
+e28,Create Sales Order Item,2024-04-18T00:00:00+00:00,CUSTOMER--47#None,MAT-3#None,MAT-3_Plant5#None,Plant5#None,,SO_ITEM--4-2#None,,92.0,92.0
+e143,Create Purchase Order Item,2024-04-18T00:00:00+00:00,,MAT-12#None,MAT-12_Plant2#None,Plant2#None,PO_ITEM--120-2#None,,SUPPLIER--6#None,17.0,17.0
+e155,Create Purchase Order Item,2024-04-18T00:00:00+00:00,,MAT-13#None,MAT-13_Plant3#None,Plant3#None,PO_ITEM--120-4#None,,SUPPLIER--6#None,0.0,0.0
+e386,Create Purchase Order Item,2024-04-18T00:00:00+00:00,,MAT-31#None,MAT-31_Plant4#None,Plant4#None,PO_ITEM--120-5#None,,SUPPLIER--6#None,0.0,0.0
+e413,Create Purchase Order Item,2024-04-18T00:00:00+00:00,,MAT-33#None,MAT-33_Plant1#None,Plant1#None,PO_ITEM--120-1#None,,SUPPLIER--6#None,0.0,0.0
+e951,Create Sales Order Item,2024-04-18T00:00:00+00:00,CUSTOMER--47#None,MAT-71#None,MAT-71_Plant3#None,Plant3#None,,SO_ITEM--4-1#None,,0.0,0.0
+e1042,Goods Issue,2024-04-18T00:00:00+00:00,CUSTOMER--508814#None,MAT-78#None,MAT-78_Plant5#None,Plant5#None,,,,51.0,36.0
+e1093,Create Purchase Order Item,2024-04-18T00:00:00+00:00,,MAT-82#None,MAT-82_Plant2#None,Plant2#None,PO_ITEM--120-3#None,,SUPPLIER--6#None,0.0,0.0
+e1209,Create Purchase Suggestion Item,2024-04-18T00:00:00+00:00,,MAT-92#None,MAT-92_Plant1#None,Plant1#None,,,,0.0,0.0
+e72,Goods Receipt,2024-04-19T00:00:00+00:00,,MAT-7#None,MAT-7_Plant1#None,Plant1#None,PO_ITEM--56-3#None,,SUPPLIER--10#None,0.0,37.0
+e1094,Create Sales Order Item,2024-04-19T00:00:00+00:00,CUSTOMER--27#None,MAT-82#None,MAT-82_Plant3#None,Plant3#None,,SO_ITEM--89-1#None,,44.0,44.0
+e117,Create Sales Order Item,2024-04-20T00:00:00+00:00,CUSTOMER--49#None,MAT-10#None,MAT-10_Plant1#None,Plant1#None,,SO_ITEM--98-1#None,,27.0,27.0
+e280,Create Sales Order Item,2024-04-20T00:00:00+00:00,CUSTOMER--49#None,MAT-23#None,MAT-23_Plant4#None,Plant4#None,,SO_ITEM--98-3#None,,13.0,13.0
+e525,Create Sales Order Item,2024-04-20T00:00:00+00:00,CUSTOMER--49#None,MAT-42#None,MAT-42_Plant5#None,Plant5#None,,SO_ITEM--98-2#None,,0.0,0.0
+e801,Goods Issue,2024-04-20T00:00:00+00:00,CUSTOMER--889346#None,MAT-61#None,MAT-61_Plant2#None,Plant2#None,,,,100.0,0.0
+e17,Create Sales Order Item,2024-04-21T00:00:00+00:00,CUSTOMER--11#None,MAT-2#None,MAT-2_Plant3#None,Plant3#None,,SO_ITEM--156-5#None,,0.0,0.0
+e308,Create Sales Order Item,2024-04-21T00:00:00+00:00,CUSTOMER--11#None,MAT-25#None,MAT-25_Plant5#None,Plant5#None,,SO_ITEM--156-4#None,,0.0,0.0
+e440,Create Sales Order Item,2024-04-21T00:00:00+00:00,CUSTOMER--11#None,MAT-35#None,MAT-35_Plant5#None,Plant5#None,,SO_ITEM--156-1#None,,0.0,0.0
+e779,Create Sales Order Item,2024-04-21T00:00:00+00:00,CUSTOMER--11#None,MAT-59#None,MAT-59_Plant5#None,Plant5#None,,SO_ITEM--156-2#None,,31.0,31.0
+e818,Create Sales Order Item,2024-04-21T00:00:00+00:00,CUSTOMER--11#None,MAT-62#None,MAT-62_Plant5#None,Plant5#None,,SO_ITEM--156-3#None,,110.0,110.0
+e990,Create Sales Order Item,2024-04-21T00:00:00+00:00,CUSTOMER--41#None,MAT-74#None,MAT-74_Plant1#None,Plant1#None,,SO_ITEM--29-1#None,,91.0,91.0
+e1195,Create Sales Order Item,2024-04-21T00:00:00+00:00,CUSTOMER--41#None,MAT-90#None,MAT-90_Plant2#None,Plant2#None,,SO_ITEM--29-2#None,,1.0,1.0
+e73,Create Purchase Order Item,2024-04-22T00:00:00+00:00,,MAT-7#None,MAT-7_Plant3#None,Plant3#None,PO_ITEM--118-2#None,,SUPPLIER--26#None,37.0,37.0
+e74,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--1#None,MAT-7#None,MAT-7_Plant3#None,Plant3#None,,SO_ITEM--20-3#None,,37.0,37.0
+e177,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--2#None,MAT-14#None,MAT-14_Plant3#None,Plant3#None,,SO_ITEM--47-1#None,,0.0,0.0
+e191,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--1#None,MAT-15#None,MAT-15_Plant3#None,Plant3#None,,SO_ITEM--20-2#None,,4.0,4.0
+e236,Create Purchase Order Item,2024-04-22T00:00:00+00:00,,MAT-19#None,MAT-19_Plant2#None,Plant2#None,PO_ITEM--118-1#None,,SUPPLIER--26#None,0.0,0.0
+e271,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--3#None,MAT-22#None,MAT-22_Plant5#None,Plant5#None,,SO_ITEM--73-4#None,,23.0,23.0
+e404,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--3#None,MAT-32#None,MAT-32_Plant4#None,Plant4#None,,SO_ITEM--73-2#None,,189.0,189.0
+e427,Create Purchase Order Item,2024-04-22T00:00:00+00:00,,MAT-34#None,MAT-34_Plant3#None,Plant3#None,PO_ITEM--118-3#None,,SUPPLIER--26#None,75.0,75.0
+e441,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--3#None,MAT-35#None,MAT-35_Plant3#None,Plant3#None,,SO_ITEM--73-5#None,,0.0,0.0
+e542,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--3#None,MAT-43#None,MAT-43_Plant2#None,Plant2#None,,SO_ITEM--73-3#None,,0.0,0.0
+e771,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--2#None,MAT-58#None,MAT-58_Plant3#None,Plant3#None,,SO_ITEM--47-5#None,,0.0,0.0
+e867,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--3#None,MAT-65#None,MAT-65_Plant5#None,Plant5#None,,SO_ITEM--73-1#None,,0.0,0.0
+e890,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--2#None,MAT-67#None,MAT-67_Plant1#None,Plant1#None,,SO_ITEM--47-3#None,,0.0,0.0
+e1022,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--1#None,MAT-76#None,MAT-76_Plant3#None,Plant3#None,,SO_ITEM--20-5#None,,0.0,0.0
+e1130,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--1#None,MAT-85#None,MAT-85_Plant5#None,Plant5#None,,SO_ITEM--20-1#None,,50.0,50.0
+e1154,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--2#None,MAT-87#None,MAT-87_Plant3#None,Plant3#None,,SO_ITEM--47-2#None,,20.0,20.0
+e1239,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--1#None,MAT-94#None,MAT-94_Plant3#None,Plant3#None,,SO_ITEM--20-4#None,,50.0,50.0
+e1305,Create Sales Order Item,2024-04-22T00:00:00+00:00,CUSTOMER--2#None,MAT-100#None,MAT-100_Plant2#None,Plant2#None,,SO_ITEM--47-4#None,,0.0,0.0
+e937,Create Sales Order Item,2024-04-23T00:00:00+00:00,CUSTOMER--16#None,MAT-70#None,MAT-70_Plant1#None,Plant1#None,,SO_ITEM--161-1#None,,26.0,26.0
+e18,Create Sales Order Item,2024-04-24T00:00:00+00:00,CUSTOMER--13#None,MAT-2#None,MAT-2_Plant3#None,Plant3#None,,SO_ITEM--45-1#None,,0.0,0.0
+e201,Create Purchase Suggestion Item,2024-04-24T00:00:00+00:00,,MAT-16#None,MAT-16_Plant1#None,Plant1#None,,,,0.0,0.0
+e741,Create Purchase Suggestion Item,2024-04-24T00:00:00+00:00,,MAT-56#None,MAT-56_Plant4#None,Plant4#None,,,,202.0,202.0
+e957,Create Purchase Suggestion Item,2024-04-24T00:00:00+00:00,,MAT-72#None,MAT-72_Plant2#None,Plant2#None,,,,0.0,0.0
+e1095,Create Sales Order Item,2024-04-24T00:00:00+00:00,CUSTOMER--13#None,MAT-82#None,MAT-82_Plant1#None,Plant1#None,,SO_ITEM--45-2#None,,27.0,27.0
+e387,Create Sales Order Item,2024-04-25T00:00:00+00:00,CUSTOMER--49#None,MAT-31#None,MAT-31_Plant5#None,Plant5#None,,SO_ITEM--113-1#None,,0.0,0.0
+e388,Goods Issue,2024-04-25T00:00:00+00:00,CUSTOMER--672392#None,MAT-31#None,MAT-31_Plant2#None,Plant2#None,,,,39.0,0.0
+e906,Create Purchase Order Item,2024-04-25T00:00:00+00:00,,MAT-68#None,MAT-68_Plant3#None,Plant3#None,PO_ITEM--70-2#None,,SUPPLIER--18#None,0.0,0.0
+e958,Create Purchase Order Item,2024-04-25T00:00:00+00:00,,MAT-72#None,MAT-72_Plant5#None,Plant5#None,PO_ITEM--70-1#None,,SUPPLIER--18#None,0.0,0.0
+e1203,Create Sales Order Item,2024-04-25T00:00:00+00:00,CUSTOMER--49#None,MAT-91#None,MAT-91_Plant5#None,Plant5#None,,SO_ITEM--113-2#None,,0.0,0.0
+e309,Goods Receipt,2024-04-26T00:00:00+00:00,,MAT-25#None,MAT-25_Plant2#None,Plant2#None,PO_ITEM--74-5#None,,SUPPLIER--2#None,0.0,23.0
+e310,Create Purchase Order Item,2024-04-27T00:00:00+00:00,,MAT-25#None,MAT-25_Plant2#None,Plant2#None,PO_ITEM--53-1#None,,SUPPLIER--21#None,23.0,23.0
+e526,Create Purchase Suggestion Item,2024-04-27T00:00:00+00:00,,MAT-42#None,MAT-42_Plant1#None,Plant1#None,,,,0.0,0.0
+e57,Create Sales Order Item,2024-04-28T00:00:00+00:00,CUSTOMER--10#None,MAT-6#None,MAT-6_Plant5#None,Plant5#None,,SO_ITEM--172-4#None,,62.0,62.0
+e311,Create Sales Order Item,2024-04-28T00:00:00+00:00,CUSTOMER--10#None,MAT-25#None,MAT-25_Plant1#None,Plant1#None,,SO_ITEM--172-1#None,,23.0,23.0
+e405,Create Sales Order Item,2024-04-28T00:00:00+00:00,CUSTOMER--10#None,MAT-32#None,MAT-32_Plant2#None,Plant2#None,,SO_ITEM--172-3#None,,189.0,189.0
+e619,Create Sales Order Item,2024-04-28T00:00:00+00:00,CUSTOMER--10#None,MAT-48#None,MAT-48_Plant4#None,Plant4#None,,SO_ITEM--172-2#None,,0.0,0.0
+e819,Create Purchase Order Item,2024-04-28T00:00:00+00:00,,MAT-62#None,MAT-62_Plant1#None,Plant1#None,PO_ITEM--9-1#None,,SUPPLIER--27#None,110.0,110.0
+e833,Create Purchase Order Item,2024-04-28T00:00:00+00:00,,MAT-63#None,MAT-63_Plant3#None,Plant3#None,PO_ITEM--9-3#None,,SUPPLIER--27#None,0.0,0.0
+e938,Create Purchase Order Item,2024-04-28T00:00:00+00:00,,MAT-70#None,MAT-70_Plant3#None,Plant3#None,PO_ITEM--9-2#None,,SUPPLIER--27#None,26.0,26.0
+e1240,Create Sales Order Item,2024-04-28T00:00:00+00:00,CUSTOMER--10#None,MAT-94#None,MAT-94_Plant3#None,Plant3#None,,SO_ITEM--172-5#None,,50.0,50.0
+e414,Goods Receipt,2024-04-29T00:00:00+00:00,,MAT-33#None,MAT-33_Plant2#None,Plant2#None,PO_ITEM--32-1#None,,SUPPLIER--12#None,0.0,89.0
+e455,Goods Issue,2024-05-02T00:00:00+00:00,CUSTOMER--193677#None,MAT-36#None,MAT-36_Plant2#None,Plant2#None,,,,65.0,39.0
+e558,Create Sales Order Item,2024-05-02T00:00:00+00:00,CUSTOMER--22#None,MAT-44#None,MAT-44_Plant5#None,Plant5#None,,SO_ITEM--67-4#None,,0.0,0.0
+e620,Create Sales Order Item,2024-05-02T00:00:00+00:00,CUSTOMER--22#None,MAT-48#None,MAT-48_Plant3#None,Plant3#None,,SO_ITEM--67-1#None,,0.0,0.0
+e742,Create Sales Order Item,2024-05-02T00:00:00+00:00,CUSTOMER--22#None,MAT-56#None,MAT-56_Plant3#None,Plant3#None,,SO_ITEM--67-5#None,,122.0,122.0
+e1069,Create Sales Order Item,2024-05-02T00:00:00+00:00,CUSTOMER--22#None,MAT-80#None,MAT-80_Plant4#None,Plant4#None,,SO_ITEM--67-2#None,,0.0,0.0
+e1096,Create Sales Order Item,2024-05-02T00:00:00+00:00,CUSTOMER--22#None,MAT-82#None,MAT-82_Plant2#None,Plant2#None,,SO_ITEM--67-3#None,,0.0,0.0
+e46,Create Purchase Suggestion Item,2024-05-03T00:00:00+00:00,,MAT-5#None,MAT-5_Plant2#None,Plant2#None,,,,69.0,69.0
+e406,Create Purchase Suggestion Item,2024-05-04T00:00:00+00:00,,MAT-32#None,MAT-32_Plant5#None,Plant5#None,,,,189.0,189.0
+e697,Goods Receipt,2024-05-04T00:00:00+00:00,,MAT-53#None,MAT-53_Plant4#None,Plant4#None,PO_ITEM--56-5#None,,SUPPLIER--10#None,44.0,71.0
+e257,Create Sales Order Item,2024-05-05T00:00:00+00:00,CUSTOMER--28#None,MAT-21#None,MAT-21_Plant3#None,Plant3#None,,SO_ITEM--43-3#None,,0.0,0.0
+e517,Create Sales Order Item,2024-05-05T00:00:00+00:00,CUSTOMER--28#None,MAT-41#None,MAT-41_Plant5#None,Plant5#None,,SO_ITEM--43-4#None,,74.0,74.0
+e891,Goods Receipt,2024-05-05T00:00:00+00:00,,MAT-67#None,MAT-67_Plant4#None,Plant4#None,PO_ITEM--82-1#None,,SUPPLIER--29#None,0.0,13.0
+e976,Create Sales Order Item,2024-05-05T00:00:00+00:00,CUSTOMER--28#None,MAT-73#None,MAT-73_Plant2#None,Plant2#None,,SO_ITEM--43-2#None,,51.0,51.0
+e1254,Create Sales Order Item,2024-05-05T00:00:00+00:00,CUSTOMER--28#None,MAT-95#None,MAT-95_Plant2#None,Plant2#None,,SO_ITEM--43-1#None,,142.0,142.0
+e368,Create Purchase Order Item,2024-05-06T00:00:00+00:00,,MAT-30#None,MAT-30_Plant4#None,Plant4#None,PO_ITEM--46-2#None,,SUPPLIER--21#None,41.0,41.0
+e1097,Create Purchase Order Item,2024-05-06T00:00:00+00:00,,MAT-82#None,MAT-82_Plant2#None,Plant2#None,PO_ITEM--46-1#None,,SUPPLIER--21#None,0.0,0.0
+e35,Goods Receipt,2024-05-07T00:00:00+00:00,,MAT-4#None,MAT-4_Plant4#None,Plant4#None,PO_ITEM--56-1#None,,SUPPLIER--10#None,0.0,41.0
+e100,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--8#None,MAT-9#None,MAT-9_Plant5#None,Plant5#None,,SO_ITEM--193-1#None,,88.0,88.0
+e246,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--41#None,MAT-20#None,MAT-20_Plant2#None,Plant2#None,,SO_ITEM--35-1#None,,39.0,39.0
+e281,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--41#None,MAT-23#None,MAT-23_Plant5#None,Plant5#None,,SO_ITEM--35-4#None,,13.0,13.0
+e312,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--39#None,MAT-25#None,MAT-25_Plant2#None,Plant2#None,,SO_ITEM--37-2#None,,23.0,23.0
+e322,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--6#None,MAT-26#None,MAT-26_Plant1#None,Plant1#None,,SO_ITEM--26-1#None,,0.0,0.0
+e471,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--41#None,MAT-37#None,MAT-37_Plant1#None,Plant1#None,,SO_ITEM--35-2#None,,57.0,57.0
+e472,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--41#None,MAT-37#None,MAT-37_Plant4#None,Plant4#None,,SO_ITEM--35-3#None,,57.0,57.0
+e681,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--39#None,MAT-52#None,MAT-52_Plant5#None,Plant5#None,,SO_ITEM--37-4#None,,64.0,64.0
+e868,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--39#None,MAT-65#None,MAT-65_Plant5#None,Plant5#None,,SO_ITEM--37-1#None,,0.0,0.0
+e1300,Create Sales Order Item,2024-05-07T00:00:00+00:00,CUSTOMER--39#None,MAT-99#None,MAT-99_Plant5#None,Plant5#None,,SO_ITEM--37-3#None,,0.0,0.0
+e58,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--28#None,MAT-6#None,MAT-6_Plant3#None,Plant3#None,,SO_ITEM--39-2#None,,62.0,62.0
+e340,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--6#None,MAT-27#None,MAT-27_Plant1#None,Plant1#None,,SO_ITEM--124-1#None,,0.0,0.0
+e473,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--28#None,MAT-37#None,MAT-37_Plant5#None,Plant5#None,,SO_ITEM--39-4#None,,57.0,57.0
+e527,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--28#None,MAT-42#None,MAT-42_Plant2#None,Plant2#None,,SO_ITEM--39-5#None,,0.0,0.0
+e601,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--28#None,MAT-47#None,MAT-47_Plant2#None,Plant2#None,,SO_ITEM--39-1#None,,0.0,0.0
+e621,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--6#None,MAT-48#None,MAT-48_Plant3#None,Plant3#None,,SO_ITEM--124-2#None,,0.0,0.0
+e715,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--28#None,MAT-54#None,MAT-54_Plant3#None,Plant3#None,,SO_ITEM--39-3#None,,0.0,0.0
+e802,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--24#None,MAT-61#None,MAT-61_Plant4#None,Plant4#None,,SO_ITEM--32-1#None,,53.0,53.0
+e1054,Create Sales Order Item,2024-05-08T00:00:00+00:00,CUSTOMER--24#None,MAT-79#None,MAT-79_Plant5#None,Plant5#None,,SO_ITEM--32-2#None,,0.0,0.0
+e59,Create Sales Order Item,2024-05-09T00:00:00+00:00,CUSTOMER--2#None,MAT-6#None,MAT-6_Plant4#None,Plant4#None,,SO_ITEM--97-2#None,,62.0,62.0
+e654,Create Purchase Suggestion Item,2024-05-09T00:00:00+00:00,,MAT-50#None,MAT-50_Plant2#None,Plant2#None,,,,0.0,0.0
+e834,Create Sales Order Item,2024-05-09T00:00:00+00:00,CUSTOMER--2#None,MAT-63#None,MAT-63_Plant1#None,Plant1#None,,SO_ITEM--97-1#None,,0.0,0.0
+e959,Create Purchase Suggestion Item,2024-05-09T00:00:00+00:00,,MAT-72#None,MAT-72_Plant5#None,Plant5#None,,,,0.0,0.0
+e1081,Create Purchase Order Item,2024-05-09T00:00:00+00:00,,MAT-81#None,MAT-81_Plant5#None,Plant5#None,PO_ITEM--85-1#None,,SUPPLIER--9#None,0.0,0.0
+e131,Create Purchase Suggestion Item,2024-05-10T00:00:00+00:00,,MAT-11#None,MAT-11_Plant1#None,Plant1#None,,,,82.0,82.0
+e716,Create Purchase Suggestion Item,2024-05-11T00:00:00+00:00,,MAT-54#None,MAT-54_Plant5#None,Plant5#None,,,,0.0,0.0
+e743,Create Purchase Suggestion Item,2024-05-11T00:00:00+00:00,,MAT-56#None,MAT-56_Plant5#None,Plant5#None,,,,81.0,81.0
+e144,Create Purchase Order Item,2024-05-12T00:00:00+00:00,,MAT-12#None,MAT-12_Plant1#None,Plant1#None,PO_ITEM--20-1#None,,SUPPLIER--25#None,17.0,17.0
+e922,Create Purchase Order Item,2024-05-12T00:00:00+00:00,,MAT-69#None,MAT-69_Plant5#None,Plant5#None,PO_ITEM--20-3#None,,SUPPLIER--25#None,0.0,0.0
+e1043,Create Purchase Order Item,2024-05-12T00:00:00+00:00,,MAT-78#None,MAT-78_Plant1#None,Plant1#None,PO_ITEM--20-2#None,,SUPPLIER--25#None,36.0,36.0
+e1070,Create Sales Order Item,2024-05-12T00:00:00+00:00,CUSTOMER--32#None,MAT-80#None,MAT-80_Plant5#None,Plant5#None,,SO_ITEM--90-1#None,,0.0,0.0
+e1131,Create Purchase Order Item,2024-05-12T00:00:00+00:00,,MAT-85#None,MAT-85_Plant2#None,Plant2#None,PO_ITEM--20-4#None,,SUPPLIER--25#None,48.0,48.0
+e1222,Create Purchase Order Item,2024-05-12T00:00:00+00:00,,MAT-93#None,MAT-93_Plant3#None,Plant3#None,PO_ITEM--20-5#None,,SUPPLIER--25#None,0.0,0.0
+e247,Create Sales Order Item,2024-05-13T00:00:00+00:00,CUSTOMER--32#None,MAT-20#None,MAT-20_Plant3#None,Plant3#None,,SO_ITEM--74-1#None,,39.0,39.0
+e498,Create Purchase Suggestion Item,2024-05-13T00:00:00+00:00,,MAT-39#None,MAT-39_Plant1#None,Plant1#None,,,,0.0,0.0
+e682,Create Purchase Order Item,2024-05-13T00:00:00+00:00,,MAT-52#None,MAT-52_Plant1#None,Plant1#None,PO_ITEM--139-1#None,,SUPPLIER--14#None,81.0,81.0
+e755,Create Sales Order Item,2024-05-13T00:00:00+00:00,CUSTOMER--32#None,MAT-57#None,MAT-57_Plant1#None,Plant1#None,,SO_ITEM--74-4#None,,0.0,0.0
+e1163,Create Sales Order Item,2024-05-13T00:00:00+00:00,CUSTOMER--32#None,MAT-88#None,MAT-88_Plant3#None,Plant3#None,,SO_ITEM--74-2#None,,39.0,39.0
+e1306,Create Sales Order Item,2024-05-13T00:00:00+00:00,CUSTOMER--32#None,MAT-100#None,MAT-100_Plant5#None,Plant5#None,,SO_ITEM--74-3#None,,0.0,0.0
+e19,Create Purchase Order Item,2024-05-14T00:00:00+00:00,,MAT-2#None,MAT-2_Plant3#None,Plant3#None,PO_ITEM--109-1#None,,SUPPLIER--15#None,0.0,0.0
+e683,Goods Issue,2024-05-14T00:00:00+00:00,CUSTOMER--163788#None,MAT-52#None,MAT-52_Plant5#None,Plant5#None,,,,64.0,30.0
+e118,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--26#None,MAT-10#None,MAT-10_Plant3#None,Plant3#None,,SO_ITEM--196-4#None,,37.0,37.0
+e156,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--26#None,MAT-13#None,MAT-13_Plant2#None,Plant2#None,,SO_ITEM--196-1#None,,0.0,0.0
+e559,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--48#None,MAT-44#None,MAT-44_Plant5#None,Plant5#None,,SO_ITEM--198-1#None,,0.0,0.0
+e622,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--46#None,MAT-48#None,MAT-48_Plant1#None,Plant1#None,,SO_ITEM--126-3#None,,0.0,0.0
+e637,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--30#None,MAT-49#None,MAT-49_Plant5#None,Plant5#None,,SO_ITEM--91-1#None,,0.0,0.0
+e852,Goods Issue,2024-05-15T00:00:00+00:00,CUSTOMER--635618#None,MAT-64#None,MAT-64_Plant4#None,Plant4#None,,,,125.0,98.0
+e977,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--26#None,MAT-73#None,MAT-73_Plant2#None,Plant2#None,,SO_ITEM--196-2#None,,51.0,51.0
+e991,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--46#None,MAT-74#None,MAT-74_Plant4#None,Plant4#None,,SO_ITEM--126-2#None,,0.0,0.0
+e1113,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--46#None,MAT-83#None,MAT-83_Plant3#None,Plant3#None,,SO_ITEM--126-5#None,,56.0,56.0
+e1116,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--26#None,MAT-84#None,MAT-84_Plant2#None,Plant2#None,,SO_ITEM--196-5#None,,14.0,14.0
+e1210,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--26#None,MAT-92#None,MAT-92_Plant3#None,Plant3#None,,SO_ITEM--196-3#None,,0.0,0.0
+e1261,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--46#None,MAT-96#None,MAT-96_Plant3#None,Plant3#None,,SO_ITEM--126-4#None,,0.0,0.0
+e1291,Create Sales Order Item,2024-05-15T00:00:00+00:00,CUSTOMER--46#None,MAT-98#None,MAT-98_Plant4#None,Plant4#None,,SO_ITEM--126-1#None,,0.0,0.0
+e323,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--11#None,MAT-26#None,MAT-26_Plant4#None,Plant4#None,,SO_ITEM--151-1#None,,24.0,24.0
+e456,Goods Issue,2024-05-17T00:00:00+00:00,CUSTOMER--421165#None,MAT-36#None,MAT-36_Plant1#None,Plant1#None,,,,39.0,0.0
+e543,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--25#None,MAT-43#None,MAT-43_Plant2#None,Plant2#None,,SO_ITEM--21-3#None,,0.0,0.0
+e602,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--25#None,MAT-47#None,MAT-47_Plant5#None,Plant5#None,,SO_ITEM--21-2#None,,0.0,0.0
+e638,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--40#None,MAT-49#None,MAT-49_Plant2#None,Plant2#None,,SO_ITEM--191-5#None,,29.0,29.0
+e820,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--25#None,MAT-62#None,MAT-62_Plant3#None,Plant3#None,,SO_ITEM--21-1#None,,110.0,110.0
+e923,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--40#None,MAT-69#None,MAT-69_Plant1#None,Plant1#None,,SO_ITEM--191-1#None,,0.0,0.0
+e960,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--40#None,MAT-72#None,MAT-72_Plant5#None,Plant5#None,,SO_ITEM--191-4#None,,0.0,0.0
+e1055,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--40#None,MAT-79#None,MAT-79_Plant4#None,Plant4#None,,SO_ITEM--191-2#None,,86.0,86.0
+e1164,Create Sales Order Item,2024-05-17T00:00:00+00:00,CUSTOMER--40#None,MAT-88#None,MAT-88_Plant1#None,Plant1#None,,SO_ITEM--191-3#None,,0.0,0.0
+e119,Create Sales Order Item,2024-05-18T00:00:00+00:00,CUSTOMER--25#None,MAT-10#None,MAT-10_Plant2#None,Plant2#None,,SO_ITEM--19-2#None,,27.0,27.0
+e484,Create Sales Order Item,2024-05-18T00:00:00+00:00,CUSTOMER--25#None,MAT-38#None,MAT-38_Plant1#None,Plant1#None,,SO_ITEM--19-4#None,,127.0,127.0
+e1139,Create Sales Order Item,2024-05-18T00:00:00+00:00,CUSTOMER--25#None,MAT-86#None,MAT-86_Plant1#None,Plant1#None,,SO_ITEM--19-1#None,,0.0,0.0
+e1262,Create Sales Order Item,2024-05-18T00:00:00+00:00,CUSTOMER--25#None,MAT-96#None,MAT-96_Plant5#None,Plant5#None,,SO_ITEM--19-3#None,,0.0,0.0
+e248,Create Purchase Suggestion Item,2024-05-19T00:00:00+00:00,,MAT-20#None,MAT-20_Plant2#None,Plant2#None,,,,39.0,39.0
+e272,Create Sales Order Item,2024-05-19T00:00:00+00:00,CUSTOMER--7#None,MAT-22#None,MAT-22_Plant1#None,Plant1#None,,SO_ITEM--100-1#None,,23.0,23.0
+e528,Create Sales Order Item,2024-05-19T00:00:00+00:00,CUSTOMER--7#None,MAT-42#None,MAT-42_Plant2#None,Plant2#None,,SO_ITEM--100-3#None,,0.0,0.0
+e684,Create Sales Order Item,2024-05-19T00:00:00+00:00,CUSTOMER--7#None,MAT-52#None,MAT-52_Plant3#None,Plant3#None,,SO_ITEM--100-2#None,,30.0,30.0
+e730,Create Sales Order Item,2024-05-19T00:00:00+00:00,CUSTOMER--42#None,MAT-55#None,MAT-55_Plant4#None,Plant4#None,,SO_ITEM--176-1#None,,96.0,96.0
+e853,Create Sales Order Item,2024-05-19T00:00:00+00:00,CUSTOMER--42#None,MAT-64#None,MAT-64_Plant1#None,Plant1#None,,SO_ITEM--176-2#None,,98.0,98.0
+e1082,Goods Issue,2024-05-19T00:00:00+00:00,CUSTOMER--833228#None,MAT-81#None,MAT-81_Plant2#None,Plant2#None,,,,79.0,0.0
+e20,Create Sales Order Item,2024-05-21T00:00:00+00:00,CUSTOMER--25#None,MAT-2#None,MAT-2_Plant2#None,Plant2#None,,SO_ITEM--51-1#None,,0.0,0.0
+e101,Create Purchase Order Item,2024-05-21T00:00:00+00:00,,MAT-9#None,MAT-9_Plant3#None,Plant3#None,PO_ITEM--32-2#None,,SUPPLIER--12#None,88.0,88.0
+e237,Create Purchase Order Item,2024-05-21T00:00:00+00:00,,MAT-19#None,MAT-19_Plant5#None,Plant5#None,PO_ITEM--32-1#None,,SUPPLIER--12#None,0.0,0.0
+e349,Create Sales Order Item,2024-05-21T00:00:00+00:00,CUSTOMER--25#None,MAT-28#None,MAT-28_Plant4#None,Plant4#None,,SO_ITEM--51-2#None,,0.0,0.0
+e854,Create Purchase Order Item,2024-05-21T00:00:00+00:00,,MAT-64#None,MAT-64_Plant5#None,Plant5#None,PO_ITEM--32-3#None,,SUPPLIER--12#None,98.0,98.0
+e202,Create Sales Order Item,2024-05-22T00:00:00+00:00,CUSTOMER--15#None,MAT-16#None,MAT-16_Plant5#None,Plant5#None,,SO_ITEM--115-1#None,,0.0,0.0
+e1044,Create Sales Order Item,2024-05-22T00:00:00+00:00,CUSTOMER--15#None,MAT-78#None,MAT-78_Plant3#None,Plant3#None,,SO_ITEM--115-2#None,,36.0,36.0
+e518,Goods Issue,2024-05-23T00:00:00+00:00,CUSTOMER--717704#None,MAT-41#None,MAT-41_Plant5#None,Plant5#None,,,,74.0,0.0
+e978,Goods Issue,2024-05-24T00:00:00+00:00,CUSTOMER--837727#None,MAT-73#None,MAT-73_Plant1#None,Plant1#None,,,,51.0,0.0
+e1083,Create Purchase Order Item,2024-05-24T00:00:00+00:00,,MAT-81#None,MAT-81_Plant2#None,Plant2#None,PO_ITEM--55-1#None,,SUPPLIER--13#None,0.0,0.0
+e369,Create Sales Order Item,2024-05-25T00:00:00+00:00,CUSTOMER--3#None,MAT-30#None,MAT-30_Plant1#None,Plant1#None,,SO_ITEM--175-1#None,,41.0,41.0
+e603,Create Sales Order Item,2024-05-26T00:00:00+00:00,CUSTOMER--37#None,MAT-47#None,MAT-47_Plant5#None,Plant5#None,,SO_ITEM--162-1#None,,0.0,0.0
+e60,Create Purchase Order Item,2024-05-27T00:00:00+00:00,,MAT-6#None,MAT-6_Plant4#None,Plant4#None,PO_ITEM--41-1#None,,SUPPLIER--9#None,62.0,62.0
+e219,Create Sales Order Item,2024-05-28T00:00:00+00:00,CUSTOMER--11#None,MAT-18#None,MAT-18_Plant2#None,Plant2#None,,SO_ITEM--69-1#None,,50.0,50.0
+e924,Create Sales Order Item,2024-05-28T00:00:00+00:00,CUSTOMER--11#None,MAT-69#None,MAT-69_Plant1#None,Plant1#None,,SO_ITEM--69-2#None,,0.0,0.0
+e415,Create Purchase Order Item,2024-05-29T00:00:00+00:00,,MAT-33#None,MAT-33_Plant1#None,Plant1#None,PO_ITEM--60-3#None,,SUPPLIER--3#None,89.0,89.0
+e821,Create Purchase Order Item,2024-05-29T00:00:00+00:00,,MAT-62#None,MAT-62_Plant5#None,Plant5#None,PO_ITEM--60-2#None,,SUPPLIER--3#None,110.0,110.0
+e1301,Create Purchase Order Item,2024-05-29T00:00:00+00:00,,MAT-99#None,MAT-99_Plant3#None,Plant3#None,PO_ITEM--60-1#None,,SUPPLIER--3#None,0.0,0.0
+e1117,Goods Issue,2024-05-30T00:00:00+00:00,CUSTOMER--387166#None,MAT-84#None,MAT-84_Plant3#None,Plant3#None,,,,28.0,0.0
+e9,Create Purchase Order Item,2024-05-31T00:00:00+00:00,,MAT-1#None,MAT-1_Plant4#None,Plant4#None,PO_ITEM--102-3#None,,SUPPLIER--2#None,0.0,0.0
+e474,Create Purchase Order Item,2024-05-31T00:00:00+00:00,,MAT-37#None,MAT-37_Plant1#None,Plant1#None,PO_ITEM--102-4#None,,SUPPLIER--2#None,57.0,57.0
+e510,Create Purchase Order Item,2024-05-31T00:00:00+00:00,,MAT-40#None,MAT-40_Plant2#None,Plant2#None,PO_ITEM--102-5#None,,SUPPLIER--2#None,54.0,54.0
+e581,Goods Receipt,2024-05-31T00:00:00+00:00,,MAT-46#None,MAT-46_Plant4#None,Plant4#None,PO_ITEM--125-3#None,,SUPPLIER--10#None,0.0,44.0
+e1132,Create Purchase Order Item,2024-05-31T00:00:00+00:00,,MAT-85#None,MAT-85_Plant3#None,Plant3#None,PO_ITEM--102-1#None,,SUPPLIER--2#None,50.0,50.0
+e1263,Create Purchase Order Item,2024-05-31T00:00:00+00:00,,MAT-96#None,MAT-96_Plant4#None,Plant4#None,PO_ITEM--102-2#None,,SUPPLIER--2#None,0.0,0.0
+e582,Create Purchase Suggestion Item,2024-06-01T00:00:00+00:00,,MAT-46#None,MAT-46_Plant1#None,Plant1#None,,,,44.0,44.0
+e780,Create Purchase Order Item,2024-06-02T00:00:00+00:00,,MAT-59#None,MAT-59_Plant4#None,Plant4#None,PO_ITEM--30-4#None,,SUPPLIER--1#None,31.0,31.0
+e1045,Create Purchase Order Item,2024-06-02T00:00:00+00:00,,MAT-78#None,MAT-78_Plant4#None,Plant4#None,PO_ITEM--30-3#None,,SUPPLIER--1#None,36.0,36.0
+e1211,Create Purchase Order Item,2024-06-02T00:00:00+00:00,,MAT-92#None,MAT-92_Plant3#None,Plant3#None,PO_ITEM--30-2#None,,SUPPLIER--1#None,0.0,0.0
+e1241,Create Purchase Order Item,2024-06-02T00:00:00+00:00,,MAT-94#None,MAT-94_Plant3#None,Plant3#None,PO_ITEM--30-1#None,,SUPPLIER--1#None,50.0,50.0
+e639,Goods Receipt,2024-06-03T00:00:00+00:00,,MAT-49#None,MAT-49_Plant5#None,Plant5#None,PO_ITEM--45-2#None,,SUPPLIER--15#None,0.0,29.0
+e47,Create Purchase Order Item,2024-06-04T00:00:00+00:00,,MAT-5#None,MAT-5_Plant4#None,Plant4#None,PO_ITEM--52-2#None,,SUPPLIER--29#None,69.0,69.0
+e282,Create Purchase Order Item,2024-06-04T00:00:00+00:00,,MAT-23#None,MAT-23_Plant4#None,Plant4#None,PO_ITEM--52-1#None,,SUPPLIER--29#None,13.0,13.0
+e442,Create Sales Order Item,2024-06-04T00:00:00+00:00,CUSTOMER--46#None,MAT-35#None,MAT-35_Plant2#None,Plant2#None,,SO_ITEM--167-1#None,,0.0,0.0
+e61,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-6#None,MAT-6_Plant3#None,Plant3#None,PO_ITEM--88-2#None,,SUPPLIER--30#None,62.0,62.0
+e87,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-8#None,MAT-8_Plant4#None,Plant4#None,PO_ITEM--88-1#None,,SUPPLIER--30#None,94.0,94.0
+e157,Goods Receipt,2024-06-06T00:00:00+00:00,,MAT-13#None,MAT-13_Plant1#None,Plant1#None,PO_ITEM--97-2#None,,SUPPLIER--19#None,0.0,60.0
+e370,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-30#None,MAT-30_Plant3#None,Plant3#None,PO_ITEM--88-5#None,,SUPPLIER--30#None,41.0,41.0
+e623,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-48#None,MAT-48_Plant3#None,Plant3#None,PO_ITEM--18-3#None,,SUPPLIER--29#None,0.0,0.0
+e717,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-54#None,MAT-54_Plant5#None,Plant5#None,PO_ITEM--18-4#None,,SUPPLIER--29#None,0.0,0.0
+e855,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-64#None,MAT-64_Plant2#None,Plant2#None,PO_ITEM--88-4#None,,SUPPLIER--30#None,98.0,98.0
+e952,Create Sales Order Item,2024-06-06T00:00:00+00:00,CUSTOMER--23#None,MAT-71#None,MAT-71_Plant4#None,Plant4#None,,SO_ITEM--166-2#None,,0.0,0.0
+e1046,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-78#None,MAT-78_Plant2#None,Plant2#None,PO_ITEM--18-2#None,,SUPPLIER--29#None,36.0,36.0
+e1133,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-85#None,MAT-85_Plant3#None,Plant3#None,PO_ITEM--88-3#None,,SUPPLIER--30#None,50.0,50.0
+e1179,Create Purchase Order Item,2024-06-06T00:00:00+00:00,,MAT-89#None,MAT-89_Plant2#None,Plant2#None,PO_ITEM--18-1#None,,SUPPLIER--29#None,0.0,0.0
+e1180,Create Sales Order Item,2024-06-06T00:00:00+00:00,CUSTOMER--28#None,MAT-89#None,MAT-89_Plant5#None,Plant5#None,,SO_ITEM--136-1#None,,0.0,0.0
+e1264,Create Sales Order Item,2024-06-06T00:00:00+00:00,CUSTOMER--23#None,MAT-96#None,MAT-96_Plant1#None,Plant1#None,,SO_ITEM--166-1#None,,0.0,0.0
+e102,Create Sales Order Item,2024-06-07T00:00:00+00:00,CUSTOMER--33#None,MAT-9#None,MAT-9_Plant2#None,Plant2#None,,SO_ITEM--11-2#None,,88.0,88.0
+e961,Create Sales Order Item,2024-06-07T00:00:00+00:00,CUSTOMER--33#None,MAT-72#None,MAT-72_Plant2#None,Plant2#None,,SO_ITEM--11-3#None,,0.0,0.0
+e1307,Create Sales Order Item,2024-06-07T00:00:00+00:00,CUSTOMER--33#None,MAT-100#None,MAT-100_Plant3#None,Plant3#None,,SO_ITEM--11-1#None,,0.0,0.0
+e145,Create Purchase Order Item,2024-06-08T00:00:00+00:00,,MAT-12#None,MAT-12_Plant1#None,Plant1#None,PO_ITEM--86-4#None,,SUPPLIER--18#None,17.0,17.0
+e206,Create Purchase Order Item,2024-06-08T00:00:00+00:00,,MAT-17#None,MAT-17_Plant4#None,Plant4#None,PO_ITEM--86-2#None,,SUPPLIER--18#None,0.0,0.0
+e443,Create Purchase Order Item,2024-06-08T00:00:00+00:00,,MAT-35#None,MAT-35_Plant5#None,Plant5#None,PO_ITEM--86-3#None,,SUPPLIER--18#None,0.0,0.0
+e519,Goods Receipt,2024-06-08T00:00:00+00:00,,MAT-41#None,MAT-41_Plant1#None,Plant1#None,PO_ITEM--29-2#None,,SUPPLIER--29#None,0.0,6.0
+e573,Create Purchase Order Item,2024-06-08T00:00:00+00:00,,MAT-45#None,MAT-45_Plant3#None,Plant3#None,PO_ITEM--86-1#None,,SUPPLIER--18#None,95.0,95.0
+e756,Create Purchase Order Item,2024-06-08T00:00:00+00:00,,MAT-57#None,MAT-57_Plant5#None,Plant5#None,PO_ITEM--86-5#None,,SUPPLIER--18#None,0.0,0.0
+e298,Create Sales Order Item,2024-06-09T00:00:00+00:00,CUSTOMER--26#None,MAT-24#None,MAT-24_Plant2#None,Plant2#None,,SO_ITEM--174-1#None,,0.0,0.0
+e604,Create Sales Order Item,2024-06-09T00:00:00+00:00,CUSTOMER--34#None,MAT-47#None,MAT-47_Plant3#None,Plant3#None,,SO_ITEM--85-2#None,,0.0,0.0
+e856,Create Sales Order Item,2024-06-09T00:00:00+00:00,CUSTOMER--34#None,MAT-64#None,MAT-64_Plant5#None,Plant5#None,,SO_ITEM--85-4#None,,98.0,98.0
+e1181,Create Sales Order Item,2024-06-09T00:00:00+00:00,CUSTOMER--34#None,MAT-89#None,MAT-89_Plant5#None,Plant5#None,,SO_ITEM--85-1#None,,0.0,0.0
+e1242,Create Sales Order Item,2024-06-09T00:00:00+00:00,CUSTOMER--34#None,MAT-94#None,MAT-94_Plant3#None,Plant3#None,,SO_ITEM--85-3#None,,50.0,50.0
+e698,Create Purchase Order Item,2024-06-11T00:00:00+00:00,,MAT-53#None,MAT-53_Plant2#None,Plant2#None,PO_ITEM--123-1#None,,SUPPLIER--14#None,27.0,27.0
+e907,Create Purchase Order Item,2024-06-11T00:00:00+00:00,,MAT-68#None,MAT-68_Plant2#None,Plant2#None,PO_ITEM--123-2#None,,SUPPLIER--14#None,0.0,0.0
+e1140,Create Purchase Suggestion Item,2024-06-11T00:00:00+00:00,,MAT-86#None,MAT-86_Plant1#None,Plant1#None,,,,0.0,0.0
+e939,Goods Receipt,2024-06-12T00:00:00+00:00,,MAT-70#None,MAT-70_Plant3#None,Plant3#None,PO_ITEM--108-5#None,,SUPPLIER--29#None,26.0,87.0
+e1009,Create Purchase Order Item,2024-06-12T00:00:00+00:00,,MAT-75#None,MAT-75_Plant5#None,Plant5#None,PO_ITEM--1-1#None,,SUPPLIER--9#None,0.0,0.0
+e29,Create Sales Order Item,2024-06-13T00:00:00+00:00,CUSTOMER--42#None,MAT-3#None,MAT-3_Plant4#None,Plant4#None,,SO_ITEM--184-3#None,,92.0,92.0
+e407,Create Sales Order Item,2024-06-13T00:00:00+00:00,CUSTOMER--42#None,MAT-32#None,MAT-32_Plant1#None,Plant1#None,,SO_ITEM--184-2#None,,189.0,189.0
+e416,Create Sales Order Item,2024-06-13T00:00:00+00:00,CUSTOMER--42#None,MAT-33#None,MAT-33_Plant2#None,Plant2#None,,SO_ITEM--184-4#None,,89.0,89.0
+e790,Create Sales Order Item,2024-06-13T00:00:00+00:00,CUSTOMER--42#None,MAT-60#None,MAT-60_Plant2#None,Plant2#None,,SO_ITEM--184-1#None,,10.0,10.0
+e1212,Goods Receipt,2024-06-13T00:00:00+00:00,,MAT-92#None,MAT-92_Plant2#None,Plant2#None,PO_ITEM--83-1#None,,SUPPLIER--12#None,0.0,39.0
+e36,Goods Receipt,2024-06-14T00:00:00+00:00,,MAT-4#None,MAT-4_Plant3#None,Plant3#None,PO_ITEM--127-1#None,,SUPPLIER--24#None,41.0,64.0
+e389,Create Sales Order Item,2024-06-14T00:00:00+00:00,CUSTOMER--37#None,MAT-31#None,MAT-31_Plant2#None,Plant2#None,,SO_ITEM--181-1#None,,0.0,0.0
+e718,Create Sales Order Item,2024-06-14T00:00:00+00:00,CUSTOMER--37#None,MAT-54#None,MAT-54_Plant5#None,Plant5#None,,SO_ITEM--181-3#None,,0.0,0.0
+e857,Create Sales Order Item,2024-06-14T00:00:00+00:00,CUSTOMER--37#None,MAT-64#None,MAT-64_Plant2#None,Plant2#None,,SO_ITEM--181-4#None,,98.0,98.0
+e876,Create Sales Order Item,2024-06-14T00:00:00+00:00,CUSTOMER--37#None,MAT-66#None,MAT-66_Plant2#None,Plant2#None,,SO_ITEM--181-5#None,,0.0,0.0
+e925,Create Purchase Suggestion Item,2024-06-14T00:00:00+00:00,,MAT-69#None,MAT-69_Plant3#None,Plant3#None,,,,0.0,0.0
+e1134,Create Sales Order Item,2024-06-14T00:00:00+00:00,CUSTOMER--37#None,MAT-85#None,MAT-85_Plant1#None,Plant1#None,,SO_ITEM--181-2#None,,48.0,48.0
+e10,Create Purchase Suggestion Item,2024-06-16T00:00:00+00:00,,MAT-1#None,MAT-1_Plant2#None,Plant2#None,,,,0.0,0.0
+e207,Goods Receipt,2024-06-17T00:00:00+00:00,,MAT-17#None,MAT-17_Plant1#None,Plant1#None,PO_ITEM--45-2#None,,SUPPLIER--15#None,0.0,86.0
+e624,Create Sales Order Item,2024-06-17T00:00:00+00:00,CUSTOMER--27#None,MAT-48#None,MAT-48_Plant5#None,Plant5#None,,SO_ITEM--152-1#None,,0.0,0.0
+e719,Goods Receipt,2024-06-17T00:00:00+00:00,,MAT-54#None,MAT-54_Plant1#None,Plant1#None,PO_ITEM--8-3#None,,SUPPLIER--26#None,0.0,28.0
+e11,Create Purchase Order Item,2024-06-18T00:00:00+00:00,,MAT-1#None,MAT-1_Plant2#None,Plant2#None,PO_ITEM--77-1#None,,SUPPLIER--22#None,0.0,0.0
+e75,Create Purchase Order Item,2024-06-18T00:00:00+00:00,,MAT-7#None,MAT-7_Plant5#None,Plant5#None,PO_ITEM--77-2#None,,SUPPLIER--22#None,37.0,37.0
+e258,Create Purchase Order Item,2024-06-18T00:00:00+00:00,,MAT-21#None,MAT-21_Plant4#None,Plant4#None,PO_ITEM--125-1#None,,SUPPLIER--10#None,0.0,0.0
+e835,Create Purchase Order Item,2024-06-18T00:00:00+00:00,,MAT-63#None,MAT-63_Plant5#None,Plant5#None,PO_ITEM--77-3#None,,SUPPLIER--22#None,0.0,0.0
+e158,Create Sales Order Item,2024-06-19T00:00:00+00:00,CUSTOMER--34#None,MAT-13#None,MAT-13_Plant4#None,Plant4#None,,SO_ITEM--8-4#None,,60.0,60.0
+e417,Create Sales Order Item,2024-06-19T00:00:00+00:00,CUSTOMER--34#None,MAT-33#None,MAT-33_Plant2#None,Plant2#None,,SO_ITEM--8-5#None,,89.0,89.0
+e529,Create Sales Order Item,2024-06-19T00:00:00+00:00,CUSTOMER--34#None,MAT-42#None,MAT-42_Plant1#None,Plant1#None,,SO_ITEM--8-2#None,,0.0,0.0
+e869,Create Sales Order Item,2024-06-19T00:00:00+00:00,CUSTOMER--34#None,MAT-65#None,MAT-65_Plant1#None,Plant1#None,,SO_ITEM--8-1#None,,0.0,0.0
+e877,Create Sales Order Item,2024-06-19T00:00:00+00:00,CUSTOMER--34#None,MAT-66#None,MAT-66_Plant3#None,Plant3#None,,SO_ITEM--8-3#None,,0.0,0.0
+e132,Create Sales Order Item,2024-06-20T00:00:00+00:00,CUSTOMER--23#None,MAT-11#None,MAT-11_Plant3#None,Plant3#None,,SO_ITEM--141-1#None,,82.0,82.0
+e192,Create Purchase Suggestion Item,2024-06-20T00:00:00+00:00,,MAT-15#None,MAT-15_Plant4#None,Plant4#None,,,,4.0,4.0
+e76,Goods Receipt,2024-06-21T00:00:00+00:00,,MAT-7#None,MAT-7_Plant2#None,Plant2#None,PO_ITEM--81-4#None,,SUPPLIER--19#None,37.0,124.0
+e1010,Goods Receipt,2024-06-23T00:00:00+00:00,,MAT-75#None,MAT-75_Plant5#None,Plant5#None,PO_ITEM--150-3#None,,SUPPLIER--20#None,0.0,16.0
+e655,Goods Receipt,2024-06-24T00:00:00+00:00,,MAT-50#None,MAT-50_Plant5#None,Plant5#None,PO_ITEM--127-4#None,,SUPPLIER--24#None,0.0,8.0
+e731,Create Sales Order Item,2024-06-24T00:00:00+00:00,CUSTOMER--20#None,MAT-55#None,MAT-55_Plant5#None,Plant5#None,,SO_ITEM--170-1#None,,96.0,96.0
+e12,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--24#None,MAT-1#None,MAT-1_Plant4#None,Plant4#None,,SO_ITEM--94-1#None,,0.0,0.0
+e259,Create Purchase Suggestion Item,2024-06-25T00:00:00+00:00,,MAT-21#None,MAT-21_Plant3#None,Plant3#None,,,,0.0,0.0
+e324,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--4#None,MAT-26#None,MAT-26_Plant2#None,Plant2#None,,SO_ITEM--70-2#None,,24.0,24.0
+e341,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--24#None,MAT-27#None,MAT-27_Plant5#None,Plant5#None,,SO_ITEM--94-3#None,,0.0,0.0
+e457,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--8#None,MAT-36#None,MAT-36_Plant2#None,Plant2#None,,SO_ITEM--168-1#None,,0.0,0.0
+e583,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--8#None,MAT-46#None,MAT-46_Plant3#None,Plant3#None,,SO_ITEM--168-3#None,,44.0,44.0
+e584,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--8#None,MAT-46#None,MAT-46_Plant5#None,Plant5#None,,SO_ITEM--168-4#None,,44.0,44.0
+e666,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--49#None,MAT-51#None,MAT-51_Plant1#None,Plant1#None,,SO_ITEM--6-1#None,,0.0,0.0
+e667,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--8#None,MAT-51#None,MAT-51_Plant1#None,Plant1#None,,SO_ITEM--168-2#None,,0.0,0.0
+e772,Goods Issue,2024-06-25T00:00:00+00:00,CUSTOMER--214783#None,MAT-58#None,MAT-58_Plant1#None,Plant1#None,,,,73.0,0.0
+e858,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--24#None,MAT-64#None,MAT-64_Plant1#None,Plant1#None,,SO_ITEM--94-2#None,,98.0,98.0
+e892,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--24#None,MAT-67#None,MAT-67_Plant5#None,Plant5#None,,SO_ITEM--94-4#None,,13.0,13.0
+e1056,Goods Issue,2024-06-25T00:00:00+00:00,CUSTOMER--991037#None,MAT-79#None,MAT-79_Plant4#None,Plant4#None,,,,86.0,0.0
+e1213,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--4#None,MAT-92#None,MAT-92_Plant4#None,Plant4#None,,SO_ITEM--70-1#None,,39.0,39.0
+e1265,Create Sales Order Item,2024-06-25T00:00:00+00:00,CUSTOMER--4#None,MAT-96#None,MAT-96_Plant1#None,Plant1#None,,SO_ITEM--70-3#None,,0.0,0.0
+e744,Create Sales Order Item,2024-06-29T00:00:00+00:00,CUSTOMER--23#None,MAT-56#None,MAT-56_Plant1#None,Plant1#None,,SO_ITEM--99-2#None,,0.0,0.0
+e870,Create Sales Order Item,2024-06-29T00:00:00+00:00,CUSTOMER--23#None,MAT-65#None,MAT-65_Plant1#None,Plant1#None,,SO_ITEM--99-1#None,,0.0,0.0
+e908,Create Sales Order Item,2024-06-29T00:00:00+00:00,CUSTOMER--23#None,MAT-68#None,MAT-68_Plant3#None,Plant3#None,,SO_ITEM--99-3#None,,0.0,0.0
+e962,Create Sales Order Item,2024-06-29T00:00:00+00:00,CUSTOMER--23#None,MAT-72#None,MAT-72_Plant5#None,Plant5#None,,SO_ITEM--99-4#None,,0.0,0.0
+e313,Create Purchase Suggestion Item,2024-06-30T00:00:00+00:00,,MAT-25#None,MAT-25_Plant2#None,Plant2#None,,,,23.0,23.0
+e30,Create Purchase Order Item,2024-07-02T00:00:00+00:00,,MAT-3#None,MAT-3_Plant4#None,Plant4#None,PO_ITEM--31-3#None,,SUPPLIER--21#None,92.0,92.0
+e159,Create Purchase Order Item,2024-07-02T00:00:00+00:00,,MAT-13#None,MAT-13_Plant5#None,Plant5#None,PO_ITEM--31-4#None,,SUPPLIER--21#None,60.0,60.0
+e893,Create Purchase Order Item,2024-07-02T00:00:00+00:00,,MAT-67#None,MAT-67_Plant4#None,Plant4#None,PO_ITEM--31-1#None,,SUPPLIER--21#None,13.0,13.0
+e1165,Create Purchase Order Item,2024-07-02T00:00:00+00:00,,MAT-88#None,MAT-88_Plant1#None,Plant1#None,PO_ITEM--31-2#None,,SUPPLIER--21#None,0.0,0.0
+e791,Create Purchase Suggestion Item,2024-07-03T00:00:00+00:00,,MAT-60#None,MAT-60_Plant4#None,Plant4#None,,,,0.0,0.0
+e640,Create Sales Order Item,2024-07-05T00:00:00+00:00,CUSTOMER--50#None,MAT-49#None,MAT-49_Plant5#None,Plant5#None,,SO_ITEM--185-1#None,,29.0,29.0
+e656,Create Sales Order Item,2024-07-05T00:00:00+00:00,CUSTOMER--50#None,MAT-50#None,MAT-50_Plant3#None,Plant3#None,,SO_ITEM--185-3#None,,8.0,8.0
+e668,Create Sales Order Item,2024-07-05T00:00:00+00:00,CUSTOMER--50#None,MAT-51#None,MAT-51_Plant4#None,Plant4#None,,SO_ITEM--185-2#None,,25.0,25.0
+e249,Goods Issue,2024-07-07T00:00:00+00:00,CUSTOMER--639156#None,MAT-20#None,MAT-20_Plant2#None,Plant2#None,,,,39.0,0.0
+e992,Goods Issue,2024-07-07T00:00:00+00:00,CUSTOMER--116932#None,MAT-74#None,MAT-74_Plant5#None,Plant5#None,,,,47.0,0.0
+e48,Create Sales Order Item,2024-07-08T00:00:00+00:00,CUSTOMER--14#None,MAT-5#None,MAT-5_Plant5#None,Plant5#None,,SO_ITEM--75-2#None,,69.0,69.0
+e325,Create Sales Order Item,2024-07-08T00:00:00+00:00,CUSTOMER--42#None,MAT-26#None,MAT-26_Plant3#None,Plant3#None,,SO_ITEM--195-1#None,,0.0,0.0
+e363,Create Sales Order Item,2024-07-08T00:00:00+00:00,CUSTOMER--42#None,MAT-29#None,MAT-29_Plant4#None,Plant4#None,,SO_ITEM--195-2#None,,0.0,0.0
+e699,Create Sales Order Item,2024-07-08T00:00:00+00:00,CUSTOMER--14#None,MAT-53#None,MAT-53_Plant4#None,Plant4#None,,SO_ITEM--75-3#None,,71.0,71.0
+e792,Create Sales Order Item,2024-07-08T00:00:00+00:00,CUSTOMER--42#None,MAT-60#None,MAT-60_Plant5#None,Plant5#None,,SO_ITEM--195-3#None,,10.0,10.0
+e1223,Create Sales Order Item,2024-07-08T00:00:00+00:00,CUSTOMER--14#None,MAT-93#None,MAT-93_Plant5#None,Plant5#None,,SO_ITEM--75-1#None,,0.0,0.0
+e220,Goods Receipt,2024-07-09T00:00:00+00:00,,MAT-18#None,MAT-18_Plant3#None,Plant3#None,PO_ITEM--137-4#None,,SUPPLIER--18#None,0.0,17.0
+e1118,Goods Receipt,2024-07-09T00:00:00+00:00,,MAT-84#None,MAT-84_Plant4#None,Plant4#None,PO_ITEM--26-2#None,,SUPPLIER--16#None,0.0,14.0
+e146,Create Sales Order Item,2024-07-11T00:00:00+00:00,CUSTOMER--28#None,MAT-12#None,MAT-12_Plant3#None,Plant3#None,,SO_ITEM--180-4#None,,17.0,17.0
+e940,Create Sales Order Item,2024-07-11T00:00:00+00:00,CUSTOMER--28#None,MAT-70#None,MAT-70_Plant3#None,Plant3#None,,SO_ITEM--180-2#None,,87.0,87.0
+e1141,Create Sales Order Item,2024-07-11T00:00:00+00:00,CUSTOMER--28#None,MAT-86#None,MAT-86_Plant1#None,Plant1#None,,SO_ITEM--180-1#None,,0.0,0.0
+e1275,Create Sales Order Item,2024-07-11T00:00:00+00:00,CUSTOMER--28#None,MAT-97#None,MAT-97_Plant5#None,Plant5#None,,SO_ITEM--180-3#None,,0.0,0.0
+e283,Create Sales Order Item,2024-07-12T00:00:00+00:00,CUSTOMER--3#None,MAT-23#None,MAT-23_Plant2#None,Plant2#None,,SO_ITEM--131-1#None,,13.0,13.0
+e103,Create Purchase Order Item,2024-07-13T00:00:00+00:00,,MAT-9#None,MAT-9_Plant2#None,Plant2#None,PO_ITEM--89-3#None,,SUPPLIER--23#None,88.0,88.0
+e260,Create Sales Order Item,2024-07-13T00:00:00+00:00,CUSTOMER--35#None,MAT-21#None,MAT-21_Plant3#None,Plant3#None,,SO_ITEM--17-3#None,,0.0,0.0
+e299,Create Purchase Order Item,2024-07-13T00:00:00+00:00,,MAT-24#None,MAT-24_Plant1#None,Plant1#None,PO_ITEM--89-1#None,,SUPPLIER--23#None,0.0,0.0
+e350,Create Purchase Order Item,2024-07-13T00:00:00+00:00,,MAT-28#None,MAT-28_Plant5#None,Plant5#None,PO_ITEM--106-1#None,,SUPPLIER--15#None,0.0,0.0
+e371,Create Purchase Order Item,2024-07-13T00:00:00+00:00,,MAT-30#None,MAT-30_Plant5#None,Plant5#None,PO_ITEM--89-5#None,,SUPPLIER--23#None,41.0,41.0
+e641,Create Purchase Order Item,2024-07-13T00:00:00+00:00,,MAT-49#None,MAT-49_Plant2#None,Plant2#None,PO_ITEM--89-2#None,,SUPPLIER--23#None,58.0,58.0
+e745,Create Sales Order Item,2024-07-13T00:00:00+00:00,CUSTOMER--35#None,MAT-56#None,MAT-56_Plant5#None,Plant5#None,,SO_ITEM--17-2#None,,81.0,81.0
+e1023,Create Purchase Order Item,2024-07-13T00:00:00+00:00,,MAT-76#None,MAT-76_Plant1#None,Plant1#None,PO_ITEM--89-4#None,,SUPPLIER--23#None,0.0,0.0
+e1098,Create Purchase Order Item,2024-07-13T00:00:00+00:00,,MAT-82#None,MAT-82_Plant5#None,Plant5#None,PO_ITEM--106-2#None,,SUPPLIER--15#None,27.0,27.0
+e1099,Goods Issue,2024-07-13T00:00:00+00:00,CUSTOMER--121344#None,MAT-82#None,MAT-82_Plant3#None,Plant3#None,,,,44.0,0.0
+e1214,Create Sales Order Item,2024-07-13T00:00:00+00:00,CUSTOMER--35#None,MAT-92#None,MAT-92_Plant5#None,Plant5#None,,SO_ITEM--17-1#None,,39.0,39.0
+e793,Goods Issue,2024-07-14T00:00:00+00:00,CUSTOMER--514348#None,MAT-60#None,MAT-60_Plant5#None,Plant5#None,,,,10.0,0.0
+e1057,Goods Receipt,2024-07-14T00:00:00+00:00,,MAT-79#None,MAT-79_Plant1#None,Plant1#None,PO_ITEM--139-2#None,,SUPPLIER--14#None,0.0,32.0
+e49,Create Purchase Order Item,2024-07-15T00:00:00+00:00,,MAT-5#None,MAT-5_Plant4#None,Plant4#None,PO_ITEM--115-2#None,,SUPPLIER--14#None,69.0,69.0
+e894,Create Purchase Order Item,2024-07-15T00:00:00+00:00,,MAT-67#None,MAT-67_Plant3#None,Plant3#None,PO_ITEM--115-1#None,,SUPPLIER--14#None,10.0,10.0
+e21,Create Sales Order Item,2024-07-16T00:00:00+00:00,CUSTOMER--48#None,MAT-2#None,MAT-2_Plant5#None,Plant5#None,,SO_ITEM--110-2#None,,0.0,0.0
+e238,Create Sales Order Item,2024-07-16T00:00:00+00:00,CUSTOMER--48#None,MAT-19#None,MAT-19_Plant2#None,Plant2#None,,SO_ITEM--110-1#None,,0.0,0.0
+e250,Create Sales Order Item,2024-07-17T00:00:00+00:00,CUSTOMER--44#None,MAT-20#None,MAT-20_Plant1#None,Plant1#None,,SO_ITEM--182-3#None,,0.0,0.0
+e428,Goods Issue,2024-07-17T00:00:00+00:00,CUSTOMER--328056#None,MAT-34#None,MAT-34_Plant4#None,Plant4#None,,,,75.0,52.0
+e499,Create Sales Order Item,2024-07-17T00:00:00+00:00,CUSTOMER--44#None,MAT-39#None,MAT-39_Plant1#None,Plant1#None,,SO_ITEM--182-2#None,,0.0,0.0
+e511,Create Sales Order Item,2024-07-17T00:00:00+00:00,CUSTOMER--44#None,MAT-40#None,MAT-40_Plant2#None,Plant2#None,,SO_ITEM--182-4#None,,54.0,54.0
+e746,Create Sales Order Item,2024-07-17T00:00:00+00:00,CUSTOMER--44#None,MAT-56#None,MAT-56_Plant4#None,Plant4#None,,SO_ITEM--182-1#None,,202.0,202.0
+e193,Create Purchase Suggestion Item,2024-07-18T00:00:00+00:00,,MAT-15#None,MAT-15_Plant4#None,Plant4#None,,,,4.0,4.0
+e326,Goods Issue,2024-07-19T00:00:00+00:00,CUSTOMER--758734#None,MAT-26#None,MAT-26_Plant2#None,Plant2#None,,,,24.0,0.0
+e700,Create Purchase Order Item,2024-07-19T00:00:00+00:00,,MAT-53#None,MAT-53_Plant1#None,Plant1#None,PO_ITEM--127-1#None,,SUPPLIER--24#None,71.0,71.0
+e757,Create Purchase Order Item,2024-07-19T00:00:00+00:00,,MAT-57#None,MAT-57_Plant5#None,Plant5#None,PO_ITEM--127-2#None,,SUPPLIER--24#None,0.0,0.0
+e372,Create Purchase Suggestion Item,2024-07-20T00:00:00+00:00,,MAT-30#None,MAT-30_Plant5#None,Plant5#None,,,,41.0,41.0
+e251,Create Purchase Order Item,2024-07-21T00:00:00+00:00,,MAT-20#None,MAT-20_Plant3#None,Plant3#None,PO_ITEM--66-3#None,,SUPPLIER--27#None,0.0,0.0
+e475,Create Purchase Order Item,2024-07-21T00:00:00+00:00,,MAT-37#None,MAT-37_Plant3#None,Plant3#None,PO_ITEM--66-1#None,,SUPPLIER--27#None,57.0,57.0
+e993,Goods Issue,2024-07-21T00:00:00+00:00,CUSTOMER--377348#None,MAT-74#None,MAT-74_Plant1#None,Plant1#None,,,,44.0,0.0
+e1182,Create Purchase Order Item,2024-07-21T00:00:00+00:00,,MAT-89#None,MAT-89_Plant5#None,Plant5#None,PO_ITEM--66-2#None,,SUPPLIER--27#None,0.0,0.0
+e544,Create Sales Order Item,2024-07-22T00:00:00+00:00,CUSTOMER--42#None,MAT-43#None,MAT-43_Plant5#None,Plant5#None,,SO_ITEM--154-2#None,,56.0,56.0
+e560,Create Sales Order Item,2024-07-22T00:00:00+00:00,CUSTOMER--42#None,MAT-44#None,MAT-44_Plant1#None,Plant1#None,,SO_ITEM--154-3#None,,45.0,45.0
+e1308,Create Sales Order Item,2024-07-22T00:00:00+00:00,CUSTOMER--42#None,MAT-100#None,MAT-100_Plant2#None,Plant2#None,,SO_ITEM--154-1#None,,0.0,0.0
+e104,Goods Issue,2024-07-23T00:00:00+00:00,CUSTOMER--150909#None,MAT-9#None,MAT-9_Plant3#None,Plant3#None,,,,88.0,36.0
+e859,Create Purchase Suggestion Item,2024-07-23T00:00:00+00:00,,MAT-64#None,MAT-64_Plant5#None,Plant5#None,,,,98.0,98.0
+e261,Create Purchase Order Item,2024-07-24T00:00:00+00:00,,MAT-21#None,MAT-21_Plant4#None,Plant4#None,PO_ITEM--94-1#None,,SUPPLIER--12#None,0.0,0.0
+e342,Create Purchase Suggestion Item,2024-07-24T00:00:00+00:00,,MAT-27#None,MAT-27_Plant3#None,Plant3#None,,,,0.0,0.0
+e530,Create Sales Order Item,2024-07-24T00:00:00+00:00,CUSTOMER--14#None,MAT-42#None,MAT-42_Plant1#None,Plant1#None,,SO_ITEM--178-1#None,,0.0,0.0
+e605,Goods Receipt,2024-07-24T00:00:00+00:00,,MAT-47#None,MAT-47_Plant5#None,Plant5#None,PO_ITEM--38-4#None,,SUPPLIER--11#None,0.0,84.0
+e657,Goods Receipt,2024-07-25T00:00:00+00:00,,MAT-50#None,MAT-50_Plant1#None,Plant1#None,PO_ITEM--91-2#None,,SUPPLIER--10#None,8.0,108.0
+e77,Create Sales Order Item,2024-07-26T00:00:00+00:00,CUSTOMER--9#None,MAT-7#None,MAT-7_Plant1#None,Plant1#None,,SO_ITEM--189-1#None,,124.0,124.0
+e669,Goods Receipt,2024-07-26T00:00:00+00:00,,MAT-51#None,MAT-51_Plant3#None,Plant3#None,PO_ITEM--110-3#None,,SUPPLIER--25#None,0.0,41.0
+e836,Create Purchase Order Item,2024-07-27T00:00:00+00:00,,MAT-63#None,MAT-63_Plant1#None,Plant1#None,PO_ITEM--101-1#None,,SUPPLIER--24#None,0.0,0.0
+e860,Goods Receipt,2024-07-27T00:00:00+00:00,,MAT-64#None,MAT-64_Plant1#None,Plant1#None,PO_ITEM--81-1#None,,SUPPLIER--19#None,98.0,146.0
+e1183,Create Purchase Order Item,2024-07-27T00:00:00+00:00,,MAT-89#None,MAT-89_Plant3#None,Plant3#None,PO_ITEM--101-3#None,,SUPPLIER--24#None,0.0,0.0
+e1302,Create Purchase Order Item,2024-07-27T00:00:00+00:00,,MAT-99#None,MAT-99_Plant5#None,Plant5#None,PO_ITEM--101-2#None,,SUPPLIER--24#None,0.0,0.0
+e178,Create Purchase Suggestion Item,2024-07-28T00:00:00+00:00,,MAT-14#None,MAT-14_Plant1#None,Plant1#None,,,,0.0,0.0
+e861,Create Sales Order Item,2024-07-28T00:00:00+00:00,CUSTOMER--9#None,MAT-64#None,MAT-64_Plant5#None,Plant5#None,,SO_ITEM--122-1#None,,146.0,146.0
+e1100,Create Sales Order Item,2024-07-28T00:00:00+00:00,CUSTOMER--9#None,MAT-82#None,MAT-82_Plant3#None,Plant3#None,,SO_ITEM--122-2#None,,0.0,0.0
+e979,Create Purchase Order Item,2024-07-29T00:00:00+00:00,,MAT-73#None,MAT-73_Plant2#None,Plant2#None,PO_ITEM--136-1#None,,SUPPLIER--26#None,0.0,0.0
+e88,Goods Issue,2024-07-30T00:00:00+00:00,CUSTOMER--540224#None,MAT-8#None,MAT-8_Plant5#None,Plant5#None,,,,94.0,0.0
+e221,Create Sales Order Item,2024-07-31T00:00:00+00:00,CUSTOMER--3#None,MAT-18#None,MAT-18_Plant2#None,Plant2#None,,SO_ITEM--112-5#None,,67.0,67.0
+e390,Create Sales Order Item,2024-07-31T00:00:00+00:00,CUSTOMER--3#None,MAT-31#None,MAT-31_Plant2#None,Plant2#None,,SO_ITEM--112-1#None,,0.0,0.0
+e574,Create Sales Order Item,2024-07-31T00:00:00+00:00,CUSTOMER--3#None,MAT-45#None,MAT-45_Plant3#None,Plant3#None,,SO_ITEM--112-2#None,,95.0,95.0
+e953,Create Sales Order Item,2024-07-31T00:00:00+00:00,CUSTOMER--3#None,MAT-71#None,MAT-71_Plant1#None,Plant1#None,,SO_ITEM--112-3#None,,0.0,0.0
+e1101,Create Sales Order Item,2024-07-31T00:00:00+00:00,CUSTOMER--3#None,MAT-82#None,MAT-82_Plant4#None,Plant4#None,,SO_ITEM--112-4#None,,0.0,0.0
+e239,Create Purchase Suggestion Item,2024-08-01T00:00:00+00:00,,MAT-19#None,MAT-19_Plant3#None,Plant3#None,,,,0.0,0.0
+e429,Create Purchase Order Item,2024-08-01T00:00:00+00:00,,MAT-34#None,MAT-34_Plant2#None,Plant2#None,PO_ITEM--144-2#None,,SUPPLIER--13#None,52.0,52.0
+e444,Create Purchase Order Item,2024-08-01T00:00:00+00:00,,MAT-35#None,MAT-35_Plant2#None,Plant2#None,PO_ITEM--144-4#None,,SUPPLIER--13#None,0.0,0.0
+e520,Create Purchase Order Item,2024-08-01T00:00:00+00:00,,MAT-41#None,MAT-41_Plant4#None,Plant4#None,PO_ITEM--144-3#None,,SUPPLIER--13#None,0.0,0.0
+e773,Create Purchase Order Item,2024-08-01T00:00:00+00:00,,MAT-58#None,MAT-58_Plant4#None,Plant4#None,PO_ITEM--144-5#None,,SUPPLIER--13#None,0.0,0.0
+e878,Create Purchase Order Item,2024-08-01T00:00:00+00:00,,MAT-66#None,MAT-66_Plant4#None,Plant4#None,PO_ITEM--144-1#None,,SUPPLIER--13#None,0.0,0.0
+e1292,Goods Receipt,2024-08-01T00:00:00+00:00,,MAT-98#None,MAT-98_Plant3#None,Plant3#None,PO_ITEM--43-4#None,,SUPPLIER--6#None,0.0,13.0
+e781,Create Purchase Suggestion Item,2024-08-02T00:00:00+00:00,,MAT-59#None,MAT-59_Plant2#None,Plant2#None,,,,31.0,31.0
+e575,Create Sales Order Item,2024-08-03T00:00:00+00:00,CUSTOMER--42#None,MAT-45#None,MAT-45_Plant5#None,Plant5#None,,SO_ITEM--76-1#None,,0.0,0.0
+e642,Goods Issue,2024-08-03T00:00:00+00:00,CUSTOMER--548899#None,MAT-49#None,MAT-49_Plant4#None,Plant4#None,,,,58.0,0.0
+e133,Create Sales Order Item,2024-08-04T00:00:00+00:00,CUSTOMER--1#None,MAT-11#None,MAT-11_Plant1#None,Plant1#None,,SO_ITEM--65-2#None,,82.0,82.0
+e343,Create Sales Order Item,2024-08-04T00:00:00+00:00,CUSTOMER--1#None,MAT-27#None,MAT-27_Plant1#None,Plant1#None,,SO_ITEM--65-3#None,,0.0,0.0
+e758,Create Purchase Suggestion Item,2024-08-04T00:00:00+00:00,,MAT-57#None,MAT-57_Plant2#None,Plant2#None,,,,0.0,0.0
+e782,Create Sales Order Item,2024-08-04T00:00:00+00:00,CUSTOMER--1#None,MAT-59#None,MAT-59_Plant3#None,Plant3#None,,SO_ITEM--65-1#None,,31.0,31.0
+e963,Create Sales Order Item,2024-08-04T00:00:00+00:00,CUSTOMER--1#None,MAT-72#None,MAT-72_Plant5#None,Plant5#None,,SO_ITEM--65-4#None,,0.0,0.0
+e1224,Create Sales Order Item,2024-08-04T00:00:00+00:00,CUSTOMER--1#None,MAT-93#None,MAT-93_Plant4#None,Plant4#None,,SO_ITEM--65-5#None,,12.0,12.0
+e50,Goods Receipt,2024-08-05T00:00:00+00:00,,MAT-5#None,MAT-5_Plant5#None,Plant5#None,PO_ITEM--2-4#None,,SUPPLIER--5#None,69.0,144.0
+e89,Create Sales Order Item,2024-08-05T00:00:00+00:00,CUSTOMER--21#None,MAT-8#None,MAT-8_Plant5#None,Plant5#None,,SO_ITEM--57-1#None,,0.0,0.0
+e208,Create Sales Order Item,2024-08-05T00:00:00+00:00,CUSTOMER--21#None,MAT-17#None,MAT-17_Plant1#None,Plant1#None,,SO_ITEM--57-2#None,,86.0,86.0
+e701,Goods Issue,2024-08-05T00:00:00+00:00,CUSTOMER--656289#None,MAT-53#None,MAT-53_Plant1#None,Plant1#None,,,,71.0,0.0
+e545,Create Purchase Suggestion Item,2024-08-06T00:00:00+00:00,,MAT-43#None,MAT-43_Plant2#None,Plant2#None,,,,0.0,0.0
+e90,Create Purchase Order Item,2024-08-08T00:00:00+00:00,,MAT-8#None,MAT-8_Plant4#None,Plant4#None,PO_ITEM--114-1#None,,SUPPLIER--30#None,0.0,0.0
+e160,Create Purchase Order Item,2024-08-08T00:00:00+00:00,,MAT-13#None,MAT-13_Plant2#None,Plant2#None,PO_ITEM--114-2#None,,SUPPLIER--30#None,60.0,60.0
+e373,Create Purchase Order Item,2024-08-08T00:00:00+00:00,,MAT-30#None,MAT-30_Plant2#None,Plant2#None,PO_ITEM--137-1#None,,SUPPLIER--18#None,41.0,41.0
+e658,Create Purchase Order Item,2024-08-08T00:00:00+00:00,,MAT-50#None,MAT-50_Plant5#None,Plant5#None,PO_ITEM--137-3#None,,SUPPLIER--18#None,108.0,108.0
+e774,Create Purchase Order Item,2024-08-08T00:00:00+00:00,,MAT-58#None,MAT-58_Plant4#None,Plant4#None,PO_ITEM--137-2#None,,SUPPLIER--18#None,0.0,0.0
+e606,Create Purchase Suggestion Item,2024-08-09T00:00:00+00:00,,MAT-47#None,MAT-47_Plant5#None,Plant5#None,,,,84.0,84.0
+e670,Create Sales Order Item,2024-08-10T00:00:00+00:00,CUSTOMER--10#None,MAT-51#None,MAT-51_Plant4#None,Plant4#None,,SO_ITEM--1-2#None,,66.0,66.0
+e732,Create Sales Order Item,2024-08-10T00:00:00+00:00,CUSTOMER--10#None,MAT-55#None,MAT-55_Plant3#None,Plant3#None,,SO_ITEM--1-1#None,,96.0,96.0
+e374,Create Sales Order Item,2024-08-11T00:00:00+00:00,CUSTOMER--5#None,MAT-30#None,MAT-30_Plant2#None,Plant2#None,,SO_ITEM--52-1#None,,41.0,41.0
+e445,Create Sales Order Item,2024-08-11T00:00:00+00:00,CUSTOMER--5#None,MAT-35#None,MAT-35_Plant3#None,Plant3#None,,SO_ITEM--52-4#None,,0.0,0.0
+e485,Create Sales Order Item,2024-08-11T00:00:00+00:00,CUSTOMER--5#None,MAT-38#None,MAT-38_Plant3#None,Plant3#None,,SO_ITEM--52-2#None,,127.0,127.0
+e759,Create Purchase Suggestion Item,2024-08-11T00:00:00+00:00,,MAT-57#None,MAT-57_Plant5#None,Plant5#None,,,,0.0,0.0
+e803,Goods Issue,2024-08-11T00:00:00+00:00,CUSTOMER--680019#None,MAT-61#None,MAT-61_Plant1#None,Plant1#None,,,,53.0,0.0
+e1225,Create Sales Order Item,2024-08-11T00:00:00+00:00,CUSTOMER--5#None,MAT-93#None,MAT-93_Plant3#None,Plant3#None,,SO_ITEM--52-3#None,,0.0,0.0
+e120,Create Purchase Suggestion Item,2024-08-13T00:00:00+00:00,,MAT-10#None,MAT-10_Plant5#None,Plant5#None,,,,27.0,27.0
+e531,Goods Receipt,2024-08-13T00:00:00+00:00,,MAT-42#None,MAT-42_Plant5#None,Plant5#None,PO_ITEM--48-5#None,,SUPPLIER--1#None,0.0,23.0
+e458,Goods Receipt,2024-08-14T00:00:00+00:00,,MAT-36#None,MAT-36_Plant5#None,Plant5#None,PO_ITEM--141-1#None,,SUPPLIER--10#None,0.0,21.0
+e871,Create Purchase Suggestion Item,2024-08-14T00:00:00+00:00,,MAT-65#None,MAT-65_Plant4#None,Plant4#None,,,,0.0,0.0
+e134,Create Purchase Order Item,2024-08-15T00:00:00+00:00,,MAT-11#None,MAT-11_Plant1#None,Plant1#None,PO_ITEM--59-1#None,,SUPPLIER--30#None,82.0,82.0
+e78,Create Sales Order Item,2024-08-16T00:00:00+00:00,CUSTOMER--44#None,MAT-7#None,MAT-7_Plant3#None,Plant3#None,,SO_ITEM--157-2#None,,124.0,124.0
+e486,Goods Issue,2024-08-16T00:00:00+00:00,CUSTOMER--487999#None,MAT-38#None,MAT-38_Plant5#None,Plant5#None,,,,176.0,159.0
+e500,Create Sales Order Item,2024-08-16T00:00:00+00:00,CUSTOMER--44#None,MAT-39#None,MAT-39_Plant2#None,Plant2#None,,SO_ITEM--157-3#None,,0.0,0.0
+e1058,Create Sales Order Item,2024-08-16T00:00:00+00:00,CUSTOMER--44#None,MAT-79#None,MAT-79_Plant2#None,Plant2#None,,SO_ITEM--157-4#None,,0.0,0.0
+e1155,Create Sales Order Item,2024-08-16T00:00:00+00:00,CUSTOMER--44#None,MAT-87#None,MAT-87_Plant3#None,Plant3#None,,SO_ITEM--157-1#None,,20.0,20.0
+e685,Create Purchase Order Item,2024-08-18T00:00:00+00:00,,MAT-52#None,MAT-52_Plant5#None,Plant5#None,PO_ITEM--90-3#None,,SUPPLIER--21#None,30.0,30.0
+e702,Create Purchase Order Item,2024-08-18T00:00:00+00:00,,MAT-53#None,MAT-53_Plant4#None,Plant4#None,PO_ITEM--90-1#None,,SUPPLIER--21#None,0.0,0.0
+e747,Goods Issue,2024-08-18T00:00:00+00:00,CUSTOMER--360843#None,MAT-56#None,MAT-56_Plant5#None,Plant5#None,,,,81.0,0.0
+e822,Create Purchase Order Item,2024-08-18T00:00:00+00:00,,MAT-62#None,MAT-62_Plant1#None,Plant1#None,PO_ITEM--90-2#None,,SUPPLIER--21#None,110.0,110.0
+e823,Create Purchase Order Item,2024-08-18T00:00:00+00:00,,MAT-62#None,MAT-62_Plant2#None,Plant2#None,PO_ITEM--90-4#None,,SUPPLIER--21#None,110.0,110.0
+e980,Create Purchase Order Item,2024-08-18T00:00:00+00:00,,MAT-73#None,MAT-73_Plant5#None,Plant5#None,PO_ITEM--90-5#None,,SUPPLIER--21#None,0.0,0.0
+e408,Goods Receipt,2024-08-19T00:00:00+00:00,,MAT-32#None,MAT-32_Plant1#None,Plant1#None,PO_ITEM--63-2#None,,SUPPLIER--26#None,189.0,204.0
+e748,Goods Issue,2024-08-19T00:00:00+00:00,CUSTOMER--158849#None,MAT-56#None,MAT-56_Plant3#None,Plant3#None,,,,41.0,0.0
+e1119,Create Sales Order Item,2024-08-20T00:00:00+00:00,CUSTOMER--39#None,MAT-84#None,MAT-84_Plant2#None,Plant2#None,,SO_ITEM--114-1#None,,0.0,0.0
+e300,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-24#None,MAT-24_Plant5#None,Plant5#None,PO_ITEM--100-2#None,,SUPPLIER--15#None,0.0,0.0
+e375,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-30#None,MAT-30_Plant2#None,Plant2#None,PO_ITEM--111-1#None,,SUPPLIER--18#None,41.0,41.0
+e430,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-34#None,MAT-34_Plant1#None,Plant1#None,PO_ITEM--100-5#None,,SUPPLIER--15#None,52.0,52.0
+e487,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-38#None,MAT-38_Plant4#None,Plant4#None,PO_ITEM--100-3#None,,SUPPLIER--15#None,110.0,110.0
+e585,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-46#None,MAT-46_Plant1#None,Plant1#None,PO_ITEM--100-4#None,,SUPPLIER--15#None,44.0,44.0
+e720,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-54#None,MAT-54_Plant4#None,Plant4#None,PO_ITEM--100-1#None,,SUPPLIER--15#None,28.0,28.0
+e895,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-67#None,MAT-67_Plant5#None,Plant5#None,PO_ITEM--111-3#None,,SUPPLIER--18#None,13.0,13.0
+e1135,Create Purchase Order Item,2024-08-22T00:00:00+00:00,,MAT-85#None,MAT-85_Plant4#None,Plant4#None,PO_ITEM--111-2#None,,SUPPLIER--18#None,50.0,50.0
+e135,Create Sales Order Item,2024-08-23T00:00:00+00:00,CUSTOMER--15#None,MAT-11#None,MAT-11_Plant2#None,Plant2#None,,SO_ITEM--31-2#None,,49.0,49.0
+e775,Goods Receipt,2024-08-23T00:00:00+00:00,,MAT-58#None,MAT-58_Plant4#None,Plant4#None,PO_ITEM--101-5#None,,SUPPLIER--24#None,0.0,1.0
+e1196,Create Sales Order Item,2024-08-23T00:00:00+00:00,CUSTOMER--15#None,MAT-90#None,MAT-90_Plant2#None,Plant2#None,,SO_ITEM--31-1#None,,1.0,1.0
+e607,Create Sales Order Item,2024-08-24T00:00:00+00:00,CUSTOMER--18#None,MAT-47#None,MAT-47_Plant2#None,Plant2#None,,SO_ITEM--14-1#None,,84.0,84.0
+e284,Create Purchase Order Item,2024-08-26T00:00:00+00:00,,MAT-23#None,MAT-23_Plant2#None,Plant2#None,PO_ITEM--91-1#None,,SUPPLIER--10#None,13.0,13.0
+e301,Create Purchase Order Item,2024-08-26T00:00:00+00:00,,MAT-24#None,MAT-24_Plant4#None,Plant4#None,PO_ITEM--73-1#None,,SUPPLIER--28#None,0.0,0.0
+e351,Create Purchase Order Item,2024-08-26T00:00:00+00:00,,MAT-28#None,MAT-28_Plant1#None,Plant1#None,PO_ITEM--91-2#None,,SUPPLIER--10#None,0.0,0.0
+e643,Create Purchase Order Item,2024-08-26T00:00:00+00:00,,MAT-49#None,MAT-49_Plant2#None,Plant2#None,PO_ITEM--73-2#None,,SUPPLIER--28#None,0.0,0.0
+e879,Create Purchase Order Item,2024-08-27T00:00:00+00:00,,MAT-66#None,MAT-66_Plant2#None,Plant2#None,PO_ITEM--69-2#None,,SUPPLIER--17#None,0.0,0.0
+e1033,Create Purchase Order Item,2024-08-27T00:00:00+00:00,,MAT-77#None,MAT-77_Plant2#None,Plant2#None,PO_ITEM--69-1#None,,SUPPLIER--17#None,61.0,61.0
+e222,Goods Issue,2024-08-28T00:00:00+00:00,CUSTOMER--807614#None,MAT-18#None,MAT-18_Plant1#None,Plant1#None,,,,1.0,0.0
+e376,Goods Receipt,2024-08-28T00:00:00+00:00,,MAT-30#None,MAT-30_Plant3#None,Plant3#None,PO_ITEM--81-1#None,,SUPPLIER--19#None,41.0,84.0
+e671,Create Purchase Order Item,2024-08-28T00:00:00+00:00,,MAT-51#None,MAT-51_Plant4#None,Plant4#None,PO_ITEM--64-2#None,,SUPPLIER--16#None,66.0,66.0
+e1266,Create Purchase Order Item,2024-08-28T00:00:00+00:00,,MAT-96#None,MAT-96_Plant2#None,Plant2#None,PO_ITEM--64-1#None,,SUPPLIER--16#None,0.0,0.0
+e327,Goods Receipt,2024-08-29T00:00:00+00:00,,MAT-26#None,MAT-26_Plant4#None,Plant4#None,PO_ITEM--14-3#None,,SUPPLIER--10#None,0.0,1.0
+e1197,Create Purchase Order Item,2024-08-30T00:00:00+00:00,,MAT-90#None,MAT-90_Plant5#None,Plant5#None,PO_ITEM--26-1#None,,SUPPLIER--16#None,1.0,1.0
+e532,Goods Issue,2024-08-31T00:00:00+00:00,CUSTOMER--853223#None,MAT-42#None,MAT-42_Plant3#None,Plant3#None,,,,59.0,0.0
+e352,Create Sales Order Item,2024-09-01T00:00:00+00:00,CUSTOMER--29#None,MAT-28#None,MAT-28_Plant5#None,Plant5#None,,SO_ITEM--146-3#None,,0.0,0.0
+e608,Create Sales Order Item,2024-09-01T00:00:00+00:00,CUSTOMER--29#None,MAT-47#None,MAT-47_Plant4#None,Plant4#None,,SO_ITEM--146-2#None,,84.0,84.0
+e659,Create Sales Order Item,2024-09-01T00:00:00+00:00,CUSTOMER--29#None,MAT-50#None,MAT-50_Plant4#None,Plant4#None,,SO_ITEM--146-1#None,,108.0,108.0
+e862,Create Sales Order Item,2024-09-01T00:00:00+00:00,CUSTOMER--29#None,MAT-64#None,MAT-64_Plant2#None,Plant2#None,,SO_ITEM--146-4#None,,146.0,146.0
+e896,Goods Issue,2024-09-01T00:00:00+00:00,CUSTOMER--647970#None,MAT-67#None,MAT-67_Plant1#None,Plant1#None,,,,13.0,3.0
+e446,Create Purchase Order Item,2024-09-02T00:00:00+00:00,,MAT-35#None,MAT-35_Plant3#None,Plant3#None,PO_ITEM--6-4#None,,SUPPLIER--5#None,0.0,0.0
+e561,Create Purchase Order Item,2024-09-02T00:00:00+00:00,,MAT-44#None,MAT-44_Plant4#None,Plant4#None,PO_ITEM--6-3#None,,SUPPLIER--5#None,45.0,45.0
+e609,Create Purchase Order Item,2024-09-02T00:00:00+00:00,,MAT-47#None,MAT-47_Plant5#None,Plant5#None,PO_ITEM--6-5#None,,SUPPLIER--5#None,84.0,84.0
+e909,Create Purchase Order Item,2024-09-02T00:00:00+00:00,,MAT-68#None,MAT-68_Plant3#None,Plant3#None,PO_ITEM--6-1#None,,SUPPLIER--5#None,0.0,0.0
+e1142,Create Purchase Order Item,2024-09-02T00:00:00+00:00,,MAT-86#None,MAT-86_Plant1#None,Plant1#None,PO_ITEM--6-2#None,,SUPPLIER--5#None,0.0,0.0
+e37,Create Sales Order Item,2024-09-03T00:00:00+00:00,CUSTOMER--17#None,MAT-4#None,MAT-4_Plant2#None,Plant2#None,,SO_ITEM--83-2#None,,64.0,64.0
+e194,Create Sales Order Item,2024-09-03T00:00:00+00:00,CUSTOMER--17#None,MAT-15#None,MAT-15_Plant3#None,Plant3#None,,SO_ITEM--83-1#None,,4.0,4.0
+e926,Create Sales Order Item,2024-09-03T00:00:00+00:00,CUSTOMER--17#None,MAT-69#None,MAT-69_Plant3#None,Plant3#None,,SO_ITEM--83-3#None,,0.0,0.0
+e179,Goods Issue,2024-09-04T00:00:00+00:00,CUSTOMER--192021#None,MAT-14#None,MAT-14_Plant4#None,Plant4#None,,,,86.0,0.0
+e488,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--44#None,MAT-38#None,MAT-38_Plant5#None,Plant5#None,,SO_ITEM--66-1#None,,159.0,159.0
+e501,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--44#None,MAT-39#None,MAT-39_Plant5#None,Plant5#None,,SO_ITEM--66-4#None,,0.0,0.0
+e546,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--44#None,MAT-43#None,MAT-43_Plant3#None,Plant3#None,,SO_ITEM--66-5#None,,0.0,0.0
+e644,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--44#None,MAT-49#None,MAT-49_Plant2#None,Plant2#None,,SO_ITEM--66-2#None,,0.0,0.0
+e721,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--49#None,MAT-54#None,MAT-54_Plant5#None,Plant5#None,,SO_ITEM--62-2#None,,28.0,28.0
+e733,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--49#None,MAT-55#None,MAT-55_Plant2#None,Plant2#None,,SO_ITEM--62-1#None,,96.0,96.0
+e837,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--44#None,MAT-63#None,MAT-63_Plant1#None,Plant1#None,,SO_ITEM--66-3#None,,0.0,0.0
+e1156,Goods Issue,2024-09-04T00:00:00+00:00,CUSTOMER--931226#None,MAT-87#None,MAT-87_Plant2#None,Plant2#None,,,,21.0,0.0
+e1198,Create Sales Order Item,2024-09-04T00:00:00+00:00,CUSTOMER--49#None,MAT-90#None,MAT-90_Plant4#None,Plant4#None,,SO_ITEM--62-3#None,,1.0,1.0
+e994,Goods Issue,2024-09-05T00:00:00+00:00,CUSTOMER--875934#None,MAT-74#None,MAT-74_Plant3#None,Plant3#None,,,,34.0,0.0
+e353,Create Sales Order Item,2024-09-06T00:00:00+00:00,CUSTOMER--12#None,MAT-28#None,MAT-28_Plant3#None,Plant3#None,,SO_ITEM--93-5#None,,0.0,0.0
+e645,Create Purchase Suggestion Item,2024-09-06T00:00:00+00:00,,MAT-49#None,MAT-49_Plant2#None,Plant2#None,,,,0.0,0.0
+e703,Create Sales Order Item,2024-09-06T00:00:00+00:00,CUSTOMER--12#None,MAT-53#None,MAT-53_Plant3#None,Plant3#None,,SO_ITEM--93-1#None,,0.0,0.0
+e760,Create Sales Order Item,2024-09-06T00:00:00+00:00,CUSTOMER--12#None,MAT-57#None,MAT-57_Plant2#None,Plant2#None,,SO_ITEM--93-4#None,,0.0,0.0
+e880,Create Sales Order Item,2024-09-06T00:00:00+00:00,CUSTOMER--12#None,MAT-66#None,MAT-66_Plant4#None,Plant4#None,,SO_ITEM--93-2#None,,0.0,0.0
+e1184,Create Sales Order Item,2024-09-06T00:00:00+00:00,CUSTOMER--12#None,MAT-89#None,MAT-89_Plant5#None,Plant5#None,,SO_ITEM--93-3#None,,0.0,0.0
+e672,Create Purchase Order Item,2024-09-07T00:00:00+00:00,,MAT-51#None,MAT-51_Plant4#None,Plant4#None,PO_ITEM--107-4#None,,SUPPLIER--11#None,66.0,66.0
+e794,Create Purchase Order Item,2024-09-07T00:00:00+00:00,,MAT-60#None,MAT-60_Plant2#None,Plant2#None,PO_ITEM--107-3#None,,SUPPLIER--11#None,0.0,0.0
+e910,Create Purchase Order Item,2024-09-07T00:00:00+00:00,,MAT-68#None,MAT-68_Plant1#None,Plant1#None,PO_ITEM--107-1#None,,SUPPLIER--11#None,0.0,0.0
+e1226,Create Purchase Order Item,2024-09-07T00:00:00+00:00,,MAT-93#None,MAT-93_Plant2#None,Plant2#None,PO_ITEM--107-2#None,,SUPPLIER--11#None,0.0,0.0
+e377,Create Purchase Order Item,2024-09-08T00:00:00+00:00,,MAT-30#None,MAT-30_Plant4#None,Plant4#None,PO_ITEM--124-1#None,,SUPPLIER--16#None,84.0,84.0
+e489,Create Purchase Order Item,2024-09-08T00:00:00+00:00,,MAT-38#None,MAT-38_Plant3#None,Plant3#None,PO_ITEM--124-2#None,,SUPPLIER--16#None,110.0,110.0
+e734,Goods Issue,2024-09-08T00:00:00+00:00,CUSTOMER--740339#None,MAT-55#None,MAT-55_Plant4#None,Plant4#None,,,,96.0,87.0
+e62,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--1#None,MAT-6#None,MAT-6_Plant2#None,Plant2#None,,SO_ITEM--13-4#None,,62.0,62.0
+e121,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--1#None,MAT-10#None,MAT-10_Plant3#None,Plant3#None,,SO_ITEM--13-2#None,,37.0,37.0
+e586,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--47#None,MAT-46#None,MAT-46_Plant5#None,Plant5#None,,SO_ITEM--128-4#None,,44.0,44.0
+e646,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--1#None,MAT-49#None,MAT-49_Plant3#None,Plant3#None,,SO_ITEM--13-5#None,,0.0,0.0
+e704,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--47#None,MAT-53#None,MAT-53_Plant4#None,Plant4#None,,SO_ITEM--128-3#None,,0.0,0.0
+e838,Create Purchase Suggestion Item,2024-09-09T00:00:00+00:00,,MAT-63#None,MAT-63_Plant5#None,Plant5#None,,,,0.0,0.0
+e897,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--1#None,MAT-67#None,MAT-67_Plant3#None,Plant3#None,,SO_ITEM--13-1#None,,0.0,0.0
+e1024,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--1#None,MAT-76#None,MAT-76_Plant1#None,Plant1#None,,SO_ITEM--13-3#None,,0.0,0.0
+e1071,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--47#None,MAT-80#None,MAT-80_Plant3#None,Plant3#None,,SO_ITEM--128-2#None,,0.0,0.0
+e1157,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--47#None,MAT-87#None,MAT-87_Plant2#None,Plant2#None,,SO_ITEM--128-1#None,,0.0,0.0
+e1185,Create Sales Order Item,2024-09-09T00:00:00+00:00,CUSTOMER--47#None,MAT-89#None,MAT-89_Plant2#None,Plant2#None,,SO_ITEM--128-5#None,,0.0,0.0
+e223,Goods Issue,2024-09-10T00:00:00+00:00,CUSTOMER--479873#None,MAT-18#None,MAT-18_Plant4#None,Plant4#None,,,,66.0,0.0
+e660,Goods Issue,2024-09-10T00:00:00+00:00,CUSTOMER--280443#None,MAT-50#None,MAT-50_Plant2#None,Plant2#None,,,,108.0,78.0
+e1059,Create Purchase Order Item,2024-09-10T00:00:00+00:00,,MAT-79#None,MAT-79_Plant1#None,Plant1#None,PO_ITEM--36-1#None,,SUPPLIER--27#None,32.0,32.0
+e1114,Goods Receipt,2024-09-10T00:00:00+00:00,,MAT-83#None,MAT-83_Plant2#None,Plant2#None,PO_ITEM--26-3#None,,SUPPLIER--16#None,56.0,106.0
+e31,Goods Issue,2024-09-11T00:00:00+00:00,CUSTOMER--361353#None,MAT-3#None,MAT-3_Plant2#None,Plant2#None,,,,92.0,3.0
+e224,Create Purchase Order Item,2024-09-11T00:00:00+00:00,,MAT-18#None,MAT-18_Plant2#None,Plant2#None,PO_ITEM--87-2#None,,SUPPLIER--23#None,0.0,0.0
+e562,Create Purchase Order Item,2024-09-11T00:00:00+00:00,,MAT-44#None,MAT-44_Plant2#None,Plant2#None,PO_ITEM--87-3#None,,SUPPLIER--23#None,45.0,45.0
+e824,Create Purchase Order Item,2024-09-11T00:00:00+00:00,,MAT-62#None,MAT-62_Plant2#None,Plant2#None,PO_ITEM--87-4#None,,SUPPLIER--23#None,110.0,110.0
+e872,Create Purchase Order Item,2024-09-11T00:00:00+00:00,,MAT-65#None,MAT-65_Plant1#None,Plant1#None,PO_ITEM--87-5#None,,SUPPLIER--23#None,0.0,0.0
+e1025,Create Purchase Order Item,2024-09-11T00:00:00+00:00,,MAT-76#None,MAT-76_Plant1#None,Plant1#None,PO_ITEM--87-1#None,,SUPPLIER--23#None,0.0,0.0
+e225,Create Sales Order Item,2024-09-12T00:00:00+00:00,CUSTOMER--21#None,MAT-18#None,MAT-18_Plant2#None,Plant2#None,,SO_ITEM--187-1#None,,0.0,0.0
+e328,Create Sales Order Item,2024-09-12T00:00:00+00:00,CUSTOMER--21#None,MAT-26#None,MAT-26_Plant5#None,Plant5#None,,SO_ITEM--187-3#None,,0.0,0.0
+e418,Create Sales Order Item,2024-09-12T00:00:00+00:00,CUSTOMER--21#None,MAT-33#None,MAT-33_Plant3#None,Plant3#None,,SO_ITEM--187-2#None,,40.0,40.0
+e563,Create Sales Order Item,2024-09-12T00:00:00+00:00,CUSTOMER--21#None,MAT-44#None,MAT-44_Plant4#None,Plant4#None,,SO_ITEM--187-5#None,,45.0,45.0
+e825,Goods Receipt,2024-09-12T00:00:00+00:00,,MAT-62#None,MAT-62_Plant3#None,Plant3#None,PO_ITEM--110-4#None,,SUPPLIER--25#None,110.0,166.0
+e1267,Create Sales Order Item,2024-09-12T00:00:00+00:00,CUSTOMER--21#None,MAT-96#None,MAT-96_Plant3#None,Plant3#None,,SO_ITEM--187-4#None,,0.0,0.0
+e447,Create Sales Order Item,2024-09-13T00:00:00+00:00,CUSTOMER--44#None,MAT-35#None,MAT-35_Plant3#None,Plant3#None,,SO_ITEM--160-3#None,,0.0,0.0
+e661,Create Sales Order Item,2024-09-13T00:00:00+00:00,CUSTOMER--44#None,MAT-50#None,MAT-50_Plant1#None,Plant1#None,,SO_ITEM--160-4#None,,78.0,78.0
+e705,Create Purchase Order Item,2024-09-13T00:00:00+00:00,,MAT-53#None,MAT-53_Plant3#None,Plant3#None,PO_ITEM--82-1#None,,SUPPLIER--29#None,0.0,0.0
+e804,Create Sales Order Item,2024-09-13T00:00:00+00:00,CUSTOMER--44#None,MAT-61#None,MAT-61_Plant4#None,Plant4#None,,SO_ITEM--160-2#None,,0.0,0.0
+e826,Create Purchase Order Item,2024-09-13T00:00:00+00:00,,MAT-62#None,MAT-62_Plant5#None,Plant5#None,PO_ITEM--82-2#None,,SUPPLIER--29#None,166.0,166.0
+e1026,Create Purchase Order Item,2024-09-13T00:00:00+00:00,,MAT-76#None,MAT-76_Plant2#None,Plant2#None,PO_ITEM--82-3#None,,SUPPLIER--29#None,0.0,0.0
+e1072,Create Sales Order Item,2024-09-13T00:00:00+00:00,CUSTOMER--44#None,MAT-80#None,MAT-80_Plant1#None,Plant1#None,,SO_ITEM--160-1#None,,0.0,0.0
+e344,Goods Receipt,2024-09-14T00:00:00+00:00,,MAT-27#None,MAT-27_Plant3#None,Plant3#None,PO_ITEM--9-1#None,,SUPPLIER--27#None,0.0,16.0
+e1227,Goods Issue,2024-09-14T00:00:00+00:00,CUSTOMER--545777#None,MAT-93#None,MAT-93_Plant4#None,Plant4#None,,,,12.0,0.0
+e749,Goods Issue,2024-09-15T00:00:00+00:00,CUSTOMER--348772#None,MAT-56#None,MAT-56_Plant4#None,Plant4#None,,,,80.0,0.0
+e1215,Goods Receipt,2024-09-15T00:00:00+00:00,,MAT-92#None,MAT-92_Plant4#None,Plant4#None,PO_ITEM--63-4#None,,SUPPLIER--26#None,39.0,119.0
+e13,Create Purchase Order Item,2024-09-16T00:00:00+00:00,,MAT-1#None,MAT-1_Plant1#None,Plant1#None,PO_ITEM--51-4#None,,SUPPLIER--1#None,0.0,0.0
+e38,Create Purchase Order Item,2024-09-16T00:00:00+00:00,,MAT-4#None,MAT-4_Plant5#None,Plant5#None,PO_ITEM--51-3#None,,SUPPLIER--1#None,64.0,64.0
+e195,Create Purchase Order Item,2024-09-16T00:00:00+00:00,,MAT-15#None,MAT-15_Plant4#None,Plant4#None,PO_ITEM--51-1#None,,SUPPLIER--1#None,4.0,4.0
+e964,Create Purchase Order Item,2024-09-16T00:00:00+00:00,,MAT-72#None,MAT-72_Plant3#None,Plant3#None,PO_ITEM--51-2#None,,SUPPLIER--1#None,0.0,0.0
+e1084,Create Purchase Order Item,2024-09-16T00:00:00+00:00,,MAT-81#None,MAT-81_Plant3#None,Plant3#None,PO_ITEM--74-2#None,,SUPPLIER--2#None,0.0,0.0
+e1204,Create Purchase Order Item,2024-09-16T00:00:00+00:00,,MAT-91#None,MAT-91_Plant2#None,Plant2#None,PO_ITEM--74-3#None,,SUPPLIER--2#None,0.0,0.0
+e1228,Create Purchase Order Item,2024-09-16T00:00:00+00:00,,MAT-93#None,MAT-93_Plant1#None,Plant1#None,PO_ITEM--74-1#None,,SUPPLIER--2#None,0.0,0.0
+e1276,Goods Receipt,2024-09-16T00:00:00+00:00,,MAT-97#None,MAT-97_Plant1#None,Plant1#None,PO_ITEM--52-3#None,,SUPPLIER--29#None,0.0,72.0
+e105,Create Purchase Suggestion Item,2024-09-17T00:00:00+00:00,,MAT-9#None,MAT-9_Plant5#None,Plant5#None,,,,36.0,36.0
+e625,Create Sales Order Item,2024-09-17T00:00:00+00:00,CUSTOMER--4#None,MAT-48#None,MAT-48_Plant4#None,Plant4#None,,SO_ITEM--103-2#None,,0.0,0.0
+e735,Create Sales Order Item,2024-09-17T00:00:00+00:00,CUSTOMER--4#None,MAT-55#None,MAT-55_Plant1#None,Plant1#None,,SO_ITEM--103-3#None,,87.0,87.0
+e995,Create Sales Order Item,2024-09-17T00:00:00+00:00,CUSTOMER--4#None,MAT-74#None,MAT-74_Plant3#None,Plant3#None,,SO_ITEM--103-1#None,,0.0,0.0
+e1277,Goods Issue,2024-09-17T00:00:00+00:00,CUSTOMER--330147#None,MAT-97#None,MAT-97_Plant4#None,Plant4#None,,,,72.0,20.0
+e502,Goods Issue,2024-09-18T00:00:00+00:00,CUSTOMER--550729#None,MAT-39#None,MAT-39_Plant4#None,Plant4#None,,,,73.0,0.0
+e391,Create Sales Order Item,2024-09-19T00:00:00+00:00,CUSTOMER--19#None,MAT-31#None,MAT-31_Plant1#None,Plant1#None,,SO_ITEM--179-1#None,,0.0,0.0
+e1309,Goods Receipt,2024-09-19T00:00:00+00:00,,MAT-100#None,MAT-100_Plant1#None,Plant1#None,PO_ITEM--137-5#None,,SUPPLIER--18#None,0.0,47.0
+e147,Goods Issue,2024-09-20T00:00:00+00:00,CUSTOMER--591492#None,MAT-12#None,MAT-12_Plant5#None,Plant5#None,,,,97.0,0.0
+e576,Goods Issue,2024-09-20T00:00:00+00:00,CUSTOMER--802360#None,MAT-45#None,MAT-45_Plant3#None,Plant3#None,,,,95.0,0.0
+e647,Goods Receipt,2024-09-20T00:00:00+00:00,,MAT-49#None,MAT-49_Plant4#None,Plant4#None,PO_ITEM--21-4#None,,SUPPLIER--13#None,0.0,30.0
+e1166,Goods Issue,2024-09-20T00:00:00+00:00,CUSTOMER--589614#None,MAT-88#None,MAT-88_Plant3#None,Plant3#None,,,,39.0,0.0
+e378,Goods Receipt,2024-09-21T00:00:00+00:00,,MAT-30#None,MAT-30_Plant2#None,Plant2#None,PO_ITEM--135-3#None,,SUPPLIER--6#None,84.0,167.0
+e63,Create Purchase Order Item,2024-09-23T00:00:00+00:00,,MAT-6#None,MAT-6_Plant2#None,Plant2#None,PO_ITEM--79-2#None,,SUPPLIER--3#None,62.0,62.0
+e91,Create Purchase Order Item,2024-09-23T00:00:00+00:00,,MAT-8#None,MAT-8_Plant2#None,Plant2#None,PO_ITEM--79-1#None,,SUPPLIER--3#None,0.0,0.0
+e106,Create Purchase Order Item,2024-09-23T00:00:00+00:00,,MAT-9#None,MAT-9_Plant4#None,Plant4#None,PO_ITEM--93-2#None,,SUPPLIER--29#None,36.0,36.0
+e226,Create Purchase Order Item,2024-09-23T00:00:00+00:00,,MAT-18#None,MAT-18_Plant5#None,Plant5#None,PO_ITEM--93-1#None,,SUPPLIER--29#None,0.0,0.0
+e1102,Create Purchase Order Item,2024-09-23T00:00:00+00:00,,MAT-82#None,MAT-82_Plant4#None,Plant4#None,PO_ITEM--93-4#None,,SUPPLIER--29#None,0.0,0.0
+e1293,Create Purchase Order Item,2024-09-23T00:00:00+00:00,,MAT-98#None,MAT-98_Plant4#None,Plant4#None,PO_ITEM--93-3#None,,SUPPLIER--29#None,13.0,13.0
+e32,Create Purchase Order Item,2024-09-24T00:00:00+00:00,,MAT-3#None,MAT-3_Plant5#None,Plant5#None,PO_ITEM--143-2#None,,SUPPLIER--17#None,3.0,3.0
+e122,Goods Issue,2024-09-24T00:00:00+00:00,CUSTOMER--881471#None,MAT-10#None,MAT-10_Plant3#None,Plant3#None,,,,37.0,0.0
+e273,Create Purchase Order Item,2024-09-24T00:00:00+00:00,,MAT-22#None,MAT-22_Plant3#None,Plant3#None,PO_ITEM--143-3#None,,SUPPLIER--17#None,23.0,23.0
+e354,Create Purchase Order Item,2024-09-24T00:00:00+00:00,,MAT-28#None,MAT-28_Plant2#None,Plant2#None,PO_ITEM--143-1#None,,SUPPLIER--17#None,0.0,0.0
+e673,Create Purchase Order Item,2024-09-24T00:00:00+00:00,,MAT-51#None,MAT-51_Plant1#None,Plant1#None,PO_ITEM--143-5#None,,SUPPLIER--17#None,41.0,41.0
+e795,Create Purchase Order Item,2024-09-24T00:00:00+00:00,,MAT-60#None,MAT-60_Plant2#None,Plant2#None,PO_ITEM--143-4#None,,SUPPLIER--17#None,0.0,0.0
+e22,Create Purchase Order Item,2024-09-25T00:00:00+00:00,,MAT-2#None,MAT-2_Plant3#None,Plant3#None,PO_ITEM--133-1#None,,SUPPLIER--20#None,0.0,0.0
+e161,Create Sales Order Item,2024-09-25T00:00:00+00:00,CUSTOMER--17#None,MAT-13#None,MAT-13_Plant3#None,Plant3#None,,SO_ITEM--87-2#None,,60.0,60.0
+e227,Create Purchase Order Item,2024-09-25T00:00:00+00:00,,MAT-18#None,MAT-18_Plant4#None,Plant4#None,PO_ITEM--133-4#None,,SUPPLIER--20#None,0.0,0.0
+e285,Create Purchase Order Item,2024-09-25T00:00:00+00:00,,MAT-23#None,MAT-23_Plant5#None,Plant5#None,PO_ITEM--133-3#None,,SUPPLIER--20#None,13.0,13.0
+e379,Create Sales Order Item,2024-09-25T00:00:00+00:00,CUSTOMER--17#None,MAT-30#None,MAT-30_Plant4#None,Plant4#None,,SO_ITEM--87-1#None,,167.0,167.0
+e431,Create Sales Order Item,2024-09-25T00:00:00+00:00,CUSTOMER--17#None,MAT-34#None,MAT-34_Plant5#None,Plant5#None,,SO_ITEM--87-3#None,,52.0,52.0
+e610,Create Sales Order Item,2024-09-25T00:00:00+00:00,CUSTOMER--17#None,MAT-47#None,MAT-47_Plant2#None,Plant2#None,,SO_ITEM--87-4#None,,84.0,84.0
+e736,Goods Receipt,2024-09-25T00:00:00+00:00,,MAT-55#None,MAT-55_Plant1#None,Plant1#None,PO_ITEM--72-4#None,,SUPPLIER--4#None,87.0,182.0
+e881,Create Purchase Order Item,2024-09-25T00:00:00+00:00,,MAT-66#None,MAT-66_Plant1#None,Plant1#None,PO_ITEM--68-1#None,,SUPPLIER--19#None,0.0,0.0
+e965,Create Purchase Order Item,2024-09-25T00:00:00+00:00,,MAT-72#None,MAT-72_Plant3#None,Plant3#None,PO_ITEM--133-5#None,,SUPPLIER--20#None,0.0,0.0
+e1120,Create Purchase Order Item,2024-09-25T00:00:00+00:00,,MAT-84#None,MAT-84_Plant3#None,Plant3#None,PO_ITEM--133-2#None,,SUPPLIER--20#None,14.0,14.0
