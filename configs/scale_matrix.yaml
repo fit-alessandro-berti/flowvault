@@ -1,20 +1,20 @@
 profiles:
-  - id: inv-5k
+  - id: inv-75k
     scenario: inventory
-    target_events: 5000
-    leading_objects: 50
-  - id: inv-20k
+    target_events: 75000
+    leading_objects: 750
+  - id: inv-300k
     scenario: inventory
-    target_events: 20000
-    leading_objects: 200
-  - id: mfg-5k
+    target_events: 300000
+    leading_objects: 3000
+  - id: mfg-75k
     scenario: manufacturing
-    target_events: 5000
-    leading_objects: 5
-  - id: mfg-20k
+    target_events: 75000
+    leading_objects: 75
+  - id: mfg-300k
     scenario: manufacturing
-    target_events: 20000
-    leading_objects: 10
+    target_events: 300000
+    leading_objects: 150
 
 repetitions: 1
 warmup_repetitions: 0

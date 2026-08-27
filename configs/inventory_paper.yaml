@@ -2,7 +2,7 @@ scenario: inventory
 profile: paper
 seed: 20260826
 start_time: "2023-01-01T00:00:00Z"
-horizon_days: 60
+horizon_days: 731
 
 entities:
   materials: 24

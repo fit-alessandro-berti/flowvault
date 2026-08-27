@@ -2,7 +2,7 @@ scenario: manufacturing
 profile: paper
 seed: 20260826
 start_time: "2024-01-01T00:00:00Z"
-horizon_days: 30
+horizon_days: 450
 telemetry_interval_minutes: 120
 
 entities:
