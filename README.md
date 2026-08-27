@@ -15,6 +15,7 @@ rust/ocel_core/          Rust OCEL parser/exporter/filtering/analysis core
 rust/ocel_core/tests/    Rust integration tests for the public core API
 rust/ocel_wasm/          Thin wasm-bindgen adapter compiled with wasm-pack
 files/ocel2/             Example OCEL 2.0 files in every supported format
+results/saocpm_15x/     Reproducible 15x evaluation logs, analyses, and tables (Git LFS)
 public/wasm/             Generated wasm-pack output during builds
 dist/flowvault/browser/  Static production build output
 ```
@@ -182,6 +183,38 @@ npm start
 ```
 
 The npm scripts set `CARGO_HOME=$PWD/.cargo-home` so Cargo does not need to write to a global system cache.
+
+## Evaluation Results and Git LFS
+
+The complete enlarged evaluation bundle is stored in `results/saocpm_15x/`. It contains the
+generated object-centric event logs, behavior-only logs, ground truth, validation records,
+analysis outputs, robustness results, 75k/300k-event scalability runs, publication tables, and
+measured runtime summary. The paper runs contain 46,256 inventory events and 43,458 manufacturing
+events; their complete generation, validation, and analysis pipelines took 87.071 seconds and
+72.957 seconds respectively.
+
+The bundle is approximately 593 MB and is tracked through Git LFS. Install Git LFS before cloning
+or pulling these results:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+A normal clone downloads LFS objects when Git LFS is installed. If the repository was cloned
+without Git LFS, install it and run `git lfs pull` from the repository root. The most important
+paths are:
+
+- `results/saocpm_15x/inventory-paper/observed.ocel.json`
+- `results/saocpm_15x/manufacturing-paper/observed.ocel.json`
+- `results/saocpm_15x/*-paper/analytics/`
+- `results/saocpm_15x/robustness/`
+- `results/saocpm_15x/benchmark/`
+- `results/saocpm_15x/tables/`
+- `results/saocpm_15x/runtime_summary.json`
+
+The corresponding experiment definitions are in `configs/inventory_paper.yaml`,
+`configs/manufacturing_paper.yaml`, and `configs/scale_matrix.yaml`.
 
 ## Testing
 
