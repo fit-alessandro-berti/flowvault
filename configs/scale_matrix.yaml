@@ -1,0 +1,40 @@
+profiles:
+  - id: inv-5k
+    scenario: inventory
+    target_events: 5000
+    leading_objects: 50
+  - id: inv-20k
+    scenario: inventory
+    target_events: 20000
+    leading_objects: 200
+  - id: mfg-5k
+    scenario: manufacturing
+    target_events: 5000
+    leading_objects: 5
+  - id: mfg-20k
+    scenario: manufacturing
+    target_events: 20000
+    leading_objects: 10
+
+repetitions: 1
+warmup_repetitions: 0
+operations:
+  - import
+  - apply_state_query
+  - state_transition_kpis
+  - state_patterns
+  - state_detection_and_assignments
+record:
+  - wall_time_ms
+  - cpu_time_ms
+  - peak_rss_bytes
+  - input_bytes
+  - output_bytes
+  - event_count
+  - object_count
+  - leading_object_count
+  - e2o_count
+  - o2o_count
+  - feature_count
+  - window_count
+  - pattern_count

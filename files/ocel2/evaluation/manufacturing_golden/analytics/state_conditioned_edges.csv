@@ -1,0 +1,50 @@
+activity,next_activity,state,frequency,median_waiting_seconds
+Automatic Stop,Inspection Performed,Down,1,43200.0
+Automatic Stop,Machine Restarted,Down,1,1790.0
+Automatic Stop,Work Order Created,Down,2,21725.0
+Calibration Performed,Quality Hold Released,Quality Hold,1,10.0
+Component Replaced,Inspection Performed,Down,1,10.0
+Component Replaced,Simulation End Snapshot,Running,1,2418606.0
+Component Replaced,Test Failed,Down,1,1200.0
+Critical Alarm Raised,Automatic Stop,Degraded,2,10.0
+Defect Detected,Quality Hold Started,Degraded,1,10.0
+Diagnosis Performed,Component Replaced,Down,1,10.0
+Diagnosis Performed,Part Unavailable,Down,1,300.0
+Initialize Machine,Automatic Stop,Running,2,86550.0
+Initialize Machine,Critical Alarm Raised,Running,1,86700.0
+Initialize Machine,Maintenance Request Created,Running,1,86800.0
+Initialize Machine,Sensor Snapshot,Running,2,86655.0
+Initialize Machine,Setup Completed,Setup,1,87000.0
+Initialize Machine,Setup Started,Idle,1,87100.0
+Inspection Performed,Calibration Performed,Quality Hold,1,10.0
+Inspection Performed,Test Run Completed,Down,2,10.0
+Inspection Performed,Test Run Completed,Running,1,3.0
+Machine Restarted,Maintenance Completed,Recovery,1,10.0
+Machine Restarted,Operation Completed,Recovery,3,6900.0
+Machine Restarted,Simulation End Snapshot,Recovery,1,2503503.0
+Maintenance Completed,Simulation End Snapshot,Recovery,1,2505174.0
+Maintenance Completed,Simulation End Snapshot,Running,1,2411990.0
+Maintenance Request Created,Critical Alarm Raised,Degraded,1,10.0
+Maintenance Request Created,Maintenance Started,Running,1,10.0
+Maintenance Started,Diagnosis Performed,Down,2,155.0
+Maintenance Started,Inspection Performed,Running,1,5.0
+Operation Completed,Maintenance Completed,Running,1,10.0
+Operation Completed,Simulation End Snapshot,Running,1,2390301.0
+Operation Completed,Warning Alarm Raised,Running,1,3600.0
+Part Unavailable,Component Replaced,Down,1,13800.0
+Quality Hold Released,Simulation End Snapshot,Degraded,1,2505055.0
+Quality Hold Started,Inspection Performed,Quality Hold,1,10.0
+Repair Performed,Test Run Completed,Down,1,3600.0
+Sensor Snapshot,Defect Detected,Degraded,1,10.0
+Sensor Snapshot,Sensor Snapshot,Unknown,1,86400.0
+Sensor Snapshot,Simulation End Snapshot,Running,1,2332107.0
+Sensor Snapshot,Warning Alarm Raised,Degraded,1,10.0
+Setup Completed,Component Replaced,Running,1,86400.0
+Setup Completed,Sensor Snapshot,Running,1,86390.0
+Setup Started,Setup Completed,Setup,1,10.0
+Test Failed,Repair Performed,Down,1,2400.0
+Test Run Completed,Machine Restarted,Down,3,300.0
+Test Run Completed,Machine Restarted,Running,1,2.0
+Warning Alarm Raised,Maintenance Request Created,Degraded,1,10.0
+Warning Alarm Raised,Simulation End Snapshot,Degraded,1,2411802.0
+Work Order Created,Maintenance Started,Down,2,64655.0

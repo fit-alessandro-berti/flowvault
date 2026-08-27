@@ -1,0 +1,67 @@
+scenario: manufacturing
+profile: paper
+seed: 20260826
+start_time: "2024-01-01T00:00:00Z"
+horizon_days: 30
+telemetry_interval_minutes: 120
+
+entities:
+  machines: 8
+  machine_families: 2
+  operators: 10
+  maintenance_teams: 3
+  component_families: 3
+  material_lot_suppliers: 3
+
+production:
+  utilization_range: [0.30, 0.95]
+  production_orders_per_machine_day: [0.2, 4.0]
+  setup_probability: 0.30
+  operation_duration_hours: [0.25, 16.0]
+
+health:
+  initial_health: [0.72, 1.00]
+  degraded_entry_health: 0.65
+  degraded_exit_health: 0.75
+  degraded_entry_samples: 2
+  degraded_exit_samples: 4
+  failure_hazard_scale: 1.0
+  sensor_noise_multiplier: 1.0
+
+maintenance:
+  warning_request_probability: 0.55
+  critical_request_sla_minutes: 15
+  down_start_sla_minutes_by_criticality:
+    high: 60
+    medium: 240
+    low: 720
+  dispatch_delay_minutes: [5, 720]
+  part_unavailable_probability: 0.18
+  repair_effectiveness: [0.35, 0.99]
+  recovery_stable_minutes: 180
+  recurrence_horizon_hours: 24
+
+forced_episodes:
+  bearing_degradation_to_down: 5
+  thermal_quality_drift: 4
+  quick_recovery: 4
+  slow_recovery: 4
+  recurrent_degradation: 3
+  unsafe_restart: 3
+  data_gap: 2
+
+patterns:
+  noise_event_probability: 0.30
+  exact_behavior_instances_per_pattern: 2
+
+missingness:
+  telemetry_mcar: 0.01
+  process_event_mcar: 0.002
+  relationship_mcar: 0.002
+  timestamp_jitter_minutes: 1
+
+state_detection:
+  window_sizes: [4, 8, 16, 32]
+  som_grids: [[3, 3], [5, 5], [7, 7]]
+  epochs: 10
+  max_training_windows: 2000

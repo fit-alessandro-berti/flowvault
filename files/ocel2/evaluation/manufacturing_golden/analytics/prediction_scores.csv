@@ -1,0 +1,61 @@
+scenario,run_id,task,model,feature_set,split,sample_count,positive_count,auprc,auroc,brier,ece,recall_at_alert_budget,median_warning_lead_time_minutes,median_lead_time_minutes,false_alerts_per_object_week,false_alerts_per_object_month,mae_minutes,concordance
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,logistic-regression,static-only,group-holdout,8,1,0.25,0.7857142857142857,0.09901664735406178,0.07084688106961734,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,hist-gradient-boosting,static-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,logistic-regression,raw-only,group-holdout,8,1,0.16666666666666666,0.5714285714285714,0.12266077840790092,0.11620001162099663,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,hist-gradient-boosting,raw-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,logistic-regression,process-only,group-holdout,8,1,1.0,1.0,0.045597867382006683,0.15524829491981088,1.0,0.16666666666666666,0.16666666666666666,0.0,0.0,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,hist-gradient-boosting,process-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,logistic-regression,state-only,group-holdout,8,1,1.0,1.0,0.018985758033392967,0.110493521091228,1.0,0.16666666666666666,0.16666666666666666,0.0,0.0,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,hist-gradient-boosting,state-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,logistic-regression,object-context-only,group-holdout,8,1,0.3333333333333333,0.7142857142857143,0.11601102943664371,0.19184516409272812,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,hist-gradient-boosting,object-context-only,group-holdout,8,1,0.25,0.7857142857142857,0.10000002765640122,0.07500018581618018,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,logistic-regression,full,group-holdout,8,1,1.0,1.0,0.11753979354341533,0.11507130128607791,1.0,0.16666666666666666,0.16666666666666666,0.0,0.0,,
+manufacturing,manufacturing-golden-20260826,Down within 24 hours,hist-gradient-boosting,full,group-holdout,8,1,0.25,0.7857142857142857,0.10000002765640122,0.07500018581618018,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,logistic-regression,static-only,group-holdout,8,1,0.25,0.7857142857142857,0.09901664735406178,0.07084688106961734,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,hist-gradient-boosting,static-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,logistic-regression,raw-only,group-holdout,8,1,0.16666666666666666,0.5714285714285714,0.12266077840790092,0.11620001162099663,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,hist-gradient-boosting,raw-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,logistic-regression,process-only,group-holdout,8,1,1.0,1.0,0.045597867382006683,0.15524829491981088,1.0,0.16666666666666666,0.16666666666666666,0.0,0.0,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,hist-gradient-boosting,process-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,logistic-regression,state-only,group-holdout,8,1,1.0,1.0,0.018985758033392967,0.110493521091228,1.0,0.16666666666666666,0.16666666666666666,0.0,0.0,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,hist-gradient-boosting,state-only,group-holdout,8,1,0.125,0.5,0.11000000000000001,0.02499999999999998,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,logistic-regression,object-context-only,group-holdout,8,1,0.3333333333333333,0.7142857142857143,0.11601102943664371,0.19184516409272812,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,hist-gradient-boosting,object-context-only,group-holdout,8,1,0.25,0.7857142857142857,0.10000002765640122,0.07500018581618018,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,logistic-regression,full,group-holdout,8,1,1.0,1.0,0.11753979354341533,0.11507130128607791,1.0,0.16666666666666666,0.16666666666666666,0.0,0.0,,
+manufacturing,manufacturing-golden-20260826,Down within 4 hours,hist-gradient-boosting,full,group-holdout,8,1,0.25,0.7857142857142857,0.10000002765640122,0.07500018581618018,0.0,,,0.11666653163595875,0.5055549704224879,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,logistic-regression,static-only,group-holdout,1,0,0.0,,0.07689064778009405,0.27729162948075814,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,hist-gradient-boosting,static-only,group-holdout,1,0,0.0,,0.0625,0.25,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,logistic-regression,raw-only,group-holdout,1,0,0.0,,0.4372674818878582,0.6612620372347547,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,hist-gradient-boosting,raw-only,group-holdout,1,0,0.0,,0.0625,0.25,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,logistic-regression,process-only,group-holdout,1,0,0.0,,0.694213570235253,0.8331947972924777,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,hist-gradient-boosting,process-only,group-holdout,1,0,0.0,,0.0625,0.25,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,logistic-regression,state-only,group-holdout,1,0,0.0,,0.15941534629461923,0.39926851402861613,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,hist-gradient-boosting,state-only,group-holdout,1,0,0.0,,0.0625,0.25,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,logistic-regression,object-context-only,group-holdout,1,0,0.0,,0.8400405553922333,0.9165372635044542,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,hist-gradient-boosting,object-context-only,group-holdout,1,0,0.0,,0.0625,0.25,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,logistic-regression,full,group-holdout,1,0,0.0,,0.7839363332826912,0.8854017920033205,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Recurrent Degraded or Down within 24 hours,hist-gradient-boosting,full,group-holdout,1,0,0.0,,0.0625,0.25,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,logistic-regression,static-only,group-holdout,1,0,0.0,,0.22560542730124844,0.47497939671237155,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,hist-gradient-boosting,static-only,group-holdout,1,0,0.0,,0.5625,0.75,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,logistic-regression,raw-only,group-holdout,1,0,0.0,,0.11474340741834874,0.3387379627652453,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,hist-gradient-boosting,raw-only,group-holdout,1,0,0.0,,0.5625,0.75,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,logistic-regression,process-only,group-holdout,1,0,0.0,,0.6827552305015494,0.8262900401805345,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,hist-gradient-boosting,process-only,group-holdout,1,0,0.0,,0.5625,0.75,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,logistic-regression,state-only,group-holdout,1,0,0.0,,0.7198936091647155,0.8484654437068816,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,hist-gradient-boosting,state-only,group-holdout,1,0,0.0,,0.5625,0.75,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,logistic-regression,object-context-only,group-holdout,1,0,0.0,,0.15064882700018012,0.38813506283274657,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,hist-gradient-boosting,object-context-only,group-holdout,1,0,0.0,,0.5625,0.75,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,logistic-regression,full,group-holdout,1,0,0.0,,0.6978614671747873,0.8353810311317748,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Stable Running recovery within 8 hours,hist-gradient-boosting,full,group-holdout,1,0,0.0,,0.5625,0.75,1.0,,,7.0,30.333333333333332,,
+manufacturing,manufacturing-golden-20260826,Time to Down,ridge-regression,static-only,group-holdout,3,,,,,,,,,,,3413.779510703362,0.5
+manufacturing,manufacturing-golden-20260826,Time to Down,hist-gradient-boosting-regression,static-only,group-holdout,3,,,,,,,,,,,801.8981481481483,0.5
+manufacturing,manufacturing-golden-20260826,Time to Down,ridge-regression,raw-only,group-holdout,3,,,,,,,,,,,494.3425925925926,0.5
+manufacturing,manufacturing-golden-20260826,Time to Down,hist-gradient-boosting-regression,raw-only,group-holdout,3,,,,,,,,,,,801.8981481481483,0.5
+manufacturing,manufacturing-golden-20260826,Time to Down,ridge-regression,process-only,group-holdout,3,,,,,,,,,,,520.9638894436678,0.8333333333333334
+manufacturing,manufacturing-golden-20260826,Time to Down,hist-gradient-boosting-regression,process-only,group-holdout,3,,,,,,,,,,,801.8981481481483,0.5
+manufacturing,manufacturing-golden-20260826,Time to Down,ridge-regression,state-only,group-holdout,3,,,,,,,,,,,102.51285936285949,0.8333333333333334
+manufacturing,manufacturing-golden-20260826,Time to Down,hist-gradient-boosting-regression,state-only,group-holdout,3,,,,,,,,,,,801.8981481481483,0.5
+manufacturing,manufacturing-golden-20260826,Time to Down,ridge-regression,object-context-only,group-holdout,3,,,,,,,,,,,499.89934626066025,0.8333333333333334
+manufacturing,manufacturing-golden-20260826,Time to Down,hist-gradient-boosting-regression,object-context-only,group-holdout,3,,,,,,,,,,,801.8981481481483,0.5
+manufacturing,manufacturing-golden-20260826,Time to Down,ridge-regression,full,group-holdout,3,,,,,,,,,,,493.52426179945274,1.0
+manufacturing,manufacturing-golden-20260826,Time to Down,hist-gradient-boosting-regression,full,group-holdout,3,,,,,,,,,,,801.8981481481483,0.5

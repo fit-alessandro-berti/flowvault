@@ -1,4 +1,8 @@
-<section class="transition-kpi-page feature-panel" aria-label="State transition KPI dashboard">
+<section
+  class="transition-kpi-page feature-panel"
+  data-testid="transition-kpis"
+  aria-label="State transition KPI dashboard"
+>
   <header class="feature-header time-header">
     <div>
       <h1>Transition KPIs</h1>
@@ -195,7 +199,13 @@
             @for (row of vm.topStuckRows(analysis); track row.object_id + row.state) {
               <tr>
                 <th>
-                  <button type="button" class="link-button" (click)="vm.selectLifecycleObject(row.object_id); vm.setActiveFeature('lifecycle')">
+                  <button
+                    type="button"
+                    class="link-button"
+                    (click)="
+                      vm.selectLifecycleObject(row.object_id); vm.setActiveFeature('lifecycle')
+                    "
+                  >
                     {{ row.object_id }}
                   </button>
                 </th>

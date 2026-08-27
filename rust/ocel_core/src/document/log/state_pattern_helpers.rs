@@ -14,6 +14,14 @@ impl CompactOcelLog {
         let mut object_types = BTreeSet::from([leading_type.clone()]);
         let mut eo_edges = BTreeMap::<(String, String), usize>::new();
         let mut oo_edges = BTreeMap::<(String, String), usize>::new();
+        let first_event_index = segment_events
+            .first()
+            .map(|(event_index, _)| *event_index)
+            .expect("pattern segment cannot be empty");
+        let last_event_index = segment_events
+            .last()
+            .map(|(event_index, _)| *event_index)
+            .expect("pattern segment cannot be empty");
 
         for (event_index, state) in segment_events {
             let event = &self.events[*event_index];
@@ -63,6 +71,13 @@ impl CompactOcelLog {
             df_edges,
             eo_edges,
             oo_edges,
+            occurrence: PatternOccurrence {
+                object_id: self.pool.resolve(leading_object.id).to_owned(),
+                start_event: self.pool.resolve(self.events[first_event_index].id).to_owned(),
+                end_event: self.pool.resolve(self.events[last_event_index].id).to_owned(),
+                start_time_ms: self.events[first_event_index].time_ms,
+                end_time_ms: self.events[last_event_index].time_ms,
+            },
         }
     }
 
@@ -121,16 +136,33 @@ impl CompactOcelLog {
         left: &StateEpisode,
         right: &StateEpisode,
     ) -> Vec<String> {
+        self.inter_sequence_bounded(
+            state_lifecycle,
+            left,
+            right,
+            left.start,
+            right.end,
+        )
+    }
+
+    fn inter_sequence_bounded(
+        &self,
+        state_lifecycle: &[(usize, String)],
+        left: &StateEpisode,
+        right: &StateEpisode,
+        left_start: usize,
+        right_end: usize,
+    ) -> Vec<String> {
         let mut sequence = Vec::with_capacity(right.end - left.start + 4);
         sequence.push(format!("START {}", left.state));
         sequence.extend(
-            state_lifecycle[left.start..=left.end]
+            state_lifecycle[left_start..=left.end]
                 .iter()
                 .map(|(event_index, state)| self.state_aware_event_label(*event_index, state)),
         );
         sequence.push(format!("CHANGE {} -> {}", left.state, right.state));
         sequence.extend(
-            state_lifecycle[right.start..=right.end]
+            state_lifecycle[right.start..=right_end]
                 .iter()
                 .map(|(event_index, state)| self.state_aware_event_label(*event_index, state)),
         );

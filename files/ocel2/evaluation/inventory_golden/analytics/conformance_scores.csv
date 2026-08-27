@@ -1,0 +1,8 @@
+rule_id,precision,recall,matched,false_positives,false_negatives,median_timing_error_seconds
+ALL,1.0,1.0,7,0,0,0.0
+INV-C1,1.0,1.0,1,0,0,0.0
+INV-C2,1.0,1.0,2,0,0,0.0
+INV-C3,1.0,1.0,1,0,0,0.0
+INV-C4,1.0,1.0,1,0,0,0.0
+INV-C5,1.0,1.0,1,0,0,0.0
+INV-C6,1.0,1.0,1,0,0,0.0

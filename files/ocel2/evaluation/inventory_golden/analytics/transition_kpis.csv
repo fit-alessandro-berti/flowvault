@@ -1,0 +1,13 @@
+scenario,run_id,object_type,category,from_state,to_state,count,object_count,min_duration_ms,median_duration_ms,avg_duration_ms,max_duration_ms,median_duration_minutes,avg_duration_minutes
+inventory,inventory-golden-20260826,ItemLocation,transitions,Overstock,Normal,3,3,86400000,172800000,144103333.333333,173110000,2880.0,2401.7222222222163
+inventory,inventory-golden-20260826,ItemLocation,transitions,Normal,Understock,2,2,86430000,86600000,86515000.0,86600000,1443.3333333333333,1441.9166666666667
+inventory,inventory-golden-20260826,ItemLocation,transitions,Understock,Critical Understock,2,2,10000,10000,10000.0,10000,0.16666666666666666,0.16666666666666666
+inventory,inventory-golden-20260826,ItemLocation,transitions,Understock,Normal,2,2,345620000,691300000,518460000.0,691300000,11521.666666666666,8641.0
+inventory,inventory-golden-20260826,ItemLocation,transitions,Critical Understock,Normal,1,1,172800000,172800000,172800000.0,172800000,2880.0,2880.0
+inventory,inventory-golden-20260826,ItemLocation,transitions,Critical Understock,Understock,1,1,172820000,172820000,172820000.0,172820000,2880.3333333333335,2880.3333333333335
+inventory,inventory-golden-20260826,ItemLocation,transitions,Normal,Overstock,1,1,259210000,259210000,259210000.0,259210000,4320.166666666667,4320.166666666667
+inventory,inventory-golden-20260826,ItemLocation,transitions,Normal,Unknown,1,1,173300000,173300000,173300000.0,173300000,2888.3333333333335,2888.3333333333335
+inventory,inventory-golden-20260826,ItemLocation,transitions,Understock,Overstock,1,1,172740000,172740000,172740000.0,172740000,2879.0,2879.0
+inventory,inventory-golden-20260826,ItemLocation,transitions,Unknown,Normal,1,1,86400000,86400000,86400000.0,86400000,1440.0,1440.0
+inventory,inventory-golden-20260826,ItemLocation,recovery,Understock,Normal,2,2,345620000,691300000,518460000.0,691300000,11521.666666666666,8641.0
+inventory,inventory-golden-20260826,ItemLocation,recovery,Critical Understock,Understock,1,1,172820000,172820000,172820000.0,172820000,2880.3333333333335,2880.3333333333335

@@ -1,0 +1,5 @@
+dimension,held_out_value,train_windows,test_windows,balanced_accuracy
+machine_family,FAMILY-1,20,24,0.14285714285714285
+machine_family,FAMILY-2,24,20,0.1
+site,SITE-A,20,24,0.14285714285714285
+site,SITE-B,24,20,0.1

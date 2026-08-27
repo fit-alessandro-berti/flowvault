@@ -8,6 +8,7 @@
     (drop)="vm.onDrop($event)"
   >
     <input
+      data-testid="ocel-upload"
       type="file"
       accept=".json,.jsonocel,.xml,.xmlocel,.ocel.csv,.sqlite,.sqlite3,.ocel.zip,.gz,.json.gz,.xml.gz,application/json,application/xml,text/xml,text/csv,application/vnd.sqlite3,application/zip,application/gzip,application/x-gzip"
       (change)="vm.onFileSelected($event)"

@@ -12,7 +12,7 @@
   }
 
   @if (stateMessage()) {
-    <p class="message success">{{ stateMessage() }}</p>
+    <p class="message success" data-testid="state-message">{{ stateMessage() }}</p>
   }
 
   @if (hasDocument()) {

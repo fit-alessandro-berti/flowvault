@@ -70,7 +70,7 @@ fn attr_value_to_f64(value: &AttrValue) -> Option<f64> {
     }
 }
 
-fn pca_project(rows: &[Vec<f64>]) -> PcaProjection {
+fn pca_project(rows: &[Vec<f64>], max_training_rows: Option<usize>) -> PcaProjection {
     let row_count = rows.len();
     let column_count = rows.first().map(Vec::len).unwrap_or_default();
     if row_count == 0 || column_count == 0 {
@@ -83,46 +83,55 @@ fn pca_project(rows: &[Vec<f64>]) -> PcaProjection {
         };
     }
 
+    let training_indices = max_training_rows
+        .filter(|maximum| *maximum > 0 && row_count > *maximum)
+        .map(|maximum| {
+            (0..maximum)
+                .map(|index| {
+                    (((2 * index + 1) * row_count) / (2 * maximum)).min(row_count - 1)
+                })
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_else(|| (0..row_count).collect());
+    let training_count = training_indices.len();
+
     let mut means = vec![0.0; column_count];
-    for row in rows {
+    for row_index in &training_indices {
+        let row = &rows[*row_index];
         for (index, value) in row.iter().enumerate() {
             means[index] += *value;
         }
     }
     for mean in &mut means {
-        *mean /= row_count as f64;
+        *mean /= training_count as f64;
     }
 
     let mut std_devs = vec![0.0; column_count];
-    for row in rows {
+    for row_index in &training_indices {
+        let row = &rows[*row_index];
         for (index, value) in row.iter().enumerate() {
             let centered = value - means[index];
             std_devs[index] += centered * centered;
         }
     }
     for std_dev in &mut std_devs {
-        *std_dev = (*std_dev / row_count.max(1) as f64).sqrt();
+        *std_dev = (*std_dev / training_count.max(1) as f64).sqrt();
         if *std_dev <= f64::EPSILON {
             *std_dev = 1.0;
         }
     }
 
-    let standardized = rows
-        .iter()
-        .map(|row| {
-            row.iter()
-                .enumerate()
-                .map(|(index, value)| (value - means[index]) / std_devs[index])
-                .collect::<Vec<_>>()
-        })
-        .collect::<Vec<_>>();
-
-    let divisor = row_count.saturating_sub(1).max(1) as f64;
+    let divisor = training_count.saturating_sub(1).max(1) as f64;
     let mut covariance = vec![vec![0.0; column_count]; column_count];
-    for row in &standardized {
+    let mut standardized = vec![0.0; column_count];
+    for row_index in &training_indices {
+        let row = &rows[*row_index];
+        for (index, value) in row.iter().enumerate() {
+            standardized[index] = (value - means[index]) / std_devs[index];
+        }
         for left in 0..column_count {
             for right in left..column_count {
-                covariance[left][right] += row[left] * row[right] / divisor;
+                covariance[left][right] += standardized[left] * standardized[right] / divisor;
             }
         }
     }
@@ -157,9 +166,21 @@ fn pca_project(rows: &[Vec<f64>]) -> PcaProjection {
         0.0
     };
 
-    let points = standardized
+    let points = rows
         .iter()
-        .map(|row| (dot(row, &pc1), dot(row, &pc2)))
+        .map(|row| {
+            let pc1_value = row
+                .iter()
+                .enumerate()
+                .map(|(index, value)| ((value - means[index]) / std_devs[index]) * pc1[index])
+                .sum();
+            let pc2_value = row
+                .iter()
+                .enumerate()
+                .map(|(index, value)| ((value - means[index]) / std_devs[index]) * pc2[index])
+                .sum();
+            (pc1_value, pc2_value)
+        })
         .collect();
 
     PcaProjection {

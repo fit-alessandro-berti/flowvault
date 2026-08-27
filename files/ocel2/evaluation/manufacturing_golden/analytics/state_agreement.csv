@@ -1,0 +1,10 @@
+accuracy,coverage,episode_iou,f1,macro_f1,precision,recall,run_id,scenario,scope,state,transition_precision,transition_recall,transition_time_mae_minutes,unknown_exposure,unknown_rate,weighted_f1
+1.0,1.0,1.0,,1.0,,,manufacturing-golden-20260826,manufacturing,overall,ALL,1.0,1.0,0.0,0.014705882352941176,0.014705882352941176,1.0
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Degraded,,,,,,
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Down,,,,,,
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Idle,,,,,,
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Quality Hold,,,,,,
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Recovery,,,,,,
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Running,,,,,,
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Setup,,,,,,
+,,,1.0,,1.0,1.0,manufacturing-golden-20260826,manufacturing,state,Unknown,,,,,,

@@ -39,10 +39,15 @@ yarn-error.log
 .sass-cache/
 /connect.lock
 /coverage
+/artifacts
+/playwright-report
+/test-results
 /libpeerconnection.log
 testem.log
 /typings
 __screenshots__/
+__pycache__/
+*.py[cod]
 
 # Rust/Cargo local cache
 /.cargo-home

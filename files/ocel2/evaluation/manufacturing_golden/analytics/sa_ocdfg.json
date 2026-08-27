@@ -1,0 +1,9189 @@
+{
+  "edges": [
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e1",
+      "kind": "df",
+      "label": "6",
+      "label_x": 330.0,
+      "label_y": 275.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 6
+        }
+      ],
+      "path": "M 244.0 114.0 C 330.0 114.0 330.0 449.0 416.0 449.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 114.0
+        },
+        {
+          "x": 330.0,
+          "y": 114.0
+        },
+        {
+          "x": 330.0,
+          "y": 448.96
+        },
+        {
+          "x": 416.0,
+          "y": 448.96
+        }
+      ],
+      "source": "n1",
+      "target": "n8",
+      "title": "Component: 6",
+      "weight": 6
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e2",
+      "kind": "df",
+      "label": "6",
+      "label_x": 330.0,
+      "label_y": 354.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 6
+        }
+      ],
+      "path": "M 244.0 272.0 C 330.0 272.0 330.0 449.0 416.0 449.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 272.0
+        },
+        {
+          "x": 330.0,
+          "y": 272.0
+        },
+        {
+          "x": 330.0,
+          "y": 448.96
+        },
+        {
+          "x": 416.0,
+          "y": 448.96
+        }
+      ],
+      "source": "n2",
+      "target": "n8",
+      "title": "Machine: 6",
+      "weight": 6
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e3",
+      "kind": "df",
+      "label": "4",
+      "label_x": 6983.5,
+      "label_y": 536.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 4
+        }
+      ],
+      "path": "M 6876.0 665.0 C 6983.5 620.0 6983.5 464.0 7091.0 509.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 665.0
+        },
+        {
+          "x": 6983.5,
+          "y": 620.0
+        },
+        {
+          "x": 6983.5,
+          "y": 464.0
+        },
+        {
+          "x": 7091.0,
+          "y": 509.0
+        }
+      ],
+      "source": "n54",
+      "target": "n53",
+      "title": "Component: 4",
+      "weight": 4
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e4",
+      "kind": "df",
+      "label": "4",
+      "label_x": 6983.5,
+      "label_y": 566.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 4
+        }
+      ],
+      "path": "M 6876.0 665.0 C 6983.5 650.0 6983.5 494.0 7091.0 509.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 665.0
+        },
+        {
+          "x": 6983.5,
+          "y": 650.0
+        },
+        {
+          "x": 6983.5,
+          "y": 494.0
+        },
+        {
+          "x": 7091.0,
+          "y": 509.0
+        }
+      ],
+      "source": "n54",
+      "target": "n53",
+      "title": "Machine: 4",
+      "weight": 4
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e5",
+      "kind": "df",
+      "label": "4",
+      "label_x": 8830.0,
+      "label_y": 551.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 4
+        }
+      ],
+      "path": "M 9256.0 528.0 C 8830.0 528.0 8830.0 588.0 8404.0 588.0",
+      "points": [
+        {
+          "x": 9256.0,
+          "y": 527.96
+        },
+        {
+          "x": 8830.0,
+          "y": 527.96
+        },
+        {
+          "x": 8830.0,
+          "y": 588.0
+        },
+        {
+          "x": 8404.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n62",
+      "target": "n58",
+      "title": "Machine: 4",
+      "weight": 4
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e6",
+      "kind": "df",
+      "label": "4",
+      "label_x": 9000.0,
+      "label_y": 600.96,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 4
+        }
+      ],
+      "path": "M 9256.0 528.0 C 9000.0 528.0 9000.0 686.0 8744.0 686.0",
+      "points": [
+        {
+          "x": 9256.0,
+          "y": 527.96
+        },
+        {
+          "x": 9000.0,
+          "y": 527.96
+        },
+        {
+          "x": 9000.0,
+          "y": 685.96
+        },
+        {
+          "x": 8744.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n62",
+      "target": "n60",
+      "title": "Component: 4",
+      "weight": 4
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e7",
+      "kind": "df",
+      "label": "3",
+      "label_x": 6643.5,
+      "label_y": 496.5,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 3
+        }
+      ],
+      "path": "M 6411.0 430.0 C 6643.5 385.0 6643.5 620.0 6876.0 665.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 430.0
+        },
+        {
+          "x": 6643.5,
+          "y": 385.0
+        },
+        {
+          "x": 6643.5,
+          "y": 620.0
+        },
+        {
+          "x": 6876.0,
+          "y": 665.0
+        }
+      ],
+      "source": "n49",
+      "target": "n54",
+      "title": "Component: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e8",
+      "kind": "df",
+      "label": "3",
+      "label_x": 6643.5,
+      "label_y": 526.5,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 3
+        }
+      ],
+      "path": "M 6411.0 430.0 C 6643.5 415.0 6643.5 650.0 6876.0 665.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 430.0
+        },
+        {
+          "x": 6643.5,
+          "y": 415.0
+        },
+        {
+          "x": 6643.5,
+          "y": 650.0
+        },
+        {
+          "x": 6876.0,
+          "y": 665.0
+        }
+      ],
+      "source": "n49",
+      "target": "n54",
+      "title": "Machine: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e9",
+      "kind": "df",
+      "label": "3",
+      "label_x": 6643.5,
+      "label_y": 586.5,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 3
+        }
+      ],
+      "path": "M 6411.0 430.0 C 6643.5 475.0 6643.5 710.0 6876.0 665.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 430.0
+        },
+        {
+          "x": 6643.5,
+          "y": 475.0
+        },
+        {
+          "x": 6643.5,
+          "y": 710.0
+        },
+        {
+          "x": 6876.0,
+          "y": 665.0
+        }
+      ],
+      "source": "n49",
+      "target": "n54",
+      "title": "WorkOrder: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e10",
+      "kind": "df",
+      "label": "3",
+      "label_x": 7833.5,
+      "label_y": 467.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 3
+        }
+      ],
+      "path": "M 7091.0 509.0 C 7833.5 464.0 7833.5 483.0 8576.0 528.0",
+      "points": [
+        {
+          "x": 7091.0,
+          "y": 509.0
+        },
+        {
+          "x": 7833.5,
+          "y": 464.0
+        },
+        {
+          "x": 7833.5,
+          "y": 482.96000000000004
+        },
+        {
+          "x": 8576.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n53",
+      "target": "n59",
+      "title": "Component: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e11",
+      "kind": "df",
+      "label": "3",
+      "label_x": 7833.5,
+      "label_y": 497.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 3
+        }
+      ],
+      "path": "M 7091.0 509.0 C 7833.5 494.0 7833.5 513.0 8576.0 528.0",
+      "points": [
+        {
+          "x": 7091.0,
+          "y": 509.0
+        },
+        {
+          "x": 7833.5,
+          "y": 494.0
+        },
+        {
+          "x": 7833.5,
+          "y": 512.96
+        },
+        {
+          "x": 8576.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n53",
+      "target": "n59",
+      "title": "Machine: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e12",
+      "kind": "df",
+      "label": "3",
+      "label_x": 7833.5,
+      "label_y": 557.48,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 3
+        }
+      ],
+      "path": "M 7091.0 509.0 C 7833.5 554.0 7833.5 573.0 8576.0 528.0",
+      "points": [
+        {
+          "x": 7091.0,
+          "y": 509.0
+        },
+        {
+          "x": 7833.5,
+          "y": 554.0
+        },
+        {
+          "x": 7833.5,
+          "y": 572.96
+        },
+        {
+          "x": 8576.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n53",
+      "target": "n59",
+      "title": "WorkOrder: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e13",
+      "kind": "df",
+      "label": "3",
+      "label_x": 6983.5,
+      "label_y": 626.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 3
+        }
+      ],
+      "path": "M 6876.0 665.0 C 6983.5 710.0 6983.5 554.0 7091.0 509.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 665.0
+        },
+        {
+          "x": 6983.5,
+          "y": 710.0
+        },
+        {
+          "x": 6983.5,
+          "y": 554.0
+        },
+        {
+          "x": 7091.0,
+          "y": 509.0
+        }
+      ],
+      "source": "n54",
+      "target": "n53",
+      "title": "WorkOrder: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e14",
+      "kind": "df",
+      "label": "3",
+      "label_x": 8861.0,
+      "label_y": 506.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 3
+        }
+      ],
+      "path": "M 8806.0 528.0 C 8861.0 483.0 8861.0 543.0 8916.0 588.0",
+      "points": [
+        {
+          "x": 8806.0,
+          "y": 527.96
+        },
+        {
+          "x": 8861.0,
+          "y": 482.96000000000004
+        },
+        {
+          "x": 8861.0,
+          "y": 543.0
+        },
+        {
+          "x": 8916.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n59",
+      "target": "n61",
+      "title": "Component: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e15",
+      "kind": "df",
+      "label": "3",
+      "label_x": 8861.0,
+      "label_y": 536.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 3
+        }
+      ],
+      "path": "M 8806.0 528.0 C 8861.0 513.0 8861.0 573.0 8916.0 588.0",
+      "points": [
+        {
+          "x": 8806.0,
+          "y": 527.96
+        },
+        {
+          "x": 8861.0,
+          "y": 512.96
+        },
+        {
+          "x": 8861.0,
+          "y": 573.0
+        },
+        {
+          "x": 8916.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n59",
+      "target": "n61",
+      "title": "Machine: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e16",
+      "kind": "df",
+      "label": "3",
+      "label_x": 8861.0,
+      "label_y": 596.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 3
+        }
+      ],
+      "path": "M 8806.0 528.0 C 8861.0 573.0 8861.0 633.0 8916.0 588.0",
+      "points": [
+        {
+          "x": 8806.0,
+          "y": 527.96
+        },
+        {
+          "x": 8861.0,
+          "y": 572.96
+        },
+        {
+          "x": 8861.0,
+          "y": 633.0
+        },
+        {
+          "x": 8916.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n59",
+      "target": "n61",
+      "title": "WorkOrder: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e17",
+      "kind": "df",
+      "label": "3",
+      "label_x": 1543.5,
+      "label_y": 467.46000000000004,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 3
+        }
+      ],
+      "path": "M 631.0 449.0 C 1543.5 434.0 1543.5 513.0 2456.0 528.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 448.96
+        },
+        {
+          "x": 1543.5,
+          "y": 433.96
+        },
+        {
+          "x": 1543.5,
+          "y": 512.96
+        },
+        {
+          "x": 2456.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n8",
+      "target": "n23",
+      "title": "Component: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e18",
+      "kind": "df",
+      "label": "3",
+      "label_x": 1543.5,
+      "label_y": 497.46000000000004,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 3
+        }
+      ],
+      "path": "M 631.0 449.0 C 1543.5 464.0 1543.5 543.0 2456.0 528.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 448.96
+        },
+        {
+          "x": 1543.5,
+          "y": 463.96
+        },
+        {
+          "x": 1543.5,
+          "y": 542.96
+        },
+        {
+          "x": 2456.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n8",
+      "target": "n23",
+      "title": "Machine: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e19",
+      "kind": "df",
+      "label": "2",
+      "label_x": 1721.0,
+      "label_y": 376.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 986.0 428.0 C 1721.0 413.0 1721.0 353.0 2456.0 368.0",
+      "points": [
+        {
+          "x": 986.0,
+          "y": 428.0
+        },
+        {
+          "x": 1721.0,
+          "y": 413.0
+        },
+        {
+          "x": 1721.0,
+          "y": 352.96
+        },
+        {
+          "x": 2456.0,
+          "y": 367.96
+        }
+      ],
+      "source": "n11",
+      "target": "n22",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e20",
+      "kind": "df",
+      "label": "2",
+      "label_x": 1721.0,
+      "label_y": 406.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 986.0 428.0 C 1721.0 443.0 1721.0 383.0 2456.0 368.0",
+      "points": [
+        {
+          "x": 986.0,
+          "y": 428.0
+        },
+        {
+          "x": 1721.0,
+          "y": 443.0
+        },
+        {
+          "x": 1721.0,
+          "y": 382.96
+        },
+        {
+          "x": 2456.0,
+          "y": 367.96
+        }
+      ],
+      "source": "n11",
+      "target": "n22",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e21",
+      "kind": "df",
+      "label": "2",
+      "label_x": 1721.0,
+      "label_y": 487.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 1666.0 428.0 C 1721.0 413.0 1721.0 573.0 1776.0 588.0",
+      "points": [
+        {
+          "x": 1666.0,
+          "y": 428.0
+        },
+        {
+          "x": 1721.0,
+          "y": 413.0
+        },
+        {
+          "x": 1721.0,
+          "y": 573.0
+        },
+        {
+          "x": 1776.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n15",
+      "target": "n18",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e22",
+      "kind": "df",
+      "label": "2",
+      "label_x": 1721.0,
+      "label_y": 517.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 1666.0 428.0 C 1721.0 443.0 1721.0 603.0 1776.0 588.0",
+      "points": [
+        {
+          "x": 1666.0,
+          "y": 428.0
+        },
+        {
+          "x": 1721.0,
+          "y": 443.0
+        },
+        {
+          "x": 1721.0,
+          "y": 603.0
+        },
+        {
+          "x": 1776.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n15",
+      "target": "n18",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e23",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2903.5,
+      "label_y": 308.46000000000004,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 2671.0 368.0 C 2903.5 353.0 2903.5 276.0 3136.0 291.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 2903.5,
+          "y": 352.96
+        },
+        {
+          "x": 2903.5,
+          "y": 275.96000000000004
+        },
+        {
+          "x": 3136.0,
+          "y": 290.96000000000004
+        }
+      ],
+      "source": "n22",
+      "target": "n27",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e24",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2903.5,
+      "label_y": 338.46000000000004,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 2671.0 368.0 C 2903.5 383.0 2903.5 306.0 3136.0 291.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 2903.5,
+          "y": 382.96
+        },
+        {
+          "x": 2903.5,
+          "y": 305.96000000000004
+        },
+        {
+          "x": 3136.0,
+          "y": 290.96000000000004
+        }
+      ],
+      "source": "n22",
+      "target": "n27",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e25",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2053.5,
+      "label_y": 536.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 2456.0 528.0 C 2053.5 513.0 2053.5 573.0 1651.0 588.0",
+      "points": [
+        {
+          "x": 2456.0,
+          "y": 527.96
+        },
+        {
+          "x": 2053.5,
+          "y": 512.96
+        },
+        {
+          "x": 2053.5,
+          "y": 573.0
+        },
+        {
+          "x": 1651.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n23",
+      "target": "n16",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e26",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2053.5,
+      "label_y": 566.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 2456.0 528.0 C 2053.5 543.0 2053.5 603.0 1651.0 588.0",
+      "points": [
+        {
+          "x": 2456.0,
+          "y": 527.96
+        },
+        {
+          "x": 2053.5,
+          "y": 542.96
+        },
+        {
+          "x": 2053.5,
+          "y": 603.0
+        },
+        {
+          "x": 1651.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n23",
+      "target": "n16",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e27",
+      "kind": "df",
+      "label": "2",
+      "label_x": 3583.5,
+      "label_y": 279.46000000000004,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 3351.0 291.0 C 3583.5 246.0 3583.5 325.0 3816.0 370.0",
+      "points": [
+        {
+          "x": 3351.0,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 245.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 324.96
+        },
+        {
+          "x": 3816.0,
+          "y": 369.96
+        }
+      ],
+      "source": "n27",
+      "target": "n33",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e28",
+      "kind": "df",
+      "label": "2",
+      "label_x": 3583.5,
+      "label_y": 309.46000000000004,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 3351.0 291.0 C 3583.5 276.0 3583.5 355.0 3816.0 370.0",
+      "points": [
+        {
+          "x": 3351.0,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 275.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 354.96
+        },
+        {
+          "x": 3816.0,
+          "y": 369.96
+        }
+      ],
+      "source": "n27",
+      "target": "n33",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e29",
+      "kind": "df",
+      "label": "2",
+      "label_x": 3583.5,
+      "label_y": 369.46000000000004,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "path": "M 3351.0 291.0 C 3583.5 336.0 3583.5 415.0 3816.0 370.0",
+      "points": [
+        {
+          "x": 3351.0,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 335.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 414.96
+        },
+        {
+          "x": 3816.0,
+          "y": 369.96
+        }
+      ],
+      "source": "n27",
+      "target": "n33",
+      "title": "WorkOrder: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e30",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2903.5,
+      "label_y": 401.46000000000004,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 3136.0 447.0 C 2903.5 447.0 2903.5 368.0 2671.0 368.0",
+      "points": [
+        {
+          "x": 3136.0,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 2903.5,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 2903.5,
+          "y": 367.96
+        },
+        {
+          "x": 2671.0,
+          "y": 367.96
+        }
+      ],
+      "source": "n28",
+      "target": "n22",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e31",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2903.5,
+      "label_y": 431.46000000000004,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 3136.0 447.0 C 2903.5 477.0 2903.5 398.0 2671.0 368.0",
+      "points": [
+        {
+          "x": 3136.0,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 2903.5,
+          "y": 476.96000000000004
+        },
+        {
+          "x": 2903.5,
+          "y": 397.96
+        },
+        {
+          "x": 2671.0,
+          "y": 367.96
+        }
+      ],
+      "source": "n28",
+      "target": "n22",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e32",
+      "kind": "df",
+      "label": "2",
+      "label_x": 3251.0,
+      "label_y": 520.96,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 3136.0 607.0 C 3251.0 607.0 3251.0 447.0 3366.0 447.0",
+      "points": [
+        {
+          "x": 3136.0,
+          "y": 606.96
+        },
+        {
+          "x": 3251.0,
+          "y": 606.96
+        },
+        {
+          "x": 3251.0,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 3366.0,
+          "y": 446.96000000000004
+        }
+      ],
+      "source": "n29",
+      "target": "n28",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e33",
+      "kind": "df",
+      "label": "2",
+      "label_x": 3251.0,
+      "label_y": 550.96,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 3136.0 607.0 C 3251.0 637.0 3251.0 477.0 3366.0 447.0",
+      "points": [
+        {
+          "x": 3136.0,
+          "y": 606.96
+        },
+        {
+          "x": 3251.0,
+          "y": 636.96
+        },
+        {
+          "x": 3251.0,
+          "y": 476.96000000000004
+        },
+        {
+          "x": 3366.0,
+          "y": 446.96000000000004
+        }
+      ],
+      "source": "n29",
+      "target": "n28",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e34",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2540.0,
+      "label_y": 424.0,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 2
+        }
+      ],
+      "path": "M 244.0 430.0 C 2540.0 430.0 2540.0 430.0 4836.0 430.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 430.0
+        },
+        {
+          "x": 2540.0,
+          "y": 430.0
+        },
+        {
+          "x": 2540.0,
+          "y": 430.0
+        },
+        {
+          "x": 4836.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n3",
+      "target": "n42",
+      "title": "Inspection: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e35",
+      "kind": "df",
+      "label": "2",
+      "label_x": 4433.5,
+      "label_y": 427.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 4031.0 370.0 C 4433.5 325.0 4433.5 543.0 4836.0 588.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 369.96
+        },
+        {
+          "x": 4433.5,
+          "y": 324.96
+        },
+        {
+          "x": 4433.5,
+          "y": 543.0
+        },
+        {
+          "x": 4836.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n33",
+      "target": "n43",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e36",
+      "kind": "df",
+      "label": "2",
+      "label_x": 4433.5,
+      "label_y": 457.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 4031.0 370.0 C 4433.5 355.0 4433.5 573.0 4836.0 588.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 369.96
+        },
+        {
+          "x": 4433.5,
+          "y": 354.96
+        },
+        {
+          "x": 4433.5,
+          "y": 573.0
+        },
+        {
+          "x": 4836.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n33",
+      "target": "n43",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e37",
+      "kind": "df",
+      "label": "2",
+      "label_x": 4433.5,
+      "label_y": 487.98,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 2
+        }
+      ],
+      "path": "M 4031.0 370.0 C 4433.5 385.0 4433.5 603.0 4836.0 588.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 369.96
+        },
+        {
+          "x": 4433.5,
+          "y": 384.96
+        },
+        {
+          "x": 4433.5,
+          "y": 603.0
+        },
+        {
+          "x": 4836.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n33",
+      "target": "n43",
+      "title": "MaintenanceTeam: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e38",
+      "kind": "df",
+      "label": "2",
+      "label_x": 4433.5,
+      "label_y": 517.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "path": "M 4031.0 370.0 C 4433.5 415.0 4433.5 633.0 4836.0 588.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 369.96
+        },
+        {
+          "x": 4433.5,
+          "y": 414.96
+        },
+        {
+          "x": 4433.5,
+          "y": 633.0
+        },
+        {
+          "x": 4836.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n33",
+      "target": "n43",
+      "title": "WorkOrder: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e39",
+      "kind": "df",
+      "label": "2",
+      "label_x": 1690.0,
+      "label_y": 433.48,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "path": "M 244.0 588.0 C 1690.0 588.0 1690.0 291.0 3136.0 291.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 588.0
+        },
+        {
+          "x": 1690.0,
+          "y": 588.0
+        },
+        {
+          "x": 1690.0,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 3136.0,
+          "y": 290.96000000000004
+        }
+      ],
+      "source": "n4",
+      "target": "n27",
+      "title": "WorkOrder: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e40",
+      "kind": "df",
+      "label": "2",
+      "label_x": 5623.5,
+      "label_y": 364.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 5051.0 430.0 C 5623.5 370.0 5623.5 370.0 6196.0 430.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 430.0
+        },
+        {
+          "x": 5623.5,
+          "y": 370.0
+        },
+        {
+          "x": 5623.5,
+          "y": 370.0
+        },
+        {
+          "x": 6196.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n42",
+      "target": "n49",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e41",
+      "kind": "df",
+      "label": "2",
+      "label_x": 5623.5,
+      "label_y": 394.0,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 2
+        }
+      ],
+      "path": "M 5051.0 430.0 C 5623.5 400.0 5623.5 400.0 6196.0 430.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 430.0
+        },
+        {
+          "x": 5623.5,
+          "y": 400.0
+        },
+        {
+          "x": 5623.5,
+          "y": 400.0
+        },
+        {
+          "x": 6196.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n42",
+      "target": "n49",
+      "title": "Inspection: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e42",
+      "kind": "df",
+      "label": "2",
+      "label_x": 5623.5,
+      "label_y": 424.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 5051.0 430.0 C 5623.5 430.0 5623.5 430.0 6196.0 430.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 430.0
+        },
+        {
+          "x": 5623.5,
+          "y": 430.0
+        },
+        {
+          "x": 5623.5,
+          "y": 430.0
+        },
+        {
+          "x": 6196.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n42",
+      "target": "n49",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e43",
+      "kind": "df",
+      "label": "2",
+      "label_x": 5623.5,
+      "label_y": 484.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "path": "M 5051.0 430.0 C 5623.5 490.0 5623.5 490.0 6196.0 430.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 430.0
+        },
+        {
+          "x": 5623.5,
+          "y": 490.0
+        },
+        {
+          "x": 5623.5,
+          "y": 490.0
+        },
+        {
+          "x": 6196.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n42",
+      "target": "n49",
+      "title": "WorkOrder: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e44",
+      "kind": "df",
+      "label": "2",
+      "label_x": 7153.5,
+      "label_y": 582.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 6071.0 588.0 C 7153.5 588.0 7153.5 588.0 8236.0 588.0",
+      "points": [
+        {
+          "x": 6071.0,
+          "y": 588.0
+        },
+        {
+          "x": 7153.5,
+          "y": 588.0
+        },
+        {
+          "x": 7153.5,
+          "y": 588.0
+        },
+        {
+          "x": 8236.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n48",
+      "target": "n58",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e45",
+      "kind": "df",
+      "label": "2",
+      "label_x": 7323.5,
+      "label_y": 630.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 6071.0 588.0 C 7323.5 588.0 7323.5 686.0 8576.0 686.0",
+      "points": [
+        {
+          "x": 6071.0,
+          "y": 588.0
+        },
+        {
+          "x": 7323.5,
+          "y": 588.0
+        },
+        {
+          "x": 7323.5,
+          "y": 685.96
+        },
+        {
+          "x": 8576.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n48",
+      "target": "n60",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e46",
+      "kind": "df",
+      "label": "2",
+      "label_x": 4240.0,
+      "label_y": 424.0,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 2
+        }
+      ],
+      "path": "M 6196.0 430.0 C 4240.0 430.0 4240.0 430.0 2284.0 430.0",
+      "points": [
+        {
+          "x": 6196.0,
+          "y": 430.0
+        },
+        {
+          "x": 4240.0,
+          "y": 430.0
+        },
+        {
+          "x": 4240.0,
+          "y": 430.0
+        },
+        {
+          "x": 2284.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n49",
+      "target": "n19",
+      "title": "Inspection: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e47",
+      "kind": "df",
+      "label": "2",
+      "label_x": 6643.5,
+      "label_y": 556.5,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 2
+        }
+      ],
+      "path": "M 6411.0 430.0 C 6643.5 445.0 6643.5 680.0 6876.0 665.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 430.0
+        },
+        {
+          "x": 6643.5,
+          "y": 445.0
+        },
+        {
+          "x": 6643.5,
+          "y": 680.0
+        },
+        {
+          "x": 6876.0,
+          "y": 665.0
+        }
+      ],
+      "source": "n49",
+      "target": "n54",
+      "title": "MaintenanceTeam: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e48",
+      "kind": "df",
+      "label": "2",
+      "label_x": 7833.5,
+      "label_y": 527.48,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 2
+        }
+      ],
+      "path": "M 7091.0 509.0 C 7833.5 524.0 7833.5 543.0 8576.0 528.0",
+      "points": [
+        {
+          "x": 7091.0,
+          "y": 509.0
+        },
+        {
+          "x": 7833.5,
+          "y": 524.0
+        },
+        {
+          "x": 7833.5,
+          "y": 542.96
+        },
+        {
+          "x": 8576.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n53",
+      "target": "n59",
+      "title": "MaintenanceTeam: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e49",
+      "kind": "df",
+      "label": "2",
+      "label_x": 6983.5,
+      "label_y": 596.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 2
+        }
+      ],
+      "path": "M 6876.0 665.0 C 6983.5 680.0 6983.5 524.0 7091.0 509.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 665.0
+        },
+        {
+          "x": 6983.5,
+          "y": 680.0
+        },
+        {
+          "x": 6983.5,
+          "y": 524.0
+        },
+        {
+          "x": 7091.0,
+          "y": 509.0
+        }
+      ],
+      "source": "n54",
+      "target": "n53",
+      "title": "MaintenanceTeam: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e50",
+      "kind": "df",
+      "label": "2",
+      "label_x": 8003.5,
+      "label_y": 582.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 7771.0 588.0 C 8003.5 588.0 8003.5 588.0 8236.0 588.0",
+      "points": [
+        {
+          "x": 7771.0,
+          "y": 588.0
+        },
+        {
+          "x": 8003.5,
+          "y": 588.0
+        },
+        {
+          "x": 8003.5,
+          "y": 588.0
+        },
+        {
+          "x": 8236.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n56",
+      "target": "n58",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e51",
+      "kind": "df",
+      "label": "2",
+      "label_x": 8173.5,
+      "label_y": 630.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 7771.0 588.0 C 8173.5 588.0 8173.5 686.0 8576.0 686.0",
+      "points": [
+        {
+          "x": 7771.0,
+          "y": 588.0
+        },
+        {
+          "x": 8173.5,
+          "y": 588.0
+        },
+        {
+          "x": 8173.5,
+          "y": 685.96
+        },
+        {
+          "x": 8576.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n56",
+      "target": "n60",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e52",
+      "kind": "df",
+      "label": "2",
+      "label_x": 8861.0,
+      "label_y": 566.98,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 2
+        }
+      ],
+      "path": "M 8806.0 528.0 C 8861.0 543.0 8861.0 603.0 8916.0 588.0",
+      "points": [
+        {
+          "x": 8806.0,
+          "y": 527.96
+        },
+        {
+          "x": 8861.0,
+          "y": 542.96
+        },
+        {
+          "x": 8861.0,
+          "y": 603.0
+        },
+        {
+          "x": 8916.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n59",
+      "target": "n61",
+      "title": "MaintenanceTeam: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e53",
+      "kind": "df",
+      "label": "2",
+      "label_x": 693.5,
+      "label_y": 417.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 2
+        }
+      ],
+      "path": "M 631.0 449.0 C 693.5 434.0 693.5 413.0 756.0 428.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 448.96
+        },
+        {
+          "x": 693.5,
+          "y": 433.96
+        },
+        {
+          "x": 693.5,
+          "y": 413.0
+        },
+        {
+          "x": 756.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n8",
+      "target": "n11",
+      "title": "Component: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e54",
+      "kind": "df",
+      "label": "2",
+      "label_x": 693.5,
+      "label_y": 447.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 2
+        }
+      ],
+      "path": "M 631.0 449.0 C 693.5 464.0 693.5 443.0 756.0 428.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 448.96
+        },
+        {
+          "x": 693.5,
+          "y": 463.96
+        },
+        {
+          "x": 693.5,
+          "y": 443.0
+        },
+        {
+          "x": 756.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n8",
+      "target": "n11",
+      "title": "Machine: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e55",
+      "kind": "df",
+      "label": "1",
+      "label_x": 330.0,
+      "label_y": 433.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 114.0 C 330.0 114.0 330.0 765.0 416.0 765.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 114.0
+        },
+        {
+          "x": 330.0,
+          "y": 114.0
+        },
+        {
+          "x": 330.0,
+          "y": 764.96
+        },
+        {
+          "x": 416.0,
+          "y": 764.96
+        }
+      ],
+      "source": "n1",
+      "target": "n10",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e56",
+      "kind": "df",
+      "label": "1",
+      "label_x": 330.0,
+      "label_y": 354.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 114.0 C 330.0 114.0 330.0 607.0 416.0 607.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 114.0
+        },
+        {
+          "x": 330.0,
+          "y": 114.0
+        },
+        {
+          "x": 330.0,
+          "y": 606.96
+        },
+        {
+          "x": 416.0,
+          "y": 606.96
+        }
+      ],
+      "source": "n1",
+      "target": "n9",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e57",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1033.5,
+      "label_y": 575.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 765.0 C 1033.5 750.0 1033.5 413.0 1436.0 428.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 764.96
+        },
+        {
+          "x": 1033.5,
+          "y": 749.96
+        },
+        {
+          "x": 1033.5,
+          "y": 413.0
+        },
+        {
+          "x": 1436.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n10",
+      "target": "n15",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e58",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1033.5,
+      "label_y": 605.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 765.0 C 1033.5 780.0 1033.5 443.0 1436.0 428.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 764.96
+        },
+        {
+          "x": 1033.5,
+          "y": 779.96
+        },
+        {
+          "x": 1033.5,
+          "y": 443.0
+        },
+        {
+          "x": 1436.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n10",
+      "target": "n15",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e59",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1211.0,
+      "label_y": 644.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 986.0 586.0 C 1211.0 571.0 1211.0 729.0 1436.0 744.0",
+      "points": [
+        {
+          "x": 986.0,
+          "y": 586.0
+        },
+        {
+          "x": 1211.0,
+          "y": 571.0
+        },
+        {
+          "x": 1211.0,
+          "y": 729.0
+        },
+        {
+          "x": 1436.0,
+          "y": 744.0
+        }
+      ],
+      "source": "n12",
+      "target": "n17",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e60",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1211.0,
+      "label_y": 674.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 986.0 586.0 C 1211.0 601.0 1211.0 759.0 1436.0 744.0",
+      "points": [
+        {
+          "x": 986.0,
+          "y": 586.0
+        },
+        {
+          "x": 1211.0,
+          "y": 601.0
+        },
+        {
+          "x": 1211.0,
+          "y": 759.0
+        },
+        {
+          "x": 1436.0,
+          "y": 744.0
+        }
+      ],
+      "source": "n12",
+      "target": "n17",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e61",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1713.5,
+      "label_y": 631.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 1311.0 588.0 C 1713.5 558.0 1713.5 716.0 2116.0 746.0",
+      "points": [
+        {
+          "x": 1311.0,
+          "y": 588.0
+        },
+        {
+          "x": 1713.5,
+          "y": 558.0
+        },
+        {
+          "x": 1713.5,
+          "y": 716.0
+        },
+        {
+          "x": 2116.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n14",
+      "target": "n21",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e62",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1713.5,
+      "label_y": 661.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 1311.0 588.0 C 1713.5 588.0 1713.5 746.0 2116.0 746.0",
+      "points": [
+        {
+          "x": 1311.0,
+          "y": 588.0
+        },
+        {
+          "x": 1713.5,
+          "y": 588.0
+        },
+        {
+          "x": 1713.5,
+          "y": 746.0
+        },
+        {
+          "x": 2116.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n14",
+      "target": "n21",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e63",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1713.5,
+      "label_y": 691.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 1311.0 588.0 C 1713.5 618.0 1713.5 776.0 2116.0 746.0",
+      "points": [
+        {
+          "x": 1311.0,
+          "y": 588.0
+        },
+        {
+          "x": 1713.5,
+          "y": 618.0
+        },
+        {
+          "x": 1713.5,
+          "y": 776.0
+        },
+        {
+          "x": 2116.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n14",
+      "target": "n21",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e64",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2053.5,
+      "label_y": 694.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 1651.0 588.0 C 2053.5 573.0 2053.5 829.0 2456.0 844.0",
+      "points": [
+        {
+          "x": 1651.0,
+          "y": 588.0
+        },
+        {
+          "x": 2053.5,
+          "y": 573.0
+        },
+        {
+          "x": 2053.5,
+          "y": 828.96
+        },
+        {
+          "x": 2456.0,
+          "y": 843.96
+        }
+      ],
+      "source": "n16",
+      "target": "n25",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e65",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2053.5,
+      "label_y": 724.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 1651.0 588.0 C 2053.5 603.0 2053.5 859.0 2456.0 844.0",
+      "points": [
+        {
+          "x": 1651.0,
+          "y": 588.0
+        },
+        {
+          "x": 2053.5,
+          "y": 603.0
+        },
+        {
+          "x": 2053.5,
+          "y": 858.96
+        },
+        {
+          "x": 2456.0,
+          "y": 843.96
+        }
+      ],
+      "source": "n16",
+      "target": "n25",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e66",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2903.5,
+      "label_y": 488.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 1651.0 588.0 C 2903.5 573.0 2903.5 415.0 4156.0 430.0",
+      "points": [
+        {
+          "x": 1651.0,
+          "y": 588.0
+        },
+        {
+          "x": 2903.5,
+          "y": 573.0
+        },
+        {
+          "x": 2903.5,
+          "y": 415.0
+        },
+        {
+          "x": 4156.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n16",
+      "target": "n37",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e67",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2903.5,
+      "label_y": 518.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 1651.0 588.0 C 2903.5 603.0 2903.5 445.0 4156.0 430.0",
+      "points": [
+        {
+          "x": 1651.0,
+          "y": 588.0
+        },
+        {
+          "x": 2903.5,
+          "y": 603.0
+        },
+        {
+          "x": 2903.5,
+          "y": 445.0
+        },
+        {
+          "x": 4156.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n16",
+      "target": "n37",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e68",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1551.0,
+      "label_y": 565.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 1436.0 744.0 C 1551.0 729.0 1551.0 413.0 1666.0 428.0",
+      "points": [
+        {
+          "x": 1436.0,
+          "y": 744.0
+        },
+        {
+          "x": 1551.0,
+          "y": 729.0
+        },
+        {
+          "x": 1551.0,
+          "y": 413.0
+        },
+        {
+          "x": 1666.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n17",
+      "target": "n15",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e69",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1551.0,
+      "label_y": 595.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 1436.0 744.0 C 1551.0 759.0 1551.0 443.0 1666.0 428.0",
+      "points": [
+        {
+          "x": 1436.0,
+          "y": 744.0
+        },
+        {
+          "x": 1551.0,
+          "y": 759.0
+        },
+        {
+          "x": 1551.0,
+          "y": 443.0
+        },
+        {
+          "x": 1666.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n17",
+      "target": "n15",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(42 68% 38%)",
+      "directed": true,
+      "id": "e70",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1350.0,
+      "label_y": 661.0,
+      "object_type": "Operator",
+      "object_types": [
+        {
+          "object_type": "Operator",
+          "weight": 1
+        }
+      ],
+      "path": "M 1776.0 588.0 C 1350.0 588.0 1350.0 746.0 924.0 746.0",
+      "points": [
+        {
+          "x": 1776.0,
+          "y": 588.0
+        },
+        {
+          "x": 1350.0,
+          "y": 588.0
+        },
+        {
+          "x": 1350.0,
+          "y": 746.0
+        },
+        {
+          "x": 924.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n18",
+      "target": "n13",
+      "title": "Operator: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e71",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2393.5,
+      "label_y": 567.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 1991.0 588.0 C 2393.5 573.0 2393.5 573.0 2796.0 588.0",
+      "points": [
+        {
+          "x": 1991.0,
+          "y": 588.0
+        },
+        {
+          "x": 2393.5,
+          "y": 573.0
+        },
+        {
+          "x": 2393.5,
+          "y": 573.0
+        },
+        {
+          "x": 2796.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n18",
+      "target": "n26",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e72",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2393.5,
+      "label_y": 597.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 1991.0 588.0 C 2393.5 603.0 2393.5 603.0 2796.0 588.0",
+      "points": [
+        {
+          "x": 1991.0,
+          "y": 588.0
+        },
+        {
+          "x": 2393.5,
+          "y": 603.0
+        },
+        {
+          "x": 2393.5,
+          "y": 603.0
+        },
+        {
+          "x": 2796.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n18",
+      "target": "n26",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e73",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2563.5,
+      "label_y": 734.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 1991.0 588.0 C 2563.5 573.0 2563.5 908.0 3136.0 923.0",
+      "points": [
+        {
+          "x": 1991.0,
+          "y": 588.0
+        },
+        {
+          "x": 2563.5,
+          "y": 573.0
+        },
+        {
+          "x": 2563.5,
+          "y": 907.96
+        },
+        {
+          "x": 3136.0,
+          "y": 922.96
+        }
+      ],
+      "source": "n18",
+      "target": "n31",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e74",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2563.5,
+      "label_y": 764.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 1991.0 588.0 C 2563.5 603.0 2563.5 938.0 3136.0 923.0",
+      "points": [
+        {
+          "x": 1991.0,
+          "y": 588.0
+        },
+        {
+          "x": 2563.5,
+          "y": 603.0
+        },
+        {
+          "x": 2563.5,
+          "y": 937.96
+        },
+        {
+          "x": 3136.0,
+          "y": 922.96
+        }
+      ],
+      "source": "n18",
+      "target": "n31",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e75",
+      "kind": "df",
+      "label": "1",
+      "label_x": 330.0,
+      "label_y": 512.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 272.0 C 330.0 272.0 330.0 765.0 416.0 765.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 272.0
+        },
+        {
+          "x": 330.0,
+          "y": 272.0
+        },
+        {
+          "x": 330.0,
+          "y": 764.96
+        },
+        {
+          "x": 416.0,
+          "y": 764.96
+        }
+      ],
+      "source": "n2",
+      "target": "n10",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e76",
+      "kind": "df",
+      "label": "1",
+      "label_x": 330.0,
+      "label_y": 433.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 272.0 C 330.0 272.0 330.0 607.0 416.0 607.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 272.0
+        },
+        {
+          "x": 330.0,
+          "y": 272.0
+        },
+        {
+          "x": 330.0,
+          "y": 606.96
+        },
+        {
+          "x": 416.0,
+          "y": 606.96
+        }
+      ],
+      "source": "n2",
+      "target": "n9",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e77",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2733.5,
+      "label_y": 511.48,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 588.0 C 2733.5 588.0 2733.5 447.0 3136.0 447.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 588.0
+        },
+        {
+          "x": 2733.5,
+          "y": 588.0
+        },
+        {
+          "x": 2733.5,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 3136.0,
+          "y": 446.96000000000004
+        }
+      ],
+      "source": "n20",
+      "target": "n28",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e78",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2733.5,
+      "label_y": 561.48,
+      "object_type": "Alarm",
+      "object_types": [
+        {
+          "object_type": "Alarm",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 588.0 C 2733.5 558.0 2733.5 577.0 3136.0 607.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 588.0
+        },
+        {
+          "x": 2733.5,
+          "y": 558.0
+        },
+        {
+          "x": 2733.5,
+          "y": 576.96
+        },
+        {
+          "x": 3136.0,
+          "y": 606.96
+        }
+      ],
+      "source": "n20",
+      "target": "n29",
+      "title": "Alarm: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e79",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2733.5,
+      "label_y": 591.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 588.0 C 2733.5 588.0 2733.5 607.0 3136.0 607.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 588.0
+        },
+        {
+          "x": 2733.5,
+          "y": 588.0
+        },
+        {
+          "x": 2733.5,
+          "y": 606.96
+        },
+        {
+          "x": 3136.0,
+          "y": 606.96
+        }
+      ],
+      "source": "n20",
+      "target": "n29",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e80",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2733.5,
+      "label_y": 621.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 588.0 C 2733.5 618.0 2733.5 637.0 3136.0 607.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 588.0
+        },
+        {
+          "x": 2733.5,
+          "y": 618.0
+        },
+        {
+          "x": 2733.5,
+          "y": 636.96
+        },
+        {
+          "x": 3136.0,
+          "y": 606.96
+        }
+      ],
+      "source": "n20",
+      "target": "n29",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e81",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2393.5,
+      "label_y": 679.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 746.0 C 2393.5 716.0 2393.5 656.0 2456.0 686.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 746.0
+        },
+        {
+          "x": 2393.5,
+          "y": 716.0
+        },
+        {
+          "x": 2393.5,
+          "y": 655.96
+        },
+        {
+          "x": 2456.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n21",
+      "target": "n24",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e82",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2393.5,
+      "label_y": 709.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 746.0 C 2393.5 746.0 2393.5 686.0 2456.0 686.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 746.0
+        },
+        {
+          "x": 2393.5,
+          "y": 746.0
+        },
+        {
+          "x": 2393.5,
+          "y": 685.96
+        },
+        {
+          "x": 2456.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n21",
+      "target": "n24",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e83",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2393.5,
+      "label_y": 739.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 746.0 C 2393.5 776.0 2393.5 716.0 2456.0 686.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 746.0
+        },
+        {
+          "x": 2393.5,
+          "y": 776.0
+        },
+        {
+          "x": 2393.5,
+          "y": 715.96
+        },
+        {
+          "x": 2456.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n21",
+      "target": "n24",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e84",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3413.5,
+      "label_y": 550.98,
+      "object_type": "Alarm",
+      "object_types": [
+        {
+          "object_type": "Alarm",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 368.0 C 3413.5 368.0 3413.5 746.0 4156.0 746.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 3413.5,
+          "y": 367.96
+        },
+        {
+          "x": 3413.5,
+          "y": 746.0
+        },
+        {
+          "x": 4156.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n22",
+      "target": "n39",
+      "title": "Alarm: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e85",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3753.5,
+      "label_y": 362.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 368.0 C 3753.5 338.0 3753.5 400.0 4836.0 430.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 3753.5,
+          "y": 337.96
+        },
+        {
+          "x": 3753.5,
+          "y": 400.0
+        },
+        {
+          "x": 4836.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n22",
+      "target": "n42",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e86",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3753.5,
+      "label_y": 392.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 368.0 C 3753.5 368.0 3753.5 430.0 4836.0 430.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 3753.5,
+          "y": 367.96
+        },
+        {
+          "x": 3753.5,
+          "y": 430.0
+        },
+        {
+          "x": 4836.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n22",
+      "target": "n42",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e87",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3753.5,
+      "label_y": 422.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 368.0 C 3753.5 398.0 3753.5 460.0 4836.0 430.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 3753.5,
+          "y": 397.96
+        },
+        {
+          "x": 3753.5,
+          "y": 460.0
+        },
+        {
+          "x": 4836.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n22",
+      "target": "n42",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e88",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4773.5,
+      "label_y": 495.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 368.0 C 4773.5 353.0 4773.5 650.0 6876.0 665.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 4773.5,
+          "y": 352.96
+        },
+        {
+          "x": 4773.5,
+          "y": 650.0
+        },
+        {
+          "x": 6876.0,
+          "y": 665.0
+        }
+      ],
+      "source": "n22",
+      "target": "n54",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e89",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4773.5,
+      "label_y": 525.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 368.0 C 4773.5 383.0 4773.5 680.0 6876.0 665.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 367.96
+        },
+        {
+          "x": 4773.5,
+          "y": 382.96
+        },
+        {
+          "x": 4773.5,
+          "y": 680.0
+        },
+        {
+          "x": 6876.0,
+          "y": 665.0
+        }
+      ],
+      "source": "n22",
+      "target": "n54",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e90",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2911.0,
+      "label_y": 546.46,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2686.0 528.0 C 2911.0 513.0 2911.0 592.0 3136.0 607.0",
+      "points": [
+        {
+          "x": 2686.0,
+          "y": 527.96
+        },
+        {
+          "x": 2911.0,
+          "y": 512.96
+        },
+        {
+          "x": 2911.0,
+          "y": 591.96
+        },
+        {
+          "x": 3136.0,
+          "y": 606.96
+        }
+      ],
+      "source": "n23",
+      "target": "n29",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e91",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2911.0,
+      "label_y": 576.46,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2686.0 528.0 C 2911.0 543.0 2911.0 622.0 3136.0 607.0",
+      "points": [
+        {
+          "x": 2686.0,
+          "y": 527.96
+        },
+        {
+          "x": 2911.0,
+          "y": 542.96
+        },
+        {
+          "x": 2911.0,
+          "y": 621.96
+        },
+        {
+          "x": 3136.0,
+          "y": 606.96
+        }
+      ],
+      "source": "n23",
+      "target": "n29",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e92",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3421.0,
+      "label_y": 442.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2686.0 528.0 C 3421.0 498.0 3421.0 400.0 4156.0 430.0",
+      "points": [
+        {
+          "x": 2686.0,
+          "y": 527.96
+        },
+        {
+          "x": 3421.0,
+          "y": 497.96000000000004
+        },
+        {
+          "x": 3421.0,
+          "y": 400.0
+        },
+        {
+          "x": 4156.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n23",
+      "target": "n37",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e93",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3421.0,
+      "label_y": 472.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2686.0 528.0 C 3421.0 528.0 3421.0 430.0 4156.0 430.0",
+      "points": [
+        {
+          "x": 2686.0,
+          "y": 527.96
+        },
+        {
+          "x": 3421.0,
+          "y": 527.96
+        },
+        {
+          "x": 3421.0,
+          "y": 430.0
+        },
+        {
+          "x": 4156.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n23",
+      "target": "n37",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e94",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3421.0,
+      "label_y": 502.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 2686.0 528.0 C 3421.0 558.0 3421.0 460.0 4156.0 430.0",
+      "points": [
+        {
+          "x": 2686.0,
+          "y": 527.96
+        },
+        {
+          "x": 3421.0,
+          "y": 557.96
+        },
+        {
+          "x": 3421.0,
+          "y": 460.0
+        },
+        {
+          "x": 4156.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n23",
+      "target": "n37",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e95",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 555.96,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 686.0 C 3243.5 641.0 3243.5 483.0 3816.0 528.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 685.96
+        },
+        {
+          "x": 3243.5,
+          "y": 640.96
+        },
+        {
+          "x": 3243.5,
+          "y": 482.96000000000004
+        },
+        {
+          "x": 3816.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n24",
+      "target": "n34",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e96",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 585.96,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 686.0 C 3243.5 671.0 3243.5 513.0 3816.0 528.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 685.96
+        },
+        {
+          "x": 3243.5,
+          "y": 670.96
+        },
+        {
+          "x": 3243.5,
+          "y": 512.96
+        },
+        {
+          "x": 3816.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n24",
+      "target": "n34",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e97",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 615.96,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 686.0 C 3243.5 701.0 3243.5 543.0 3816.0 528.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 685.96
+        },
+        {
+          "x": 3243.5,
+          "y": 700.96
+        },
+        {
+          "x": 3243.5,
+          "y": 542.96
+        },
+        {
+          "x": 3816.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n24",
+      "target": "n34",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e98",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 645.96,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 686.0 C 3243.5 731.0 3243.5 573.0 3816.0 528.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 685.96
+        },
+        {
+          "x": 3243.5,
+          "y": 730.96
+        },
+        {
+          "x": 3243.5,
+          "y": 572.96
+        },
+        {
+          "x": 3816.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n24",
+      "target": "n34",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e99",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2903.5,
+      "label_y": 783.46,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 844.0 C 2903.5 829.0 2903.5 750.0 3136.0 765.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 843.96
+        },
+        {
+          "x": 2903.5,
+          "y": 828.96
+        },
+        {
+          "x": 2903.5,
+          "y": 749.96
+        },
+        {
+          "x": 3136.0,
+          "y": 764.96
+        }
+      ],
+      "source": "n25",
+      "target": "n30",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e100",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2903.5,
+      "label_y": 813.46,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 844.0 C 2903.5 859.0 2903.5 780.0 3136.0 765.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 843.96
+        },
+        {
+          "x": 2903.5,
+          "y": 858.96
+        },
+        {
+          "x": 2903.5,
+          "y": 779.96
+        },
+        {
+          "x": 3136.0,
+          "y": 764.96
+        }
+      ],
+      "source": "n25",
+      "target": "n30",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e101",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2979.25,
+      "label_y": 528.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 3011.0 588.0 C 3055.0 546.0 2903.5 522.0 2796.0 572.0",
+      "points": [
+        {
+          "x": 3011.0,
+          "y": 588.0
+        },
+        {
+          "x": 3055.0,
+          "y": 546.0
+        },
+        {
+          "x": 2903.5,
+          "y": 522.0
+        },
+        {
+          "x": 2796.0,
+          "y": 572.0
+        }
+      ],
+      "source": "n26",
+      "target": "n26",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e102",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6133.5,
+      "label_y": 536.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 3011.0 588.0 C 6133.5 573.0 6133.5 513.0 9256.0 528.0",
+      "points": [
+        {
+          "x": 3011.0,
+          "y": 588.0
+        },
+        {
+          "x": 6133.5,
+          "y": 573.0
+        },
+        {
+          "x": 6133.5,
+          "y": 512.96
+        },
+        {
+          "x": 9256.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n26",
+      "target": "n62",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e103",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6133.5,
+      "label_y": 566.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 3011.0 588.0 C 6133.5 603.0 6133.5 543.0 9256.0 528.0",
+      "points": [
+        {
+          "x": 3011.0,
+          "y": 588.0
+        },
+        {
+          "x": 6133.5,
+          "y": 603.0
+        },
+        {
+          "x": 6133.5,
+          "y": 542.96
+        },
+        {
+          "x": 9256.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n26",
+      "target": "n62",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e104",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3583.5,
+      "label_y": 339.46000000000004,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 3351.0 291.0 C 3583.5 306.0 3583.5 385.0 3816.0 370.0",
+      "points": [
+        {
+          "x": 3351.0,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 305.96000000000004
+        },
+        {
+          "x": 3583.5,
+          "y": 384.96
+        },
+        {
+          "x": 3816.0,
+          "y": 369.96
+        }
+      ],
+      "source": "n27",
+      "target": "n33",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e105",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2903.5,
+      "label_y": 371.46000000000004,
+      "object_type": "Alarm",
+      "object_types": [
+        {
+          "object_type": "Alarm",
+          "weight": 1
+        }
+      ],
+      "path": "M 3136.0 447.0 C 2903.5 417.0 2903.5 338.0 2671.0 368.0",
+      "points": [
+        {
+          "x": 3136.0,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 2903.5,
+          "y": 416.96000000000004
+        },
+        {
+          "x": 2903.5,
+          "y": 337.96
+        },
+        {
+          "x": 2671.0,
+          "y": 367.96
+        }
+      ],
+      "source": "n28",
+      "target": "n22",
+      "title": "Alarm: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e106",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 362.96000000000004,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 3136.0 447.0 C 3243.5 447.0 3243.5 291.0 3351.0 291.0",
+      "points": [
+        {
+          "x": 3136.0,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 3243.5,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 3243.5,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 3351.0,
+          "y": 290.96000000000004
+        }
+      ],
+      "source": "n28",
+      "target": "n27",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e107",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3251.0,
+      "label_y": 490.96000000000004,
+      "object_type": "Alarm",
+      "object_types": [
+        {
+          "object_type": "Alarm",
+          "weight": 1
+        }
+      ],
+      "path": "M 3136.0 607.0 C 3251.0 577.0 3251.0 417.0 3366.0 447.0",
+      "points": [
+        {
+          "x": 3136.0,
+          "y": 606.96
+        },
+        {
+          "x": 3251.0,
+          "y": 576.96
+        },
+        {
+          "x": 3251.0,
+          "y": 416.96000000000004
+        },
+        {
+          "x": 3366.0,
+          "y": 446.96000000000004
+        }
+      ],
+      "source": "n29",
+      "target": "n28",
+      "title": "Alarm: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e108",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1350.0,
+      "label_y": 551.98,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 430.0 C 1350.0 430.0 1350.0 686.0 2456.0 686.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 430.0
+        },
+        {
+          "x": 1350.0,
+          "y": 430.0
+        },
+        {
+          "x": 1350.0,
+          "y": 685.96
+        },
+        {
+          "x": 2456.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n3",
+      "target": "n24",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e109",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1860.0,
+      "label_y": 503.0,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 430.0 C 1860.0 430.0 1860.0 588.0 3476.0 588.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 430.0
+        },
+        {
+          "x": 1860.0,
+          "y": 430.0
+        },
+        {
+          "x": 1860.0,
+          "y": 588.0
+        },
+        {
+          "x": 3476.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n3",
+      "target": "n32",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e110",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3591.0,
+      "label_y": 704.46,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 3366.0 765.0 C 3591.0 750.0 3591.0 671.0 3816.0 686.0",
+      "points": [
+        {
+          "x": 3366.0,
+          "y": 764.96
+        },
+        {
+          "x": 3591.0,
+          "y": 749.96
+        },
+        {
+          "x": 3591.0,
+          "y": 670.96
+        },
+        {
+          "x": 3816.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n30",
+      "target": "n35",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e111",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3591.0,
+      "label_y": 734.46,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 3366.0 765.0 C 3591.0 780.0 3591.0 701.0 3816.0 686.0",
+      "points": [
+        {
+          "x": 3366.0,
+          "y": 764.96
+        },
+        {
+          "x": 3591.0,
+          "y": 779.96
+        },
+        {
+          "x": 3591.0,
+          "y": 700.96
+        },
+        {
+          "x": 3816.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n30",
+      "target": "n35",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e112",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3591.0,
+      "label_y": 862.46,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 3366.0 923.0 C 3591.0 908.0 3591.0 829.0 3816.0 844.0",
+      "points": [
+        {
+          "x": 3366.0,
+          "y": 922.96
+        },
+        {
+          "x": 3591.0,
+          "y": 907.96
+        },
+        {
+          "x": 3591.0,
+          "y": 828.96
+        },
+        {
+          "x": 3816.0,
+          "y": 843.96
+        }
+      ],
+      "source": "n31",
+      "target": "n36",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e113",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3591.0,
+      "label_y": 892.46,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 3366.0 923.0 C 3591.0 938.0 3591.0 859.0 3816.0 844.0",
+      "points": [
+        {
+          "x": 3366.0,
+          "y": 922.96
+        },
+        {
+          "x": 3591.0,
+          "y": 937.96
+        },
+        {
+          "x": 3591.0,
+          "y": 858.96
+        },
+        {
+          "x": 3816.0,
+          "y": 843.96
+        }
+      ],
+      "source": "n31",
+      "target": "n36",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e114",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4093.5,
+      "label_y": 600.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 3691.0 588.0 C 4093.5 558.0 4093.5 656.0 4496.0 686.0",
+      "points": [
+        {
+          "x": 3691.0,
+          "y": 588.0
+        },
+        {
+          "x": 4093.5,
+          "y": 558.0
+        },
+        {
+          "x": 4093.5,
+          "y": 655.96
+        },
+        {
+          "x": 4496.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n32",
+      "target": "n41",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e115",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4093.5,
+      "label_y": 630.98,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 3691.0 588.0 C 4093.5 588.0 4093.5 686.0 4496.0 686.0",
+      "points": [
+        {
+          "x": 3691.0,
+          "y": 588.0
+        },
+        {
+          "x": 4093.5,
+          "y": 588.0
+        },
+        {
+          "x": 4093.5,
+          "y": 685.96
+        },
+        {
+          "x": 4496.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n32",
+      "target": "n41",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e116",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4093.5,
+      "label_y": 660.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 3691.0 588.0 C 4093.5 618.0 4093.5 716.0 4496.0 686.0",
+      "points": [
+        {
+          "x": 3691.0,
+          "y": 588.0
+        },
+        {
+          "x": 4093.5,
+          "y": 618.0
+        },
+        {
+          "x": 4093.5,
+          "y": 715.96
+        },
+        {
+          "x": 4496.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n32",
+      "target": "n41",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e117",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3050.0,
+      "label_y": 472.98,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 3816.0 528.0 C 3050.0 528.0 3050.0 430.0 2284.0 430.0",
+      "points": [
+        {
+          "x": 3816.0,
+          "y": 527.96
+        },
+        {
+          "x": 3050.0,
+          "y": 527.96
+        },
+        {
+          "x": 3050.0,
+          "y": 430.0
+        },
+        {
+          "x": 2284.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n34",
+      "target": "n19",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e118",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4603.5,
+      "label_y": 570.96,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4031.0 528.0 C 4603.5 498.0 4603.5 656.0 5176.0 686.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 527.96
+        },
+        {
+          "x": 4603.5,
+          "y": 497.96000000000004
+        },
+        {
+          "x": 4603.5,
+          "y": 655.96
+        },
+        {
+          "x": 5176.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n34",
+      "target": "n46",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e119",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4603.5,
+      "label_y": 600.96,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4031.0 528.0 C 4603.5 528.0 4603.5 686.0 5176.0 686.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 527.96
+        },
+        {
+          "x": 4603.5,
+          "y": 527.96
+        },
+        {
+          "x": 4603.5,
+          "y": 685.96
+        },
+        {
+          "x": 5176.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n34",
+      "target": "n46",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e120",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4603.5,
+      "label_y": 630.96,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 4031.0 528.0 C 4603.5 558.0 4603.5 716.0 5176.0 686.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 527.96
+        },
+        {
+          "x": 4603.5,
+          "y": 557.96
+        },
+        {
+          "x": 4603.5,
+          "y": 715.96
+        },
+        {
+          "x": 5176.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n34",
+      "target": "n46",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e121",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3753.5,
+      "label_y": 615.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 3816.0 686.0 C 3753.5 671.0 3753.5 573.0 3691.0 588.0",
+      "points": [
+        {
+          "x": 3816.0,
+          "y": 685.96
+        },
+        {
+          "x": 3753.5,
+          "y": 670.96
+        },
+        {
+          "x": 3753.5,
+          "y": 573.0
+        },
+        {
+          "x": 3691.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n35",
+      "target": "n32",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e122",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3753.5,
+      "label_y": 645.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 3816.0 686.0 C 3753.5 701.0 3753.5 603.0 3691.0 588.0",
+      "points": [
+        {
+          "x": 3816.0,
+          "y": 685.96
+        },
+        {
+          "x": 3753.5,
+          "y": 700.96
+        },
+        {
+          "x": 3753.5,
+          "y": 603.0
+        },
+        {
+          "x": 3691.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n35",
+      "target": "n32",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e123",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4093.5,
+      "label_y": 694.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4031.0 844.0 C 4093.5 829.0 4093.5 573.0 4156.0 588.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 843.96
+        },
+        {
+          "x": 4093.5,
+          "y": 828.96
+        },
+        {
+          "x": 4093.5,
+          "y": 573.0
+        },
+        {
+          "x": 4156.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n36",
+      "target": "n38",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e124",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4093.5,
+      "label_y": 724.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4031.0 844.0 C 4093.5 859.0 4093.5 603.0 4156.0 588.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 843.96
+        },
+        {
+          "x": 4093.5,
+          "y": 858.96
+        },
+        {
+          "x": 4093.5,
+          "y": 603.0
+        },
+        {
+          "x": 4156.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n36",
+      "target": "n38",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e125",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 473.0,
+      "object_type": "Alarm",
+      "object_types": [
+        {
+          "object_type": "Alarm",
+          "weight": 1
+        }
+      ],
+      "path": "M 4156.0 430.0 C 3243.5 400.0 3243.5 558.0 2331.0 588.0",
+      "points": [
+        {
+          "x": 4156.0,
+          "y": 430.0
+        },
+        {
+          "x": 3243.5,
+          "y": 400.0
+        },
+        {
+          "x": 3243.5,
+          "y": 558.0
+        },
+        {
+          "x": 2331.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n37",
+      "target": "n20",
+      "title": "Alarm: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e126",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 503.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4156.0 430.0 C 3243.5 430.0 3243.5 588.0 2331.0 588.0",
+      "points": [
+        {
+          "x": 4156.0,
+          "y": 430.0
+        },
+        {
+          "x": 3243.5,
+          "y": 430.0
+        },
+        {
+          "x": 3243.5,
+          "y": 588.0
+        },
+        {
+          "x": 2331.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n37",
+      "target": "n20",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e127",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 533.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4156.0 430.0 C 3243.5 460.0 3243.5 618.0 2331.0 588.0",
+      "points": [
+        {
+          "x": 4156.0,
+          "y": 430.0
+        },
+        {
+          "x": 3243.5,
+          "y": 460.0
+        },
+        {
+          "x": 3243.5,
+          "y": 618.0
+        },
+        {
+          "x": 2331.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n37",
+      "target": "n20",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e128",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5963.5,
+      "label_y": 488.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4371.0 430.0 C 5963.5 415.0 5963.5 573.0 7556.0 588.0",
+      "points": [
+        {
+          "x": 4371.0,
+          "y": 430.0
+        },
+        {
+          "x": 5963.5,
+          "y": 415.0
+        },
+        {
+          "x": 5963.5,
+          "y": 573.0
+        },
+        {
+          "x": 7556.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n37",
+      "target": "n56",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e129",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5963.5,
+      "label_y": 518.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4371.0 430.0 C 5963.5 445.0 5963.5 603.0 7556.0 588.0",
+      "points": [
+        {
+          "x": 4371.0,
+          "y": 430.0
+        },
+        {
+          "x": 5963.5,
+          "y": 445.0
+        },
+        {
+          "x": 5963.5,
+          "y": 603.0
+        },
+        {
+          "x": 7556.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n37",
+      "target": "n56",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e130",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6133.5,
+      "label_y": 503.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 4371.0 430.0 C 6133.5 430.0 6133.5 588.0 7896.0 588.0",
+      "points": [
+        {
+          "x": 4371.0,
+          "y": 430.0
+        },
+        {
+          "x": 6133.5,
+          "y": 430.0
+        },
+        {
+          "x": 6133.5,
+          "y": 588.0
+        },
+        {
+          "x": 7896.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n37",
+      "target": "n57",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e131",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4611.0,
+      "label_y": 646.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4386.0 588.0 C 4611.0 573.0 4611.0 731.0 4836.0 746.0",
+      "points": [
+        {
+          "x": 4386.0,
+          "y": 588.0
+        },
+        {
+          "x": 4611.0,
+          "y": 573.0
+        },
+        {
+          "x": 4611.0,
+          "y": 731.0
+        },
+        {
+          "x": 4836.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n38",
+      "target": "n44",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e132",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4611.0,
+      "label_y": 676.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4386.0 588.0 C 4611.0 603.0 4611.0 761.0 4836.0 746.0",
+      "points": [
+        {
+          "x": 4386.0,
+          "y": 588.0
+        },
+        {
+          "x": 4611.0,
+          "y": 603.0
+        },
+        {
+          "x": 4611.0,
+          "y": 761.0
+        },
+        {
+          "x": 4836.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n38",
+      "target": "n44",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e133",
+      "kind": "df",
+      "label": "1",
+      "label_x": 670.0,
+      "label_y": 582.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 588.0 C 670.0 588.0 670.0 588.0 1096.0 588.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 588.0
+        },
+        {
+          "x": 670.0,
+          "y": 588.0
+        },
+        {
+          "x": 670.0,
+          "y": 588.0
+        },
+        {
+          "x": 1096.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n4",
+      "target": "n14",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e134",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1350.0,
+      "label_y": 471.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 588.0 C 1350.0 588.0 1350.0 368.0 2456.0 368.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 588.0
+        },
+        {
+          "x": 1350.0,
+          "y": 588.0
+        },
+        {
+          "x": 1350.0,
+          "y": 367.96
+        },
+        {
+          "x": 2456.0,
+          "y": 367.96
+        }
+      ],
+      "source": "n4",
+      "target": "n22",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e135",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5623.5,
+      "label_y": 505.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4711.0 526.0 C 5623.5 481.0 5623.5 543.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 4711.0,
+          "y": 525.96
+        },
+        {
+          "x": 5623.5,
+          "y": 480.96000000000004
+        },
+        {
+          "x": 5623.5,
+          "y": 543.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n40",
+      "target": "n52",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e136",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5623.5,
+      "label_y": 535.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4711.0 526.0 C 5623.5 511.0 5623.5 573.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 4711.0,
+          "y": 525.96
+        },
+        {
+          "x": 5623.5,
+          "y": 510.96000000000004
+        },
+        {
+          "x": 5623.5,
+          "y": 573.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n40",
+      "target": "n52",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e137",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5623.5,
+      "label_y": 565.98,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 4711.0 526.0 C 5623.5 541.0 5623.5 603.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 4711.0,
+          "y": 525.96
+        },
+        {
+          "x": 5623.5,
+          "y": 540.96
+        },
+        {
+          "x": 5623.5,
+          "y": 603.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n40",
+      "target": "n52",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e138",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5623.5,
+      "label_y": 595.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 4711.0 526.0 C 5623.5 571.0 5623.5 633.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 4711.0,
+          "y": 525.96
+        },
+        {
+          "x": 5623.5,
+          "y": 570.96
+        },
+        {
+          "x": 5623.5,
+          "y": 633.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n40",
+      "target": "n52",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e139",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4943.5,
+      "label_y": 570.96,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4711.0 686.0 C 4943.5 656.0 4943.5 498.0 5176.0 528.0",
+      "points": [
+        {
+          "x": 4711.0,
+          "y": 685.96
+        },
+        {
+          "x": 4943.5,
+          "y": 655.96
+        },
+        {
+          "x": 4943.5,
+          "y": 497.96000000000004
+        },
+        {
+          "x": 5176.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n41",
+      "target": "n45",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e140",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4943.5,
+      "label_y": 600.96,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 4711.0 686.0 C 4943.5 686.0 4943.5 528.0 5176.0 528.0",
+      "points": [
+        {
+          "x": 4711.0,
+          "y": 685.96
+        },
+        {
+          "x": 4943.5,
+          "y": 685.96
+        },
+        {
+          "x": 4943.5,
+          "y": 527.96
+        },
+        {
+          "x": 5176.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n41",
+      "target": "n45",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e141",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4943.5,
+      "label_y": 630.96,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4711.0 686.0 C 4943.5 716.0 4943.5 558.0 5176.0 528.0",
+      "points": [
+        {
+          "x": 4711.0,
+          "y": 685.96
+        },
+        {
+          "x": 4943.5,
+          "y": 715.96
+        },
+        {
+          "x": 4943.5,
+          "y": 557.96
+        },
+        {
+          "x": 5176.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n41",
+      "target": "n45",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e142",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5623.5,
+      "label_y": 454.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 5051.0 430.0 C 5623.5 460.0 5623.5 460.0 6196.0 430.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 430.0
+        },
+        {
+          "x": 5623.5,
+          "y": 460.0
+        },
+        {
+          "x": 5623.5,
+          "y": 460.0
+        },
+        {
+          "x": 6196.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n42",
+      "target": "n49",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e143",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4773.5,
+      "label_y": 505.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 4836.0 588.0 C 4773.5 543.0 4773.5 481.0 4711.0 526.0",
+      "points": [
+        {
+          "x": 4836.0,
+          "y": 588.0
+        },
+        {
+          "x": 4773.5,
+          "y": 543.0
+        },
+        {
+          "x": 4773.5,
+          "y": 480.96000000000004
+        },
+        {
+          "x": 4711.0,
+          "y": 525.96
+        }
+      ],
+      "source": "n43",
+      "target": "n40",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e144",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4773.5,
+      "label_y": 535.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 4836.0 588.0 C 4773.5 573.0 4773.5 511.0 4711.0 526.0",
+      "points": [
+        {
+          "x": 4836.0,
+          "y": 588.0
+        },
+        {
+          "x": 4773.5,
+          "y": 573.0
+        },
+        {
+          "x": 4773.5,
+          "y": 510.96000000000004
+        },
+        {
+          "x": 4711.0,
+          "y": 525.96
+        }
+      ],
+      "source": "n43",
+      "target": "n40",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e145",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4773.5,
+      "label_y": 565.98,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 4836.0 588.0 C 4773.5 603.0 4773.5 541.0 4711.0 526.0",
+      "points": [
+        {
+          "x": 4836.0,
+          "y": 588.0
+        },
+        {
+          "x": 4773.5,
+          "y": 603.0
+        },
+        {
+          "x": 4773.5,
+          "y": 540.96
+        },
+        {
+          "x": 4711.0,
+          "y": 525.96
+        }
+      ],
+      "source": "n43",
+      "target": "n40",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e146",
+      "kind": "df",
+      "label": "1",
+      "label_x": 4773.5,
+      "label_y": 595.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 4836.0 588.0 C 4773.5 633.0 4773.5 571.0 4711.0 526.0",
+      "points": [
+        {
+          "x": 4836.0,
+          "y": 588.0
+        },
+        {
+          "x": 4773.5,
+          "y": 633.0
+        },
+        {
+          "x": 4773.5,
+          "y": 570.96
+        },
+        {
+          "x": 4711.0,
+          "y": 525.96
+        }
+      ],
+      "source": "n43",
+      "target": "n40",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e147",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 537.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 5051.0 588.0 C 5793.5 543.0 5793.5 543.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 543.0
+        },
+        {
+          "x": 5793.5,
+          "y": 543.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n43",
+      "target": "n52",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e148",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 567.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 5051.0 588.0 C 5793.5 573.0 5793.5 573.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 573.0
+        },
+        {
+          "x": 5793.5,
+          "y": 573.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n43",
+      "target": "n52",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e149",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 597.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 5051.0 588.0 C 5793.5 603.0 5793.5 603.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 603.0
+        },
+        {
+          "x": 5793.5,
+          "y": 603.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n43",
+      "target": "n52",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e150",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 627.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 5051.0 588.0 C 5793.5 633.0 5793.5 633.0 6536.0 588.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 633.0
+        },
+        {
+          "x": 5793.5,
+          "y": 633.0
+        },
+        {
+          "x": 6536.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n43",
+      "target": "n52",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e151",
+      "kind": "df",
+      "label": "1",
+      "label_x": 7153.5,
+      "label_y": 615.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 5051.0 746.0 C 7153.5 731.0 7153.5 513.0 9256.0 528.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 746.0
+        },
+        {
+          "x": 7153.5,
+          "y": 731.0
+        },
+        {
+          "x": 7153.5,
+          "y": 512.96
+        },
+        {
+          "x": 9256.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n44",
+      "target": "n62",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e152",
+      "kind": "df",
+      "label": "1",
+      "label_x": 7153.5,
+      "label_y": 645.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 5051.0 746.0 C 7153.5 761.0 7153.5 543.0 9256.0 528.0",
+      "points": [
+        {
+          "x": 5051.0,
+          "y": 746.0
+        },
+        {
+          "x": 7153.5,
+          "y": 761.0
+        },
+        {
+          "x": 7153.5,
+          "y": 542.96
+        },
+        {
+          "x": 9256.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n44",
+      "target": "n62",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e153",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5461.0,
+      "label_y": 521.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 5406.0 528.0 C 5461.0 498.0 5461.0 558.0 5516.0 588.0",
+      "points": [
+        {
+          "x": 5406.0,
+          "y": 527.96
+        },
+        {
+          "x": 5461.0,
+          "y": 497.96000000000004
+        },
+        {
+          "x": 5461.0,
+          "y": 558.0
+        },
+        {
+          "x": 5516.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n45",
+      "target": "n47",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e154",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5461.0,
+      "label_y": 551.98,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 5406.0 528.0 C 5461.0 528.0 5461.0 588.0 5516.0 588.0",
+      "points": [
+        {
+          "x": 5406.0,
+          "y": 527.96
+        },
+        {
+          "x": 5461.0,
+          "y": 527.96
+        },
+        {
+          "x": 5461.0,
+          "y": 588.0
+        },
+        {
+          "x": 5516.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n45",
+      "target": "n47",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e155",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5461.0,
+      "label_y": 581.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 5406.0 528.0 C 5461.0 558.0 5461.0 618.0 5516.0 588.0",
+      "points": [
+        {
+          "x": 5406.0,
+          "y": 527.96
+        },
+        {
+          "x": 5461.0,
+          "y": 557.96
+        },
+        {
+          "x": 5461.0,
+          "y": 618.0
+        },
+        {
+          "x": 5516.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n45",
+      "target": "n47",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e156",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6141.0,
+      "label_y": 561.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 5406.0 686.0 C 6141.0 656.0 6141.0 479.0 6876.0 509.0",
+      "points": [
+        {
+          "x": 5406.0,
+          "y": 685.96
+        },
+        {
+          "x": 6141.0,
+          "y": 655.96
+        },
+        {
+          "x": 6141.0,
+          "y": 479.0
+        },
+        {
+          "x": 6876.0,
+          "y": 509.0
+        }
+      ],
+      "source": "n46",
+      "target": "n53",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e157",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6141.0,
+      "label_y": 591.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 5406.0 686.0 C 6141.0 686.0 6141.0 509.0 6876.0 509.0",
+      "points": [
+        {
+          "x": 5406.0,
+          "y": 685.96
+        },
+        {
+          "x": 6141.0,
+          "y": 685.96
+        },
+        {
+          "x": 6141.0,
+          "y": 509.0
+        },
+        {
+          "x": 6876.0,
+          "y": 509.0
+        }
+      ],
+      "source": "n46",
+      "target": "n53",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e158",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6141.0,
+      "label_y": 621.48,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 5406.0 686.0 C 6141.0 716.0 6141.0 539.0 6876.0 509.0",
+      "points": [
+        {
+          "x": 5406.0,
+          "y": 685.96
+        },
+        {
+          "x": 6141.0,
+          "y": 715.96
+        },
+        {
+          "x": 6141.0,
+          "y": 539.0
+        },
+        {
+          "x": 6876.0,
+          "y": 509.0
+        }
+      ],
+      "source": "n46",
+      "target": "n53",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "directed": true,
+      "id": "e159",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3900.0,
+      "label_y": 503.0,
+      "object_type": "Inspection",
+      "object_types": [
+        {
+          "object_type": "Inspection",
+          "weight": 1
+        }
+      ],
+      "path": "M 5516.0 588.0 C 3900.0 588.0 3900.0 430.0 2284.0 430.0",
+      "points": [
+        {
+          "x": 5516.0,
+          "y": 588.0
+        },
+        {
+          "x": 3900.0,
+          "y": 588.0
+        },
+        {
+          "x": 3900.0,
+          "y": 430.0
+        },
+        {
+          "x": 2284.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n47",
+      "target": "n19",
+      "title": "Inspection: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e160",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6643.5,
+      "label_y": 567.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 5731.0 588.0 C 6643.5 573.0 6643.5 573.0 7556.0 588.0",
+      "points": [
+        {
+          "x": 5731.0,
+          "y": 588.0
+        },
+        {
+          "x": 6643.5,
+          "y": 573.0
+        },
+        {
+          "x": 6643.5,
+          "y": 573.0
+        },
+        {
+          "x": 7556.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n47",
+      "target": "n56",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e161",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6643.5,
+      "label_y": 597.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 5731.0 588.0 C 6643.5 603.0 6643.5 603.0 7556.0 588.0",
+      "points": [
+        {
+          "x": 5731.0,
+          "y": 588.0
+        },
+        {
+          "x": 6643.5,
+          "y": 603.0
+        },
+        {
+          "x": 6643.5,
+          "y": 603.0
+        },
+        {
+          "x": 7556.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n47",
+      "target": "n56",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e162",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1180.0,
+      "label_y": 661.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 746.0 C 1180.0 746.0 1180.0 588.0 2116.0 588.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 746.0
+        },
+        {
+          "x": 1180.0,
+          "y": 746.0
+        },
+        {
+          "x": 1180.0,
+          "y": 588.0
+        },
+        {
+          "x": 2116.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n5",
+      "target": "n20",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e163",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2030.0,
+      "label_y": 551.98,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 746.0 C 2030.0 746.0 2030.0 370.0 3816.0 370.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 746.0
+        },
+        {
+          "x": 2030.0,
+          "y": 746.0
+        },
+        {
+          "x": 2030.0,
+          "y": 369.96
+        },
+        {
+          "x": 3816.0,
+          "y": 369.96
+        }
+      ],
+      "source": "n5",
+      "target": "n33",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e164",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 535.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 6411.0 586.0 C 6813.5 541.0 6813.5 541.0 7216.0 586.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 541.0
+        },
+        {
+          "x": 6813.5,
+          "y": 541.0
+        },
+        {
+          "x": 7216.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n50",
+      "target": "n55",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e165",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 565.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 6411.0 586.0 C 6813.5 571.0 6813.5 571.0 7216.0 586.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 571.0
+        },
+        {
+          "x": 6813.5,
+          "y": 571.0
+        },
+        {
+          "x": 7216.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n50",
+      "target": "n55",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e166",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 595.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 6411.0 586.0 C 6813.5 601.0 6813.5 601.0 7216.0 586.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 601.0
+        },
+        {
+          "x": 6813.5,
+          "y": 601.0
+        },
+        {
+          "x": 7216.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n50",
+      "target": "n55",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e167",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 625.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 6411.0 586.0 C 6813.5 631.0 6813.5 631.0 7216.0 586.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 631.0
+        },
+        {
+          "x": 6813.5,
+          "y": 631.0
+        },
+        {
+          "x": 7216.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n50",
+      "target": "n55",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e168",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6133.5,
+      "label_y": 646.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 6196.0 746.0 C 6133.5 731.0 6133.5 573.0 6071.0 588.0",
+      "points": [
+        {
+          "x": 6196.0,
+          "y": 746.0
+        },
+        {
+          "x": 6133.5,
+          "y": 731.0
+        },
+        {
+          "x": 6133.5,
+          "y": 573.0
+        },
+        {
+          "x": 6071.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n51",
+      "target": "n48",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e169",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6133.5,
+      "label_y": 676.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 6196.0 746.0 C 6133.5 761.0 6133.5 603.0 6071.0 588.0",
+      "points": [
+        {
+          "x": 6196.0,
+          "y": 746.0
+        },
+        {
+          "x": 6133.5,
+          "y": 761.0
+        },
+        {
+          "x": 6133.5,
+          "y": 603.0
+        },
+        {
+          "x": 6071.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n51",
+      "target": "n48",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e170",
+      "kind": "df",
+      "label": "1",
+      "label_x": 7153.5,
+      "label_y": 661.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 6411.0 746.0 C 7153.5 746.0 7153.5 588.0 7896.0 588.0",
+      "points": [
+        {
+          "x": 6411.0,
+          "y": 746.0
+        },
+        {
+          "x": 7153.5,
+          "y": 746.0
+        },
+        {
+          "x": 7153.5,
+          "y": 588.0
+        },
+        {
+          "x": 7896.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n51",
+      "target": "n57",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e171",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 458.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 5793.5 543.0 5793.5 385.0 5051.0 430.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 543.0
+        },
+        {
+          "x": 5793.5,
+          "y": 385.0
+        },
+        {
+          "x": 5051.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n52",
+      "target": "n42",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e172",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 488.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 5793.5 573.0 5793.5 415.0 5051.0 430.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 573.0
+        },
+        {
+          "x": 5793.5,
+          "y": 415.0
+        },
+        {
+          "x": 5051.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n52",
+      "target": "n42",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e173",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 518.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 5793.5 603.0 5793.5 445.0 5051.0 430.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 603.0
+        },
+        {
+          "x": 5793.5,
+          "y": 445.0
+        },
+        {
+          "x": 5051.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n52",
+      "target": "n42",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e174",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5793.5,
+      "label_y": 548.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 5793.5 633.0 5793.5 475.0 5051.0 430.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 5793.5,
+          "y": 633.0
+        },
+        {
+          "x": 5793.5,
+          "y": 475.0
+        },
+        {
+          "x": 5051.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n52",
+      "target": "n42",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e175",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6473.5,
+      "label_y": 536.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 6473.5 543.0 6473.5 541.0 6411.0 586.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 6473.5,
+          "y": 543.0
+        },
+        {
+          "x": 6473.5,
+          "y": 541.0
+        },
+        {
+          "x": 6411.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n52",
+      "target": "n50",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e176",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6473.5,
+      "label_y": 566.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 6473.5 573.0 6473.5 571.0 6411.0 586.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 6473.5,
+          "y": 573.0
+        },
+        {
+          "x": 6473.5,
+          "y": 571.0
+        },
+        {
+          "x": 6411.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n52",
+      "target": "n50",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e177",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6473.5,
+      "label_y": 596.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 6473.5 603.0 6473.5 601.0 6411.0 586.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 6473.5,
+          "y": 603.0
+        },
+        {
+          "x": 6473.5,
+          "y": 601.0
+        },
+        {
+          "x": 6411.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n52",
+      "target": "n50",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e178",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6473.5,
+      "label_y": 626.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 6536.0 588.0 C 6473.5 633.0 6473.5 631.0 6411.0 586.0",
+      "points": [
+        {
+          "x": 6536.0,
+          "y": 588.0
+        },
+        {
+          "x": 6473.5,
+          "y": 633.0
+        },
+        {
+          "x": 6473.5,
+          "y": 631.0
+        },
+        {
+          "x": 6411.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n52",
+      "target": "n50",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e179",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6719.25,
+      "label_y": 528.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 6751.0 588.0 C 6795.0 546.0 6643.5 522.0 6536.0 572.0",
+      "points": [
+        {
+          "x": 6751.0,
+          "y": 588.0
+        },
+        {
+          "x": 6795.0,
+          "y": 546.0
+        },
+        {
+          "x": 6643.5,
+          "y": 522.0
+        },
+        {
+          "x": 6536.0,
+          "y": 572.0
+        }
+      ],
+      "source": "n52",
+      "target": "n52",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e180",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6473.5,
+      "label_y": 527.5,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 6876.0 509.0 C 6473.5 494.0 6473.5 573.0 6071.0 588.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 509.0
+        },
+        {
+          "x": 6473.5,
+          "y": 494.0
+        },
+        {
+          "x": 6473.5,
+          "y": 573.0
+        },
+        {
+          "x": 6071.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n53",
+      "target": "n48",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e181",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6473.5,
+      "label_y": 557.5,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 6876.0 509.0 C 6473.5 524.0 6473.5 603.0 6071.0 588.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 509.0
+        },
+        {
+          "x": 6473.5,
+          "y": 524.0
+        },
+        {
+          "x": 6473.5,
+          "y": 603.0
+        },
+        {
+          "x": 6071.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n53",
+      "target": "n48",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e182",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6643.5,
+      "label_y": 591.5,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 6876.0 509.0 C 6643.5 479.0 6643.5 716.0 6411.0 746.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 509.0
+        },
+        {
+          "x": 6643.5,
+          "y": 479.0
+        },
+        {
+          "x": 6643.5,
+          "y": 716.0
+        },
+        {
+          "x": 6411.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n53",
+      "target": "n51",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e183",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6643.5,
+      "label_y": 621.5,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 6876.0 509.0 C 6643.5 509.0 6643.5 746.0 6411.0 746.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 509.0
+        },
+        {
+          "x": 6643.5,
+          "y": 509.0
+        },
+        {
+          "x": 6643.5,
+          "y": 746.0
+        },
+        {
+          "x": 6411.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n53",
+      "target": "n51",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e184",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6643.5,
+      "label_y": 651.5,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 6876.0 509.0 C 6643.5 539.0 6643.5 776.0 6411.0 746.0",
+      "points": [
+        {
+          "x": 6876.0,
+          "y": 509.0
+        },
+        {
+          "x": 6643.5,
+          "y": 539.0
+        },
+        {
+          "x": 6643.5,
+          "y": 776.0
+        },
+        {
+          "x": 6411.0,
+          "y": 746.0
+        }
+      ],
+      "source": "n53",
+      "target": "n51",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e185",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 457.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 7216.0 586.0 C 6813.5 541.0 6813.5 385.0 6411.0 430.0",
+      "points": [
+        {
+          "x": 7216.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 541.0
+        },
+        {
+          "x": 6813.5,
+          "y": 385.0
+        },
+        {
+          "x": 6411.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n55",
+      "target": "n49",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e186",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 487.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 7216.0 586.0 C 6813.5 571.0 6813.5 415.0 6411.0 430.0",
+      "points": [
+        {
+          "x": 7216.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 571.0
+        },
+        {
+          "x": 6813.5,
+          "y": 415.0
+        },
+        {
+          "x": 6411.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n55",
+      "target": "n49",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e187",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 517.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 7216.0 586.0 C 6813.5 601.0 6813.5 445.0 6411.0 430.0",
+      "points": [
+        {
+          "x": 7216.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 601.0
+        },
+        {
+          "x": 6813.5,
+          "y": 445.0
+        },
+        {
+          "x": 6411.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n55",
+      "target": "n49",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e188",
+      "kind": "df",
+      "label": "1",
+      "label_x": 6813.5,
+      "label_y": 547.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 7216.0 586.0 C 6813.5 631.0 6813.5 475.0 6411.0 430.0",
+      "points": [
+        {
+          "x": 7216.0,
+          "y": 586.0
+        },
+        {
+          "x": 6813.5,
+          "y": 631.0
+        },
+        {
+          "x": 6813.5,
+          "y": 475.0
+        },
+        {
+          "x": 6411.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n55",
+      "target": "n49",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e189",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2200.0,
+      "label_y": 661.0,
+      "object_type": "Alarm",
+      "object_types": [
+        {
+          "object_type": "Alarm",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 904.0 C 2200.0 904.0 2200.0 430.0 4156.0 430.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 904.0
+        },
+        {
+          "x": 2200.0,
+          "y": 904.0
+        },
+        {
+          "x": 2200.0,
+          "y": 430.0
+        },
+        {
+          "x": 4156.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n6",
+      "target": "n37",
+      "title": "Alarm: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e190",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5801.0,
+      "label_y": 521.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 8916.0 588.0 C 5801.0 558.0 5801.0 498.0 2686.0 528.0",
+      "points": [
+        {
+          "x": 8916.0,
+          "y": 588.0
+        },
+        {
+          "x": 5801.0,
+          "y": 558.0
+        },
+        {
+          "x": 5801.0,
+          "y": 497.96000000000004
+        },
+        {
+          "x": 2686.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n61",
+      "target": "n23",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e191",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5801.0,
+      "label_y": 551.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 8916.0 588.0 C 5801.0 588.0 5801.0 528.0 2686.0 528.0",
+      "points": [
+        {
+          "x": 8916.0,
+          "y": 588.0
+        },
+        {
+          "x": 5801.0,
+          "y": 588.0
+        },
+        {
+          "x": 5801.0,
+          "y": 527.96
+        },
+        {
+          "x": 2686.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n61",
+      "target": "n23",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e192",
+      "kind": "df",
+      "label": "1",
+      "label_x": 5801.0,
+      "label_y": 581.98,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 8916.0 588.0 C 5801.0 618.0 5801.0 558.0 2686.0 528.0",
+      "points": [
+        {
+          "x": 8916.0,
+          "y": 588.0
+        },
+        {
+          "x": 5801.0,
+          "y": 618.0
+        },
+        {
+          "x": 5801.0,
+          "y": 557.96
+        },
+        {
+          "x": 2686.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n61",
+      "target": "n23",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e193",
+      "kind": "df",
+      "label": "1",
+      "label_x": 8490.0,
+      "label_y": 582.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 8916.0 588.0 C 8490.0 588.0 8490.0 588.0 8064.0 588.0",
+      "points": [
+        {
+          "x": 8916.0,
+          "y": 588.0
+        },
+        {
+          "x": 8490.0,
+          "y": 588.0
+        },
+        {
+          "x": 8490.0,
+          "y": 588.0
+        },
+        {
+          "x": 8064.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n61",
+      "target": "n57",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e194",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9193.5,
+      "label_y": 536.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 9131.0 588.0 C 9193.5 573.0 9193.5 513.0 9256.0 528.0",
+      "points": [
+        {
+          "x": 9131.0,
+          "y": 588.0
+        },
+        {
+          "x": 9193.5,
+          "y": 573.0
+        },
+        {
+          "x": 9193.5,
+          "y": 512.96
+        },
+        {
+          "x": 9256.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n61",
+      "target": "n62",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e195",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9193.5,
+      "label_y": 566.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 9131.0 588.0 C 9193.5 603.0 9193.5 543.0 9256.0 528.0",
+      "points": [
+        {
+          "x": 9131.0,
+          "y": 588.0
+        },
+        {
+          "x": 9193.5,
+          "y": 603.0
+        },
+        {
+          "x": 9193.5,
+          "y": 542.96
+        },
+        {
+          "x": 9256.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n61",
+      "target": "n62",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e196",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9193.5,
+      "label_y": 630.98,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 9131.0 588.0 C 9193.5 588.0 9193.5 686.0 9256.0 686.0",
+      "points": [
+        {
+          "x": 9131.0,
+          "y": 588.0
+        },
+        {
+          "x": 9193.5,
+          "y": 588.0
+        },
+        {
+          "x": 9193.5,
+          "y": 685.96
+        },
+        {
+          "x": 9256.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n61",
+      "target": "n63",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e197",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9363.5,
+      "label_y": 537.0,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 9131.0 588.0 C 9363.5 543.0 9363.5 543.0 9596.0 588.0",
+      "points": [
+        {
+          "x": 9131.0,
+          "y": 588.0
+        },
+        {
+          "x": 9363.5,
+          "y": 543.0
+        },
+        {
+          "x": 9363.5,
+          "y": 543.0
+        },
+        {
+          "x": 9596.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n61",
+      "target": "n64",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e198",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9363.5,
+      "label_y": 567.0,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 9131.0 588.0 C 9363.5 573.0 9363.5 573.0 9596.0 588.0",
+      "points": [
+        {
+          "x": 9131.0,
+          "y": 588.0
+        },
+        {
+          "x": 9363.5,
+          "y": 573.0
+        },
+        {
+          "x": 9363.5,
+          "y": 573.0
+        },
+        {
+          "x": 9596.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n61",
+      "target": "n64",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e199",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9363.5,
+      "label_y": 597.0,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 9131.0 588.0 C 9363.5 603.0 9363.5 603.0 9596.0 588.0",
+      "points": [
+        {
+          "x": 9131.0,
+          "y": 588.0
+        },
+        {
+          "x": 9363.5,
+          "y": 603.0
+        },
+        {
+          "x": 9363.5,
+          "y": 603.0
+        },
+        {
+          "x": 9596.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n61",
+      "target": "n64",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e200",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9363.5,
+      "label_y": 627.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 9131.0 588.0 C 9363.5 633.0 9363.5 633.0 9596.0 588.0",
+      "points": [
+        {
+          "x": 9131.0,
+          "y": 588.0
+        },
+        {
+          "x": 9363.5,
+          "y": 633.0
+        },
+        {
+          "x": 9363.5,
+          "y": 633.0
+        },
+        {
+          "x": 9596.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n61",
+      "target": "n64",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "directed": true,
+      "id": "e201",
+      "kind": "df",
+      "label": "1",
+      "label_x": 8830.0,
+      "label_y": 582.0,
+      "object_type": "WorkOrder",
+      "object_types": [
+        {
+          "object_type": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "path": "M 9596.0 588.0 C 8830.0 588.0 8830.0 588.0 8064.0 588.0",
+      "points": [
+        {
+          "x": 9596.0,
+          "y": 588.0
+        },
+        {
+          "x": 8830.0,
+          "y": 588.0
+        },
+        {
+          "x": 8830.0,
+          "y": 588.0
+        },
+        {
+          "x": 8064.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n64",
+      "target": "n57",
+      "title": "WorkOrder: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e202",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9533.5,
+      "label_y": 536.98,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 9596.0 588.0 C 9533.5 573.0 9533.5 513.0 9471.0 528.0",
+      "points": [
+        {
+          "x": 9596.0,
+          "y": 588.0
+        },
+        {
+          "x": 9533.5,
+          "y": 573.0
+        },
+        {
+          "x": 9533.5,
+          "y": 512.96
+        },
+        {
+          "x": 9471.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n64",
+      "target": "n62",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e203",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9533.5,
+      "label_y": 566.98,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 9596.0 588.0 C 9533.5 603.0 9533.5 543.0 9471.0 528.0",
+      "points": [
+        {
+          "x": 9596.0,
+          "y": 588.0
+        },
+        {
+          "x": 9533.5,
+          "y": 603.0
+        },
+        {
+          "x": 9533.5,
+          "y": 542.96
+        },
+        {
+          "x": 9471.0,
+          "y": 527.96
+        }
+      ],
+      "source": "n64",
+      "target": "n62",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "directed": true,
+      "id": "e204",
+      "kind": "df",
+      "label": "1",
+      "label_x": 9510.0,
+      "label_y": 630.98,
+      "object_type": "MaintenanceTeam",
+      "object_types": [
+        {
+          "object_type": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "path": "M 9596.0 588.0 C 9510.0 588.0 9510.0 686.0 9424.0 686.0",
+      "points": [
+        {
+          "x": 9596.0,
+          "y": 588.0
+        },
+        {
+          "x": 9510.0,
+          "y": 588.0
+        },
+        {
+          "x": 9510.0,
+          "y": 685.96
+        },
+        {
+          "x": 9424.0,
+          "y": 685.96
+        }
+      ],
+      "source": "n64",
+      "target": "n63",
+      "title": "MaintenanceTeam: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(42 68% 38%)",
+      "directed": true,
+      "id": "e205",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1010.0,
+      "label_y": 819.0,
+      "object_type": "Operator",
+      "object_types": [
+        {
+          "object_type": "Operator",
+          "weight": 1
+        }
+      ],
+      "path": "M 244.0 1062.0 C 1010.0 1062.0 1010.0 588.0 1776.0 588.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 1062.0
+        },
+        {
+          "x": 1010.0,
+          "y": 1062.0
+        },
+        {
+          "x": 1010.0,
+          "y": 588.0
+        },
+        {
+          "x": 1776.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n7",
+      "target": "n18",
+      "title": "Operator: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e206",
+      "kind": "df",
+      "label": "1",
+      "label_x": 863.5,
+      "label_y": 497.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 449.0 C 863.5 434.0 863.5 573.0 1096.0 588.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 448.96
+        },
+        {
+          "x": 863.5,
+          "y": 433.96
+        },
+        {
+          "x": 863.5,
+          "y": 573.0
+        },
+        {
+          "x": 1096.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n8",
+      "target": "n14",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e207",
+      "kind": "df",
+      "label": "1",
+      "label_x": 863.5,
+      "label_y": 527.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 449.0 C 863.5 464.0 863.5 603.0 1096.0 588.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 448.96
+        },
+        {
+          "x": 863.5,
+          "y": 463.96
+        },
+        {
+          "x": 863.5,
+          "y": 603.0
+        },
+        {
+          "x": 1096.0,
+          "y": 588.0
+        }
+      ],
+      "source": "n8",
+      "target": "n14",
+      "title": "Machine: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "directed": true,
+      "id": "e208",
+      "kind": "df",
+      "label": "1",
+      "label_x": 693.5,
+      "label_y": 575.48,
+      "object_type": "Component",
+      "object_types": [
+        {
+          "object_type": "Component",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 607.0 C 693.5 592.0 693.5 571.0 756.0 586.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 606.96
+        },
+        {
+          "x": 693.5,
+          "y": 591.96
+        },
+        {
+          "x": 693.5,
+          "y": 571.0
+        },
+        {
+          "x": 756.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n9",
+      "target": "n12",
+      "title": "Component: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "directed": true,
+      "id": "e209",
+      "kind": "df",
+      "label": "1",
+      "label_x": 693.5,
+      "label_y": 605.48,
+      "object_type": "Machine",
+      "object_types": [
+        {
+          "object_type": "Machine",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 607.0 C 693.5 622.0 693.5 601.0 756.0 586.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 606.96
+        },
+        {
+          "x": 693.5,
+          "y": 621.96
+        },
+        {
+          "x": 693.5,
+          "y": 601.0
+        },
+        {
+          "x": 756.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n9",
+      "target": "n12",
+      "title": "Machine: 1",
+      "weight": 1
+    }
+  ],
+  "height": 1258.0,
+  "nodes": [
+    {
+      "color": "hsl(351 68% 38%)",
+      "count": 8,
+      "height": 76.0,
+      "id": "n1",
+      "kind": "object-start",
+      "label": "START\nComponent",
+      "lines": [
+        "START",
+        "Component"
+      ],
+      "object_type": "Component",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 76.0
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "count": 8,
+      "height": 76.0,
+      "id": "n2",
+      "kind": "object-start",
+      "label": "START\nMachine",
+      "lines": [
+        "START",
+        "Machine"
+      ],
+      "object_type": "Machine",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 234.0
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "count": 4,
+      "height": 76.0,
+      "id": "n3",
+      "kind": "object-start",
+      "label": "START\nInspection",
+      "lines": [
+        "START",
+        "Inspection"
+      ],
+      "object_type": "Inspection",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 392.0
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "count": 4,
+      "height": 76.0,
+      "id": "n4",
+      "kind": "object-start",
+      "label": "START\nWorkOrder",
+      "lines": [
+        "START",
+        "WorkOrder"
+      ],
+      "object_type": "WorkOrder",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 550.0
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "count": 2,
+      "height": 76.0,
+      "id": "n5",
+      "kind": "object-start",
+      "label": "START\nMaintenanceTeam",
+      "lines": [
+        "START",
+        "MaintenanceTeam"
+      ],
+      "object_type": "MaintenanceTeam",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 708.0
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "count": 1,
+      "height": 76.0,
+      "id": "n6",
+      "kind": "object-start",
+      "label": "START\nAlarm",
+      "lines": [
+        "START",
+        "Alarm"
+      ],
+      "object_type": "Alarm",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 866.0
+    },
+    {
+      "color": "hsl(42 68% 38%)",
+      "count": 1,
+      "height": 76.0,
+      "id": "n7",
+      "kind": "object-start",
+      "label": "START\nOperator",
+      "lines": [
+        "START",
+        "Operator"
+      ],
+      "object_type": "Operator",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 1024.0
+    },
+    {
+      "color": "#42635c",
+      "count": 12,
+      "height": 76.0,
+      "id": "n8",
+      "kind": "state-activity",
+      "label": "Initialize Machine [Running]",
+      "lines": [
+        "Initialize Machine",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 416.0,
+      "y": 410.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n9",
+      "kind": "state-activity",
+      "label": "Initialize Machine [Idle]",
+      "lines": [
+        "Initialize Machine",
+        "[Idle]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 416.0,
+      "y": 568.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n10",
+      "kind": "state-activity",
+      "label": "Initialize Machine [Setup]",
+      "lines": [
+        "Initialize Machine",
+        "[Setup]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 416.0,
+      "y": 726.96
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 72.0,
+      "id": "n11",
+      "kind": "state-change",
+      "label": "CHANGE Running -> Down",
+      "lines": [
+        "CHANGE Running -> Down"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 756.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 72.0,
+      "id": "n12",
+      "kind": "state-change",
+      "label": "CHANGE Idle -> Setup",
+      "lines": [
+        "CHANGE Idle -> Setup"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 756.0,
+      "y": 550.0
+    },
+    {
+      "color": "hsl(42 68% 38%)",
+      "count": 1,
+      "height": 76.0,
+      "id": "n13",
+      "kind": "object-end",
+      "label": "END\nOperator",
+      "lines": [
+        "END",
+        "Operator"
+      ],
+      "object_type": "Operator",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 756.0,
+      "y": 708.0
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n14",
+      "kind": "state-activity",
+      "label": "Maintenance Request Created [Running]",
+      "lines": [
+        "Maintenance Request",
+        "Created [Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1096.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 72.0,
+      "id": "n15",
+      "kind": "state-change",
+      "label": "CHANGE Setup -> Running",
+      "lines": [
+        "CHANGE Setup -> Running"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 1436.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 76.0,
+      "id": "n16",
+      "kind": "state-activity",
+      "label": "Sensor Snapshot [Degraded]",
+      "lines": [
+        "Sensor Snapshot",
+        "[Degraded]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1436.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 72.0,
+      "id": "n17",
+      "kind": "state-activity",
+      "label": "Setup Started [Setup]",
+      "lines": [
+        "Setup Started [Setup]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1436.0,
+      "y": 708.0
+    },
+    {
+      "color": "#42635c",
+      "count": 5,
+      "height": 76.0,
+      "id": "n18",
+      "kind": "state-activity",
+      "label": "Setup Completed [Running]",
+      "lines": [
+        "Setup Completed",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1776.0,
+      "y": 550.0
+    },
+    {
+      "color": "hsl(128 68% 38%)",
+      "count": 4,
+      "height": 76.0,
+      "id": "n19",
+      "kind": "object-end",
+      "label": "END\nInspection",
+      "lines": [
+        "END",
+        "Inspection"
+      ],
+      "object_type": "Inspection",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 2116.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 76.0,
+      "id": "n20",
+      "kind": "state-activity",
+      "label": "Maintenance Request Created [Degraded]",
+      "lines": [
+        "Maintenance Request",
+        "Created [Degraded]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2116.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n21",
+      "kind": "state-activity",
+      "label": "Maintenance Started [Running]",
+      "lines": [
+        "Maintenance Started",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2116.0,
+      "y": 708.0
+    },
+    {
+      "color": "#42635c",
+      "count": 10,
+      "height": 72.0,
+      "id": "n22",
+      "kind": "state-activity",
+      "label": "Automatic Stop [Down]",
+      "lines": [
+        "Automatic Stop [Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2456.0,
+      "y": 331.96
+    },
+    {
+      "color": "#42635c",
+      "count": 9,
+      "height": 76.0,
+      "id": "n23",
+      "kind": "state-change",
+      "label": "CHANGE Running -> Degraded",
+      "lines": [
+        "CHANGE Running ->",
+        "Degraded"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 2456.0,
+      "y": 489.96
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 76.0,
+      "id": "n24",
+      "kind": "state-activity",
+      "label": "Inspection Performed [Running]",
+      "lines": [
+        "Inspection Performed",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2456.0,
+      "y": 647.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n25",
+      "kind": "state-activity",
+      "label": "Defect Detected [Degraded]",
+      "lines": [
+        "Defect Detected",
+        "[Degraded]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2456.0,
+      "y": 805.96
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n26",
+      "kind": "state-activity",
+      "label": "Component Replaced [Running]",
+      "lines": [
+        "Component Replaced",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2796.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 7,
+      "height": 76.0,
+      "id": "n27",
+      "kind": "state-activity",
+      "label": "Work Order Created [Down]",
+      "lines": [
+        "Work Order Created",
+        "[Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3136.0,
+      "y": 252.96
+    },
+    {
+      "color": "#42635c",
+      "count": 6,
+      "height": 72.0,
+      "id": "n28",
+      "kind": "state-change",
+      "label": "CHANGE Degraded -> Down",
+      "lines": [
+        "CHANGE Degraded -> Down"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 3136.0,
+      "y": 410.96000000000004
+    },
+    {
+      "color": "#42635c",
+      "count": 5,
+      "height": 76.0,
+      "id": "n29",
+      "kind": "state-activity",
+      "label": "Critical Alarm Raised [Degraded]",
+      "lines": [
+        "Critical Alarm Raised",
+        "[Degraded]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3136.0,
+      "y": 568.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n30",
+      "kind": "state-change",
+      "label": "CHANGE Degraded -> Quality Hold",
+      "lines": [
+        "CHANGE Degraded ->",
+        "Quality Hold"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 3136.0,
+      "y": 726.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n31",
+      "kind": "state-change",
+      "label": "CHANGE Running -> Unknown",
+      "lines": [
+        "CHANGE Running ->",
+        "Unknown"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 3136.0,
+      "y": 884.96
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n32",
+      "kind": "state-activity",
+      "label": "Inspection Performed [Quality Hold]",
+      "lines": [
+        "Inspection Performed",
+        "[Quality Hold]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3476.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 8,
+      "height": 76.0,
+      "id": "n33",
+      "kind": "state-activity",
+      "label": "Maintenance Started [Down]",
+      "lines": [
+        "Maintenance Started",
+        "[Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3816.0,
+      "y": 331.96
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 76.0,
+      "id": "n34",
+      "kind": "state-activity",
+      "label": "Test Run Completed [Running]",
+      "lines": [
+        "Test Run Completed",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3816.0,
+      "y": 489.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n35",
+      "kind": "state-activity",
+      "label": "Quality Hold Started [Quality Hold]",
+      "lines": [
+        "Quality Hold Started",
+        "[Quality Hold]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3816.0,
+      "y": 647.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n36",
+      "kind": "state-activity",
+      "label": "Sensor Snapshot [Unknown]",
+      "lines": [
+        "Sensor Snapshot",
+        "[Unknown]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3816.0,
+      "y": 805.96
+    },
+    {
+      "color": "#42635c",
+      "count": 6,
+      "height": 76.0,
+      "id": "n37",
+      "kind": "state-activity",
+      "label": "Warning Alarm Raised [Degraded]",
+      "lines": [
+        "Warning Alarm Raised",
+        "[Degraded]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 4156.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n38",
+      "kind": "state-change",
+      "label": "CHANGE Unknown -> Running",
+      "lines": [
+        "CHANGE Unknown ->",
+        "Running"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 4156.0,
+      "y": 550.0
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "count": 1,
+      "height": 76.0,
+      "id": "n39",
+      "kind": "object-end",
+      "label": "END\nAlarm",
+      "lines": [
+        "END",
+        "Alarm"
+      ],
+      "object_type": "Alarm",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 4156.0,
+      "y": 708.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 72.0,
+      "id": "n40",
+      "kind": "state-activity",
+      "label": "Part Unavailable [Down]",
+      "lines": [
+        "Part Unavailable [Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 4496.0,
+      "y": 489.96
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n41",
+      "kind": "state-activity",
+      "label": "Calibration Performed [Quality Hold]",
+      "lines": [
+        "Calibration Performed",
+        "[Quality Hold]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 4496.0,
+      "y": 647.96
+    },
+    {
+      "color": "#42635c",
+      "count": 9,
+      "height": 76.0,
+      "id": "n42",
+      "kind": "state-activity",
+      "label": "Inspection Performed [Down]",
+      "lines": [
+        "Inspection Performed",
+        "[Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 4836.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 8,
+      "height": 76.0,
+      "id": "n43",
+      "kind": "state-activity",
+      "label": "Diagnosis Performed [Down]",
+      "lines": [
+        "Diagnosis Performed",
+        "[Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 4836.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n44",
+      "kind": "state-activity",
+      "label": "Sensor Snapshot [Running]",
+      "lines": [
+        "Sensor Snapshot",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 4836.0,
+      "y": 708.0
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n45",
+      "kind": "state-change",
+      "label": "CHANGE Quality Hold -> Degraded",
+      "lines": [
+        "CHANGE Quality Hold ->",
+        "Degraded"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 5176.0,
+      "y": 489.96
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n46",
+      "kind": "state-change",
+      "label": "CHANGE Running -> Recovery",
+      "lines": [
+        "CHANGE Running ->",
+        "Recovery"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 5176.0,
+      "y": 647.96
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n47",
+      "kind": "state-activity",
+      "label": "Quality Hold Released [Degraded]",
+      "lines": [
+        "Quality Hold Released",
+        "[Degraded]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 5516.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 76.0,
+      "id": "n48",
+      "kind": "state-activity",
+      "label": "Simulation End Snapshot [Recovery]",
+      "lines": [
+        "Simulation End Snapshot",
+        "[Recovery]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 5856.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 13,
+      "height": 76.0,
+      "id": "n49",
+      "kind": "state-activity",
+      "label": "Test Run Completed [Down]",
+      "lines": [
+        "Test Run Completed",
+        "[Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 6196.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 72.0,
+      "id": "n50",
+      "kind": "state-activity",
+      "label": "Test Failed [Down]",
+      "lines": [
+        "Test Failed [Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 6196.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 76.0,
+      "id": "n51",
+      "kind": "state-activity",
+      "label": "Maintenance Completed [Recovery]",
+      "lines": [
+        "Maintenance Completed",
+        "[Recovery]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 6196.0,
+      "y": 708.0
+    },
+    {
+      "color": "#42635c",
+      "count": 9,
+      "height": 76.0,
+      "id": "n52",
+      "kind": "state-activity",
+      "label": "Component Replaced [Down]",
+      "lines": [
+        "Component Replaced",
+        "[Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 6536.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 16,
+      "height": 76.0,
+      "id": "n53",
+      "kind": "state-activity",
+      "label": "Machine Restarted [Recovery]",
+      "lines": [
+        "Machine Restarted",
+        "[Recovery]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 6876.0,
+      "y": 471.0
+    },
+    {
+      "color": "#42635c",
+      "count": 13,
+      "height": 72.0,
+      "id": "n54",
+      "kind": "state-change",
+      "label": "CHANGE Down -> Recovery",
+      "lines": [
+        "CHANGE Down -> Recovery"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 6876.0,
+      "y": 629.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 72.0,
+      "id": "n55",
+      "kind": "state-activity",
+      "label": "Repair Performed [Down]",
+      "lines": [
+        "Repair Performed [Down]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 7216.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 76.0,
+      "id": "n56",
+      "kind": "state-activity",
+      "label": "Simulation End Snapshot [Degraded]",
+      "lines": [
+        "Simulation End Snapshot",
+        "[Degraded]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 7556.0,
+      "y": 550.0
+    },
+    {
+      "color": "hsl(316 68% 38%)",
+      "count": 4,
+      "height": 76.0,
+      "id": "n57",
+      "kind": "object-end",
+      "label": "END\nWorkOrder",
+      "lines": [
+        "END",
+        "WorkOrder"
+      ],
+      "object_type": "WorkOrder",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 7896.0,
+      "y": 550.0
+    },
+    {
+      "color": "hsl(265 68% 38%)",
+      "count": 8,
+      "height": 76.0,
+      "id": "n58",
+      "kind": "object-end",
+      "label": "END\nMachine",
+      "lines": [
+        "END",
+        "Machine"
+      ],
+      "object_type": "Machine",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 8236.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 11,
+      "height": 76.0,
+      "id": "n59",
+      "kind": "state-change",
+      "label": "CHANGE Recovery -> Running",
+      "lines": [
+        "CHANGE Recovery ->",
+        "Running"
+      ],
+      "shape": "rect",
+      "width": 230.0,
+      "x": 8576.0,
+      "y": 489.96
+    },
+    {
+      "color": "hsl(351 68% 38%)",
+      "count": 8,
+      "height": 76.0,
+      "id": "n60",
+      "kind": "object-end",
+      "label": "END\nComponent",
+      "lines": [
+        "END",
+        "Component"
+      ],
+      "object_type": "Component",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 8576.0,
+      "y": 647.96
+    },
+    {
+      "color": "#42635c",
+      "count": 11,
+      "height": 76.0,
+      "id": "n61",
+      "kind": "state-activity",
+      "label": "Operation Completed [Running]",
+      "lines": [
+        "Operation Completed",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 8916.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 8,
+      "height": 76.0,
+      "id": "n62",
+      "kind": "state-activity",
+      "label": "Simulation End Snapshot [Running]",
+      "lines": [
+        "Simulation End Snapshot",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 9256.0,
+      "y": 489.96
+    },
+    {
+      "color": "hsl(179 68% 38%)",
+      "count": 2,
+      "height": 76.0,
+      "id": "n63",
+      "kind": "object-end",
+      "label": "END\nMaintenanceTeam",
+      "lines": [
+        "END",
+        "MaintenanceTeam"
+      ],
+      "object_type": "MaintenanceTeam",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 9256.0,
+      "y": 647.96
+    },
+    {
+      "color": "#42635c",
+      "count": 4,
+      "height": 76.0,
+      "id": "n64",
+      "kind": "state-activity",
+      "label": "Maintenance Completed [Running]",
+      "lines": [
+        "Maintenance Completed",
+        "[Running]"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 9596.0,
+      "y": 550.0
+    }
+  ],
+  "subtitle": "State-enriched lifecycles collated across object types",
+  "title": "State-Aware Object-Centric Directly-Follows Graph",
+  "width": 9887.0
+}

@@ -9,6 +9,7 @@ impl PatternAccumulator {
             df_edges: BTreeMap::new(),
             eo_edges: BTreeMap::new(),
             oo_edges: BTreeMap::new(),
+            occurrences: Vec::new(),
         }
     }
 
@@ -19,9 +20,10 @@ impl PatternAccumulator {
         merge_weighted_edges(&mut self.df_edges, instance.df_edges);
         merge_weighted_edges(&mut self.eo_edges, instance.eo_edges);
         merge_weighted_edges(&mut self.oo_edges, instance.oo_edges);
+        self.occurrences.push(instance.occurrence);
     }
 
-    fn into_summary(self, index: usize) -> PatternSummary {
+    fn into_summary(self, index: usize, include_occurrences: bool) -> PatternSummary {
         let family = self.key.family.as_str();
         let label = match &self.key.to_state {
             Some(to_state) => format!(
@@ -46,6 +48,7 @@ impl PatternAccumulator {
             df_edges: edge_map_to_vec(self.df_edges),
             eo_edges: edge_map_to_vec(self.eo_edges),
             oo_edges: edge_map_to_vec(self.oo_edges),
+            occurrences: include_occurrences.then_some(self.occurrences),
         }
     }
 }
@@ -97,7 +100,12 @@ fn insert_pattern_instance(
         .add(instance);
 }
 
-fn summarize_patterns(mut accumulators: Vec<PatternAccumulator>) -> Vec<PatternSummary> {
+fn summarize_patterns(
+    mut accumulators: Vec<PatternAccumulator>,
+    min_support: usize,
+    include_occurrences: bool,
+) -> Vec<PatternSummary> {
+    accumulators.retain(|accumulator| accumulator.support >= min_support);
     accumulators.sort_by(|left, right| {
         right
             .support
@@ -109,7 +117,9 @@ fn summarize_patterns(mut accumulators: Vec<PatternAccumulator>) -> Vec<PatternS
     accumulators
         .into_iter()
         .enumerate()
-        .map(|(index, accumulator)| accumulator.into_summary(index + 1))
+        .map(|(index, accumulator)| {
+            accumulator.into_summary(index + 1, include_occurrences)
+        })
         .collect()
 }
 

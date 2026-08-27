@@ -1,0 +1,10 @@
+rule_id,violation_id,leading_object_id,event_id,event_time,related_object_id,expected_deadline,details_json
+MFG-C2,MFG-V-001,M-001,MFG-E-000015,2025-01-03T00:00:10Z,WO-0001,2025-01-02T01:00:50Z,"{""reason"":""quick repair response still exceeded the high-criticality SLA""}"
+MFG-C2,MFG-V-002,M-002,MFG-E-000025,2025-01-03T00:01:40Z,WO-0002,2025-01-02T01:01:40Z,"{""reason"":""maintenance began after the high-criticality Down SLA""}"
+MFG-C2,MFG-V-003,M-003,MFG-E-000034,2025-01-02T00:03:20Z,WO-0003,2025-01-02T01:03:20Z,"{""reason"":""maintenance never started after Down""}"
+MFG-C2,MFG-V-004,M-004,MFG-E-000041,2025-01-02T00:05:10Z,,2025-01-02T01:05:10Z,"{""reason"":""maintenance never started after Down""}"
+MFG-C1,MFG-V-005,M-004,MFG-E-000040,2025-01-02T00:05:00Z,,2025-01-02T00:20:00Z,"{""reason"":""critical alarm had no maintenance request within SLA""}"
+MFG-C3,MFG-V-006,M-004,MFG-E-000042,2025-01-02T00:35:00Z,,,"{""reason"":""machine restarted without passed inspection or test""}"
+MFG-C4,MFG-V-007,M-005,MFG-E-000048,2025-01-02T00:07:10Z,WO-0004,,"{""reason"":""maintenance completed before stable recovery""}"
+MFG-C5,MFG-V-008,M-006,MFG-E-000054,2025-01-02T00:09:10Z,INSP-0004,,"{""reason"":""quality hold released after a failed inspection""}"
+MFG-C6,MFG-V-009,M-007,MFG-E-000056,2025-01-03T00:10:00Z,COMP-0007,,"{""reason"":""component replacement has no open WorkOrder""}"

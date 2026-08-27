@@ -1,0 +1,27 @@
+[
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Critical Understock within 7 days"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Recovery to Normal within 3 days"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Time to stable Normal recovery"
+  },
+  {
+    "error": "regression split requires at least two uncensored train/test rows",
+    "split": "group-holdout",
+    "task": "Time to stable Normal recovery"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Understock within 7 days"
+  }
+]

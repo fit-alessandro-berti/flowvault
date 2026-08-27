@@ -1,0 +1,5 @@
+task_id,maximum_score,required_evidence_count
+MFG-TASK-1,100,3
+MFG-TASK-2,100,2
+MFG-TASK-3,100,2
+MFG-TASK-4,100,2

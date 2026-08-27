@@ -37,6 +37,7 @@ export const stateDetectionAnalysis: StateDetectionResult = {
     pc2_explained_ratio: 0.15,
   },
   som: {
+    quantization_error: 0.42,
     cells: [
       {
         x: 0,

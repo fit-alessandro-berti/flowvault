@@ -26,6 +26,7 @@
       <span>Pattern</span>
       <select
         class="pattern-select"
+        data-testid="inter-pattern-select"
         [value]="vm.selectedInterPattern()?.id ?? ''"
         (change)="vm.selectInterPattern($event)"
       >
@@ -42,7 +43,11 @@
         </button>
       </div>
       @if (vm.interVisualization() === 'text') {
-        <section class="pattern-text-view" aria-label="Selected inter-state pattern">
+        <section
+          class="pattern-text-view"
+          data-testid="selected-inter-pattern"
+          aria-label="Selected inter-state pattern"
+        >
           <dl class="pattern-stats">
             <div>
               <dt>Support</dt>
@@ -173,15 +178,10 @@
                   ></rect>
                   <text
                     [attr.x]="node.x + graph.nodeWidth / 2"
-                    [attr.y]="
-                      node.y + graph.nodeHeight / 2 - (node.lines.length - 1) * 7 + 4
-                    "
+                    [attr.y]="node.y + graph.nodeHeight / 2 - (node.lines.length - 1) * 7 + 4"
                   >
                     @for (line of node.lines; track $index) {
-                      <tspan
-                        [attr.x]="node.x + graph.nodeWidth / 2"
-                        [attr.dy]="$first ? 0 : 14"
-                      >
+                      <tspan [attr.x]="node.x + graph.nodeWidth / 2" [attr.dy]="$first ? 0 : 14">
                         {{ line }}
                       </tspan>
                     }

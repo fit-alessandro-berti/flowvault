@@ -1,0 +1,134 @@
+{
+  "config_sha256": "77ddcaadd21cae12d7bb85775c77d83d7f09920815b497d526c702e84474dc7a",
+  "counts": {
+    "e2o": 212,
+    "event_types": 24,
+    "events": 52,
+    "leading_objects": 8,
+    "o2o": 33,
+    "object_types": 10,
+    "objects": 38
+  },
+  "end_time": "2025-02-05T00:00:00Z",
+  "expected_counts": {
+    "patterns": 6,
+    "states": 52,
+    "transitions": 15,
+    "violations": 7
+  },
+  "files": {
+    "expected/branch_coverage.json": {
+      "bytes": 1073,
+      "sha256": "6ffee32184ce4dad373b2b3056bbfd18a8145d02bd1277e107f969a193ddcc97"
+    },
+    "expected/golden_assertions.json": {
+      "bytes": 1397,
+      "sha256": "9a4f36fca754328858017c90be882fb6ecc1fd1b0aeeb16b18273056159d182d"
+    },
+    "expected/summary.json": {
+      "bytes": 1403,
+      "sha256": "e031d58404e495f54895d1dbe1b94926bdebbf90b98d67064f34a7c7d12cac67"
+    },
+    "observed.behavior.ocel.json": {
+      "bytes": 86963,
+      "sha256": "842650f6fd0c3996a35dcee83775e6f1245ee6fdda4a966ea596fa917f5db348"
+    },
+    "observed.ocel.json": {
+      "bytes": 94324,
+      "sha256": "91f1fa299e7e40211f0226d4f005ccead6cfe5c260bdb3d09d81b80b014ae255"
+    },
+    "state_query.sql": {
+      "bytes": 333,
+      "sha256": "a8ce07b5fba29d2b673edd875f5d5e1998faaea2c251dccd5c346524c37b578c"
+    },
+    "tasks/answer_key.json": {
+      "bytes": 1410,
+      "sha256": "53856cb7bfd1c7c806cf3ead7268f9324ee869340f08bea93edd69fca35ce6fc"
+    },
+    "tasks/inv-task-1.json": {
+      "bytes": 1264,
+      "sha256": "a6b20e91356e2c3abed71131cf18f5289b87c7adca992c5b4dd2d2233abd6b88"
+    },
+    "tasks/inv-task-2.json": {
+      "bytes": 1287,
+      "sha256": "9341ee84819c62d0b5b0993dccccf67cfb0583adbb441f5dc3a76f126a01faef"
+    },
+    "tasks/inv-task-3.json": {
+      "bytes": 1241,
+      "sha256": "ffc01f20a672237573ca0c5a109eff50b9b9402db29a2ef2cac77c3ad4eaa3c8"
+    },
+    "tasks/inv-task-4.json": {
+      "bytes": 1515,
+      "sha256": "f48bb7a7dbec4f3db58782c4f201f518ba2d23141ab6c61b6de9ff8da36a5917"
+    },
+    "truth/causal_truth.json": {
+      "bytes": 75,
+      "sha256": "5688070a9b64181e013029ff83e2ad14efc9b6c23830df60dfec103702f4e742"
+    },
+    "truth/conformance_violations.csv": {
+      "bytes": 1128,
+      "sha256": "2960394c801cca9783af6c9dd1a2d8352df376caa75460186a2cbef211ba6901"
+    },
+    "truth/injected_pattern_instances.csv": {
+      "bytes": 1591,
+      "sha256": "ed389ec2cd7c57b62aefac8b1b37c2753c25df1c9b423ebaf2302181505332cd"
+    },
+    "truth/latent_regime_at_event.csv": {
+      "bytes": 6307,
+      "sha256": "066b2832fb16c4c76a4a17d36a76e6c062c220a07f3fb6816371f92672a776dd"
+    },
+    "truth/latent_regime_episodes.csv": {
+      "bytes": 3597,
+      "sha256": "9b7cffb601cf230ad8a8fb637f8b0a33c82253e243b3d97703921dceb61e93c7"
+    },
+    "truth/outcomes_by_object.csv": {
+      "bytes": 222,
+      "sha256": "ca395777595e175d5ecdfca5620461beec7d6edcd33589b5d24c293b6e0021ed"
+    },
+    "truth/prediction_samples.csv": {
+      "bytes": 9343,
+      "sha256": "a220a5e32653075b0da0976d2d2d9ef5d773c8ea5993c565a71a4f8a25473373"
+    },
+    "truth/state_at_event.csv": {
+      "bytes": 8376,
+      "sha256": "31d063b0f3ee4be0c3694c18e2cd2a156a26e5041e7cfebb1a94a37550b06e88"
+    },
+    "truth/state_episodes.csv": {
+      "bytes": 2943,
+      "sha256": "6da5823a431a353c159a660be9e2958816a280fdbdce5512c565bc3c0c65d2f7"
+    },
+    "truth/transitions.csv": {
+      "bytes": 1760,
+      "sha256": "d017fdbf601de45a2c84dd031aaa68a1856f2267508ad191facebba61dff7312"
+    }
+  },
+  "generator_commit": "35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b",
+  "perturbations": [],
+  "profile": "golden",
+  "rng_streams": {
+    "algorithm": "numpy.random.PCG64",
+    "root_seed": 20260826,
+    "streams": {
+      "causal intervention": {
+        "spawn_key": [
+          3978306670,
+          1372219945,
+          1410783785,
+          2972419980
+        ]
+      },
+      "entity parameters": {
+        "spawn_key": [
+          2568105485,
+          2970263544,
+          1653596657,
+          2497191303
+        ]
+      }
+    }
+  },
+  "run_id": "inventory-golden-20260826",
+  "scenario": "inventory",
+  "seed": 20260826,
+  "start_time": "2025-01-01T00:00:00Z"
+}

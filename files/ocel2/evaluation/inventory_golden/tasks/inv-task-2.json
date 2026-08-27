@@ -1,0 +1,60 @@
+{
+  "acceptable_alternative_explanations": [
+    "stable low movement",
+    "policy threshold reduction"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "mechanism": "receipt-driven excess",
+    "pattern_id": "INV-P3"
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "IL-0003"
+  ],
+  "pre_registered": true,
+  "prompt": "Distinguish receipt-driven excess from demand- or policy-driven Overstock.",
+  "required_evidence_items": [
+    "INV-P3-I001",
+    "INV-E-000026",
+    "INV-E-000028"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "INV-TASK-2",
+  "time_range": {
+    "end": "2025-01-04T00:00:30Z",
+    "start": "2025-01-04T00:00:10Z"
+  },
+  "title": "Receipt-driven Overstock",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}

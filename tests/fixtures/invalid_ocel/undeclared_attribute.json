@@ -1,0 +1,424 @@
+{
+  "objectTypes": [
+    {
+      "name": "ItemLocation",
+      "attributes": [
+        {
+          "name": "on_hand",
+          "type": "float"
+        },
+        {
+          "name": "lower_threshold",
+          "type": "float"
+        },
+        {
+          "name": "upper_threshold",
+          "type": "float"
+        },
+        {
+          "name": "data_complete",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "Material",
+      "attributes": [
+        {
+          "name": "product_class",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Location",
+      "attributes": [
+        {
+          "name": "region",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "eventTypes": [
+    {
+      "name": "Initialize Inventory",
+      "attributes": [
+        {
+          "name": "quantity",
+          "type": "float"
+        },
+        {
+          "name": "on_hand_before",
+          "type": "float"
+        },
+        {
+          "name": "on_hand_after",
+          "type": "float"
+        },
+        {
+          "name": "reserved_after",
+          "type": "float"
+        },
+        {
+          "name": "backorder_after",
+          "type": "float"
+        },
+        {
+          "name": "on_order_after",
+          "type": "float"
+        },
+        {
+          "name": "inventory_position_after",
+          "type": "float"
+        },
+        {
+          "name": "lower_threshold",
+          "type": "float"
+        },
+        {
+          "name": "upper_threshold",
+          "type": "float"
+        },
+        {
+          "name": "confirmed_demand_horizon",
+          "type": "float"
+        },
+        {
+          "name": "inbound_horizon",
+          "type": "float"
+        },
+        {
+          "name": "critical_understock",
+          "type": "boolean"
+        },
+        {
+          "name": "data_complete",
+          "type": "boolean"
+        },
+        {
+          "name": "passive_observation",
+          "type": "boolean"
+        },
+        {
+          "name": "cause_code",
+          "type": "string"
+        },
+        {
+          "name": "policy_version",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Goods Issue",
+      "attributes": [
+        {
+          "name": "quantity",
+          "type": "float"
+        },
+        {
+          "name": "on_hand_before",
+          "type": "float"
+        },
+        {
+          "name": "on_hand_after",
+          "type": "float"
+        },
+        {
+          "name": "reserved_after",
+          "type": "float"
+        },
+        {
+          "name": "backorder_after",
+          "type": "float"
+        },
+        {
+          "name": "on_order_after",
+          "type": "float"
+        },
+        {
+          "name": "inventory_position_after",
+          "type": "float"
+        },
+        {
+          "name": "lower_threshold",
+          "type": "float"
+        },
+        {
+          "name": "upper_threshold",
+          "type": "float"
+        },
+        {
+          "name": "confirmed_demand_horizon",
+          "type": "float"
+        },
+        {
+          "name": "inbound_horizon",
+          "type": "float"
+        },
+        {
+          "name": "critical_understock",
+          "type": "boolean"
+        },
+        {
+          "name": "data_complete",
+          "type": "boolean"
+        },
+        {
+          "name": "passive_observation",
+          "type": "boolean"
+        },
+        {
+          "name": "cause_code",
+          "type": "string"
+        },
+        {
+          "name": "policy_version",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "id": "IL-0001",
+      "type": "ItemLocation",
+      "attributes": [
+        {
+          "name": "on_hand",
+          "time": "2025-01-01T00:00:00Z",
+          "value": 50
+        },
+        {
+          "name": "lower_threshold",
+          "time": "2025-01-01T00:00:00Z",
+          "value": 20
+        },
+        {
+          "name": "upper_threshold",
+          "time": "2025-01-01T00:00:00Z",
+          "value": 80
+        },
+        {
+          "name": "data_complete",
+          "time": "2025-01-01T00:00:00Z",
+          "value": true
+        },
+        {
+          "name": "on_hand",
+          "time": "2025-01-02T10:00:00Z",
+          "value": 15
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "MAT-0001",
+          "qualifier": "material"
+        },
+        {
+          "objectId": "LOC-0001",
+          "qualifier": "location"
+        }
+      ]
+    },
+    {
+      "id": "MAT-0001",
+      "type": "Material",
+      "attributes": [
+        {
+          "name": "product_class",
+          "time": "2025-01-01T00:00:00Z",
+          "value": "smooth"
+        }
+      ]
+    },
+    {
+      "id": "LOC-0001",
+      "type": "Location",
+      "attributes": [
+        {
+          "name": "region",
+          "time": "2025-01-01T00:00:00Z",
+          "value": "West"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "INV-E-000001",
+      "type": "Initialize Inventory",
+      "time": "2025-01-01T00:00:00Z",
+      "attributes": [
+        {
+          "name": "quantity",
+          "value": 50
+        },
+        {
+          "name": "on_hand_before",
+          "value": 0
+        },
+        {
+          "name": "on_hand_after",
+          "value": 50
+        },
+        {
+          "name": "reserved_after",
+          "value": 0
+        },
+        {
+          "name": "backorder_after",
+          "value": 0
+        },
+        {
+          "name": "on_order_after",
+          "value": 0
+        },
+        {
+          "name": "inventory_position_after",
+          "value": 50
+        },
+        {
+          "name": "lower_threshold",
+          "value": 20
+        },
+        {
+          "name": "upper_threshold",
+          "value": 80
+        },
+        {
+          "name": "confirmed_demand_horizon",
+          "value": 0
+        },
+        {
+          "name": "inbound_horizon",
+          "value": 0
+        },
+        {
+          "name": "critical_understock",
+          "value": false
+        },
+        {
+          "name": "data_complete",
+          "value": true
+        },
+        {
+          "name": "passive_observation",
+          "value": false
+        },
+        {
+          "name": "cause_code",
+          "value": "INITIALIZATION"
+        },
+        {
+          "name": "policy_version",
+          "value": "P1"
+        },
+        {
+          "name": "reference_state",
+          "value": "Normal"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "IL-0001",
+          "qualifier": "inventory perspective"
+        },
+        {
+          "objectId": "MAT-0001",
+          "qualifier": "material"
+        },
+        {
+          "objectId": "LOC-0001",
+          "qualifier": "location"
+        }
+      ]
+    },
+    {
+      "id": "INV-E-000002",
+      "type": "Goods Issue",
+      "time": "2025-01-02T10:00:00Z",
+      "attributes": [
+        {
+          "name": "quantity",
+          "value": 35
+        },
+        {
+          "name": "on_hand_before",
+          "value": 50
+        },
+        {
+          "name": "on_hand_after",
+          "value": 15
+        },
+        {
+          "name": "reserved_after",
+          "value": 0
+        },
+        {
+          "name": "backorder_after",
+          "value": 0
+        },
+        {
+          "name": "on_order_after",
+          "value": 0
+        },
+        {
+          "name": "inventory_position_after",
+          "value": 15
+        },
+        {
+          "name": "lower_threshold",
+          "value": 20
+        },
+        {
+          "name": "upper_threshold",
+          "value": 80
+        },
+        {
+          "name": "confirmed_demand_horizon",
+          "value": 10
+        },
+        {
+          "name": "inbound_horizon",
+          "value": 0
+        },
+        {
+          "name": "critical_understock",
+          "value": false
+        },
+        {
+          "name": "data_complete",
+          "value": true
+        },
+        {
+          "name": "passive_observation",
+          "value": false
+        },
+        {
+          "name": "cause_code",
+          "value": "DEMAND"
+        },
+        {
+          "name": "policy_version",
+          "value": "P1"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "IL-0001",
+          "qualifier": "inventory perspective"
+        },
+        {
+          "objectId": "MAT-0001",
+          "qualifier": "material"
+        },
+        {
+          "objectId": "LOC-0001",
+          "qualifier": "location"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+scope,key,metric,value
+state,Critical Understock,episode_count,2
+state,Critical Understock,occupancy_minutes,5760.333333333334
+state,Critical Understock,median_dwell_minutes,2880.166666666667
+state,Normal,episode_count,12
+state,Normal,occupancy_minutes,368633.6333333333
+state,Normal,median_dwell_minutes,42479.85833333334
+state,Overstock,episode_count,3
+state,Overstock,occupancy_minutes,7205.166666666666
+state,Overstock,median_dwell_minutes,2880.0
+state,Understock,episode_count,5
+state,Understock,occupancy_minutes,20161.333333333332
+state,Understock,median_dwell_minutes,2879.0
+state,Unknown,episode_count,1
+state,Unknown,occupancy_minutes,1440.0
+state,Unknown,median_dwell_minutes,1440.0
+overall,recovery,median_recovery_minutes,5760.333333333333
+overall,7_days,recovery_opportunities,3
+overall,7_days,recurrent_shortage_count,0
+overall,7_days,recurrent_shortage_rate,0.0
+overall,14_days,recovery_opportunities,3
+overall,14_days,recurrent_shortage_count,0
+overall,14_days,recurrent_shortage_rate,0.0
+overall,30_days,recovery_opportunities,3
+overall,30_days,recurrent_shortage_count,0
+overall,30_days,recurrent_shortage_rate,0.0
+overall,horizon,stuck_object_count,0

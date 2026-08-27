@@ -136,6 +136,7 @@ struct PatternInstance {
     df_edges: BTreeMap<(String, String), usize>,
     eo_edges: BTreeMap<(String, String), usize>,
     oo_edges: BTreeMap<(String, String), usize>,
+    occurrence: PatternOccurrence,
 }
 
 impl PatternInstance {
@@ -161,4 +162,5 @@ struct PatternAccumulator {
     df_edges: BTreeMap<(String, String), usize>,
     eo_edges: BTreeMap<(String, String), usize>,
     oo_edges: BTreeMap<(String, String), usize>,
+    occurrences: Vec<PatternOccurrence>,
 }

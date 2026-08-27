@@ -1,0 +1,71 @@
+{
+  "acceptable_alternative_explanations": [
+    "supplier mix",
+    "location policy",
+    "demand mix"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "IL-0001": {
+      "final_state": "Normal",
+      "leading_object_id": "IL-0001",
+      "transition_count": "5",
+      "understock_event_count": "5"
+    },
+    "IL-0002": {
+      "final_state": "Normal",
+      "leading_object_id": "IL-0002",
+      "transition_count": "1",
+      "understock_event_count": "5"
+    }
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "IL-0001",
+    "IL-0002"
+  ],
+  "pre_registered": true,
+  "prompt": "Compare shortage and transition outcomes for two item-locations.",
+  "required_evidence_items": [
+    "IL-0001",
+    "IL-0002"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "INV-TASK-4",
+  "time_range": {
+    "end": "2025-01-09T00:01:40Z",
+    "start": "2025-01-01T00:00:00Z"
+  },
+  "title": "Recovery cohort comparison",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}

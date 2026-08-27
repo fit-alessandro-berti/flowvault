@@ -2,6 +2,7 @@
   <div class="modal-backdrop" role="presentation" (click)="vm.closeStateDialog()">
     <section
       class="state-modal"
+      data-testid="state-dialog"
       role="dialog"
       aria-modal="true"
       aria-labelledby="state-dialog-title"
@@ -62,6 +63,7 @@
           @for (preset of vm.stateQueryPresets(); track preset.id) {
             <button
               type="button"
+              [attr.data-testid]="'state-preset-' + preset.id"
               class="preset-option"
               [class.is-selected]="vm.selectedPresetId() === preset.id"
               (click)="vm.selectStatePreset(preset)"
@@ -128,7 +130,9 @@
 
       <footer class="state-modal-footer">
         <button type="button" class="ghost-button" (click)="vm.closeStateDialog()">Cancel</button>
-        <button type="button" (click)="vm.applyStateQuery()">OK</button>
+        <button type="button" data-testid="apply-state-query" (click)="vm.applyStateQuery()">
+          OK
+        </button>
       </footer>
     </section>
   </div>

@@ -132,6 +132,14 @@ impl OcelDocumentCore {
         self.log.state_patterns_json()
     }
 
+    /// Detects patterns using bounded radii, ignored activities, support, and occurrences.
+    pub fn state_patterns_with_request_json(&self, request_json: &str) -> OcelResult<String> {
+        let request = serde_json::from_str::<StatePatternRequest>(request_json).map_err(|err| {
+            OcelError::new(format!("could not parse state pattern request: {err}"))
+        })?;
+        self.log.state_patterns_with_request_json(&request)
+    }
+
     /// Extracts object-level features and detects execution-state cells with PCA and SOM.
     pub fn state_detection_json(&self, request_json: &str) -> OcelResult<String> {
         let request =
@@ -139,6 +147,24 @@ impl OcelDocumentCore {
                 OcelError::new(format!("could not parse state detection request: {err}"))
             })?;
         self.log.state_detection_json(&request)
+    }
+
+    /// Returns every PCA/SOM window assignment without the interactive preview limit.
+    pub fn state_detection_assignments_json(&self, request_json: &str) -> OcelResult<String> {
+        let request =
+            serde_json::from_str::<StateDetectionRequest>(request_json).map_err(|err| {
+                OcelError::new(format!("could not parse state detection request: {err}"))
+            })?;
+        self.log.state_detection_assignments_json(&request)
+    }
+
+    /// Returns every PCA/SOM window assignment as deterministic CSV.
+    pub fn state_detection_assignments_csv(&self, request_json: &str) -> OcelResult<String> {
+        let request =
+            serde_json::from_str::<StateDetectionRequest>(request_json).map_err(|err| {
+                OcelError::new(format!("could not parse state detection request: {err}"))
+            })?;
+        self.log.state_detection_assignments_csv(&request)
     }
 
     /// Returns details for one SOM cell, including a DFG and entering/exiting windows.

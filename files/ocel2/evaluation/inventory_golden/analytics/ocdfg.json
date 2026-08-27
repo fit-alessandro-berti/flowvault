@@ -1,0 +1,1728 @@
+{
+  "edges": [
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e1",
+      "kind": "df",
+      "label": "8",
+      "label_x": 330.0,
+      "label_y": 423.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 8
+        }
+      ],
+      "path": "M 244.0 430.0 C 330.0 430.0 330.0 428.0 416.0 428.0",
+      "points": [
+        {
+          "x": 244.0,
+          "y": 430.0
+        },
+        {
+          "x": 330.0,
+          "y": 430.0
+        },
+        {
+          "x": 330.0,
+          "y": 428.0
+        },
+        {
+          "x": 416.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n1",
+      "target": "n2",
+      "title": "ItemLocation: 8",
+      "weight": 8
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e2",
+      "kind": "df",
+      "label": "8",
+      "label_x": 3413.5,
+      "label_y": 423.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 8
+        }
+      ],
+      "path": "M 3351.0 428.0 C 3413.5 428.0 3413.5 430.0 3476.0 430.0",
+      "points": [
+        {
+          "x": 3351.0,
+          "y": 428.0
+        },
+        {
+          "x": 3413.5,
+          "y": 428.0
+        },
+        {
+          "x": 3413.5,
+          "y": 430.0
+        },
+        {
+          "x": 3476.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n20",
+      "target": "n21",
+      "title": "ItemLocation: 8",
+      "weight": 8
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e3",
+      "kind": "df",
+      "label": "3",
+      "label_x": 2563.5,
+      "label_y": 423.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 3
+        }
+      ],
+      "path": "M 2331.0 430.0 C 2563.5 430.0 2563.5 428.0 2796.0 428.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 430.0
+        },
+        {
+          "x": 2563.5,
+          "y": 430.0
+        },
+        {
+          "x": 2563.5,
+          "y": 428.0
+        },
+        {
+          "x": 2796.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n15",
+      "target": "n19",
+      "title": "ItemLocation: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e4",
+      "kind": "df",
+      "label": "3",
+      "label_x": 3753.5,
+      "label_y": 422.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 3
+        }
+      ],
+      "path": "M 4156.0 428.0 C 3753.5 428.0 3753.5 428.0 3351.0 428.0",
+      "points": [
+        {
+          "x": 4156.0,
+          "y": 428.0
+        },
+        {
+          "x": 3753.5,
+          "y": 428.0
+        },
+        {
+          "x": 3753.5,
+          "y": 428.0
+        },
+        {
+          "x": 3351.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n23",
+      "target": "n20",
+      "title": "ItemLocation: 3",
+      "weight": 3
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e5",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2393.5,
+      "label_y": 422.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 2
+        }
+      ],
+      "path": "M 1651.0 428.0 C 2393.5 428.0 2393.5 428.0 3136.0 428.0",
+      "points": [
+        {
+          "x": 1651.0,
+          "y": 428.0
+        },
+        {
+          "x": 2393.5,
+          "y": 428.0
+        },
+        {
+          "x": 2393.5,
+          "y": 428.0
+        },
+        {
+          "x": 3136.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n11",
+      "target": "n20",
+      "title": "ItemLocation: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e6",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2223.5,
+      "label_y": 363.96000000000004,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 2
+        }
+      ],
+      "path": "M 1991.0 449.0 C 2223.5 449.0 2223.5 291.0 2456.0 291.0",
+      "points": [
+        {
+          "x": 1991.0,
+          "y": 448.96000000000004
+        },
+        {
+          "x": 2223.5,
+          "y": 448.96000000000004
+        },
+        {
+          "x": 2223.5,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 2456.0,
+          "y": 290.96000000000004
+        }
+      ],
+      "source": "n13",
+      "target": "n16",
+      "title": "ItemLocation: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e7",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2393.5,
+      "label_y": 354.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 2
+        }
+      ],
+      "path": "M 2456.0 291.0 C 2393.5 291.0 2393.5 430.0 2331.0 430.0",
+      "points": [
+        {
+          "x": 2456.0,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 2393.5,
+          "y": 290.96000000000004
+        },
+        {
+          "x": 2393.5,
+          "y": 430.0
+        },
+        {
+          "x": 2331.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n16",
+      "target": "n15",
+      "title": "ItemLocation: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e8",
+      "kind": "df",
+      "label": "2",
+      "label_x": 1373.5,
+      "label_y": 423.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 2
+        }
+      ],
+      "path": "M 631.0 428.0 C 1373.5 428.0 1373.5 430.0 2116.0 430.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 428.0
+        },
+        {
+          "x": 1373.5,
+          "y": 428.0
+        },
+        {
+          "x": 1373.5,
+          "y": 430.0
+        },
+        {
+          "x": 2116.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n2",
+      "target": "n15",
+      "title": "ItemLocation: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e9",
+      "kind": "df",
+      "label": "2",
+      "label_x": 4093.5,
+      "label_y": 422.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 2
+        }
+      ],
+      "path": "M 4031.0 428.0 C 4093.5 428.0 4093.5 428.0 4156.0 428.0",
+      "points": [
+        {
+          "x": 4031.0,
+          "y": 428.0
+        },
+        {
+          "x": 4093.5,
+          "y": 428.0
+        },
+        {
+          "x": 4093.5,
+          "y": 428.0
+        },
+        {
+          "x": 4156.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n22",
+      "target": "n23",
+      "title": "ItemLocation: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e10",
+      "kind": "df",
+      "label": "2",
+      "label_x": 1543.5,
+      "label_y": 203.96000000000004,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 2
+        }
+      ],
+      "path": "M 1311.0 131.0 C 1543.5 131.0 1543.5 289.0 1776.0 289.0",
+      "points": [
+        {
+          "x": 1311.0,
+          "y": 130.96
+        },
+        {
+          "x": 1543.5,
+          "y": 130.96
+        },
+        {
+          "x": 1543.5,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 1776.0,
+          "y": 288.96000000000004
+        }
+      ],
+      "source": "n6",
+      "target": "n12",
+      "title": "ItemLocation: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e11",
+      "kind": "df",
+      "label": "2",
+      "label_x": 2223.5,
+      "label_y": 352.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 2
+        }
+      ],
+      "path": "M 1311.0 289.0 C 2223.5 289.0 2223.5 428.0 3136.0 428.0",
+      "points": [
+        {
+          "x": 1311.0,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 2223.5,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 2223.5,
+          "y": 428.0
+        },
+        {
+          "x": 3136.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n7",
+      "target": "n20",
+      "title": "ItemLocation: 2",
+      "weight": 2
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e12",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1543.5,
+      "label_y": 678.96,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 1311.0 765.0 C 1543.5 765.0 1543.5 605.0 1776.0 605.0",
+      "points": [
+        {
+          "x": 1311.0,
+          "y": 764.96
+        },
+        {
+          "x": 1543.5,
+          "y": 764.96
+        },
+        {
+          "x": 1543.5,
+          "y": 604.96
+        },
+        {
+          "x": 1776.0,
+          "y": 604.96
+        }
+      ],
+      "source": "n10",
+      "target": "n14",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e13",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1713.5,
+      "label_y": 352.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 1776.0 289.0 C 1713.5 289.0 1713.5 428.0 1651.0 428.0",
+      "points": [
+        {
+          "x": 1776.0,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 1713.5,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 1713.5,
+          "y": 428.0
+        },
+        {
+          "x": 1651.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n12",
+      "target": "n11",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e14",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1883.5,
+      "label_y": 362.96000000000004,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 1776.0 289.0 C 1883.5 289.0 1883.5 449.0 1991.0 449.0",
+      "points": [
+        {
+          "x": 1776.0,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 1883.5,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 1883.5,
+          "y": 448.96000000000004
+        },
+        {
+          "x": 1991.0,
+          "y": 448.96000000000004
+        }
+      ],
+      "source": "n12",
+      "target": "n13",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e15",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2223.5,
+      "label_y": 519.96,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 1991.0 605.0 C 2223.5 605.0 2223.5 447.0 2456.0 447.0",
+      "points": [
+        {
+          "x": 1991.0,
+          "y": 604.96
+        },
+        {
+          "x": 2223.5,
+          "y": 604.96
+        },
+        {
+          "x": 2223.5,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 2456.0,
+          "y": 446.96000000000004
+        }
+      ],
+      "source": "n14",
+      "target": "n17",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e16",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1713.5,
+      "label_y": 591.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 2116.0 430.0 C 1713.5 430.0 1713.5 765.0 1311.0 765.0",
+      "points": [
+        {
+          "x": 2116.0,
+          "y": 430.0
+        },
+        {
+          "x": 1713.5,
+          "y": 430.0
+        },
+        {
+          "x": 1713.5,
+          "y": 764.96
+        },
+        {
+          "x": 1311.0,
+          "y": 764.96
+        }
+      ],
+      "source": "n15",
+      "target": "n10",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e17",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 423.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 2331.0 430.0 C 3243.5 430.0 3243.5 428.0 4156.0 428.0",
+      "points": [
+        {
+          "x": 2331.0,
+          "y": 430.0
+        },
+        {
+          "x": 3243.5,
+          "y": 430.0
+        },
+        {
+          "x": 3243.5,
+          "y": 428.0
+        },
+        {
+          "x": 4156.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n15",
+      "target": "n23",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e18",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2733.5,
+      "label_y": 431.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 447.0 C 2733.5 447.0 2733.5 428.0 2796.0 428.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 2733.5,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 2733.5,
+          "y": 428.0
+        },
+        {
+          "x": 2796.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n17",
+      "target": "n19",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e19",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3243.5,
+      "label_y": 510.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 2671.0 605.0 C 3243.5 605.0 3243.5 428.0 3816.0 428.0",
+      "points": [
+        {
+          "x": 2671.0,
+          "y": 604.96
+        },
+        {
+          "x": 3243.5,
+          "y": 604.96
+        },
+        {
+          "x": 3243.5,
+          "y": 428.0
+        },
+        {
+          "x": 3816.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n18",
+      "target": "n22",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e20",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2563.5,
+      "label_y": 423.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 2796.0 428.0 C 2563.5 428.0 2563.5 430.0 2331.0 430.0",
+      "points": [
+        {
+          "x": 2796.0,
+          "y": 428.0
+        },
+        {
+          "x": 2563.5,
+          "y": 428.0
+        },
+        {
+          "x": 2563.5,
+          "y": 430.0
+        },
+        {
+          "x": 2331.0,
+          "y": 430.0
+        }
+      ],
+      "source": "n19",
+      "target": "n15",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e21",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2733.5,
+      "label_y": 510.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 2796.0 428.0 C 2733.5 428.0 2733.5 605.0 2671.0 605.0",
+      "points": [
+        {
+          "x": 2796.0,
+          "y": 428.0
+        },
+        {
+          "x": 2733.5,
+          "y": 428.0
+        },
+        {
+          "x": 2733.5,
+          "y": 604.96
+        },
+        {
+          "x": 2671.0,
+          "y": 604.96
+        }
+      ],
+      "source": "n19",
+      "target": "n18",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e22",
+      "kind": "df",
+      "label": "1",
+      "label_x": 2979.25,
+      "label_y": 369.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 3011.0 428.0 C 3055.0 386.0 2903.5 364.0 2796.0 412.0",
+      "points": [
+        {
+          "x": 3011.0,
+          "y": 428.0
+        },
+        {
+          "x": 3055.0,
+          "y": 386.0
+        },
+        {
+          "x": 2903.5,
+          "y": 364.0
+        },
+        {
+          "x": 2796.0,
+          "y": 412.0
+        }
+      ],
+      "source": "n19",
+      "target": "n19",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e23",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3073.5,
+      "label_y": 422.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 3011.0 428.0 C 3073.5 428.0 3073.5 428.0 3136.0 428.0",
+      "points": [
+        {
+          "x": 3011.0,
+          "y": 428.0
+        },
+        {
+          "x": 3073.5,
+          "y": 428.0
+        },
+        {
+          "x": 3073.5,
+          "y": 428.0
+        },
+        {
+          "x": 3136.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n19",
+      "target": "n20",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e24",
+      "kind": "df",
+      "label": "1",
+      "label_x": 3413.5,
+      "label_y": 422.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 3011.0 428.0 C 3413.5 428.0 3413.5 428.0 3816.0 428.0",
+      "points": [
+        {
+          "x": 3011.0,
+          "y": 428.0
+        },
+        {
+          "x": 3413.5,
+          "y": 428.0
+        },
+        {
+          "x": 3413.5,
+          "y": 428.0
+        },
+        {
+          "x": 3816.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n19",
+      "target": "n22",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e25",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1203.5,
+      "label_y": 432.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 428.0 C 1203.5 428.0 1203.5 449.0 1776.0 449.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 428.0
+        },
+        {
+          "x": 1203.5,
+          "y": 428.0
+        },
+        {
+          "x": 1203.5,
+          "y": 448.96000000000004
+        },
+        {
+          "x": 1776.0,
+          "y": 448.96000000000004
+        }
+      ],
+      "source": "n2",
+      "target": "n13",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e26",
+      "kind": "df",
+      "label": "1",
+      "label_x": 693.5,
+      "label_y": 343.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 428.0 C 693.5 428.0 693.5 270.0 756.0 270.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 428.0
+        },
+        {
+          "x": 693.5,
+          "y": 428.0
+        },
+        {
+          "x": 693.5,
+          "y": 270.0
+        },
+        {
+          "x": 756.0,
+          "y": 270.0
+        }
+      ],
+      "source": "n2",
+      "target": "n3",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e27",
+      "kind": "df",
+      "label": "1",
+      "label_x": 693.5,
+      "label_y": 422.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 428.0 C 693.5 428.0 693.5 428.0 756.0 428.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 428.0
+        },
+        {
+          "x": 693.5,
+          "y": 428.0
+        },
+        {
+          "x": 693.5,
+          "y": 428.0
+        },
+        {
+          "x": 756.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n2",
+      "target": "n4",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e28",
+      "kind": "df",
+      "label": "1",
+      "label_x": 693.5,
+      "label_y": 501.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 428.0 C 693.5 428.0 693.5 586.0 756.0 586.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 428.0
+        },
+        {
+          "x": 693.5,
+          "y": 428.0
+        },
+        {
+          "x": 693.5,
+          "y": 586.0
+        },
+        {
+          "x": 756.0,
+          "y": 586.0
+        }
+      ],
+      "source": "n2",
+      "target": "n5",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e29",
+      "kind": "df",
+      "label": "1",
+      "label_x": 863.5,
+      "label_y": 273.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 428.0 C 863.5 428.0 863.5 131.0 1096.0 131.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 428.0
+        },
+        {
+          "x": 863.5,
+          "y": 428.0
+        },
+        {
+          "x": 863.5,
+          "y": 130.96
+        },
+        {
+          "x": 1096.0,
+          "y": 130.96
+        }
+      ],
+      "source": "n2",
+      "target": "n6",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e30",
+      "kind": "df",
+      "label": "1",
+      "label_x": 863.5,
+      "label_y": 352.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 631.0 428.0 C 863.5 428.0 863.5 289.0 1096.0 289.0",
+      "points": [
+        {
+          "x": 631.0,
+          "y": 428.0
+        },
+        {
+          "x": 863.5,
+          "y": 428.0
+        },
+        {
+          "x": 863.5,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 1096.0,
+          "y": 288.96000000000004
+        }
+      ],
+      "source": "n2",
+      "target": "n7",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e31",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1203.5,
+      "label_y": 343.0,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 971.0 270.0 C 1203.5 270.0 1203.5 428.0 1436.0 428.0",
+      "points": [
+        {
+          "x": 971.0,
+          "y": 270.0
+        },
+        {
+          "x": 1203.5,
+          "y": 270.0
+        },
+        {
+          "x": 1203.5,
+          "y": 428.0
+        },
+        {
+          "x": 1436.0,
+          "y": 428.0
+        }
+      ],
+      "source": "n3",
+      "target": "n11",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e32",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1033.5,
+      "label_y": 431.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 971.0 428.0 C 1033.5 428.0 1033.5 447.0 1096.0 447.0",
+      "points": [
+        {
+          "x": 971.0,
+          "y": 428.0
+        },
+        {
+          "x": 1033.5,
+          "y": 428.0
+        },
+        {
+          "x": 1033.5,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 1096.0,
+          "y": 446.96000000000004
+        }
+      ],
+      "source": "n4",
+      "target": "n8",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e33",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1033.5,
+      "label_y": 589.48,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 971.0 586.0 C 1033.5 586.0 1033.5 605.0 1096.0 605.0",
+      "points": [
+        {
+          "x": 971.0,
+          "y": 586.0
+        },
+        {
+          "x": 1033.5,
+          "y": 586.0
+        },
+        {
+          "x": 1033.5,
+          "y": 604.96
+        },
+        {
+          "x": 1096.0,
+          "y": 604.96
+        }
+      ],
+      "source": "n5",
+      "target": "n9",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e34",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1203.5,
+      "label_y": 361.96000000000004,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 1096.0 447.0 C 1203.5 447.0 1203.5 289.0 1311.0 289.0",
+      "points": [
+        {
+          "x": 1096.0,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 1203.5,
+          "y": 446.96000000000004
+        },
+        {
+          "x": 1203.5,
+          "y": 288.96000000000004
+        },
+        {
+          "x": 1311.0,
+          "y": 288.96000000000004
+        }
+      ],
+      "source": "n8",
+      "target": "n7",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "directed": true,
+      "id": "e35",
+      "kind": "df",
+      "label": "1",
+      "label_x": 1203.5,
+      "label_y": 361.96000000000004,
+      "object_type": "ItemLocation",
+      "object_types": [
+        {
+          "object_type": "ItemLocation",
+          "weight": 1
+        }
+      ],
+      "path": "M 1096.0 605.0 C 1203.5 605.0 1203.5 131.0 1311.0 131.0",
+      "points": [
+        {
+          "x": 1096.0,
+          "y": 604.96
+        },
+        {
+          "x": 1203.5,
+          "y": 604.96
+        },
+        {
+          "x": 1203.5,
+          "y": 130.96
+        },
+        {
+          "x": 1311.0,
+          "y": 130.96
+        }
+      ],
+      "source": "n9",
+      "target": "n6",
+      "title": "ItemLocation: 1",
+      "weight": 1
+    }
+  ],
+  "height": 942.0,
+  "nodes": [
+    {
+      "color": "hsl(214 68% 38%)",
+      "count": 8,
+      "height": 76.0,
+      "id": "n1",
+      "kind": "object-start",
+      "label": "START\nItemLocation",
+      "lines": [
+        "START",
+        "ItemLocation"
+      ],
+      "object_type": "ItemLocation",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 76.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 8,
+      "height": 72.0,
+      "id": "n2",
+      "kind": "activity",
+      "label": "Initialize Inventory",
+      "lines": [
+        "Initialize Inventory"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 416.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n3",
+      "kind": "activity",
+      "label": "Cycle Count Performed",
+      "lines": [
+        "Cycle Count Performed"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 756.0,
+      "y": 234.0
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n4",
+      "kind": "activity",
+      "label": "Data Gap Started",
+      "lines": [
+        "Data Gap Started"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 756.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n5",
+      "kind": "activity",
+      "label": "Sales Order Item Created",
+      "lines": [
+        "Sales Order Item Created"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 756.0,
+      "y": 550.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 72.0,
+      "id": "n6",
+      "kind": "activity",
+      "label": "Goods Issue",
+      "lines": [
+        "Goods Issue"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1096.0,
+      "y": 94.96000000000001
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 72.0,
+      "id": "n7",
+      "kind": "activity",
+      "label": "Transfer Receive",
+      "lines": [
+        "Transfer Receive"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1096.0,
+      "y": 252.96
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n8",
+      "kind": "activity",
+      "label": "Data Gap Ended",
+      "lines": [
+        "Data Gap Ended"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1096.0,
+      "y": 410.96000000000004
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n9",
+      "kind": "activity",
+      "label": "Reservation Created",
+      "lines": [
+        "Reservation Created"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1096.0,
+      "y": 568.96
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 76.0,
+      "id": "n10",
+      "kind": "activity",
+      "label": "Supplier Confirmation Received",
+      "lines": [
+        "Supplier Confirmation",
+        "Received"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1096.0,
+      "y": 726.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 72.0,
+      "id": "n11",
+      "kind": "activity",
+      "label": "Inventory Adjustment",
+      "lines": [
+        "Inventory Adjustment"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1436.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 72.0,
+      "id": "n12",
+      "kind": "activity",
+      "label": "Backorder Registered",
+      "lines": [
+        "Backorder Registered"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1776.0,
+      "y": 252.96
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n13",
+      "kind": "activity",
+      "label": "Replenishment Proposal Created",
+      "lines": [
+        "Replenishment Proposal",
+        "Created"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1776.0,
+      "y": 410.96000000000004
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n14",
+      "kind": "activity",
+      "label": "Delivery Delayed",
+      "lines": [
+        "Delivery Delayed"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 1776.0,
+      "y": 568.96
+    },
+    {
+      "color": "#42635c",
+      "count": 5,
+      "height": 76.0,
+      "id": "n15",
+      "kind": "activity",
+      "label": "Purchase Order Item Created",
+      "lines": [
+        "Purchase Order Item",
+        "Created"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2116.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 76.0,
+      "id": "n16",
+      "kind": "activity",
+      "label": "Replenishment Proposal Approved",
+      "lines": [
+        "Replenishment Proposal",
+        "Approved"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2456.0,
+      "y": 252.96
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n17",
+      "kind": "activity",
+      "label": "Expedite Requested",
+      "lines": [
+        "Expedite Requested"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2456.0,
+      "y": 410.96000000000004
+    },
+    {
+      "color": "#42635c",
+      "count": 1,
+      "height": 72.0,
+      "id": "n18",
+      "kind": "activity",
+      "label": "Policy Threshold Updated",
+      "lines": [
+        "Policy Threshold Updated"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2456.0,
+      "y": 568.96
+    },
+    {
+      "color": "#42635c",
+      "count": 5,
+      "height": 72.0,
+      "id": "n19",
+      "kind": "activity",
+      "label": "Goods Receipt",
+      "lines": [
+        "Goods Receipt"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 2796.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 8,
+      "height": 72.0,
+      "id": "n20",
+      "kind": "activity",
+      "label": "Simulation End Snapshot",
+      "lines": [
+        "Simulation End Snapshot"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3136.0,
+      "y": 392.0
+    },
+    {
+      "color": "hsl(214 68% 38%)",
+      "count": 8,
+      "height": 76.0,
+      "id": "n21",
+      "kind": "object-end",
+      "label": "END\nItemLocation",
+      "lines": [
+        "END",
+        "ItemLocation"
+      ],
+      "object_type": "ItemLocation",
+      "shape": "ellipse",
+      "width": 168.0,
+      "x": 3476.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 2,
+      "height": 72.0,
+      "id": "n22",
+      "kind": "activity",
+      "label": "Transfer Requested",
+      "lines": [
+        "Transfer Requested"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 3816.0,
+      "y": 392.0
+    },
+    {
+      "color": "#42635c",
+      "count": 3,
+      "height": 72.0,
+      "id": "n23",
+      "kind": "activity",
+      "label": "Transfer Ship",
+      "lines": [
+        "Transfer Ship"
+      ],
+      "shape": "rect",
+      "width": 215.0,
+      "x": 4156.0,
+      "y": 392.0
+    }
+  ],
+  "subtitle": "Flattened over ItemLocation object lifecycles",
+  "title": "Directly-Follows Graph: ItemLocation",
+  "width": 4447.0
+}

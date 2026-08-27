@@ -1,0 +1,66 @@
+scenario: inventory
+profile: golden
+seed: 20260826
+start_time: "2025-01-01T00:00:00Z"
+horizon_days: 35
+
+entities:
+  materials: 8
+  locations: 3
+  item_locations: 8
+  suppliers: 3
+  planners: 3
+
+stock:
+  initial_cover_days: [5.0, 20.0]
+  allow_negative_on_hand: false
+  final_snapshot: true
+  numeric_tolerance: 1.0e-9
+
+policy:
+  review_interval_days: [1, 7]
+  service_level_range: [0.9, 0.99]
+  safety_stock_cover_days: [3.0, 10.0]
+  order_up_to_cover_days: [15.0, 45.0]
+  minimum_order_quantity: [5, 50]
+  lot_size: [1, 20]
+  planner_approval_delay_hours: [0.5, 24.0]
+  critical_demand_horizon_days: 3
+  critical_action_sla_hours: 8
+
+demand:
+  class_mix:
+    smooth: 1.0
+  base_daily_rate: [1.0, 1.0]
+  order_quantity_mean: [1.0, 1.0]
+  backorder_cancel_probability: 0.0
+
+supply:
+  lead_time_days: [1.0, 1.0]
+  lead_time_cv: [0.0, 0.0]
+  fill_rate: [1.0, 1.0]
+  rejection_probability: 0.0
+  expedite_lead_time_multiplier: 0.5
+
+forced_episodes:
+  demand_surge_without_inbound: 1
+  supplier_delay: 1
+  receipt_driven_excess: 1
+  transfer_recovery: 1
+  count_discrepancy: 1
+  policy_failure: 1
+  data_gap: 1
+
+patterns:
+  noise_event_probability: 0.0
+  exact_behavior_instances_per_pattern: 1
+
+missingness:
+  event_attribute_mcar: 0.0
+  relationship_mcar: 0.0
+  timestamp_jitter_minutes: 0
+
+state_detection:
+  window_sizes: [3, 5]
+  som_grids: [[3, 3]]
+  epochs: 40

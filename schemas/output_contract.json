@@ -1,0 +1,37 @@
+{
+  "state_agreement.csv": [
+    "scenario", "run_id", "coverage", "accuracy", "macro_f1",
+    "unknown_rate", "transition_precision", "transition_recall",
+    "transition_time_mae_minutes", "episode_iou"
+  ],
+  "transition_kpis.csv": [
+    "scenario", "run_id", "object_type", "from_state", "to_state",
+    "count", "object_count", "median_duration_minutes", "avg_duration_minutes"
+  ],
+  "pattern_scores.csv": [
+    "scenario", "run_id", "pattern_id", "rank", "top_k_hit",
+    "support_truth", "support_detected", "sequence_similarity",
+    "context_jaccard", "occurrence_precision", "occurrence_recall"
+  ],
+  "som_scores.csv": [
+    "scenario", "run_id", "window_size", "som_width", "som_height",
+    "label_definition", "purity", "ari", "nmi", "balanced_accuracy",
+    "quantization_error", "empty_cell_rate", "nearby_transition_rate",
+    "warning_precision", "warning_recall", "median_lead_time_minutes"
+  ],
+  "prediction_scores.csv": [
+    "scenario", "run_id", "task", "feature_set", "split",
+    "auprc", "auroc", "brier", "ece", "median_lead_time_minutes",
+    "false_alerts_per_object_week", "mae_minutes"
+  ],
+  "robustness_scores.csv": [
+    "scenario", "base_run_id", "perturbation_id", "metric",
+    "base_value", "perturbed_value", "absolute_change", "relative_change",
+    "stability_class"
+  ],
+  "performance.csv": [
+    "scenario", "profile", "operation", "repetition", "wall_time_ms",
+    "cpu_time_ms", "peak_rss_bytes", "events", "objects", "windows",
+    "features", "patterns", "commit"
+  ]
+}

@@ -1,0 +1,4427 @@
+{
+  "inter": [
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Work Order Created [Down]",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Degraded -> Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "CHANGE Degraded -> Down",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Critical Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "END Down",
+          "weight": 1
+        },
+        {
+          "source": "START Degraded",
+          "target": "Warning Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Maintenance Request Created [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Maintenance Started [Down]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Degraded",
+      "id": "inter-1",
+      "label": "Degraded -> Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 8,
+      "object_types": [
+        "Alarm",
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000015",
+          "end_time_ms": 1735862410000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000010",
+          "start_time_ms": 1735776020000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Alarm",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 6
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 3
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Warning Alarm Raised [Degraded]",
+        "Maintenance Request Created [Degraded]",
+        "Critical Alarm Raised [Degraded]",
+        "CHANGE Degraded -> Down",
+        "Automatic Stop [Down]",
+        "Work Order Created [Down]",
+        "Maintenance Started [Down]",
+        "END Down"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Down"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Running -> Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "Test Run Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Maintenance Completed [Recovery]",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Running]",
+          "target": "Inspection Performed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Maintenance Started [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "CHANGE Running -> Recovery",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Running",
+      "id": "inter-2",
+      "label": "Running -> Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 7,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000048",
+          "end_time_ms": 1735776430000,
+          "object_id": "M-005",
+          "start_event": "MFG-E-000044",
+          "start_time_ms": 1735776410000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 5
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 5
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Maintenance Started [Running]",
+        "Inspection Performed [Running]",
+        "Test Run Completed [Running]",
+        "CHANGE Running -> Recovery",
+        "Machine Restarted [Recovery]",
+        "Maintenance Completed [Recovery]",
+        "END Recovery"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Recovery"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Degraded -> Quality Hold",
+          "target": "Quality Hold Started [Quality Hold]",
+          "weight": 1
+        },
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "END Quality Hold",
+          "weight": 1
+        },
+        {
+          "source": "Defect Detected [Degraded]",
+          "target": "CHANGE Degraded -> Quality Hold",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Calibration Performed [Quality Hold]",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Started [Quality Hold]",
+          "target": "Inspection Performed [Quality Hold]",
+          "weight": 1
+        },
+        {
+          "source": "START Degraded",
+          "target": "Defect Detected [Degraded]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Defect Detected [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Started [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Degraded",
+      "id": "inter-3",
+      "label": "Degraded -> Quality Hold on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000053",
+          "end_time_ms": 1735776540000,
+          "object_id": "M-006",
+          "start_event": "MFG-E-000050",
+          "start_time_ms": 1735776510000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Defect Detected [Degraded]",
+        "CHANGE Degraded -> Quality Hold",
+        "Quality Hold Started [Quality Hold]",
+        "Inspection Performed [Quality Hold]",
+        "Calibration Performed [Quality Hold]",
+        "END Quality Hold"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Quality Hold"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Down -> Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "Inspection Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Test Run Completed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Component Replaced [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "CHANGE Down -> Recovery",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Component Replaced [Down]",
+          "target": "Component",
+          "weight": 2
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Down",
+      "id": "inter-4",
+      "label": "Down -> Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000020",
+          "end_time_ms": 1735862460000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000017",
+          "start_time_ms": 1735862430000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 5
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 4
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 4
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Component Replaced [Down]",
+        "Inspection Performed [Down]",
+        "Test Run Completed [Down]",
+        "CHANGE Down -> Recovery",
+        "Machine Restarted [Recovery]",
+        "END Recovery"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Recovery"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Inspection Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Down -> Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Test Run Completed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "CHANGE Down -> Recovery",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Down",
+      "id": "inter-5",
+      "label": "Down -> Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000037",
+          "end_time_ms": 1735862600000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000034",
+          "start_time_ms": 1735776200000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 4
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Automatic Stop [Down]",
+        "Inspection Performed [Down]",
+        "Test Run Completed [Down]",
+        "CHANGE Down -> Recovery",
+        "Machine Restarted [Recovery]",
+        "END Recovery"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Recovery"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Down -> Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "Test Run Completed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Test Failed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "Repair Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "CHANGE Down -> Recovery",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Down",
+      "id": "inter-6",
+      "label": "Down -> Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000032",
+          "end_time_ms": 1735884400000,
+          "object_id": "M-002",
+          "start_event": "MFG-E-000029",
+          "start_time_ms": 1735878100000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 4
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 4
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Test Failed [Down]",
+        "Repair Performed [Down]",
+        "Test Run Completed [Down]",
+        "CHANGE Down -> Recovery",
+        "Machine Restarted [Recovery]",
+        "END Recovery"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Recovery"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Quality Hold -> Degraded",
+          "target": "Quality Hold Released [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "CHANGE Quality Hold -> Degraded",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Calibration Performed [Quality Hold]",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Released [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Started [Quality Hold]",
+          "target": "Inspection Performed [Quality Hold]",
+          "weight": 1
+        },
+        {
+          "source": "START Quality Hold",
+          "target": "Quality Hold Started [Quality Hold]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Released [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Released [Degraded]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Started [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Quality Hold",
+      "id": "inter-7",
+      "label": "Quality Hold -> Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000054",
+          "end_time_ms": 1735776550000,
+          "object_id": "M-006",
+          "start_event": "MFG-E-000051",
+          "start_time_ms": 1735776520000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 3
+        }
+      ],
+      "sequence": [
+        "START Quality Hold",
+        "Quality Hold Started [Quality Hold]",
+        "Inspection Performed [Quality Hold]",
+        "Calibration Performed [Quality Hold]",
+        "CHANGE Quality Hold -> Degraded",
+        "Quality Hold Released [Degraded]",
+        "END Degraded"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Degraded"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Running -> Degraded",
+          "target": "Warning Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "CHANGE Running -> Degraded",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Critical Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Initialize Machine [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Maintenance Request Created [Degraded]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Running",
+      "id": "inter-8",
+      "label": "Running -> Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Alarm",
+        "Component",
+        "Machine",
+        "MaintenanceTeam"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000012",
+          "end_time_ms": 1735776040000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000001",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Alarm",
+          "target": "Machine",
+          "weight": 3
+        },
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Initialize Machine [Running]",
+        "CHANGE Running -> Degraded",
+        "Warning Alarm Raised [Degraded]",
+        "Maintenance Request Created [Degraded]",
+        "Critical Alarm Raised [Degraded]",
+        "END Degraded"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Degraded"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Inspection Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Running -> Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "CHANGE Running -> Down",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Test Run Completed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Initialize Machine [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "END Down",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Running",
+      "id": "inter-9",
+      "label": "Running -> Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000036",
+          "end_time_ms": 1735819410000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000003",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 3
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Initialize Machine [Running]",
+        "CHANGE Running -> Down",
+        "Automatic Stop [Down]",
+        "Inspection Performed [Down]",
+        "Test Run Completed [Down]",
+        "END Down"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Down"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Work Order Created [Down]",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Running -> Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "CHANGE Running -> Down",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "END Down",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Initialize Machine [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Maintenance Started [Down]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Running",
+      "id": "inter-10",
+      "label": "Running -> Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000025",
+          "end_time_ms": 1735862500000,
+          "object_id": "M-002",
+          "start_event": "MFG-E-000002",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Initialize Machine [Running]",
+        "CHANGE Running -> Down",
+        "Automatic Stop [Down]",
+        "Work Order Created [Down]",
+        "Maintenance Started [Down]",
+        "END Down"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Down"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Recovery -> Running",
+          "target": "Operation Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "CHANGE Recovery -> Running",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Maintenance Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "START Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Recovery",
+      "id": "inter-11",
+      "label": "Recovery -> Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 5,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000022",
+          "end_time_ms": 1735869610000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000020",
+          "start_time_ms": 1735862460000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 3
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 3
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 3
+        }
+      ],
+      "sequence": [
+        "START Recovery",
+        "Machine Restarted [Recovery]",
+        "CHANGE Recovery -> Running",
+        "Operation Completed [Running]",
+        "Maintenance Completed [Running]",
+        "END Running"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Running"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Setup -> Running",
+          "target": "Setup Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Setup]",
+          "target": "CHANGE Setup -> Running",
+          "weight": 1
+        },
+        {
+          "source": "START Setup",
+          "target": "Initialize Machine [Setup]",
+          "weight": 1
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Component Replaced [Running]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Component Replaced [Running]",
+          "target": "Component",
+          "weight": 2
+        },
+        {
+          "source": "Initialize Machine [Setup]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Operator",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Setup",
+      "id": "inter-12",
+      "label": "Setup -> Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 5,
+      "object_types": [
+        "Component",
+        "Machine",
+        "Operator"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000056",
+          "end_time_ms": 1735863000000,
+          "object_id": "M-007",
+          "start_event": "MFG-E-000007",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 4
+        },
+        {
+          "source": "Machine",
+          "target": "Operator",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Setup",
+        "Initialize Machine [Setup]",
+        "CHANGE Setup -> Running",
+        "Setup Completed [Running]",
+        "Component Replaced [Running]",
+        "END Running"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Running"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "END Down",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Degraded -> Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "CHANGE Degraded -> Down",
+          "weight": 1
+        },
+        {
+          "source": "START Degraded",
+          "target": "Critical Alarm Raised [Degraded]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Degraded",
+      "id": "inter-13",
+      "label": "Degraded -> Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000041",
+          "end_time_ms": 1735776310000,
+          "object_id": "M-004",
+          "start_event": "MFG-E-000040",
+          "start_time_ms": 1735776300000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Critical Alarm Raised [Degraded]",
+        "CHANGE Degraded -> Down",
+        "Automatic Stop [Down]",
+        "END Down"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Down"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "CHANGE Down -> Recovery",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Down -> Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Down",
+      "id": "inter-14",
+      "label": "Down -> Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000042",
+          "end_time_ms": 1735778100000,
+          "object_id": "M-004",
+          "start_event": "MFG-E-000041",
+          "start_time_ms": 1735776310000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Automatic Stop [Down]",
+        "CHANGE Down -> Recovery",
+        "Machine Restarted [Recovery]",
+        "END Recovery"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Recovery"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Idle -> Setup",
+          "target": "Setup Started [Setup]",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Idle]",
+          "target": "CHANGE Idle -> Setup",
+          "weight": 1
+        },
+        {
+          "source": "START Idle",
+          "target": "Initialize Machine [Idle]",
+          "weight": 1
+        },
+        {
+          "source": "Setup Started [Setup]",
+          "target": "END Setup",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Machine [Idle]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Setup Started [Setup]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Idle",
+      "id": "inter-15",
+      "label": "Idle -> Setup on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000057",
+          "end_time_ms": 1735776700000,
+          "object_id": "M-008",
+          "start_event": "MFG-E-000008",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Idle",
+        "Initialize Machine [Idle]",
+        "CHANGE Idle -> Setup",
+        "Setup Started [Setup]",
+        "END Setup"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Setup"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Recovery -> Running",
+          "target": "Operation Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "CHANGE Recovery -> Running",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "START Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Recovery",
+      "id": "inter-16",
+      "label": "Recovery -> Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000038",
+          "end_time_ms": 1735866200000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000037",
+          "start_time_ms": 1735862600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Recovery",
+        "Machine Restarted [Recovery]",
+        "CHANGE Recovery -> Running",
+        "Operation Completed [Running]",
+        "END Running"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Running"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Recovery -> Running",
+          "target": "Operation Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "CHANGE Recovery -> Running",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "START Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Recovery",
+      "id": "inter-17",
+      "label": "Recovery -> Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000033",
+          "end_time_ms": 1735891300000,
+          "object_id": "M-002",
+          "start_event": "MFG-E-000032",
+          "start_time_ms": 1735884400000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Recovery",
+        "Machine Restarted [Recovery]",
+        "CHANGE Recovery -> Running",
+        "Operation Completed [Running]",
+        "END Running"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Running"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Running -> Degraded",
+          "target": "Warning Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "CHANGE Running -> Degraded",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Operation Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Running",
+      "id": "inter-18",
+      "label": "Running -> Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000039",
+          "end_time_ms": 1735869800000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000038",
+          "start_time_ms": 1735866200000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Operation Completed [Running]",
+        "CHANGE Running -> Degraded",
+        "Warning Alarm Raised [Degraded]",
+        "END Degraded"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Degraded"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Running -> Degraded",
+          "target": "Defect Detected [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Defect Detected [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "CHANGE Running -> Degraded",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Initialize Machine [Running]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Defect Detected [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Running",
+      "id": "inter-19",
+      "label": "Running -> Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000050",
+          "end_time_ms": 1735776510000,
+          "object_id": "M-006",
+          "start_event": "MFG-E-000006",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Initialize Machine [Running]",
+        "CHANGE Running -> Degraded",
+        "Defect Detected [Degraded]",
+        "END Degraded"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Degraded"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Running -> Degraded",
+          "target": "Critical Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "CHANGE Running -> Degraded",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Initialize Machine [Running]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Running",
+      "id": "inter-20",
+      "label": "Running -> Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000040",
+          "end_time_ms": 1735776300000,
+          "object_id": "M-004",
+          "start_event": "MFG-E-000004",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Initialize Machine [Running]",
+        "CHANGE Running -> Degraded",
+        "Critical Alarm Raised [Degraded]",
+        "END Degraded"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Degraded"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Setup -> Running",
+          "target": "Setup Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "START Setup",
+          "target": "Setup Started [Setup]",
+          "weight": 1
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "Setup Started [Setup]",
+          "target": "CHANGE Setup -> Running",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Setup Started [Setup]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Setup",
+      "id": "inter-21",
+      "label": "Setup -> Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000058",
+          "end_time_ms": 1735776710000,
+          "object_id": "M-008",
+          "start_event": "MFG-E-000057",
+          "start_time_ms": 1735776700000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Setup",
+        "Setup Started [Setup]",
+        "CHANGE Setup -> Running",
+        "Setup Completed [Running]",
+        "END Running"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Running"
+    }
+  ],
+  "intra": [
+    {
+      "df_edges": [
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "END Running",
+          "weight": 5
+        },
+        {
+          "source": "START Running",
+          "target": "Initialize Machine [Running]",
+          "weight": 5
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Component",
+          "weight": 5
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-1",
+      "label": "Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 10,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000001",
+          "end_time_ms": 1735689600000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000001",
+          "start_time_ms": 1735689600000
+        },
+        {
+          "end_event": "MFG-E-000002",
+          "end_time_ms": 1735689600000,
+          "object_id": "M-002",
+          "start_event": "MFG-E-000002",
+          "start_time_ms": 1735689600000
+        },
+        {
+          "end_event": "MFG-E-000003",
+          "end_time_ms": 1735689600000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000003",
+          "start_time_ms": 1735689600000
+        },
+        {
+          "end_event": "MFG-E-000004",
+          "end_time_ms": 1735689600000,
+          "object_id": "M-004",
+          "start_event": "MFG-E-000004",
+          "start_time_ms": 1735689600000
+        },
+        {
+          "end_event": "MFG-E-000006",
+          "end_time_ms": 1735689600000,
+          "object_id": "M-006",
+          "start_event": "MFG-E-000006",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 5
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Initialize Machine [Running]",
+        "END Running"
+      ],
+      "state": "Running",
+      "support": 5,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "END Recovery",
+          "weight": 2
+        },
+        {
+          "source": "START Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 2
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 2
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "MaintenanceTeam",
+          "weight": 2
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-2",
+      "label": "Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000020",
+          "end_time_ms": 1735862460000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000020",
+          "start_time_ms": 1735862460000
+        },
+        {
+          "end_event": "MFG-E-000032",
+          "end_time_ms": 1735884400000,
+          "object_id": "M-002",
+          "start_event": "MFG-E-000032",
+          "start_time_ms": 1735884400000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Recovery",
+        "Machine Restarted [Recovery]",
+        "END Recovery"
+      ],
+      "state": "Recovery",
+      "support": 2,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Work Order Created [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "Test Failed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "Part Unavailable [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "Diagnosis Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Part Unavailable [Down]",
+          "target": "Component Replaced [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "Test Run Completed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "Repair Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "END Down",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Maintenance Started [Down]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Part Unavailable [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Part Unavailable [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Part Unavailable [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Repair Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Test Failed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-3",
+      "label": "Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 10,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000031",
+          "end_time_ms": 1735884100000,
+          "object_id": "M-002",
+          "start_event": "MFG-E-000023",
+          "start_time_ms": 1735776100000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 9
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 7
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 8
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Automatic Stop [Down]",
+        "Work Order Created [Down]",
+        "Maintenance Started [Down]",
+        "Diagnosis Performed [Down]",
+        "Part Unavailable [Down]",
+        "Component Replaced [Down]",
+        "Test Failed [Down]",
+        "Repair Performed [Down]",
+        "Test Run Completed [Down]",
+        "END Down"
+      ],
+      "state": "Down",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Work Order Created [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "Inspection Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "Component Replaced [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Test Run Completed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "Diagnosis Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "END Down",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Maintenance Started [Down]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "Component",
+          "weight": 2
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Component Replaced [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Diagnosis Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Work Order Created [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-4",
+      "label": "Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 8,
+      "object_types": [
+        "Alarm",
+        "Component",
+        "Inspection",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000019",
+          "end_time_ms": 1735862450000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000013",
+          "start_time_ms": 1735776050000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Alarm",
+          "target": "Machine",
+          "weight": 1
+        },
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 8
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 6
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 6
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Automatic Stop [Down]",
+        "Work Order Created [Down]",
+        "Maintenance Started [Down]",
+        "Diagnosis Performed [Down]",
+        "Component Replaced [Down]",
+        "Inspection Performed [Down]",
+        "Test Run Completed [Down]",
+        "END Down"
+      ],
+      "state": "Down",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Maintenance Request Created [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "Test Run Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Running]",
+          "target": "Maintenance Started [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Running]",
+          "target": "Inspection Performed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Initialize Machine [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Machine [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Started [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-5",
+      "label": "Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 6,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000046",
+          "end_time_ms": 1735776418000,
+          "object_id": "M-005",
+          "start_event": "MFG-E-000005",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 5
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 4
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Initialize Machine [Running]",
+        "Maintenance Request Created [Running]",
+        "Maintenance Started [Running]",
+        "Inspection Performed [Running]",
+        "Test Run Completed [Running]",
+        "END Running"
+      ],
+      "state": "Running",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Critical Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "START Degraded",
+          "target": "Warning Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Maintenance Request Created [Degraded]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Request Created [Degraded]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Alarm",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-6",
+      "label": "Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Alarm",
+        "Component",
+        "Machine",
+        "MaintenanceTeam"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000012",
+          "end_time_ms": 1735776040000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000010",
+          "start_time_ms": 1735776020000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Alarm",
+          "target": "Machine",
+          "weight": 3
+        },
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 3
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Warning Alarm Raised [Degraded]",
+        "Maintenance Request Created [Degraded]",
+        "Critical Alarm Raised [Degraded]",
+        "END Degraded"
+      ],
+      "state": "Degraded",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Inspection Performed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Test Run Completed [Down]",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "END Down",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Test Run Completed [Down]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-7",
+      "label": "Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000036",
+          "end_time_ms": 1735819410000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000034",
+          "start_time_ms": 1735776200000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 3
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 3
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Automatic Stop [Down]",
+        "Inspection Performed [Down]",
+        "Test Run Completed [Down]",
+        "END Down"
+      ],
+      "state": "Down",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "END Quality Hold",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Calibration Performed [Quality Hold]",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Started [Quality Hold]",
+          "target": "Inspection Performed [Quality Hold]",
+          "weight": 1
+        },
+        {
+          "source": "START Quality Hold",
+          "target": "Quality Hold Started [Quality Hold]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Calibration Performed [Quality Hold]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Inspection Performed [Quality Hold]",
+          "target": "Inspection",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Started [Quality Hold]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-8",
+      "label": "Quality Hold on Machine",
+      "leading_object_type": "Machine",
+      "mass": 4,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000053",
+          "end_time_ms": 1735776540000,
+          "object_id": "M-006",
+          "start_event": "MFG-E-000051",
+          "start_time_ms": 1735776520000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 3
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Quality Hold",
+        "Quality Hold Started [Quality Hold]",
+        "Inspection Performed [Quality Hold]",
+        "Calibration Performed [Quality Hold]",
+        "END Quality Hold"
+      ],
+      "state": "Quality Hold",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Maintenance Completed [Recovery]",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "START Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-9",
+      "label": "Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 3,
+      "object_types": [
+        "Component",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000048",
+          "end_time_ms": 1735776430000,
+          "object_id": "M-005",
+          "start_event": "MFG-E-000047",
+          "start_time_ms": 1735776420000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Recovery",
+        "Machine Restarted [Recovery]",
+        "Maintenance Completed [Recovery]",
+        "END Recovery"
+      ],
+      "state": "Recovery",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Component Replaced [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Setup Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Component Replaced [Running]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Component Replaced [Running]",
+          "target": "Component",
+          "weight": 2
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Operator",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-10",
+      "label": "Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 3,
+      "object_types": [
+        "Component",
+        "Machine",
+        "Operator"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000056",
+          "end_time_ms": 1735863000000,
+          "object_id": "M-007",
+          "start_event": "MFG-E-000055",
+          "start_time_ms": 1735776600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 3
+        },
+        {
+          "source": "Machine",
+          "target": "Operator",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Setup Completed [Running]",
+        "Component Replaced [Running]",
+        "END Running"
+      ],
+      "state": "Running",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Maintenance Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Operation Completed [Running]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Maintenance Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-11",
+      "label": "Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 3,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000022",
+          "end_time_ms": 1735869610000,
+          "object_id": "M-001",
+          "start_event": "MFG-E-000021",
+          "start_time_ms": 1735869600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 2
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Operation Completed [Running]",
+        "Maintenance Completed [Running]",
+        "END Running"
+      ],
+      "state": "Running",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Defect Detected [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "START Degraded",
+          "target": "Defect Detected [Degraded]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Defect Detected [Degraded]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-12",
+      "label": "Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000050",
+          "end_time_ms": 1735776510000,
+          "object_id": "M-006",
+          "start_event": "MFG-E-000050",
+          "start_time_ms": 1735776510000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Defect Detected [Degraded]",
+        "END Degraded"
+      ],
+      "state": "Degraded",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "START Degraded",
+          "target": "Critical Alarm Raised [Degraded]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Critical Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-13",
+      "label": "Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000040",
+          "end_time_ms": 1735776300000,
+          "object_id": "M-004",
+          "start_event": "MFG-E-000040",
+          "start_time_ms": 1735776300000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Critical Alarm Raised [Degraded]",
+        "END Degraded"
+      ],
+      "state": "Degraded",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "START Degraded",
+          "target": "Warning Alarm Raised [Degraded]",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Warning Alarm Raised [Degraded]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-14",
+      "label": "Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000039",
+          "end_time_ms": 1735869800000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000039",
+          "start_time_ms": 1735869800000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Warning Alarm Raised [Degraded]",
+        "END Degraded"
+      ],
+      "state": "Degraded",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Quality Hold Released [Degraded]",
+          "target": "END Degraded",
+          "weight": 1
+        },
+        {
+          "source": "START Degraded",
+          "target": "Quality Hold Released [Degraded]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Quality Hold Released [Degraded]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Quality Hold Released [Degraded]",
+          "target": "Inspection",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-15",
+      "label": "Degraded on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Inspection",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000054",
+          "end_time_ms": 1735776550000,
+          "object_id": "M-006",
+          "start_event": "MFG-E-000054",
+          "start_time_ms": 1735776550000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        },
+        {
+          "source": "Inspection",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Degraded",
+        "Quality Hold Released [Degraded]",
+        "END Degraded"
+      ],
+      "state": "Degraded",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "END Down",
+          "weight": 1
+        },
+        {
+          "source": "START Down",
+          "target": "Automatic Stop [Down]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Automatic Stop [Down]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-16",
+      "label": "Down on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000041",
+          "end_time_ms": 1735776310000,
+          "object_id": "M-004",
+          "start_event": "MFG-E-000041",
+          "start_time_ms": 1735776310000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Down",
+        "Automatic Stop [Down]",
+        "END Down"
+      ],
+      "state": "Down",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Initialize Machine [Idle]",
+          "target": "END Idle",
+          "weight": 1
+        },
+        {
+          "source": "START Idle",
+          "target": "Initialize Machine [Idle]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Machine [Idle]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-17",
+      "label": "Idle on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000008",
+          "end_time_ms": 1735689600000,
+          "object_id": "M-008",
+          "start_event": "MFG-E-000008",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Idle",
+        "Initialize Machine [Idle]",
+        "END Idle"
+      ],
+      "state": "Idle",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "START Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-18",
+      "label": "Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000042",
+          "end_time_ms": 1735778100000,
+          "object_id": "M-004",
+          "start_event": "MFG-E-000042",
+          "start_time_ms": 1735778100000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Recovery",
+        "Machine Restarted [Recovery]",
+        "END Recovery"
+      ],
+      "state": "Recovery",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "END Recovery",
+          "weight": 1
+        },
+        {
+          "source": "START Recovery",
+          "target": "Machine Restarted [Recovery]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Machine Restarted [Recovery]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-19",
+      "label": "Recovery on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000037",
+          "end_time_ms": 1735862600000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000037",
+          "start_time_ms": 1735862600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Recovery",
+        "Machine Restarted [Recovery]",
+        "END Recovery"
+      ],
+      "state": "Recovery",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Operation Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Operation Completed [Running]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-20",
+      "label": "Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine",
+        "MaintenanceTeam",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000033",
+          "end_time_ms": 1735891300000,
+          "object_id": "M-002",
+          "start_event": "MFG-E-000033",
+          "start_time_ms": 1735891300000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        },
+        {
+          "source": "Machine",
+          "target": "MaintenanceTeam",
+          "weight": 1
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Operation Completed [Running]",
+        "END Running"
+      ],
+      "state": "Running",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "START Running",
+          "target": "Setup Completed [Running]",
+          "weight": 1
+        },
+        {
+          "source": "Setup Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Setup Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-21",
+      "label": "Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000058",
+          "end_time_ms": 1735776710000,
+          "object_id": "M-008",
+          "start_event": "MFG-E-000058",
+          "start_time_ms": 1735776710000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Setup Completed [Running]",
+        "END Running"
+      ],
+      "state": "Running",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Operation Completed [Running]",
+          "target": "END Running",
+          "weight": 1
+        },
+        {
+          "source": "START Running",
+          "target": "Operation Completed [Running]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Operation Completed [Running]",
+          "target": "Component",
+          "weight": 1
+        },
+        {
+          "source": "Operation Completed [Running]",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-22",
+      "label": "Running on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine",
+        "WorkOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000038",
+          "end_time_ms": 1735866200000,
+          "object_id": "M-003",
+          "start_event": "MFG-E-000038",
+          "start_time_ms": 1735866200000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        },
+        {
+          "source": "Machine",
+          "target": "WorkOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Running",
+        "Operation Completed [Running]",
+        "END Running"
+      ],
+      "state": "Running",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "START Setup",
+          "target": "Setup Started [Setup]",
+          "weight": 1
+        },
+        {
+          "source": "Setup Started [Setup]",
+          "target": "END Setup",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Setup Started [Setup]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-23",
+      "label": "Setup on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000057",
+          "end_time_ms": 1735776700000,
+          "object_id": "M-008",
+          "start_event": "MFG-E-000057",
+          "start_time_ms": 1735776700000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Setup",
+        "Setup Started [Setup]",
+        "END Setup"
+      ],
+      "state": "Setup",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Initialize Machine [Setup]",
+          "target": "END Setup",
+          "weight": 1
+        },
+        {
+          "source": "START Setup",
+          "target": "Initialize Machine [Setup]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Machine [Setup]",
+          "target": "Component",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-24",
+      "label": "Setup on Machine",
+      "leading_object_type": "Machine",
+      "mass": 2,
+      "object_types": [
+        "Component",
+        "Machine"
+      ],
+      "occurrences": [
+        {
+          "end_event": "MFG-E-000007",
+          "end_time_ms": 1735689600000,
+          "object_id": "M-007",
+          "start_event": "MFG-E-000007",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Component",
+          "target": "Machine",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Setup",
+        "Initialize Machine [Setup]",
+        "END Setup"
+      ],
+      "state": "Setup",
+      "support": 1,
+      "to_state": null
+    }
+  ]
+}

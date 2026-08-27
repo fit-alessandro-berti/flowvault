@@ -131,6 +131,7 @@ struct StateDetectionRun {
     windows: Vec<WindowEncoding>,
     pca: PcaProjection,
     som: SomModel,
+    training_window_count: usize,
     color_metric: ColorMetric,
     color_options: Vec<StateDetectionColorOption>,
 }

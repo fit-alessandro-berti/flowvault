@@ -94,14 +94,35 @@ impl OcelDocument {
 
     /// Detects ranked intra-state and inter-state behavioral patterns.
     #[wasm_bindgen(js_name = statePatternsJson)]
-    pub fn state_patterns_json(&self) -> Result<String, JsValue> {
-        into_js_result(self.inner.state_patterns_json())
+    pub fn state_patterns_json(&self, request_json: Option<String>) -> Result<String, JsValue> {
+        match request_json {
+            Some(request) => into_js_result(self.inner.state_patterns_with_request_json(&request)),
+            None => into_js_result(self.inner.state_patterns_json()),
+        }
     }
 
     /// Extracts object-level features and detects execution-state cells with PCA and SOM.
     #[wasm_bindgen(js_name = stateDetectionJson)]
     pub fn state_detection_json(&self, request_json: &str) -> Result<String, JsValue> {
         into_js_result(self.inner.state_detection_json(request_json))
+    }
+
+    /// Returns all PCA/SOM lifecycle-window assignments as JSON.
+    #[wasm_bindgen(js_name = stateDetectionAssignmentsJson)]
+    pub fn state_detection_assignments_json(
+        &self,
+        request_json: &str,
+    ) -> Result<String, JsValue> {
+        into_js_result(self.inner.state_detection_assignments_json(request_json))
+    }
+
+    /// Returns all PCA/SOM lifecycle-window assignments as CSV.
+    #[wasm_bindgen(js_name = stateDetectionAssignmentsCsv)]
+    pub fn state_detection_assignments_csv(
+        &self,
+        request_json: &str,
+    ) -> Result<String, JsValue> {
+        into_js_result(self.inner.state_detection_assignments_csv(request_json))
     }
 
     /// Returns details for one SOM cell, including a DFG and entering/exiting windows.

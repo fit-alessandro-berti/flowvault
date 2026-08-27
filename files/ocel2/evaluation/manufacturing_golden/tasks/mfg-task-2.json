@@ -1,0 +1,62 @@
+{
+  "acceptable_alternative_explanations": [
+    "test failure",
+    "repair rework",
+    "team response"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "delay_step": "Part Unavailable",
+    "quick_pattern": "MFG-P3",
+    "slow_pattern": "MFG-P4"
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "M-001",
+    "M-002"
+  ],
+  "pre_registered": true,
+  "prompt": "Explain why one recovery was slower than the comparison recovery.",
+  "required_evidence_items": [
+    "MFG-P3-I001",
+    "MFG-P4-I001"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "MFG-TASK-2",
+  "time_range": {
+    "end": "2025-01-03T06:06:40Z",
+    "start": "2025-01-03T00:00:10Z"
+  },
+  "title": "Quick versus slow recovery",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}

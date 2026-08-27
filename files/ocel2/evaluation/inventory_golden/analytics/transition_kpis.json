@@ -1,0 +1,255 @@
+{
+  "dwell": [
+    {
+      "avg_duration_ms": 1843168166.666667,
+      "episode_count": 12,
+      "max_duration_ms": 3024006000,
+      "median_duration_ms": 2678383000,
+      "min_duration_ms": 86430000,
+      "object_count": 8,
+      "state": "Normal",
+      "total_duration_ms": 22118018000
+    },
+    {
+      "avg_duration_ms": 241936000.0,
+      "episode_count": 5,
+      "max_duration_ms": 691300000,
+      "median_duration_ms": 172740000,
+      "min_duration_ms": 10000,
+      "object_count": 4,
+      "state": "Understock",
+      "total_duration_ms": 1209680000
+    },
+    {
+      "avg_duration_ms": 144103333.333333,
+      "episode_count": 3,
+      "max_duration_ms": 173110000,
+      "median_duration_ms": 172800000,
+      "min_duration_ms": 86400000,
+      "object_count": 3,
+      "state": "Overstock",
+      "total_duration_ms": 432310000
+    },
+    {
+      "avg_duration_ms": 172810000.0,
+      "episode_count": 2,
+      "max_duration_ms": 172820000,
+      "median_duration_ms": 172820000,
+      "min_duration_ms": 172800000,
+      "object_count": 2,
+      "state": "Critical Understock",
+      "total_duration_ms": 345620000
+    },
+    {
+      "avg_duration_ms": 86400000.0,
+      "episode_count": 1,
+      "max_duration_ms": 86400000,
+      "median_duration_ms": 86400000,
+      "min_duration_ms": 86400000,
+      "object_count": 1,
+      "state": "Unknown",
+      "total_duration_ms": 86400000
+    }
+  ],
+  "object_count": 8,
+  "object_type": "ItemLocation",
+  "recovery": [
+    {
+      "avg_duration_ms": 518460000.0,
+      "count": 2,
+      "from_state": "Understock",
+      "max_duration_ms": 691300000,
+      "median_duration_ms": 691300000,
+      "min_duration_ms": 345620000,
+      "object_count": 2,
+      "to_state": "Normal"
+    },
+    {
+      "avg_duration_ms": 172820000.0,
+      "count": 1,
+      "from_state": "Critical Understock",
+      "max_duration_ms": 172820000,
+      "median_duration_ms": 172820000,
+      "min_duration_ms": 172820000,
+      "object_count": 1,
+      "to_state": "Understock"
+    }
+  ],
+  "state_count": 5,
+  "stateful_object_count": 8,
+  "states": [
+    "Critical Understock",
+    "Normal",
+    "Overstock",
+    "Understock",
+    "Unknown"
+  ],
+  "stuck": [
+    {
+      "duration_ms": 3024006000,
+      "entered_time_ms": 1735689600000,
+      "event_count": 8,
+      "last_time_ms": 1738713606000,
+      "object_id": "IL-0007",
+      "state": "Normal"
+    },
+    {
+      "duration_ms": 2850895000,
+      "entered_time_ms": 1735862710000,
+      "event_count": 2,
+      "last_time_ms": 1738713605000,
+      "object_id": "IL-0006",
+      "state": "Normal"
+    },
+    {
+      "duration_ms": 2764594000,
+      "entered_time_ms": 1735949010000,
+      "event_count": 2,
+      "last_time_ms": 1738713604000,
+      "object_id": "IL-0005",
+      "state": "Normal"
+    },
+    {
+      "duration_ms": 2764307000,
+      "entered_time_ms": 1735949300000,
+      "event_count": 3,
+      "last_time_ms": 1738713607000,
+      "object_id": "IL-0008",
+      "state": "Normal"
+    },
+    {
+      "duration_ms": 2678392000,
+      "entered_time_ms": 1736035210000,
+      "event_count": 2,
+      "last_time_ms": 1738713602000,
+      "object_id": "IL-0003",
+      "state": "Normal"
+    },
+    {
+      "duration_ms": 2678383000,
+      "entered_time_ms": 1736035220000,
+      "event_count": 2,
+      "last_time_ms": 1738713603000,
+      "object_id": "IL-0004",
+      "state": "Normal"
+    },
+    {
+      "duration_ms": 2419200000,
+      "entered_time_ms": 1736294400000,
+      "event_count": 2,
+      "last_time_ms": 1738713600000,
+      "object_id": "IL-0001",
+      "state": "Normal"
+    },
+    {
+      "duration_ms": 2332701000,
+      "entered_time_ms": 1736380900000,
+      "event_count": 2,
+      "last_time_ms": 1738713601000,
+      "object_id": "IL-0002",
+      "state": "Normal"
+    }
+  ],
+  "transitions": [
+    {
+      "avg_duration_ms": 144103333.333333,
+      "count": 3,
+      "from_state": "Overstock",
+      "max_duration_ms": 173110000,
+      "median_duration_ms": 172800000,
+      "min_duration_ms": 86400000,
+      "object_count": 3,
+      "to_state": "Normal"
+    },
+    {
+      "avg_duration_ms": 86515000.0,
+      "count": 2,
+      "from_state": "Normal",
+      "max_duration_ms": 86600000,
+      "median_duration_ms": 86600000,
+      "min_duration_ms": 86430000,
+      "object_count": 2,
+      "to_state": "Understock"
+    },
+    {
+      "avg_duration_ms": 10000.0,
+      "count": 2,
+      "from_state": "Understock",
+      "max_duration_ms": 10000,
+      "median_duration_ms": 10000,
+      "min_duration_ms": 10000,
+      "object_count": 2,
+      "to_state": "Critical Understock"
+    },
+    {
+      "avg_duration_ms": 518460000.0,
+      "count": 2,
+      "from_state": "Understock",
+      "max_duration_ms": 691300000,
+      "median_duration_ms": 691300000,
+      "min_duration_ms": 345620000,
+      "object_count": 2,
+      "to_state": "Normal"
+    },
+    {
+      "avg_duration_ms": 172800000.0,
+      "count": 1,
+      "from_state": "Critical Understock",
+      "max_duration_ms": 172800000,
+      "median_duration_ms": 172800000,
+      "min_duration_ms": 172800000,
+      "object_count": 1,
+      "to_state": "Normal"
+    },
+    {
+      "avg_duration_ms": 172820000.0,
+      "count": 1,
+      "from_state": "Critical Understock",
+      "max_duration_ms": 172820000,
+      "median_duration_ms": 172820000,
+      "min_duration_ms": 172820000,
+      "object_count": 1,
+      "to_state": "Understock"
+    },
+    {
+      "avg_duration_ms": 259210000.0,
+      "count": 1,
+      "from_state": "Normal",
+      "max_duration_ms": 259210000,
+      "median_duration_ms": 259210000,
+      "min_duration_ms": 259210000,
+      "object_count": 1,
+      "to_state": "Overstock"
+    },
+    {
+      "avg_duration_ms": 173300000.0,
+      "count": 1,
+      "from_state": "Normal",
+      "max_duration_ms": 173300000,
+      "median_duration_ms": 173300000,
+      "min_duration_ms": 173300000,
+      "object_count": 1,
+      "to_state": "Unknown"
+    },
+    {
+      "avg_duration_ms": 172740000.0,
+      "count": 1,
+      "from_state": "Understock",
+      "max_duration_ms": 172740000,
+      "median_duration_ms": 172740000,
+      "min_duration_ms": 172740000,
+      "object_count": 1,
+      "to_state": "Overstock"
+    },
+    {
+      "avg_duration_ms": 86400000.0,
+      "count": 1,
+      "from_state": "Unknown",
+      "max_duration_ms": 86400000,
+      "median_duration_ms": 86400000,
+      "min_duration_ms": 86400000,
+      "object_count": 1,
+      "to_state": "Normal"
+    }
+  ]
+}

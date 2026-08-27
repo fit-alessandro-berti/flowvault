@@ -46,7 +46,17 @@ impl CompactOcelLog {
     }
 
     fn state_patterns_json(&self) -> OcelResult<String> {
-        let analysis = self.detect_state_patterns()?;
+        let analysis = self.detect_state_patterns(&StatePatternRequest::default())?;
+        serde_json::to_string(&analysis).map_err(|err| {
+            OcelError::new(format!("could not serialize state pattern analysis: {err}"))
+        })
+    }
+
+    fn state_patterns_with_request_json(
+        &self,
+        request: &StatePatternRequest,
+    ) -> OcelResult<String> {
+        let analysis = self.detect_state_patterns(request)?;
         serde_json::to_string(&analysis).map_err(|err| {
             OcelError::new(format!("could not serialize state pattern analysis: {err}"))
         })
@@ -58,6 +68,43 @@ impl CompactOcelLog {
             .map_err(|err| OcelError::new(format!("could not serialize state detection: {err}")))
     }
 
+    fn state_detection_assignments_json(
+        &self,
+        request: &StateDetectionRequest,
+    ) -> OcelResult<String> {
+        let result = self.full_state_detection_assignments(request)?;
+        serde_json::to_string(&result).map_err(|err| {
+            OcelError::new(format!(
+                "could not serialize state detection assignments: {err}"
+            ))
+        })
+    }
+
+    fn state_detection_assignments_csv(
+        &self,
+        request: &StateDetectionRequest,
+    ) -> OcelResult<String> {
+        let result = self.full_state_detection_assignments(request)?;
+        let mut output = String::from(
+            "object_id,start_event,end_event,cell_x,cell_y,pc1,pc2\n",
+        );
+        for window in result.windows {
+            let object_id = csv_escape(&window.object_id);
+            let start_event = csv_escape(&window.start_event);
+            let end_event = csv_escape(&window.end_event);
+            writeln!(
+                output,
+                "{object_id},{start_event},{end_event},{},{},{},{}",
+                window.cell_x,
+                window.cell_y,
+                window.pc1,
+                window.pc2
+            )
+            .expect("writing to a String cannot fail");
+        }
+        Ok(output)
+    }
+
     fn state_detection_cell_json(&self, request: &StateDetectionCellRequest) -> OcelResult<String> {
         let state_request = StateDetectionRequest {
             object_type: request.object_type.clone(),
@@ -65,6 +112,7 @@ impl CompactOcelLog {
             som_width: request.som_width,
             som_height: request.som_height,
             epochs: request.epochs,
+            max_training_windows: request.max_training_windows,
             color_attribute: request.color_attribute.clone(),
         };
         let run = self.compute_state_detection_run(&state_request)?;

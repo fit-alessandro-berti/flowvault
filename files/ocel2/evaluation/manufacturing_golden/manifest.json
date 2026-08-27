@@ -1,0 +1,142 @@
+{
+  "config_sha256": "644701ff605e5f9539067acf6f7a49c7420b4fb7cf6a91640c4ab97c49ce7a13",
+  "counts": {
+    "e2o": 202,
+    "event_types": 30,
+    "events": 68,
+    "leading_objects": 8,
+    "o2o": 17,
+    "object_types": 11,
+    "objects": 39
+  },
+  "end_time": "2025-01-31T00:00:00Z",
+  "expected_counts": {
+    "patterns": 6,
+    "states": 68,
+    "transitions": 23,
+    "violations": 9
+  },
+  "files": {
+    "expected/branch_coverage.json": {
+      "bytes": 1187,
+      "sha256": "90631efcc5af5a25b57912b37ec8e11191ad4929b5d471e547e8294bc869ef03"
+    },
+    "expected/golden_assertions.json": {
+      "bytes": 1489,
+      "sha256": "6e23839ced31ec2b9ee89d8d1e640e7b032f474dfe3d06d436abbcf7eff722c8"
+    },
+    "expected/summary.json": {
+      "bytes": 1526,
+      "sha256": "ed74e4e4e512a5d522fce9a326f6f21c5570eff860e75f13f733fea69653539c"
+    },
+    "observed.behavior.ocel.json": {
+      "bytes": 102480,
+      "sha256": "d3b138afd04117f7bc6229f30ad7a57bfd6f8546a50a8ba2b3870058aeedb991"
+    },
+    "observed.ocel.json": {
+      "bytes": 112848,
+      "sha256": "4c2ea160b89881ef3202720d10dc080e3ae4f944c021c5a0dd2450aeff1e99a9"
+    },
+    "state_query.sql": {
+      "bytes": 440,
+      "sha256": "d5d4d1be493f0ae10a5f17ca9108f420850150f5d9cba853496a133f91442449"
+    },
+    "tasks/answer_key.json": {
+      "bytes": 1348,
+      "sha256": "a1410a5c94b8889e319dfa84fbbe74b92a528c1d793b30842d9eb98ddeb3b606"
+    },
+    "tasks/mfg-task-1.json": {
+      "bytes": 1399,
+      "sha256": "e482d7dd413c3da7a428a29ecd5ad750fa5f05073d9b58d9f8a0546b11a67dc1"
+    },
+    "tasks/mfg-task-2.json": {
+      "bytes": 1300,
+      "sha256": "0d0daca2d9c427ac874aa5f7af94a62acff42c36c5bc4e80f453e824a23e7ba0"
+    },
+    "tasks/mfg-task-3.json": {
+      "bytes": 1225,
+      "sha256": "7f6034dc53f0a450cd3c47a6247746e9ee6a24e994e30b0fe4ee9d2e420c786d"
+    },
+    "tasks/mfg-task-4.json": {
+      "bytes": 1263,
+      "sha256": "aa15d2d69790eeefd727fe856bd6687cfabcbad5529337c0e97936a93a4eb404"
+    },
+    "truth/causal_truth.json": {
+      "bytes": 79,
+      "sha256": "9d484e6436f655bb947881cd6ceca273aadbcbf5754affc41c2ccd76f4c24425"
+    },
+    "truth/conformance_violations.csv": {
+      "bytes": 1388,
+      "sha256": "96f9d3ed710082f04f9e921781e497752fef6f0b1a7fd035474d2bdcd9e73696"
+    },
+    "truth/injected_pattern_instances.csv": {
+      "bytes": 1732,
+      "sha256": "2dbdd865bd9b659f1a7108fc5280723a22a901e367f6ec9c84004686287ee117"
+    },
+    "truth/latent_regime_at_event.csv": {
+      "bytes": 7483,
+      "sha256": "44d461450c930a561f0e018e6a5d58a52e93a4f5cb1c1544603e96c66c044a02"
+    },
+    "truth/latent_regime_episodes.csv": {
+      "bytes": 5112,
+      "sha256": "a560eca71ea4e0890ab6e4f9a52503b4be180136329c359127658460c647ba54"
+    },
+    "truth/noisy_operational_state_at_event.csv": {
+      "bytes": 3832,
+      "sha256": "a9cc08158380f11f5c254aa37563cb4339ad8456ff32f2a512de4099e6bd630c"
+    },
+    "truth/outcomes_by_object.csv": {
+      "bytes": 212,
+      "sha256": "78e3a1f6a3f7e997eee2d137854043928b6c46bfd215a0a9d3ecdc21bbd12ec2"
+    },
+    "truth/physical_state_at_event.csv": {
+      "bytes": 4994,
+      "sha256": "4b2f427f2b22365952b3240c2b10ecbc83d132b9113ffb9eb7810f7a9ac6655c"
+    },
+    "truth/prediction_samples.csv": {
+      "bytes": 14261,
+      "sha256": "2360fd1c35429bd34825fec3612a6d356c7a9624af1c07ac59d20b1c8bc9b14f"
+    },
+    "truth/state_at_event.csv": {
+      "bytes": 9750,
+      "sha256": "68b11e03f4cb7f086ae1b98b95f85208ce8035088fd83989b0fc1ce0381a25ec"
+    },
+    "truth/state_episodes.csv": {
+      "bytes": 3695,
+      "sha256": "0d7f4c4d92df17d193338e8572f46c5b526806c93590e4d4359a4869323cae56"
+    },
+    "truth/transitions.csv": {
+      "bytes": 2449,
+      "sha256": "63bc67758cbf5ad354981f0c66b3d77841327616eb4f2b748034f847270f96a4"
+    }
+  },
+  "generator_commit": "35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b",
+  "perturbations": [],
+  "profile": "golden",
+  "rng_streams": {
+    "algorithm": "numpy.random.PCG64",
+    "root_seed": 20260826,
+    "streams": {
+      "causal intervention": {
+        "spawn_key": [
+          3978306670,
+          1372219945,
+          1410783785,
+          2972419980
+        ]
+      },
+      "entity parameters": {
+        "spawn_key": [
+          2568105485,
+          2970263544,
+          1653596657,
+          2497191303
+        ]
+      }
+    }
+  },
+  "run_id": "manufacturing-golden-20260826",
+  "scenario": "manufacturing",
+  "seed": 20260826,
+  "start_time": "2025-01-01T00:00:00Z"
+}

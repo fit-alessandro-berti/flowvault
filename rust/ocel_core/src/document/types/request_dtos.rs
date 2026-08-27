@@ -104,7 +104,48 @@ struct StateDetectionRequest {
     som_width: Option<usize>,
     som_height: Option<usize>,
     epochs: Option<usize>,
+    max_training_windows: Option<usize>,
     color_attribute: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct StatePatternRequest {
+    #[serde(default)]
+    leading_object_type: Option<String>,
+    #[serde(default = "default_pattern_family")]
+    family: String,
+    #[serde(default)]
+    pre_radius: Option<usize>,
+    #[serde(default)]
+    post_radius: Option<usize>,
+    #[serde(default)]
+    ignored_event_types: Vec<String>,
+    #[serde(default = "default_pattern_min_support")]
+    min_support: usize,
+    #[serde(default)]
+    include_occurrences: bool,
+}
+
+impl Default for StatePatternRequest {
+    fn default() -> Self {
+        Self {
+            leading_object_type: None,
+            family: default_pattern_family(),
+            pre_radius: None,
+            post_radius: None,
+            ignored_event_types: Vec::new(),
+            min_support: default_pattern_min_support(),
+            include_occurrences: false,
+        }
+    }
+}
+
+fn default_pattern_family() -> String {
+    "both".to_owned()
+}
+
+fn default_pattern_min_support() -> usize {
+    1
 }
 
 #[derive(Deserialize)]
@@ -114,6 +155,7 @@ struct StateDetectionCellRequest {
     som_width: Option<usize>,
     som_height: Option<usize>,
     epochs: Option<usize>,
+    max_training_windows: Option<usize>,
     color_attribute: Option<String>,
     cell_x: usize,
     cell_y: usize,
@@ -144,6 +186,8 @@ struct StateTransitionKpiRequest {
     object_type: Option<String>,
     #[serde(default)]
     stuck_limit: Option<usize>,
+    #[serde(default)]
+    recovery_transitions: Vec<(String, String)>,
 }
 
 #[derive(Deserialize)]

@@ -23,6 +23,7 @@
     <div class="pattern-tabs" role="tablist" aria-label="State pattern family">
       <button
         type="button"
+        data-testid="patterns-intra-tab"
         class="pattern-tab-button"
         role="tab"
         [attr.aria-selected]="vm.activePatternTab() === 'intra'"
@@ -33,6 +34,7 @@
       </button>
       <button
         type="button"
+        data-testid="patterns-inter-tab"
         class="pattern-tab-button"
         role="tab"
         [attr.aria-selected]="vm.activePatternTab() === 'inter'"

@@ -1,0 +1,15 @@
+scenario,run_id,object_type,category,from_state,to_state,count,object_count,min_duration_ms,median_duration_ms,avg_duration_ms,max_duration_ms,median_duration_minutes,avg_duration_minutes
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Down,Recovery,4,4,1790000,86410000,70725000.0,108300000,1440.1666666666667,1178.75
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Running,Degraded,4,4,3600000,86700000,65902500.0,86900000,1445.0,1098.375
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Recovery,Running,3,3,3600000,6900000,5880000.0,7140000,115.0,98.0
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Degraded,Down,2,2,10000,40000,25000.0,40000,0.6666666666666666,0.4166666666666667
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Running,Down,2,2,86500000,86600000,86550000.0,86600000,1443.3333333333333,1442.5
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Setup,Running,2,2,10000,87000000,43505000.0,87000000,1450.0,725.0833333333334
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Degraded,Quality Hold,1,1,20000,20000,20000.0,20000,0.3333333333333333,0.3333333333333333
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Idle,Setup,1,1,87100000,87100000,87100000.0,87100000,1451.6666666666667,1451.6666666666667
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Quality Hold,Degraded,1,1,30000,30000,30000.0,30000,0.5,0.5
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Running,Recovery,1,1,86820000,86820000,86820000.0,86820000,1447.0,1447.0
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Running,Unknown,1,1,86390000,86390000,86390000.0,86390000,1439.8333333333333,1439.8333333333333
+manufacturing,manufacturing-golden-20260826,Machine,transitions,Unknown,Running,1,1,86400000,86400000,86400000.0,86400000,1440.0,1440.0
+manufacturing,manufacturing-golden-20260826,Machine,recovery,Down,Recovery,4,4,1790000,86410000,70725000.0,108300000,1440.1666666666667,1178.75
+manufacturing,manufacturing-golden-20260826,Machine,recovery,Recovery,Running,3,3,3600000,6900000,5880000.0,7140000,115.0,98.0

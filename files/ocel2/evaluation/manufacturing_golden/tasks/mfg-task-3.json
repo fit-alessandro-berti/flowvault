@@ -1,0 +1,59 @@
+{
+  "acceptable_alternative_explanations": [
+    "new fault",
+    "sensor false positive"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "instance_id": "MFG-P5-I001",
+    "pattern_id": "MFG-P5"
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "M-003"
+  ],
+  "pre_registered": true,
+  "prompt": "Find a machine returning to Degraded shortly after repair.",
+  "required_evidence_items": [
+    "MFG-E-000037",
+    "MFG-E-000039"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "MFG-TASK-3",
+  "time_range": {
+    "end": "2025-01-03T02:03:20Z",
+    "start": "2025-01-03T00:03:20Z"
+  },
+  "title": "Post-repair recurrence",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}

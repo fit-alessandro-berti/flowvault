@@ -148,7 +148,13 @@ impl CompactOcelLog {
         let mut recovery = transitions
             .iter()
             .filter(|transition| {
-                is_recovery_transition(&transition.from_state, &transition.to_state)
+                if request.recovery_transitions.is_empty() {
+                    is_recovery_transition(&transition.from_state, &transition.to_state)
+                } else {
+                    request.recovery_transitions.iter().any(|(from, to)| {
+                        from == &transition.from_state && to == &transition.to_state
+                    })
+                }
             })
             .cloned()
             .collect::<Vec<_>>();

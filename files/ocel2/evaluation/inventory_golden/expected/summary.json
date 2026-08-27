@@ -1,0 +1,55 @@
+{
+  "conformance_violations": 7,
+  "counts": {
+    "e2o": 212,
+    "event_types": 24,
+    "events": 52,
+    "leading_objects": 8,
+    "o2o": 33,
+    "object_types": 10,
+    "objects": 38
+  },
+  "event_type_counts": {
+    "Backorder Registered": 2,
+    "Cycle Count Performed": 1,
+    "Data Gap Ended": 1,
+    "Data Gap Started": 1,
+    "Delivery Delayed": 1,
+    "Expedite Requested": 1,
+    "Goods Issue": 2,
+    "Goods Receipt": 5,
+    "Initialize Inventory": 8,
+    "Inventory Adjustment": 2,
+    "Policy Threshold Updated": 1,
+    "Purchase Order Item Created": 5,
+    "Replenishment Proposal Approved": 2,
+    "Replenishment Proposal Created": 2,
+    "Reservation Created": 1,
+    "Sales Order Item Created": 1,
+    "Simulation End Snapshot": 8,
+    "Supplier Confirmation Received": 1,
+    "Transfer Receive": 2,
+    "Transfer Requested": 2,
+    "Transfer Ship": 3
+  },
+  "pattern_instances": 6,
+  "state_counts": {
+    "Critical Understock": 4,
+    "Normal": 31,
+    "Overstock": 7,
+    "Understock": 9,
+    "Unknown": 1
+  },
+  "transition_counts": {
+    "Critical Understock -> Normal": 1,
+    "Critical Understock -> Understock": 1,
+    "Normal -> Overstock": 1,
+    "Normal -> Understock": 2,
+    "Normal -> Unknown": 1,
+    "Overstock -> Normal": 3,
+    "Understock -> Critical Understock": 2,
+    "Understock -> Normal": 2,
+    "Understock -> Overstock": 1,
+    "Unknown -> Normal": 1
+  }
+}

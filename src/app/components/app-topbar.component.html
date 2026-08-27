@@ -41,10 +41,17 @@
     }
     @if (vm.hasDocument()) {
       <div class="toolbar-popover-anchor">
-        <button type="button" class="toolbar-button" (click)="vm.toggleExportMenu()">Export</button>
+        <button
+          type="button"
+          class="toolbar-button"
+          data-testid="export-menu-button"
+          (click)="vm.toggleExportMenu()"
+        >
+          Export
+        </button>
         @if (vm.isExportMenuOpen()) {
           <section class="toolbar-popover export-menu" aria-label="Export menu">
-            <button type="button" (click)="vm.exportJson()">JSON</button>
+            <button type="button" data-testid="export-json" (click)="vm.exportJson()">JSON</button>
             <button type="button" (click)="vm.exportXml()">XML</button>
             <button type="button" (click)="vm.exportCsv()">CSV</button>
             <button type="button" (click)="vm.exportSqlite()">SQLite</button>
@@ -52,7 +59,14 @@
           </section>
         }
       </div>
-      <button type="button" class="toolbar-button" (click)="vm.openStateDialog()">State</button>
+      <button
+        type="button"
+        class="toolbar-button"
+        data-testid="open-state-dialog"
+        (click)="vm.openStateDialog()"
+      >
+        State
+      </button>
       <div class="toolbar-popover-anchor">
         <button type="button" class="toolbar-button" (click)="vm.toggleFilterMenu()">Filter</button>
         @if (vm.isFilterMenuOpen()) {

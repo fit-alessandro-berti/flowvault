@@ -1,0 +1,31 @@
+scope,key,metric,value
+state,Degraded,episode_count,5
+state,Degraded,occupancy_minutes,81948.78333333333
+state,Degraded,median_dwell_minutes,0.6666666666666666
+state,Down,episode_count,4
+state,Down,occupancy_minutes,4715.0
+state,Down,median_dwell_minutes,1440.0833333333335
+state,Idle,episode_count,1
+state,Idle,occupancy_minutes,1451.6666666666667
+state,Idle,median_dwell_minutes,1451.6666666666667
+state,Quality Hold,episode_count,1
+state,Quality Hold,occupancy_minutes,0.5
+state,Quality Hold,median_dwell_minutes,0.5
+state,Recovery,episode_count,5
+state,Recovery,occupancy_minutes,83772.11666666667
+state,Recovery,median_dwell_minutes,119.0
+state,Running,episode_count,12
+state,Running,occupancy_minutes,170822.23333333334
+state,Running,median_dwell_minutes,1446.0
+state,Setup,episode_count,2
+state,Setup,occupancy_minutes,1450.1666666666667
+state,Setup,median_dwell_minutes,725.0833333333334
+state,Unknown,episode_count,1
+state,Unknown,occupancy_minutes,1440.0
+state,Unknown,median_dwell_minutes,1440.0
+overall,recovery,median_recovery_minutes,1440.0833333333335
+transition,Running -> Down,count,2
+transition,Degraded -> Down,count,2
+transition,Down -> Recovery,count,4
+transition,Recovery -> Running,count,3
+overall,horizon,stuck_object_count,0

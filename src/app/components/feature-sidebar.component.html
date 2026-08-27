@@ -3,6 +3,7 @@
     <h2>General</h2>
     <button
       type="button"
+      data-testid="feature-statistics"
       class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'statistics'"
       (click)="vm.setActiveFeature('statistics')"
@@ -14,6 +15,7 @@
     </button>
     <button
       type="button"
+      data-testid="feature-state-detection"
       class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'stateDetection'"
       (click)="vm.setActiveFeature('stateDetection')"
@@ -29,6 +31,7 @@
     </button>
     <button
       type="button"
+      data-testid="feature-causal-model"
       class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'causalModel'"
       (click)="vm.setActiveFeature('causalModel')"
@@ -43,6 +46,7 @@
     </button>
     <button
       type="button"
+      data-testid="feature-ocdfg"
       class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'ocdfg'"
       (click)="vm.setActiveFeature('ocdfg')"
@@ -61,6 +65,7 @@
     <h2>State-Based</h2>
     <button
       type="button"
+      data-testid="feature-patterns"
       class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'patterns'"
       [disabled]="!vm.hasAppliedState()"
@@ -76,6 +81,7 @@
     </button>
     <button
       type="button"
+      data-testid="feature-sa-ocdfg"
       class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'stateAwareOcdfg'"
       [disabled]="!vm.hasAppliedState()"
@@ -105,6 +111,7 @@
     </button>
     <button
       type="button"
+      data-testid="feature-transition-kpis"
       class="feature-button"
       [class.is-selected]="vm.activeFeature() === 'transitionKpis'"
       [disabled]="!vm.hasAppliedState()"

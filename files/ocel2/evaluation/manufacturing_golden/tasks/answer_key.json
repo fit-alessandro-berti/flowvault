@@ -1,0 +1,63 @@
+{
+  "scenario": "manufacturing",
+  "tasks": [
+    {
+      "correct_answer": {
+        "pattern_id": "MFG-P1",
+        "sequence": [
+          "Sensor Snapshot",
+          "Warning Alarm Raised",
+          "Maintenance Request Created",
+          "Critical Alarm Raised",
+          "Automatic Stop"
+        ]
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "MFG-P1-I001",
+        "MFG-E-000009",
+        "MFG-E-000013"
+      ],
+      "task_id": "MFG-TASK-1"
+    },
+    {
+      "correct_answer": {
+        "delay_step": "Part Unavailable",
+        "quick_pattern": "MFG-P3",
+        "slow_pattern": "MFG-P4"
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "MFG-P3-I001",
+        "MFG-P4-I001"
+      ],
+      "task_id": "MFG-TASK-2"
+    },
+    {
+      "correct_answer": {
+        "instance_id": "MFG-P5-I001",
+        "pattern_id": "MFG-P5"
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "MFG-E-000037",
+        "MFG-E-000039"
+      ],
+      "task_id": "MFG-TASK-3"
+    },
+    {
+      "correct_answer": {
+        "violations": [
+          "MFG-V-006",
+          "MFG-V-008"
+        ]
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "MFG-E-000042",
+        "MFG-E-000054"
+      ],
+      "task_id": "MFG-TASK-4"
+    }
+  ]
+}

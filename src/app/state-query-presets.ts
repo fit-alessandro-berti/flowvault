@@ -8,6 +8,35 @@ export interface StateQueryPreset {
 
 export const STATE_QUERY_PRESETS: StateQueryPreset[] = [
   {
+    id: 'evaluation-inventory-policy',
+    logKey: 'evaluation_inventory',
+    name: 'Inventory Policy State',
+    leadingObjectType: 'ItemLocation',
+    query: `STATE state FOR LEADING OBJECT TYPE 'ItemLocation' AS CASE
+  WHEN event.data_complete = false THEN 'Unknown'
+  WHEN event.critical_understock = true THEN 'Critical Understock'
+  WHEN event.on_hand_after < event.lower_threshold THEN 'Understock'
+  WHEN event.on_hand_after > event.upper_threshold THEN 'Overstock'
+  ELSE 'Normal'
+END`,
+  },
+  {
+    id: 'evaluation-manufacturing-operation',
+    logKey: 'evaluation_manufacturing',
+    name: 'Machine Operational State',
+    leadingObjectType: 'Machine',
+    query: `STATE state FOR LEADING OBJECT TYPE 'Machine' AS CASE
+  WHEN event.data_complete = false THEN 'Unknown'
+  WHEN event.down_active = true OR event.mode = 'DOWN' THEN 'Down'
+  WHEN event.quality_hold_active = true THEN 'Quality Hold'
+  WHEN event.recovery_active = true THEN 'Recovery'
+  WHEN event.mode = 'SETUP' THEN 'Setup'
+  WHEN event.degraded_latched = true THEN 'Degraded'
+  WHEN event.mode = 'RUNNING' THEN 'Running'
+  ELSE 'Idle'
+END`,
+  },
+  {
     id: 'p2p-payment-block',
     logKey: 'ocel20_example',
     name: 'Payment Block Status',
@@ -165,9 +194,19 @@ export function presetsForFile(fileName: string): StateQueryPreset[] {
 }
 
 function logKeyForFile(fileName: string): string {
-  return fileName
+  const normalized = fileName
     .trim()
     .toLowerCase()
     .replace(/\.gz$/i, '')
     .replace(/\.(ocel\.(csv|zip)|jsonocel|xmlocel|sqlite3?|json|xml)$/i, '');
+  if (
+    normalized.startsWith('inventory_') &&
+    !normalized.startsWith('inventory_management_simulated')
+  ) {
+    return 'evaluation_inventory';
+  }
+  if (normalized.startsWith('manufacturing_')) {
+    return 'evaluation_manufacturing';
+  }
+  return normalized;
 }

@@ -1,0 +1,37 @@
+[
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Down within 24 hours"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Down within 4 hours"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Recurrent Degraded or Down within 24 hours"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Stable Running recovery within 8 hours"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Time to Down"
+  },
+  {
+    "error": "temporal split is empty after horizon purging",
+    "split": "temporal-holdout",
+    "task": "Time to stable recovery"
+  },
+  {
+    "error": "regression split requires at least two uncensored train/test rows",
+    "split": "group-holdout",
+    "task": "Time to stable recovery"
+  }
+]

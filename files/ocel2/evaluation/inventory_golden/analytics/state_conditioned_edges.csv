@@ -1,0 +1,38 @@
+activity,next_activity,state,frequency,median_waiting_seconds
+Backorder Registered,Inventory Adjustment,Critical Understock,1,172800.0
+Backorder Registered,Replenishment Proposal Created,Critical Understock,1,10.0
+Cycle Count Performed,Inventory Adjustment,Overstock,1,10.0
+Data Gap Ended,Transfer Receive,Normal,1,259100.0
+Data Gap Started,Data Gap Ended,Unknown,1,86400.0
+Delivery Delayed,Expedite Requested,Understock,1,86400.0
+Expedite Requested,Goods Receipt,Understock,1,345600.0
+Goods Issue,Backorder Registered,Understock,2,10.0
+Goods Receipt,Goods Receipt,Normal,1,86410.0
+Goods Receipt,Policy Threshold Updated,Overstock,1,10.0
+Goods Receipt,Purchase Order Item Created,Normal,1,86400.0
+Goods Receipt,Simulation End Snapshot,Normal,1,2332701.0
+Goods Receipt,Transfer Requested,Overstock,1,86400.0
+Initialize Inventory,Cycle Count Performed,Overstock,1,173100.0
+Initialize Inventory,Data Gap Started,Normal,1,173300.0
+Initialize Inventory,Goods Issue,Normal,1,86600.0
+Initialize Inventory,Purchase Order Item Created,Normal,1,129600.0
+Initialize Inventory,Purchase Order Item Created,Understock,1,86500.0
+Initialize Inventory,Replenishment Proposal Created,Normal,1,86800.0
+Initialize Inventory,Sales Order Item Created,Normal,1,86410.0
+Initialize Inventory,Transfer Receive,Understock,1,345620.0
+Inventory Adjustment,Simulation End Snapshot,Normal,2,2807744.5
+Policy Threshold Updated,Transfer Requested,Overstock,1,10.0
+Purchase Order Item Created,Goods Receipt,Normal,2,108000.0
+Purchase Order Item Created,Goods Receipt,Understock,1,172740.0
+Purchase Order Item Created,Supplier Confirmation Received,Understock,1,10.0
+Purchase Order Item Created,Transfer Ship,Normal,1,172800.0
+Replenishment Proposal Approved,Purchase Order Item Created,Critical Understock,1,172800.0
+Replenishment Proposal Approved,Purchase Order Item Created,Normal,1,86390.0
+Replenishment Proposal Created,Replenishment Proposal Approved,Critical Understock,1,10.0
+Replenishment Proposal Created,Replenishment Proposal Approved,Normal,1,10.0
+Reservation Created,Goods Issue,Normal,1,10.0
+Sales Order Item Created,Reservation Created,Normal,1,10.0
+Supplier Confirmation Received,Delivery Delayed,Understock,1,172790.0
+Transfer Receive,Simulation End Snapshot,Normal,2,2591795.0
+Transfer Requested,Transfer Ship,Overstock,2,86390.0
+Transfer Ship,Simulation End Snapshot,Normal,3,2419200.0

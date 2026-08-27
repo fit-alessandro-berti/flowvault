@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SA-OCPM synthetic run manifest",
+  "type": "object",
+  "required": [
+    "scenario", "profile", "seed", "config_sha256", "generator_commit",
+    "start_time", "end_time", "counts", "files"
+  ],
+  "properties": {
+    "scenario": {"enum": ["inventory", "manufacturing"]},
+    "profile": {"type": "string"},
+    "seed": {"type": "integer"},
+    "config_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "generator_commit": {"type": "string"},
+    "start_time": {"type": "string", "format": "date-time"},
+    "end_time": {"type": "string", "format": "date-time"},
+    "counts": {
+      "type": "object",
+      "required": ["events", "objects", "e2o", "o2o", "leading_objects"],
+      "properties": {
+        "events": {"type": "integer", "minimum": 0},
+        "objects": {"type": "integer", "minimum": 0},
+        "e2o": {"type": "integer", "minimum": 0},
+        "o2o": {"type": "integer", "minimum": 0},
+        "leading_objects": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["sha256", "bytes"],
+        "properties": {
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "rng_streams": {"type": "object"},
+    "perturbations": {"type": "array"}
+  },
+  "additionalProperties": true
+}

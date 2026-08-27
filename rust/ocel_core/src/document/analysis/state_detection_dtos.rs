@@ -21,6 +21,17 @@ struct PatternSummary {
     df_edges: Vec<PatternEdge>,
     eo_edges: Vec<PatternEdge>,
     oo_edges: Vec<PatternEdge>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    occurrences: Option<Vec<PatternOccurrence>>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+struct PatternOccurrence {
+    object_id: String,
+    start_event: String,
+    end_event: String,
+    start_time_ms: i64,
+    end_time_ms: i64,
 }
 
 #[derive(Serialize)]
@@ -42,9 +53,26 @@ struct StateDetectionResult {
     color_attributes: Vec<StateDetectionColorOption>,
     object_count: usize,
     feature_count: usize,
+    training_window_count: usize,
     window_count: usize,
     feature_columns: Vec<String>,
     table_preview: Vec<FeaturePreviewRow>,
+    pca: PcaSummary,
+    som: SomSummary,
+    windows: Vec<StateWindowProjection>,
+}
+
+#[derive(Serialize)]
+#[cfg_attr(test, derive(Debug))]
+struct StateDetectionAssignmentsResult {
+    object_type: String,
+    window_size: usize,
+    som_width: usize,
+    som_height: usize,
+    object_count: usize,
+    feature_count: usize,
+    training_window_count: usize,
+    window_count: usize,
     pca: PcaSummary,
     som: SomSummary,
     windows: Vec<StateWindowProjection>,
@@ -77,6 +105,7 @@ struct PcaSummary {
 #[derive(Serialize)]
 #[cfg_attr(test, derive(Debug))]
 struct SomSummary {
+    quantization_error: f64,
     cells: Vec<SomCellSummary>,
     transitions: Vec<SomTransitionSummary>,
 }

@@ -1,0 +1,8 @@
+rule_id,violation_id,leading_object_id,event_id,event_time,related_object_id,expected_deadline,details_json
+INV-C2,INV-V-001,IL-0001,INV-E-000015,2025-01-04T00:01:00Z,RP-0001,2025-01-03T00:01:00Z,"{""reason"":""approved proposal converted after planner SLA""}"
+INV-C6,INV-V-002,IL-0003,INV-E-000026,2025-01-04T00:00:10Z,POI-0003,,"{""reason"":""duplicate over-delivery caused receipt-driven excess""}"
+INV-C1,INV-V-003,IL-0005,INV-E-000032,2025-01-02T00:03:30Z,,2025-01-02T08:03:30Z,"{""reason"":""no replenishment proposal followed Critical Understock""}"
+INV-C2,INV-V-004,IL-0007,INV-E-000039,2025-01-02T00:06:50Z,RP-0002,2025-01-03T00:06:50Z,"{""reason"":""approved proposal was never converted to a purchase order""}"
+INV-C5,INV-V-005,IL-0007,INV-E-000040,2025-01-03T00:06:40Z,POI-0004,,"{""reason"":""order created above reorder point without exception""}"
+INV-C3,INV-V-006,IL-0007,INV-E-000041,2025-01-05T00:06:40Z,POI-0005,,"{""reason"":""Goods Receipt precedes Purchase Order Item Created""}"
+INV-C4,INV-V-007,IL-0008,INV-E-000043,2025-01-07T00:06:40Z,TO-0002,,"{""reason"":""Transfer Receive precedes Transfer Ship""}"

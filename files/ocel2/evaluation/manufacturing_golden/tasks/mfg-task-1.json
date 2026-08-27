@@ -1,0 +1,66 @@
+{
+  "acceptable_alternative_explanations": [
+    "thermal drift",
+    "quality failure"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "pattern_id": "MFG-P1",
+    "sequence": [
+      "Sensor Snapshot",
+      "Warning Alarm Raised",
+      "Maintenance Request Created",
+      "Critical Alarm Raised",
+      "Automatic Stop"
+    ]
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "M-001"
+  ],
+  "pre_registered": true,
+  "prompt": "Identify the dominant path from Degraded to Down for the selected machine.",
+  "required_evidence_items": [
+    "MFG-P1-I001",
+    "MFG-E-000009",
+    "MFG-E-000013"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "MFG-TASK-1",
+  "time_range": {
+    "end": "2025-01-02T00:00:50Z",
+    "start": "2025-01-02T00:00:10Z"
+  },
+  "title": "Path from Degraded to Down",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}

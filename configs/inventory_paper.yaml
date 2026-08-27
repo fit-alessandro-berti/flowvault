@@ -1,0 +1,71 @@
+scenario: inventory
+profile: paper
+seed: 20260826
+start_time: "2023-01-01T00:00:00Z"
+horizon_days: 60
+
+entities:
+  materials: 24
+  locations: 3
+  item_locations: 48
+  suppliers: 6
+  planners: 4
+
+stock:
+  initial_cover_days: [5.0, 45.0]
+  allow_negative_on_hand: false
+  final_snapshot: true
+  numeric_tolerance: 1.0e-8
+
+policy:
+  review_interval_days: [1, 14]
+  service_level_range: [0.85, 0.995]
+  safety_stock_cover_days: [2.0, 14.0]
+  order_up_to_cover_days: [14.0, 60.0]
+  minimum_order_quantity: [1, 200]
+  lot_size: [1, 50]
+  planner_approval_delay_hours: [0.25, 72.0]
+  critical_demand_horizon_days: 5
+  critical_action_sla_hours: 12
+
+demand:
+  class_mix:
+    smooth: 0.32
+    intermittent: 0.30
+    seasonal: 0.18
+    trending: 0.10
+    promotion_sensitive: 0.10
+  base_daily_rate: [0.05, 20.0]
+  order_quantity_mean: [1.0, 12.0]
+  backorder_cancel_probability: 0.08
+
+supply:
+  lead_time_days: [1.0, 45.0]
+  lead_time_cv: [0.05, 1.00]
+  fill_rate: [0.65, 1.00]
+  rejection_probability: 0.035
+  expedite_lead_time_multiplier: 0.60
+
+forced_episodes:
+  demand_surge_without_inbound: 8
+  supplier_delay: 8
+  receipt_driven_excess: 6
+  transfer_recovery: 6
+  count_discrepancy: 4
+  policy_failure: 4
+  data_gap: 3
+
+patterns:
+  noise_event_probability: 0.30
+  exact_behavior_instances_per_pattern: 3
+
+missingness:
+  event_attribute_mcar: 0.01
+  relationship_mcar: 0.005
+  timestamp_jitter_minutes: 2
+
+state_detection:
+  window_sizes: [3, 5, 8, 12]
+  som_grids: [[3, 3], [5, 5], [7, 7]]
+  epochs: 10
+  max_training_windows: 2000

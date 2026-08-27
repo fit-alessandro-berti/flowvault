@@ -1,0 +1,58 @@
+{
+  "acceptable_alternative_explanations": [
+    "proposal was late rather than absent"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "rule_id": "INV-C1",
+    "violation_id": "INV-V-003"
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "IL-0005"
+  ],
+  "pre_registered": true,
+  "prompt": "Find a Critical Understock episode without timely replenishment action.",
+  "required_evidence_items": [
+    "INV-E-000032",
+    "INV-V-003"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "INV-TASK-3",
+  "time_range": {
+    "end": "2025-01-02T08:03:30Z",
+    "start": "2025-01-02T00:03:30Z"
+  },
+  "title": "Critical shortage without action",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}

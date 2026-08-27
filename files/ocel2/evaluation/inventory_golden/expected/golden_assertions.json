@@ -1,0 +1,73 @@
+{
+  "conformance_rule_counts": {
+    "INV-C1": 1,
+    "INV-C2": 2,
+    "INV-C3": 1,
+    "INV-C4": 1,
+    "INV-C5": 1,
+    "INV-C6": 1
+  },
+  "observed_sha256": "91f1fa299e7e40211f0226d4f005ccead6cfe5c260bdb3d09d81b80b014ae255",
+  "pattern_support": {
+    "INV-P1": 1,
+    "INV-P2": 1,
+    "INV-P3": 1,
+    "INV-P4": 1,
+    "INV-P5": 1,
+    "INV-P6": 1
+  },
+  "prediction_positive_count": 21,
+  "state_sequences": {
+    "IL-0001": [
+      "Normal",
+      "Understock",
+      "Critical Understock",
+      "Understock",
+      "Overstock",
+      "Normal"
+    ],
+    "IL-0002": [
+      "Understock",
+      "Normal"
+    ],
+    "IL-0003": [
+      "Normal",
+      "Overstock",
+      "Normal"
+    ],
+    "IL-0004": [
+      "Understock",
+      "Normal"
+    ],
+    "IL-0005": [
+      "Normal",
+      "Understock",
+      "Critical Understock",
+      "Normal"
+    ],
+    "IL-0006": [
+      "Overstock",
+      "Normal"
+    ],
+    "IL-0007": [
+      "Normal"
+    ],
+    "IL-0008": [
+      "Normal",
+      "Unknown",
+      "Normal"
+    ]
+  },
+  "transition_counts": {
+    "Critical Understock -> Normal": 1,
+    "Critical Understock -> Understock": 1,
+    "Normal -> Overstock": 1,
+    "Normal -> Understock": 2,
+    "Normal -> Unknown": 1,
+    "Overstock -> Normal": 3,
+    "Understock -> Critical Understock": 2,
+    "Understock -> Normal": 2,
+    "Understock -> Overstock": 1,
+    "Unknown -> Normal": 1
+  }
+}

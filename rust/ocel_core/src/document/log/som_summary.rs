@@ -182,6 +182,20 @@ impl CompactOcelLog {
                 .then_with(|| left.source_x.cmp(&right.source_x))
         });
 
-        SomSummary { cells, transitions }
+        let quantization_error = points
+            .iter()
+            .zip(som.assignments.iter())
+            .map(|(point, (cell_x, cell_y))| {
+                let weight = som.weights[cell_y * som.width + cell_x];
+                ((point.0 - weight.0).powi(2) + (point.1 - weight.1).powi(2)).sqrt()
+            })
+            .sum::<f64>()
+            / points.len().max(1) as f64;
+
+        SomSummary {
+            quantization_error: round_f64(quantization_error),
+            cells,
+            transitions,
+        }
     }
 }

@@ -1,0 +1,69 @@
+leading_object_id,event_id,event_time,primary_regime,regime_factors_json,regime_started_at,transition_window
+M-001,MFG-E-000001,2025-01-01T00:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-01T00:00:00Z,false
+M-001,MFG-E-000009,2025-01-02T00:00:10Z,Bearing Degradation,"[""Bearing Degradation""]",2025-01-02T00:00:10Z,true
+M-001,MFG-E-000010,2025-01-02T00:00:20Z,Alarm Escalation,"[""Alarm Escalation""]",2025-01-02T00:00:20Z,true
+M-001,MFG-E-000011,2025-01-02T00:00:30Z,Alarm Escalation,"[""Alarm Escalation""]",2025-01-02T00:00:20Z,false
+M-001,MFG-E-000012,2025-01-02T00:00:40Z,Alarm Escalation,"[""Alarm Escalation""]",2025-01-02T00:00:20Z,false
+M-001,MFG-E-000013,2025-01-02T00:00:50Z,Failed,"[""Failed""]",2025-01-02T00:00:50Z,true
+M-001,MFG-E-000014,2025-01-02T12:00:00Z,Waiting for Maintenance,"[""Waiting for Maintenance""]",2025-01-02T12:00:00Z,true
+M-001,MFG-E-000015,2025-01-03T00:00:10Z,Active Repair,"[""Active Repair""]",2025-01-03T00:00:10Z,true
+M-001,MFG-E-000016,2025-01-03T00:00:20Z,Active Repair,"[""Active Repair""]",2025-01-03T00:00:10Z,false
+M-001,MFG-E-000017,2025-01-03T00:00:30Z,Active Repair,"[""Active Repair""]",2025-01-03T00:00:10Z,false
+M-001,MFG-E-000018,2025-01-03T00:00:40Z,Active Repair,"[""Active Repair""]",2025-01-03T00:00:10Z,false
+M-001,MFG-E-000019,2025-01-03T00:00:50Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-03T00:00:50Z,true
+M-001,MFG-E-000020,2025-01-03T00:01:00Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-03T00:00:50Z,false
+M-001,MFG-E-000021,2025-01-03T02:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-03T02:00:00Z,true
+M-001,MFG-E-000022,2025-01-03T02:00:10Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-03T02:00:00Z,false
+M-001,MFG-E-000061,2025-01-31T00:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-03T02:00:00Z,false
+M-002,MFG-E-000002,2025-01-01T00:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-01T00:00:00Z,false
+M-002,MFG-E-000023,2025-01-02T00:01:40Z,Failed,"[""Failed""]",2025-01-02T00:01:40Z,true
+M-002,MFG-E-000024,2025-01-02T00:06:40Z,Waiting for Maintenance,"[""Waiting for Maintenance""]",2025-01-02T00:06:40Z,true
+M-002,MFG-E-000025,2025-01-03T00:01:40Z,Active Repair,"[""Active Repair""]",2025-01-03T00:01:40Z,true
+M-002,MFG-E-000026,2025-01-03T00:06:40Z,Active Repair,"[""Active Repair""]",2025-01-03T00:01:40Z,false
+M-002,MFG-E-000027,2025-01-03T00:11:40Z,Active Repair,"[""Active Repair""]",2025-01-03T00:01:40Z,false
+M-002,MFG-E-000028,2025-01-03T04:01:40Z,Active Repair,"[""Active Repair""]",2025-01-03T00:01:40Z,false
+M-002,MFG-E-000029,2025-01-03T04:21:40Z,Active Repair,"[""Active Repair""]",2025-01-03T00:01:40Z,false
+M-002,MFG-E-000030,2025-01-03T05:01:40Z,Active Repair,"[""Active Repair""]",2025-01-03T00:01:40Z,false
+M-002,MFG-E-000031,2025-01-03T06:01:40Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-03T06:01:40Z,true
+M-002,MFG-E-000032,2025-01-03T06:06:40Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-03T06:01:40Z,false
+M-002,MFG-E-000033,2025-01-03T08:01:40Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-03T08:01:40Z,true
+M-002,MFG-E-000062,2025-01-31T00:00:01Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-03T08:01:40Z,false
+M-003,MFG-E-000003,2025-01-01T00:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-01T00:00:00Z,false
+M-003,MFG-E-000034,2025-01-02T00:03:20Z,Failed,"[""Failed""]",2025-01-02T00:03:20Z,true
+M-003,MFG-E-000035,2025-01-02T12:03:20Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T12:03:20Z,true
+M-003,MFG-E-000036,2025-01-02T12:03:30Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T12:03:20Z,false
+M-003,MFG-E-000037,2025-01-03T00:03:20Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T12:03:20Z,false
+M-003,MFG-E-000038,2025-01-03T01:03:20Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-03T01:03:20Z,true
+M-003,MFG-E-000039,2025-01-03T02:03:20Z,Bearing Degradation,"[""Bearing Degradation""]",2025-01-03T02:03:20Z,true
+M-003,MFG-E-000063,2025-01-31T00:00:02Z,Bearing Degradation,"[""Bearing Degradation""]",2025-01-03T02:03:20Z,false
+M-004,MFG-E-000004,2025-01-01T00:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-01T00:00:00Z,false
+M-004,MFG-E-000040,2025-01-02T00:05:00Z,Alarm Escalation,"[""Alarm Escalation""]",2025-01-02T00:05:00Z,true
+M-004,MFG-E-000041,2025-01-02T00:05:10Z,Failed,"[""Failed""]",2025-01-02T00:05:10Z,true
+M-004,MFG-E-000042,2025-01-02T00:35:00Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T00:35:00Z,true
+M-004,MFG-E-000064,2025-01-31T00:00:03Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T00:35:00Z,false
+M-005,MFG-E-000005,2025-01-01T00:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-01T00:00:00Z,false
+M-005,MFG-E-000043,2025-01-02T00:06:40Z,Waiting for Maintenance,"[""Waiting for Maintenance""]",2025-01-02T00:06:40Z,true
+M-005,MFG-E-000044,2025-01-02T00:06:50Z,Active Repair,"[""Active Repair""]",2025-01-02T00:06:50Z,true
+M-005,MFG-E-000045,2025-01-02T00:06:55Z,Active Repair,"[""Active Repair""]",2025-01-02T00:06:50Z,false
+M-005,MFG-E-000046,2025-01-02T00:06:58Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T00:06:58Z,true
+M-005,MFG-E-000047,2025-01-02T00:07:00Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T00:06:58Z,false
+M-005,MFG-E-000048,2025-01-02T00:07:10Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T00:06:58Z,false
+M-005,MFG-E-000065,2025-01-31T00:00:04Z,Post-Repair Recovery,"[""Post-Repair Recovery""]",2025-01-02T00:06:58Z,false
+M-006,MFG-E-000006,2025-01-01T00:00:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-01T00:00:00Z,false
+M-006,MFG-E-000049,2025-01-02T00:08:20Z,Thermal Drift,"[""Thermal Drift""]",2025-01-02T00:08:20Z,true
+M-006,MFG-E-000050,2025-01-02T00:08:30Z,Quality Drift,"[""Quality Drift""]",2025-01-02T00:08:30Z,true
+M-006,MFG-E-000051,2025-01-02T00:08:40Z,Quality Drift,"[""Quality Drift""]",2025-01-02T00:08:30Z,false
+M-006,MFG-E-000052,2025-01-02T00:08:50Z,Quality Drift,"[""Quality Drift""]",2025-01-02T00:08:30Z,false
+M-006,MFG-E-000053,2025-01-02T00:09:00Z,Active Repair,"[""Active Repair""]",2025-01-02T00:09:00Z,true
+M-006,MFG-E-000054,2025-01-02T00:09:10Z,Quality Drift,"[""Quality Drift""]",2025-01-02T00:09:10Z,true
+M-006,MFG-E-000066,2025-01-31T00:00:05Z,Quality Drift,"[""Quality Drift""]",2025-01-02T00:09:10Z,false
+M-007,MFG-E-000007,2025-01-01T00:00:00Z,Setup or Changeover,"[""Setup or Changeover""]",2025-01-01T00:00:00Z,false
+M-007,MFG-E-000055,2025-01-02T00:10:00Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-02T00:10:00Z,true
+M-007,MFG-E-000056,2025-01-03T00:10:00Z,Active Repair,"[""Active Repair""]",2025-01-03T00:10:00Z,true
+M-007,MFG-E-000067,2025-01-31T00:00:06Z,Active Repair,"[""Active Repair""]",2025-01-03T00:10:00Z,false
+M-008,MFG-E-000008,2025-01-01T00:00:00Z,Idle,"[""Idle""]",2025-01-01T00:00:00Z,false
+M-008,MFG-E-000057,2025-01-02T00:11:40Z,Setup or Changeover,"[""Setup or Changeover""]",2025-01-02T00:11:40Z,true
+M-008,MFG-E-000058,2025-01-02T00:11:50Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-02T00:11:50Z,true
+M-008,MFG-E-000059,2025-01-03T00:11:40Z,Data Gap,"[""Data Gap""]",2025-01-03T00:11:40Z,true
+M-008,MFG-E-000060,2025-01-04T00:11:40Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-04T00:11:40Z,true
+M-008,MFG-E-000068,2025-01-31T00:00:07Z,Healthy Steady Run,"[""Healthy Steady Run""]",2025-01-04T00:11:40Z,false

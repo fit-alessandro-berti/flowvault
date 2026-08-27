@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "State-at-event ground truth record",
+  "type": "object",
+  "required": [
+    "scenario", "leading_object_type", "leading_object_id", "event_id",
+    "event_time", "reference_state", "state_reason", "data_complete",
+    "state_before", "state_after", "is_transition"
+  ],
+  "properties": {
+    "scenario": {"enum": ["inventory", "manufacturing"]},
+    "leading_object_type": {"type": "string"},
+    "leading_object_id": {"type": "string"},
+    "event_id": {"type": "string"},
+    "event_time": {"type": "string", "format": "date-time"},
+    "reference_state": {"type": "string"},
+    "state_reason": {"type": "string"},
+    "policy_or_rule_version": {"type": "string"},
+    "data_complete": {"type": "boolean"},
+    "state_before": {"type": ["string", "null"]},
+    "state_after": {"type": "string"},
+    "is_transition": {"type": "boolean"},
+    "transition_id": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

@@ -36,6 +36,7 @@ export interface StateDetectionPca {
 }
 
 export interface StateDetectionSom {
+  quantization_error: number;
   cells: StateDetectionSomCell[];
   transitions: StateDetectionSomTransition[];
 }

@@ -1,0 +1,9 @@
+{
+  "application_commit": "35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b",
+  "complete": true,
+  "config_sha256": "77ddcaadd21cae12d7bb85775c77d83d7f09920815b497d526c702e84474dc7a",
+  "generator_commit": "35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b",
+  "input_sha256": "91f1fa299e7e40211f0226d4f005ccead6cfe5c260bdb3d09d81b80b014ae255",
+  "profile": "golden",
+  "scenario": "inventory"
+}

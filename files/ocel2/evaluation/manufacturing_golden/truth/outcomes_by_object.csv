@@ -1,0 +1,9 @@
+leading_object_id,final_state,transition_count,down_event_count
+M-001,Running,4,7
+M-002,Running,3,9
+M-003,Degraded,4,3
+M-004,Recovery,3,1
+M-005,Recovery,1,0
+M-006,Degraded,3,0
+M-007,Running,1,0
+M-008,Running,4,0

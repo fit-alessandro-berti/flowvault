@@ -1,0 +1,61 @@
+{
+  "acceptable_alternative_explanations": [
+    "passed inspection was recorded on another work order"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "violations": [
+      "MFG-V-006",
+      "MFG-V-008"
+    ]
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "M-004",
+    "M-006"
+  ],
+  "pre_registered": true,
+  "prompt": "Verify whether restart and quality-hold policies were followed.",
+  "required_evidence_items": [
+    "MFG-E-000042",
+    "MFG-E-000054"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "MFG-TASK-4",
+  "time_range": {
+    "end": "2025-01-02T00:35:00Z",
+    "start": "2025-01-02T00:09:10Z"
+  },
+  "title": "Restart and quality policy",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}

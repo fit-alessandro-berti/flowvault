@@ -1,0 +1,308 @@
+{
+  "dwell": [
+    {
+      "avg_duration_ms": 854111166.666667,
+      "episode_count": 12,
+      "max_duration_ms": 2505006000,
+      "median_duration_ms": 86820000,
+      "min_duration_ms": 3600000,
+      "object_count": 8,
+      "state": "Running",
+      "total_duration_ms": 10249334000
+    },
+    {
+      "avg_duration_ms": 1005265400.0,
+      "episode_count": 5,
+      "max_duration_ms": 2505184000,
+      "median_duration_ms": 7140000,
+      "min_duration_ms": 3600000,
+      "object_count": 5,
+      "state": "Recovery",
+      "total_duration_ms": 5026327000
+    },
+    {
+      "avg_duration_ms": 983385400.0,
+      "episode_count": 5,
+      "max_duration_ms": 2505055000,
+      "median_duration_ms": 40000,
+      "min_duration_ms": 10000,
+      "object_count": 4,
+      "state": "Degraded",
+      "total_duration_ms": 4916927000
+    },
+    {
+      "avg_duration_ms": 70725000.0,
+      "episode_count": 4,
+      "max_duration_ms": 108300000,
+      "median_duration_ms": 86410000,
+      "min_duration_ms": 1790000,
+      "object_count": 4,
+      "state": "Down",
+      "total_duration_ms": 282900000
+    },
+    {
+      "avg_duration_ms": 87100000.0,
+      "episode_count": 1,
+      "max_duration_ms": 87100000,
+      "median_duration_ms": 87100000,
+      "min_duration_ms": 87100000,
+      "object_count": 1,
+      "state": "Idle",
+      "total_duration_ms": 87100000
+    },
+    {
+      "avg_duration_ms": 43505000.0,
+      "episode_count": 2,
+      "max_duration_ms": 87000000,
+      "median_duration_ms": 87000000,
+      "min_duration_ms": 10000,
+      "object_count": 2,
+      "state": "Setup",
+      "total_duration_ms": 87010000
+    },
+    {
+      "avg_duration_ms": 86400000.0,
+      "episode_count": 1,
+      "max_duration_ms": 86400000,
+      "median_duration_ms": 86400000,
+      "min_duration_ms": 86400000,
+      "object_count": 1,
+      "state": "Unknown",
+      "total_duration_ms": 86400000
+    },
+    {
+      "avg_duration_ms": 30000.0,
+      "episode_count": 1,
+      "max_duration_ms": 30000,
+      "median_duration_ms": 30000,
+      "min_duration_ms": 30000,
+      "object_count": 1,
+      "state": "Quality Hold",
+      "total_duration_ms": 30000
+    }
+  ],
+  "object_count": 8,
+  "object_type": "Machine",
+  "recovery": [
+    {
+      "avg_duration_ms": 70725000.0,
+      "count": 4,
+      "from_state": "Down",
+      "max_duration_ms": 108300000,
+      "median_duration_ms": 86410000,
+      "min_duration_ms": 1790000,
+      "object_count": 4,
+      "to_state": "Recovery"
+    },
+    {
+      "avg_duration_ms": 5880000.0,
+      "count": 3,
+      "from_state": "Recovery",
+      "max_duration_ms": 7140000,
+      "median_duration_ms": 6900000,
+      "min_duration_ms": 3600000,
+      "object_count": 3,
+      "to_state": "Running"
+    }
+  ],
+  "state_count": 8,
+  "stateful_object_count": 8,
+  "states": [
+    "Degraded",
+    "Down",
+    "Idle",
+    "Quality Hold",
+    "Recovery",
+    "Running",
+    "Setup",
+    "Unknown"
+  ],
+  "stuck": [
+    {
+      "duration_ms": 2505184000,
+      "entered_time_ms": 1735776420000,
+      "event_count": 3,
+      "last_time_ms": 1738281604000,
+      "object_id": "M-005",
+      "state": "Recovery"
+    },
+    {
+      "duration_ms": 2505055000,
+      "entered_time_ms": 1735776550000,
+      "event_count": 2,
+      "last_time_ms": 1738281605000,
+      "object_id": "M-006",
+      "state": "Degraded"
+    },
+    {
+      "duration_ms": 2505006000,
+      "entered_time_ms": 1735776600000,
+      "event_count": 3,
+      "last_time_ms": 1738281606000,
+      "object_id": "M-007",
+      "state": "Running"
+    },
+    {
+      "duration_ms": 2503503000,
+      "entered_time_ms": 1735778100000,
+      "event_count": 2,
+      "last_time_ms": 1738281603000,
+      "object_id": "M-004",
+      "state": "Recovery"
+    },
+    {
+      "duration_ms": 2412000000,
+      "entered_time_ms": 1735869600000,
+      "event_count": 3,
+      "last_time_ms": 1738281600000,
+      "object_id": "M-001",
+      "state": "Running"
+    },
+    {
+      "duration_ms": 2411802000,
+      "entered_time_ms": 1735869800000,
+      "event_count": 2,
+      "last_time_ms": 1738281602000,
+      "object_id": "M-003",
+      "state": "Degraded"
+    },
+    {
+      "duration_ms": 2390301000,
+      "entered_time_ms": 1735891300000,
+      "event_count": 2,
+      "last_time_ms": 1738281601000,
+      "object_id": "M-002",
+      "state": "Running"
+    },
+    {
+      "duration_ms": 2332107000,
+      "entered_time_ms": 1735949500000,
+      "event_count": 2,
+      "last_time_ms": 1738281607000,
+      "object_id": "M-008",
+      "state": "Running"
+    }
+  ],
+  "transitions": [
+    {
+      "avg_duration_ms": 70725000.0,
+      "count": 4,
+      "from_state": "Down",
+      "max_duration_ms": 108300000,
+      "median_duration_ms": 86410000,
+      "min_duration_ms": 1790000,
+      "object_count": 4,
+      "to_state": "Recovery"
+    },
+    {
+      "avg_duration_ms": 65902500.0,
+      "count": 4,
+      "from_state": "Running",
+      "max_duration_ms": 86900000,
+      "median_duration_ms": 86700000,
+      "min_duration_ms": 3600000,
+      "object_count": 4,
+      "to_state": "Degraded"
+    },
+    {
+      "avg_duration_ms": 5880000.0,
+      "count": 3,
+      "from_state": "Recovery",
+      "max_duration_ms": 7140000,
+      "median_duration_ms": 6900000,
+      "min_duration_ms": 3600000,
+      "object_count": 3,
+      "to_state": "Running"
+    },
+    {
+      "avg_duration_ms": 25000.0,
+      "count": 2,
+      "from_state": "Degraded",
+      "max_duration_ms": 40000,
+      "median_duration_ms": 40000,
+      "min_duration_ms": 10000,
+      "object_count": 2,
+      "to_state": "Down"
+    },
+    {
+      "avg_duration_ms": 86550000.0,
+      "count": 2,
+      "from_state": "Running",
+      "max_duration_ms": 86600000,
+      "median_duration_ms": 86600000,
+      "min_duration_ms": 86500000,
+      "object_count": 2,
+      "to_state": "Down"
+    },
+    {
+      "avg_duration_ms": 43505000.0,
+      "count": 2,
+      "from_state": "Setup",
+      "max_duration_ms": 87000000,
+      "median_duration_ms": 87000000,
+      "min_duration_ms": 10000,
+      "object_count": 2,
+      "to_state": "Running"
+    },
+    {
+      "avg_duration_ms": 20000.0,
+      "count": 1,
+      "from_state": "Degraded",
+      "max_duration_ms": 20000,
+      "median_duration_ms": 20000,
+      "min_duration_ms": 20000,
+      "object_count": 1,
+      "to_state": "Quality Hold"
+    },
+    {
+      "avg_duration_ms": 87100000.0,
+      "count": 1,
+      "from_state": "Idle",
+      "max_duration_ms": 87100000,
+      "median_duration_ms": 87100000,
+      "min_duration_ms": 87100000,
+      "object_count": 1,
+      "to_state": "Setup"
+    },
+    {
+      "avg_duration_ms": 30000.0,
+      "count": 1,
+      "from_state": "Quality Hold",
+      "max_duration_ms": 30000,
+      "median_duration_ms": 30000,
+      "min_duration_ms": 30000,
+      "object_count": 1,
+      "to_state": "Degraded"
+    },
+    {
+      "avg_duration_ms": 86820000.0,
+      "count": 1,
+      "from_state": "Running",
+      "max_duration_ms": 86820000,
+      "median_duration_ms": 86820000,
+      "min_duration_ms": 86820000,
+      "object_count": 1,
+      "to_state": "Recovery"
+    },
+    {
+      "avg_duration_ms": 86390000.0,
+      "count": 1,
+      "from_state": "Running",
+      "max_duration_ms": 86390000,
+      "median_duration_ms": 86390000,
+      "min_duration_ms": 86390000,
+      "object_count": 1,
+      "to_state": "Unknown"
+    },
+    {
+      "avg_duration_ms": 86400000.0,
+      "count": 1,
+      "from_state": "Unknown",
+      "max_duration_ms": 86400000,
+      "median_duration_ms": 86400000,
+      "min_duration_ms": 86400000,
+      "object_count": 1,
+      "to_state": "Running"
+    }
+  ]
+}

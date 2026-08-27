@@ -1,0 +1,63 @@
+{
+  "scenario": "inventory",
+  "tasks": [
+    {
+      "correct_answer": {
+        "primary_regime": "Demand Surge Without Inbound"
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "INV-T-00001",
+        "INV-E-000011"
+      ],
+      "task_id": "INV-TASK-1"
+    },
+    {
+      "correct_answer": {
+        "mechanism": "receipt-driven excess",
+        "pattern_id": "INV-P3"
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "INV-P3-I001",
+        "INV-E-000026",
+        "INV-E-000028"
+      ],
+      "task_id": "INV-TASK-2"
+    },
+    {
+      "correct_answer": {
+        "rule_id": "INV-C1",
+        "violation_id": "INV-V-003"
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "INV-E-000032",
+        "INV-V-003"
+      ],
+      "task_id": "INV-TASK-3"
+    },
+    {
+      "correct_answer": {
+        "IL-0001": {
+          "final_state": "Normal",
+          "leading_object_id": "IL-0001",
+          "transition_count": "5",
+          "understock_event_count": "5"
+        },
+        "IL-0002": {
+          "final_state": "Normal",
+          "leading_object_id": "IL-0002",
+          "transition_count": "1",
+          "understock_event_count": "5"
+        }
+      },
+      "maximum_score": 100,
+      "required_evidence_items": [
+        "IL-0001",
+        "IL-0002"
+      ],
+      "task_id": "INV-TASK-4"
+    }
+  ]
+}

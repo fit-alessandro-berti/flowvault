@@ -1,0 +1,9 @@
+scenario,profile,run_id,repetition,events,objects,windows,features,patterns,commit,operation,command,input_bytes,output_bytes,peak_rss_bytes,wall_time_ms,cpu_time_ms
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,import_summary,summary,112848,202,5464064,0.929457,2.03600000000026
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,state_query_and_export,export,112848,224110,7557120,4.198971,5.224000000002116
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,state_transition_kpis,state-transition-kpis,112848,5491,5378048,3.134612,4.68399999999769
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,ocdfg,ocdfg,112848,26124,5464064,3.11935,4.801000000000721
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,sa_ocdfg,sa-ocdfg,112848,103950,5435392,4.696908,6.154000000002435
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,state_patterns,state-patterns,102480,65194,5410816,4.2521759999999995,6.219000000002861
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,state_detection,state-detection,112848,13679,5574656,4.691618,6.486000000000214
+manufacturing,golden,manufacturing-golden-20260826,1,68,39,44,58,45,35eab0e9da3e0db0a05e80dc4a5cb116ca8ab14b,state_detection_assignments,state-detection-assignments,112848,5859,5668864,4.697472,6.363999999999148

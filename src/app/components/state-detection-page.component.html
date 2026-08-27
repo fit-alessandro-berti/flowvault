@@ -8,6 +8,7 @@
     <label>
       <span>Object type</span>
       <select
+        data-testid="state-detection-object-type"
         [value]="vm.stateDetectionObjectType()"
         (change)="vm.onStateDetectionObjectTypeChange($event)"
       >
@@ -19,6 +20,7 @@
     <label>
       <span>Window</span>
       <input
+        data-testid="state-detection-window"
         type="number"
         min="1"
         max="30"
@@ -57,7 +59,9 @@
         }
       </select>
     </label>
-    <button type="button" (click)="vm.runStateDetection()">Run</button>
+    <button type="button" data-testid="run-state-detection" (click)="vm.runStateDetection()">
+      Run
+    </button>
     <button
       type="button"
       class="ghost-button"
@@ -144,6 +148,8 @@
           @for (cell of analysis.som.cells; track cell.label) {
             <button
               type="button"
+              data-testid="som-cell"
+              [attr.data-count]="cell.count"
               class="som-cell"
               [class.is-empty]="cell.count === 0"
               [style.background]="vm.somCellStyle(cell)"

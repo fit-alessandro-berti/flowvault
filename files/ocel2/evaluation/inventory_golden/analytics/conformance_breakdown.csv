@@ -1,0 +1,7 @@
+dimension,value,violation_count,object_count,violations_per_100_events
+Location,Location,7,5,18.42105263157895
+Planner,Planner,1,1,12.5
+state,Critical Understock,1,1,20.0
+state,Normal,4,2,30.76923076923077
+state,Overstock,1,1,12.5
+state,Understock,1,1,8.333333333333334

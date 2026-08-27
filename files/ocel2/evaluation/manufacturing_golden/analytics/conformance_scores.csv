@@ -1,0 +1,8 @@
+rule_id,precision,recall,matched,false_positives,false_negatives,median_timing_error_seconds
+ALL,1.0,1.0,9,0,0,0.0
+MFG-C1,1.0,1.0,1,0,0,0.0
+MFG-C2,1.0,1.0,4,0,0,0.0
+MFG-C3,1.0,1.0,1,0,0,0.0
+MFG-C4,1.0,1.0,1,0,0,0.0
+MFG-C5,1.0,1.0,1,0,0,0.0
+MFG-C6,1.0,1.0,1,0,0,0.0

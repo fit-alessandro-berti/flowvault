@@ -1,0 +1,83 @@
+{
+  "conformance_rule_counts": {
+    "MFG-C1": 1,
+    "MFG-C2": 4,
+    "MFG-C3": 1,
+    "MFG-C4": 1,
+    "MFG-C5": 1,
+    "MFG-C6": 1
+  },
+  "observed_sha256": "4c2ea160b89881ef3202720d10dc080e3ae4f944c021c5a0dd2450aeff1e99a9",
+  "pattern_support": {
+    "MFG-P1": 1,
+    "MFG-P2": 1,
+    "MFG-P3": 1,
+    "MFG-P4": 1,
+    "MFG-P5": 1,
+    "MFG-P6": 1
+  },
+  "prediction_positive_count": 26,
+  "state_sequences": {
+    "M-001": [
+      "Running",
+      "Degraded",
+      "Down",
+      "Recovery",
+      "Running"
+    ],
+    "M-002": [
+      "Running",
+      "Down",
+      "Recovery",
+      "Running"
+    ],
+    "M-003": [
+      "Running",
+      "Down",
+      "Recovery",
+      "Running",
+      "Degraded"
+    ],
+    "M-004": [
+      "Running",
+      "Degraded",
+      "Down",
+      "Recovery"
+    ],
+    "M-005": [
+      "Running",
+      "Recovery"
+    ],
+    "M-006": [
+      "Running",
+      "Degraded",
+      "Quality Hold",
+      "Degraded"
+    ],
+    "M-007": [
+      "Setup",
+      "Running"
+    ],
+    "M-008": [
+      "Idle",
+      "Setup",
+      "Running",
+      "Unknown",
+      "Running"
+    ]
+  },
+  "transition_counts": {
+    "Degraded -> Down": 2,
+    "Degraded -> Quality Hold": 1,
+    "Down -> Recovery": 4,
+    "Idle -> Setup": 1,
+    "Quality Hold -> Degraded": 1,
+    "Recovery -> Running": 3,
+    "Running -> Degraded": 4,
+    "Running -> Down": 2,
+    "Running -> Recovery": 1,
+    "Running -> Unknown": 1,
+    "Setup -> Running": 2,
+    "Unknown -> Running": 1
+  }
+}

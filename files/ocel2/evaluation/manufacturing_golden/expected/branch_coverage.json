@@ -1,0 +1,56 @@
+{
+  "conformance_rule_ids": [
+    "MFG-C1",
+    "MFG-C2",
+    "MFG-C3",
+    "MFG-C4",
+    "MFG-C5",
+    "MFG-C6"
+  ],
+  "event_types_exercised": {
+    "Automatic Stop": 4,
+    "Calibration Performed": 1,
+    "Component Replaced": 3,
+    "Critical Alarm Raised": 2,
+    "Defect Detected": 1,
+    "Diagnosis Performed": 2,
+    "Initialize Machine": 8,
+    "Inspection Performed": 4,
+    "Machine Restarted": 5,
+    "Maintenance Completed": 2,
+    "Maintenance Request Created": 2,
+    "Maintenance Started": 3,
+    "Operation Completed": 3,
+    "Part Unavailable": 1,
+    "Quality Hold Released": 1,
+    "Quality Hold Started": 1,
+    "Repair Performed": 1,
+    "Sensor Snapshot": 4,
+    "Setup Completed": 2,
+    "Setup Started": 1,
+    "Simulation End Snapshot": 8,
+    "Test Failed": 1,
+    "Test Run Completed": 4,
+    "Warning Alarm Raised": 2,
+    "Work Order Created": 2
+  },
+  "pattern_ids": [
+    "MFG-P1",
+    "MFG-P3",
+    "MFG-P4",
+    "MFG-P5",
+    "MFG-P6",
+    "MFG-P2"
+  ],
+  "state_branches_covered": true,
+  "states": {
+    "Degraded": 11,
+    "Down": 20,
+    "Idle": 1,
+    "Quality Hold": 3,
+    "Recovery": 8,
+    "Running": 22,
+    "Setup": 2,
+    "Unknown": 1
+  }
+}

@@ -1,0 +1,69 @@
+scenario,leading_object_type,leading_object_id,event_id,event_time,reference_state,state_reason,policy_or_rule_version,data_complete,state_before,state_after,is_transition,transition_id
+manufacturing,Machine,M-001,MFG-E-000001,2025-01-01T00:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,,Running,false,
+manufacturing,Machine,M-001,MFG-E-000009,2025-01-02T00:00:10Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Running,Degraded,true,MFG-T-00001
+manufacturing,Machine,M-001,MFG-E-000010,2025-01-02T00:00:20Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Degraded,Degraded,false,
+manufacturing,Machine,M-001,MFG-E-000011,2025-01-02T00:00:30Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Degraded,Degraded,false,
+manufacturing,Machine,M-001,MFG-E-000012,2025-01-02T00:00:40Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Degraded,Degraded,false,
+manufacturing,Machine,M-001,MFG-E-000013,2025-01-02T00:00:50Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Degraded,Down,true,MFG-T-00002
+manufacturing,Machine,M-001,MFG-E-000014,2025-01-02T12:00:00Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-001,MFG-E-000015,2025-01-03T00:00:10Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-001,MFG-E-000016,2025-01-03T00:00:20Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-001,MFG-E-000017,2025-01-03T00:00:30Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-001,MFG-E-000018,2025-01-03T00:00:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-001,MFG-E-000019,2025-01-03T00:00:50Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-001,MFG-E-000020,2025-01-03T00:01:00Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Down,Recovery,true,MFG-T-00003
+manufacturing,Machine,M-001,MFG-E-000021,2025-01-03T02:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,Recovery,Running,true,MFG-T-00004
+manufacturing,Machine,M-001,MFG-E-000022,2025-01-03T02:00:10Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-001,MFG-E-000061,2025-01-31T00:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-002,MFG-E-000002,2025-01-01T00:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,,Running,false,
+manufacturing,Machine,M-002,MFG-E-000023,2025-01-02T00:01:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Running,Down,true,MFG-T-00005
+manufacturing,Machine,M-002,MFG-E-000024,2025-01-02T00:06:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000025,2025-01-03T00:01:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000026,2025-01-03T00:06:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000027,2025-01-03T00:11:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000028,2025-01-03T04:01:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000029,2025-01-03T04:21:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000030,2025-01-03T05:01:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000031,2025-01-03T06:01:40Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-002,MFG-E-000032,2025-01-03T06:06:40Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Down,Recovery,true,MFG-T-00006
+manufacturing,Machine,M-002,MFG-E-000033,2025-01-03T08:01:40Z,Running,machine mode is RUNNING,MFG-R1,true,Recovery,Running,true,MFG-T-00007
+manufacturing,Machine,M-002,MFG-E-000062,2025-01-31T00:00:01Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-003,MFG-E-000003,2025-01-01T00:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,,Running,false,
+manufacturing,Machine,M-003,MFG-E-000034,2025-01-02T00:03:20Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Running,Down,true,MFG-T-00008
+manufacturing,Machine,M-003,MFG-E-000035,2025-01-02T12:03:20Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-003,MFG-E-000036,2025-01-02T12:03:30Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Down,Down,false,
+manufacturing,Machine,M-003,MFG-E-000037,2025-01-03T00:03:20Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Down,Recovery,true,MFG-T-00009
+manufacturing,Machine,M-003,MFG-E-000038,2025-01-03T01:03:20Z,Running,machine mode is RUNNING,MFG-R1,true,Recovery,Running,true,MFG-T-00010
+manufacturing,Machine,M-003,MFG-E-000039,2025-01-03T02:03:20Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Running,Degraded,true,MFG-T-00011
+manufacturing,Machine,M-003,MFG-E-000063,2025-01-31T00:00:02Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Degraded,Degraded,false,
+manufacturing,Machine,M-004,MFG-E-000004,2025-01-01T00:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,,Running,false,
+manufacturing,Machine,M-004,MFG-E-000040,2025-01-02T00:05:00Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Running,Degraded,true,MFG-T-00012
+manufacturing,Machine,M-004,MFG-E-000041,2025-01-02T00:05:10Z,Down,failure stop or DOWN mode is active,MFG-R1,true,Degraded,Down,true,MFG-T-00013
+manufacturing,Machine,M-004,MFG-E-000042,2025-01-02T00:35:00Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Down,Recovery,true,MFG-T-00014
+manufacturing,Machine,M-004,MFG-E-000064,2025-01-31T00:00:03Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Recovery,Recovery,false,
+manufacturing,Machine,M-005,MFG-E-000005,2025-01-01T00:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,,Running,false,
+manufacturing,Machine,M-005,MFG-E-000043,2025-01-02T00:06:40Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-005,MFG-E-000044,2025-01-02T00:06:50Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-005,MFG-E-000045,2025-01-02T00:06:55Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-005,MFG-E-000046,2025-01-02T00:06:58Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-005,MFG-E-000047,2025-01-02T00:07:00Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Running,Recovery,true,MFG-T-00015
+manufacturing,Machine,M-005,MFG-E-000048,2025-01-02T00:07:10Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Recovery,Recovery,false,
+manufacturing,Machine,M-005,MFG-E-000065,2025-01-31T00:00:04Z,Recovery,restart validation has not reached stable-run duration,MFG-R1,true,Recovery,Recovery,false,
+manufacturing,Machine,M-006,MFG-E-000006,2025-01-01T00:00:00Z,Running,machine mode is RUNNING,MFG-R1,true,,Running,false,
+manufacturing,Machine,M-006,MFG-E-000049,2025-01-02T00:08:20Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Running,Degraded,true,MFG-T-00016
+manufacturing,Machine,M-006,MFG-E-000050,2025-01-02T00:08:30Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Degraded,Degraded,false,
+manufacturing,Machine,M-006,MFG-E-000051,2025-01-02T00:08:40Z,Quality Hold,quality hold is active,MFG-R1,true,Degraded,Quality Hold,true,MFG-T-00017
+manufacturing,Machine,M-006,MFG-E-000052,2025-01-02T00:08:50Z,Quality Hold,quality hold is active,MFG-R1,true,Quality Hold,Quality Hold,false,
+manufacturing,Machine,M-006,MFG-E-000053,2025-01-02T00:09:00Z,Quality Hold,quality hold is active,MFG-R1,true,Quality Hold,Quality Hold,false,
+manufacturing,Machine,M-006,MFG-E-000054,2025-01-02T00:09:10Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Quality Hold,Degraded,true,MFG-T-00018
+manufacturing,Machine,M-006,MFG-E-000066,2025-01-31T00:00:05Z,Degraded,observed degradation hysteresis is latched,MFG-R1,true,Degraded,Degraded,false,
+manufacturing,Machine,M-007,MFG-E-000007,2025-01-01T00:00:00Z,Setup,machine mode is SETUP,MFG-R1,true,,Setup,false,
+manufacturing,Machine,M-007,MFG-E-000055,2025-01-02T00:10:00Z,Running,machine mode is RUNNING,MFG-R1,true,Setup,Running,true,MFG-T-00019
+manufacturing,Machine,M-007,MFG-E-000056,2025-01-03T00:10:00Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-007,MFG-E-000067,2025-01-31T00:00:06Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,
+manufacturing,Machine,M-008,MFG-E-000008,2025-01-01T00:00:00Z,Idle,machine is available and not processing,MFG-R1,true,,Idle,false,
+manufacturing,Machine,M-008,MFG-E-000057,2025-01-02T00:11:40Z,Setup,machine mode is SETUP,MFG-R1,true,Idle,Setup,true,MFG-T-00020
+manufacturing,Machine,M-008,MFG-E-000058,2025-01-02T00:11:50Z,Running,machine mode is RUNNING,MFG-R1,true,Setup,Running,true,MFG-T-00021
+manufacturing,Machine,M-008,MFG-E-000059,2025-01-03T00:11:40Z,Unknown,telemetry or mode data are incomplete,MFG-R1,false,Running,Unknown,true,MFG-T-00022
+manufacturing,Machine,M-008,MFG-E-000060,2025-01-04T00:11:40Z,Running,machine mode is RUNNING,MFG-R1,true,Unknown,Running,true,MFG-T-00023
+manufacturing,Machine,M-008,MFG-E-000068,2025-01-31T00:00:07Z,Running,machine mode is RUNNING,MFG-R1,true,Running,Running,false,

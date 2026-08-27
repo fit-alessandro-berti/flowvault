@@ -1,0 +1,160 @@
+leading_object_id,cutoff_event_id,cutoff_time,current_state,split_group,label_name,horizon_minutes,label,time_to_event_minutes
+M-001,MFG-E-000001,2025-01-01T00:00:00Z,Running,M-001,Down within 4 hours,240,false,1440.8333333333333
+M-001,MFG-E-000001,2025-01-01T00:00:00Z,Running,M-001,Down within 24 hours,1440,false,1440.8333333333333
+M-001,MFG-E-000001,2025-01-01T00:00:00Z,Running,M-001,Time to Down,43200,true,1440.8333333333333
+M-001,MFG-E-000009,2025-01-02T00:00:10Z,Degraded,M-001,Down within 4 hours,240,true,0.6666666666666666
+M-001,MFG-E-000009,2025-01-02T00:00:10Z,Degraded,M-001,Down within 24 hours,1440,true,0.6666666666666666
+M-001,MFG-E-000009,2025-01-02T00:00:10Z,Degraded,M-001,Time to Down,41759,true,0.6666666666666666
+M-001,MFG-E-000010,2025-01-02T00:00:20Z,Degraded,M-001,Down within 4 hours,240,true,0.5
+M-001,MFG-E-000010,2025-01-02T00:00:20Z,Degraded,M-001,Down within 24 hours,1440,true,0.5
+M-001,MFG-E-000010,2025-01-02T00:00:20Z,Degraded,M-001,Time to Down,41759,true,0.5
+M-001,MFG-E-000011,2025-01-02T00:00:30Z,Degraded,M-001,Down within 4 hours,240,true,0.3333333333333333
+M-001,MFG-E-000011,2025-01-02T00:00:30Z,Degraded,M-001,Down within 24 hours,1440,true,0.3333333333333333
+M-001,MFG-E-000011,2025-01-02T00:00:30Z,Degraded,M-001,Time to Down,41759,true,0.3333333333333333
+M-001,MFG-E-000012,2025-01-02T00:00:40Z,Degraded,M-001,Down within 4 hours,240,true,0.16666666666666666
+M-001,MFG-E-000012,2025-01-02T00:00:40Z,Degraded,M-001,Down within 24 hours,1440,true,0.16666666666666666
+M-001,MFG-E-000012,2025-01-02T00:00:40Z,Degraded,M-001,Time to Down,41759,true,0.16666666666666666
+M-001,MFG-E-000020,2025-01-03T00:01:00Z,Recovery,M-001,Down within 4 hours,240,false,
+M-001,MFG-E-000020,2025-01-03T00:01:00Z,Recovery,M-001,Down within 24 hours,1440,false,
+M-001,MFG-E-000020,2025-01-03T00:01:00Z,Recovery,M-001,Time to Down,40319,false,
+M-001,MFG-E-000020,2025-01-03T00:01:00Z,Recovery,M-001,Stable Running recovery within 8 hours,480,true,119.0
+M-001,MFG-E-000020,2025-01-03T00:01:00Z,Recovery,M-001,Time to stable recovery,40319,true,119.0
+M-001,MFG-E-000020,2025-01-03T00:01:00Z,Recovery,M-001,Recurrent Degraded or Down within 24 hours,1440,false,
+M-001,MFG-E-000021,2025-01-03T02:00:00Z,Running,M-001,Down within 4 hours,240,false,
+M-001,MFG-E-000021,2025-01-03T02:00:00Z,Running,M-001,Down within 24 hours,1440,false,
+M-001,MFG-E-000021,2025-01-03T02:00:00Z,Running,M-001,Time to Down,40200,false,
+M-001,MFG-E-000022,2025-01-03T02:00:10Z,Running,M-001,Down within 4 hours,240,false,
+M-001,MFG-E-000022,2025-01-03T02:00:10Z,Running,M-001,Down within 24 hours,1440,false,
+M-001,MFG-E-000022,2025-01-03T02:00:10Z,Running,M-001,Time to Down,40199,false,
+M-001,MFG-E-000061,2025-01-31T00:00:00Z,Running,M-001,Down within 4 hours,240,false,
+M-001,MFG-E-000061,2025-01-31T00:00:00Z,Running,M-001,Down within 24 hours,1440,false,
+M-001,MFG-E-000061,2025-01-31T00:00:00Z,Running,M-001,Time to Down,0,false,
+M-002,MFG-E-000002,2025-01-01T00:00:00Z,Running,M-002,Down within 4 hours,240,false,1441.6666666666667
+M-002,MFG-E-000002,2025-01-01T00:00:00Z,Running,M-002,Down within 24 hours,1440,false,1441.6666666666667
+M-002,MFG-E-000002,2025-01-01T00:00:00Z,Running,M-002,Time to Down,43200,true,1441.6666666666667
+M-002,MFG-E-000032,2025-01-03T06:06:40Z,Recovery,M-002,Down within 4 hours,240,false,
+M-002,MFG-E-000032,2025-01-03T06:06:40Z,Recovery,M-002,Down within 24 hours,1440,false,
+M-002,MFG-E-000032,2025-01-03T06:06:40Z,Recovery,M-002,Time to Down,39953,false,
+M-002,MFG-E-000032,2025-01-03T06:06:40Z,Recovery,M-002,Stable Running recovery within 8 hours,480,true,115.0
+M-002,MFG-E-000032,2025-01-03T06:06:40Z,Recovery,M-002,Time to stable recovery,39953,true,115.0
+M-002,MFG-E-000032,2025-01-03T06:06:40Z,Recovery,M-002,Recurrent Degraded or Down within 24 hours,1440,false,
+M-002,MFG-E-000033,2025-01-03T08:01:40Z,Running,M-002,Down within 4 hours,240,false,
+M-002,MFG-E-000033,2025-01-03T08:01:40Z,Running,M-002,Down within 24 hours,1440,false,
+M-002,MFG-E-000033,2025-01-03T08:01:40Z,Running,M-002,Time to Down,39838,false,
+M-002,MFG-E-000062,2025-01-31T00:00:01Z,Running,M-002,Down within 4 hours,240,false,
+M-002,MFG-E-000062,2025-01-31T00:00:01Z,Running,M-002,Down within 24 hours,1440,false,
+M-002,MFG-E-000062,2025-01-31T00:00:01Z,Running,M-002,Time to Down,0,false,
+M-003,MFG-E-000003,2025-01-01T00:00:00Z,Running,M-003,Down within 4 hours,240,false,1443.3333333333333
+M-003,MFG-E-000003,2025-01-01T00:00:00Z,Running,M-003,Down within 24 hours,1440,false,1443.3333333333333
+M-003,MFG-E-000003,2025-01-01T00:00:00Z,Running,M-003,Time to Down,43200,true,1443.3333333333333
+M-003,MFG-E-000037,2025-01-03T00:03:20Z,Recovery,M-003,Down within 4 hours,240,false,
+M-003,MFG-E-000037,2025-01-03T00:03:20Z,Recovery,M-003,Down within 24 hours,1440,false,
+M-003,MFG-E-000037,2025-01-03T00:03:20Z,Recovery,M-003,Time to Down,40316,false,
+M-003,MFG-E-000037,2025-01-03T00:03:20Z,Recovery,M-003,Stable Running recovery within 8 hours,480,true,60.0
+M-003,MFG-E-000037,2025-01-03T00:03:20Z,Recovery,M-003,Time to stable recovery,40316,true,60.0
+M-003,MFG-E-000037,2025-01-03T00:03:20Z,Recovery,M-003,Recurrent Degraded or Down within 24 hours,1440,true,120.0
+M-003,MFG-E-000038,2025-01-03T01:03:20Z,Running,M-003,Down within 4 hours,240,false,
+M-003,MFG-E-000038,2025-01-03T01:03:20Z,Running,M-003,Down within 24 hours,1440,false,
+M-003,MFG-E-000038,2025-01-03T01:03:20Z,Running,M-003,Time to Down,40256,false,
+M-003,MFG-E-000039,2025-01-03T02:03:20Z,Degraded,M-003,Down within 4 hours,240,false,
+M-003,MFG-E-000039,2025-01-03T02:03:20Z,Degraded,M-003,Down within 24 hours,1440,false,
+M-003,MFG-E-000039,2025-01-03T02:03:20Z,Degraded,M-003,Time to Down,40196,false,
+M-003,MFG-E-000063,2025-01-31T00:00:02Z,Degraded,M-003,Down within 4 hours,240,false,
+M-003,MFG-E-000063,2025-01-31T00:00:02Z,Degraded,M-003,Down within 24 hours,1440,false,
+M-003,MFG-E-000063,2025-01-31T00:00:02Z,Degraded,M-003,Time to Down,0,false,
+M-004,MFG-E-000004,2025-01-01T00:00:00Z,Running,M-004,Down within 4 hours,240,false,1445.1666666666667
+M-004,MFG-E-000004,2025-01-01T00:00:00Z,Running,M-004,Down within 24 hours,1440,false,1445.1666666666667
+M-004,MFG-E-000004,2025-01-01T00:00:00Z,Running,M-004,Time to Down,43200,true,1445.1666666666667
+M-004,MFG-E-000040,2025-01-02T00:05:00Z,Degraded,M-004,Down within 4 hours,240,true,0.16666666666666666
+M-004,MFG-E-000040,2025-01-02T00:05:00Z,Degraded,M-004,Down within 24 hours,1440,true,0.16666666666666666
+M-004,MFG-E-000040,2025-01-02T00:05:00Z,Degraded,M-004,Time to Down,41755,true,0.16666666666666666
+M-004,MFG-E-000042,2025-01-02T00:35:00Z,Recovery,M-004,Down within 4 hours,240,false,
+M-004,MFG-E-000042,2025-01-02T00:35:00Z,Recovery,M-004,Down within 24 hours,1440,false,
+M-004,MFG-E-000042,2025-01-02T00:35:00Z,Recovery,M-004,Time to Down,41725,false,
+M-004,MFG-E-000042,2025-01-02T00:35:00Z,Recovery,M-004,Stable Running recovery within 8 hours,480,false,
+M-004,MFG-E-000042,2025-01-02T00:35:00Z,Recovery,M-004,Time to stable recovery,41725,false,
+M-004,MFG-E-000042,2025-01-02T00:35:00Z,Recovery,M-004,Recurrent Degraded or Down within 24 hours,1440,false,
+M-004,MFG-E-000064,2025-01-31T00:00:03Z,Recovery,M-004,Down within 4 hours,240,false,
+M-004,MFG-E-000064,2025-01-31T00:00:03Z,Recovery,M-004,Down within 24 hours,1440,false,
+M-004,MFG-E-000064,2025-01-31T00:00:03Z,Recovery,M-004,Time to Down,0,false,
+M-005,MFG-E-000005,2025-01-01T00:00:00Z,Running,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000005,2025-01-01T00:00:00Z,Running,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000005,2025-01-01T00:00:00Z,Running,M-005,Time to Down,43200,false,
+M-005,MFG-E-000043,2025-01-02T00:06:40Z,Running,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000043,2025-01-02T00:06:40Z,Running,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000043,2025-01-02T00:06:40Z,Running,M-005,Time to Down,41753,false,
+M-005,MFG-E-000044,2025-01-02T00:06:50Z,Running,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000044,2025-01-02T00:06:50Z,Running,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000044,2025-01-02T00:06:50Z,Running,M-005,Time to Down,41753,false,
+M-005,MFG-E-000045,2025-01-02T00:06:55Z,Running,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000045,2025-01-02T00:06:55Z,Running,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000045,2025-01-02T00:06:55Z,Running,M-005,Time to Down,41753,false,
+M-005,MFG-E-000046,2025-01-02T00:06:58Z,Running,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000046,2025-01-02T00:06:58Z,Running,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000046,2025-01-02T00:06:58Z,Running,M-005,Time to Down,41753,false,
+M-005,MFG-E-000047,2025-01-02T00:07:00Z,Recovery,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000047,2025-01-02T00:07:00Z,Recovery,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000047,2025-01-02T00:07:00Z,Recovery,M-005,Time to Down,41753,false,
+M-005,MFG-E-000047,2025-01-02T00:07:00Z,Recovery,M-005,Stable Running recovery within 8 hours,480,false,
+M-005,MFG-E-000047,2025-01-02T00:07:00Z,Recovery,M-005,Time to stable recovery,41753,false,
+M-005,MFG-E-000047,2025-01-02T00:07:00Z,Recovery,M-005,Recurrent Degraded or Down within 24 hours,1440,false,
+M-005,MFG-E-000048,2025-01-02T00:07:10Z,Recovery,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000048,2025-01-02T00:07:10Z,Recovery,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000048,2025-01-02T00:07:10Z,Recovery,M-005,Time to Down,41752,false,
+M-005,MFG-E-000065,2025-01-31T00:00:04Z,Recovery,M-005,Down within 4 hours,240,false,
+M-005,MFG-E-000065,2025-01-31T00:00:04Z,Recovery,M-005,Down within 24 hours,1440,false,
+M-005,MFG-E-000065,2025-01-31T00:00:04Z,Recovery,M-005,Time to Down,0,false,
+M-006,MFG-E-000006,2025-01-01T00:00:00Z,Running,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000006,2025-01-01T00:00:00Z,Running,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000006,2025-01-01T00:00:00Z,Running,M-006,Time to Down,43200,false,
+M-006,MFG-E-000049,2025-01-02T00:08:20Z,Degraded,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000049,2025-01-02T00:08:20Z,Degraded,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000049,2025-01-02T00:08:20Z,Degraded,M-006,Time to Down,41751,false,
+M-006,MFG-E-000050,2025-01-02T00:08:30Z,Degraded,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000050,2025-01-02T00:08:30Z,Degraded,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000050,2025-01-02T00:08:30Z,Degraded,M-006,Time to Down,41751,false,
+M-006,MFG-E-000051,2025-01-02T00:08:40Z,Quality Hold,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000051,2025-01-02T00:08:40Z,Quality Hold,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000051,2025-01-02T00:08:40Z,Quality Hold,M-006,Time to Down,41751,false,
+M-006,MFG-E-000052,2025-01-02T00:08:50Z,Quality Hold,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000052,2025-01-02T00:08:50Z,Quality Hold,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000052,2025-01-02T00:08:50Z,Quality Hold,M-006,Time to Down,41751,false,
+M-006,MFG-E-000053,2025-01-02T00:09:00Z,Quality Hold,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000053,2025-01-02T00:09:00Z,Quality Hold,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000053,2025-01-02T00:09:00Z,Quality Hold,M-006,Time to Down,41751,false,
+M-006,MFG-E-000054,2025-01-02T00:09:10Z,Degraded,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000054,2025-01-02T00:09:10Z,Degraded,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000054,2025-01-02T00:09:10Z,Degraded,M-006,Time to Down,41750,false,
+M-006,MFG-E-000066,2025-01-31T00:00:05Z,Degraded,M-006,Down within 4 hours,240,false,
+M-006,MFG-E-000066,2025-01-31T00:00:05Z,Degraded,M-006,Down within 24 hours,1440,false,
+M-006,MFG-E-000066,2025-01-31T00:00:05Z,Degraded,M-006,Time to Down,0,false,
+M-007,MFG-E-000007,2025-01-01T00:00:00Z,Setup,M-007,Down within 4 hours,240,false,
+M-007,MFG-E-000007,2025-01-01T00:00:00Z,Setup,M-007,Down within 24 hours,1440,false,
+M-007,MFG-E-000007,2025-01-01T00:00:00Z,Setup,M-007,Time to Down,43200,false,
+M-007,MFG-E-000055,2025-01-02T00:10:00Z,Running,M-007,Down within 4 hours,240,false,
+M-007,MFG-E-000055,2025-01-02T00:10:00Z,Running,M-007,Down within 24 hours,1440,false,
+M-007,MFG-E-000055,2025-01-02T00:10:00Z,Running,M-007,Time to Down,41750,false,
+M-007,MFG-E-000056,2025-01-03T00:10:00Z,Running,M-007,Down within 4 hours,240,false,
+M-007,MFG-E-000056,2025-01-03T00:10:00Z,Running,M-007,Down within 24 hours,1440,false,
+M-007,MFG-E-000056,2025-01-03T00:10:00Z,Running,M-007,Time to Down,40310,false,
+M-007,MFG-E-000067,2025-01-31T00:00:06Z,Running,M-007,Down within 4 hours,240,false,
+M-007,MFG-E-000067,2025-01-31T00:00:06Z,Running,M-007,Down within 24 hours,1440,false,
+M-007,MFG-E-000067,2025-01-31T00:00:06Z,Running,M-007,Time to Down,0,false,
+M-008,MFG-E-000008,2025-01-01T00:00:00Z,Idle,M-008,Down within 4 hours,240,false,
+M-008,MFG-E-000008,2025-01-01T00:00:00Z,Idle,M-008,Down within 24 hours,1440,false,
+M-008,MFG-E-000008,2025-01-01T00:00:00Z,Idle,M-008,Time to Down,43200,false,
+M-008,MFG-E-000057,2025-01-02T00:11:40Z,Setup,M-008,Down within 4 hours,240,false,
+M-008,MFG-E-000057,2025-01-02T00:11:40Z,Setup,M-008,Down within 24 hours,1440,false,
+M-008,MFG-E-000057,2025-01-02T00:11:40Z,Setup,M-008,Time to Down,41748,false,
+M-008,MFG-E-000058,2025-01-02T00:11:50Z,Running,M-008,Down within 4 hours,240,false,
+M-008,MFG-E-000058,2025-01-02T00:11:50Z,Running,M-008,Down within 24 hours,1440,false,
+M-008,MFG-E-000058,2025-01-02T00:11:50Z,Running,M-008,Time to Down,41748,false,
+M-008,MFG-E-000059,2025-01-03T00:11:40Z,Unknown,M-008,Down within 4 hours,240,false,
+M-008,MFG-E-000059,2025-01-03T00:11:40Z,Unknown,M-008,Down within 24 hours,1440,false,
+M-008,MFG-E-000059,2025-01-03T00:11:40Z,Unknown,M-008,Time to Down,40308,false,
+M-008,MFG-E-000060,2025-01-04T00:11:40Z,Running,M-008,Down within 4 hours,240,false,
+M-008,MFG-E-000060,2025-01-04T00:11:40Z,Running,M-008,Down within 24 hours,1440,false,
+M-008,MFG-E-000060,2025-01-04T00:11:40Z,Running,M-008,Time to Down,38868,false,
+M-008,MFG-E-000068,2025-01-31T00:00:07Z,Running,M-008,Down within 4 hours,240,false,
+M-008,MFG-E-000068,2025-01-31T00:00:07Z,Running,M-008,Down within 24 hours,1440,false,
+M-008,MFG-E-000068,2025-01-31T00:00:07Z,Running,M-008,Time to Down,0,false,

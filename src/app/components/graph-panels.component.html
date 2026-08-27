@@ -1,6 +1,7 @@
 @if (vm.activeFeature() === 'stateAwareOcdfg' && vm.stateAwareOcdfg(); as graph) {
   <section
     class="process-graph-section feature-panel"
+    data-testid="sa-ocdfg"
     aria-label="State-aware object-centric graph"
   >
     <app-process-graph
@@ -71,7 +72,9 @@
     >
       <header class="state-modal-header">
         <h2 id="graph-dialog-title">{{ pattern.label }}</h2>
-        <button type="button" class="ghost-button" (click)="vm.closeFullScreenGraph()">Close</button>
+        <button type="button" class="ghost-button" (click)="vm.closeFullScreenGraph()">
+          Close
+        </button>
       </header>
 
       @if (vm.patternGraph(pattern, true); as graph) {

@@ -1,0 +1,6 @@
+dimension,value,violation_count,object_count,violations_per_100_events
+MaintenanceTeam,MaintenanceTeam,2,2,6.896551724137931
+state,Degraded,2,2,15.384615384615385
+state,Down,4,4,9.523809523809524
+state,Recovery,2,2,15.384615384615385
+state,Running,1,1,25.0

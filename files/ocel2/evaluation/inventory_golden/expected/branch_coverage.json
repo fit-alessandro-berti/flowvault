@@ -1,0 +1,49 @@
+{
+  "conformance_rule_ids": [
+    "INV-C1",
+    "INV-C2",
+    "INV-C3",
+    "INV-C4",
+    "INV-C5",
+    "INV-C6"
+  ],
+  "event_types_exercised": {
+    "Backorder Registered": 2,
+    "Cycle Count Performed": 1,
+    "Data Gap Ended": 1,
+    "Data Gap Started": 1,
+    "Delivery Delayed": 1,
+    "Expedite Requested": 1,
+    "Goods Issue": 2,
+    "Goods Receipt": 5,
+    "Initialize Inventory": 8,
+    "Inventory Adjustment": 2,
+    "Policy Threshold Updated": 1,
+    "Purchase Order Item Created": 5,
+    "Replenishment Proposal Approved": 2,
+    "Replenishment Proposal Created": 2,
+    "Reservation Created": 1,
+    "Sales Order Item Created": 1,
+    "Simulation End Snapshot": 8,
+    "Supplier Confirmation Received": 1,
+    "Transfer Receive": 2,
+    "Transfer Requested": 2,
+    "Transfer Ship": 3
+  },
+  "pattern_ids": [
+    "INV-P1",
+    "INV-P2",
+    "INV-P3",
+    "INV-P4",
+    "INV-P5",
+    "INV-P6"
+  ],
+  "state_branches_covered": true,
+  "states": {
+    "Critical Understock": 4,
+    "Normal": 31,
+    "Overstock": 7,
+    "Understock": 9,
+    "Unknown": 1
+  }
+}

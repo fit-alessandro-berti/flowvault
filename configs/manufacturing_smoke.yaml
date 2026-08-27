@@ -1,0 +1,67 @@
+scenario: manufacturing
+profile: smoke
+seed: 20260826
+start_time: "2025-01-01T00:00:00Z"
+horizon_days: 45
+telemetry_interval_minutes: 60
+
+entities:
+  machines: 8
+  machine_families: 2
+  operators: 12
+  maintenance_teams: 3
+  component_families: 4
+  material_lot_suppliers: 4
+
+production:
+  utilization_range: [0.45, 0.85]
+  production_orders_per_machine_day: [0.5, 2.0]
+  setup_probability: 0.25
+  operation_duration_hours: [0.5, 8.0]
+
+health:
+  initial_health: [0.82, 1.00]
+  degraded_entry_health: 0.65
+  degraded_exit_health: 0.75
+  degraded_entry_samples: 2
+  degraded_exit_samples: 4
+  failure_hazard_scale: 1.0
+  sensor_noise_multiplier: 1.0
+
+maintenance:
+  warning_request_probability: 0.65
+  critical_request_sla_minutes: 15
+  down_start_sla_minutes_by_criticality:
+    high: 60
+    medium: 180
+    low: 480
+  dispatch_delay_minutes: [5, 180]
+  part_unavailable_probability: 0.12
+  repair_effectiveness: [0.55, 0.98]
+  recovery_stable_minutes: 120
+  recurrence_horizon_hours: 24
+
+forced_episodes:
+  bearing_degradation_to_down: 8
+  thermal_quality_drift: 6
+  quick_recovery: 6
+  slow_recovery: 6
+  recurrent_degradation: 4
+  unsafe_restart: 4
+  data_gap: 3
+
+patterns:
+  noise_event_probability: 0.10
+  exact_behavior_instances_per_pattern: 2
+
+missingness:
+  telemetry_mcar: 0.0
+  process_event_mcar: 0.0
+  relationship_mcar: 0.0
+  timestamp_jitter_minutes: 0
+
+state_detection:
+  window_sizes: [4, 8, 16]
+  som_grids: [[3, 3], [5, 5]]
+  epochs: 10
+  max_training_windows: 50000

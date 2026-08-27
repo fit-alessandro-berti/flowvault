@@ -20,4 +20,14 @@ describe('state query presets', () => {
       expect(preset.query).toContain('END');
     }
   });
+
+  it('selects the registered evaluation queries without shadowing legacy inventory logs', () => {
+    expect(presetsForFile('inventory_smoke.json').map((preset) => preset.id)).toEqual([
+      'evaluation-inventory-policy',
+    ]);
+    expect(presetsForFile('manufacturing_paper.ocel.json').map((preset) => preset.id)).toEqual([
+      'evaluation-manufacturing-operation',
+    ]);
+    expect(presetsForFile('inventory_management_simulated.xml')).toHaveLength(3);
+  });
 });

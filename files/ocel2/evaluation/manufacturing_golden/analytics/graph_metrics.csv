@@ -1,0 +1,2 @@
+edge_state_entropy,weighted_jensen_shannon_divergence,conditional_mutual_information,state_conditioned_edge_count
+0.13333333333333333,0.12080756624282206,0.4207518749639422,49

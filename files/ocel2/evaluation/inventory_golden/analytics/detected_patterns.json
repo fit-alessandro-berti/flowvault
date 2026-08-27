@@ -1,0 +1,4365 @@
+{
+  "inter": [
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Normal -> Overstock",
+          "target": "Goods Receipt [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "CHANGE Normal -> Overstock",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Policy Threshold Updated [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Purchase Order Item Created [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Transfer Requested [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Goods Receipt [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "END Overstock",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Normal",
+      "id": "inter-1",
+      "label": "Normal -> Overstock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 8,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "Supplier",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000028",
+          "end_time_ms": 1735948830000,
+          "object_id": "IL-0003",
+          "start_event": "INV-E-000003",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 6
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 6
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "Purchase Order Item Created [Normal]",
+        "Goods Receipt [Normal]",
+        "CHANGE Normal -> Overstock",
+        "Goods Receipt [Overstock]",
+        "Policy Threshold Updated [Overstock]",
+        "Transfer Requested [Overstock]",
+        "END Overstock"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Overstock"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Replenishment Proposal Created [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Critical Understock -> Understock",
+          "target": "Purchase Order Item Created [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "CHANGE Critical Understock -> Understock",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Replenishment Proposal Approved [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "START Critical Understock",
+          "target": "Backorder Registered [Critical Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Critical Understock",
+      "id": "inter-2",
+      "label": "Critical Understock -> Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 6,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "ReplenishmentProposal",
+        "SalesOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000015",
+          "end_time_ms": 1735948860000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000012",
+          "start_time_ms": 1735776040000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "ReplenishmentProposal",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Critical Understock",
+        "Backorder Registered [Critical Understock]",
+        "Replenishment Proposal Created [Critical Understock]",
+        "Replenishment Proposal Approved [Critical Understock]",
+        "CHANGE Critical Understock -> Understock",
+        "Purchase Order Item Created [Understock]",
+        "END Understock"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Understock"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Normal -> Understock",
+          "target": "Goods Issue [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Sales Order Item Created [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "CHANGE Normal -> Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "Reservation Created [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Normal",
+      "id": "inter-3",
+      "label": "Normal -> Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 6,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "SalesOrderItem"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000011",
+          "end_time_ms": 1735776030000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000001",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "SalesOrderItem",
+          "weight": 3
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "Sales Order Item Created [Normal]",
+        "Reservation Created [Normal]",
+        "CHANGE Normal -> Understock",
+        "Goods Issue [Understock]",
+        "END Understock"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Understock"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Overstock -> Normal",
+          "target": "Transfer Ship [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Policy Threshold Updated [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Transfer Requested [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "START Overstock",
+          "target": "Goods Receipt [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "CHANGE Overstock -> Normal",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "TransferOrder",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Overstock",
+      "id": "inter-4",
+      "label": "Overstock -> Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 6,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000029",
+          "end_time_ms": 1736035210000,
+          "object_id": "IL-0003",
+          "start_event": "INV-E-000026",
+          "start_time_ms": 1735948810000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Overstock",
+        "Goods Receipt [Overstock]",
+        "Policy Threshold Updated [Overstock]",
+        "Transfer Requested [Overstock]",
+        "CHANGE Overstock -> Normal",
+        "Transfer Ship [Normal]",
+        "END Normal"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Normal"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Replenishment Proposal Created [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Understock -> Critical Understock",
+          "target": "Backorder Registered [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "CHANGE Understock -> Critical Understock",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "END Critical Understock",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Replenishment Proposal Approved [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Goods Issue [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Understock",
+      "id": "inter-5",
+      "label": "Understock -> Critical Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 6,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "ReplenishmentProposal",
+        "SalesOrderItem"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000014",
+          "end_time_ms": 1735776060000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000011",
+          "start_time_ms": 1735776030000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "ReplenishmentProposal",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "SalesOrderItem",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Goods Issue [Understock]",
+        "CHANGE Understock -> Critical Understock",
+        "Backorder Registered [Critical Understock]",
+        "Replenishment Proposal Created [Critical Understock]",
+        "Replenishment Proposal Approved [Critical Understock]",
+        "END Critical Understock"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Critical Understock"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Understock -> Normal",
+          "target": "Goods Receipt [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Expedite Requested [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "CHANGE Understock -> Normal",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Supplier Confirmation Received [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Delivery Delayed [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Understock",
+      "id": "inter-6",
+      "label": "Understock -> Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 6,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000023",
+          "end_time_ms": 1736380900000,
+          "object_id": "IL-0002",
+          "start_event": "INV-E-000020",
+          "start_time_ms": 1735776110000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 4
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Supplier Confirmation Received [Understock]",
+        "Delivery Delayed [Understock]",
+        "Expedite Requested [Understock]",
+        "CHANGE Understock -> Normal",
+        "Goods Receipt [Normal]",
+        "END Normal"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Normal"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Overstock -> Normal",
+          "target": "Inventory Adjustment [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "CHANGE Overstock -> Normal",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Overstock]",
+          "target": "Cycle Count Performed [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Overstock",
+          "target": "Initialize Inventory [Overstock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Planner",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Overstock",
+      "id": "inter-7",
+      "label": "Overstock -> Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 5,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000035",
+          "end_time_ms": 1735862710000,
+          "object_id": "IL-0006",
+          "start_event": "INV-E-000006",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Overstock",
+        "Initialize Inventory [Overstock]",
+        "Cycle Count Performed [Overstock]",
+        "CHANGE Overstock -> Normal",
+        "Inventory Adjustment [Normal]",
+        "END Normal"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Normal"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Overstock -> Normal",
+          "target": "Transfer Ship [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Transfer Requested [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "START Overstock",
+          "target": "Goods Receipt [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "CHANGE Overstock -> Normal",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Overstock",
+      "id": "inter-8",
+      "label": "Overstock -> Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 5,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000018",
+          "end_time_ms": 1736294400000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000016",
+          "start_time_ms": 1736121600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Overstock",
+        "Goods Receipt [Overstock]",
+        "Transfer Requested [Overstock]",
+        "CHANGE Overstock -> Normal",
+        "Transfer Ship [Normal]",
+        "END Normal"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Normal"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Understock -> Overstock",
+          "target": "Goods Receipt [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Transfer Requested [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "CHANGE Understock -> Overstock",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Purchase Order Item Created [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "END Overstock",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Understock",
+      "id": "inter-9",
+      "label": "Understock -> Overstock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 5,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000017",
+          "end_time_ms": 1736208000000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000015",
+          "start_time_ms": 1735948860000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Purchase Order Item Created [Understock]",
+        "CHANGE Understock -> Overstock",
+        "Goods Receipt [Overstock]",
+        "Transfer Requested [Overstock]",
+        "END Overstock"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Overstock"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Unknown -> Normal",
+          "target": "Data Gap Ended [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Ended [Normal]",
+          "target": "Transfer Receive [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "CHANGE Unknown -> Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Unknown",
+          "target": "Data Gap Started [Unknown]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Data Gap Ended [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Ended [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Unknown",
+      "id": "inter-10",
+      "label": "Unknown -> Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 5,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000043",
+          "end_time_ms": 1736208400000,
+          "object_id": "IL-0008",
+          "start_event": "INV-E-000036",
+          "start_time_ms": 1735862900000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Unknown",
+        "Data Gap Started [Unknown]",
+        "CHANGE Unknown -> Normal",
+        "Data Gap Ended [Normal]",
+        "Transfer Receive [Normal]",
+        "END Normal"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Normal"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "CHANGE Critical Understock -> Normal",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Critical Understock -> Normal",
+          "target": "Inventory Adjustment [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Critical Understock",
+          "target": "Backorder Registered [Critical Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Critical Understock",
+      "id": "inter-11",
+      "label": "Critical Understock -> Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000033",
+          "end_time_ms": 1735949010000,
+          "object_id": "IL-0005",
+          "start_event": "INV-E-000032",
+          "start_time_ms": 1735776210000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Critical Understock",
+        "Backorder Registered [Critical Understock]",
+        "CHANGE Critical Understock -> Normal",
+        "Inventory Adjustment [Normal]",
+        "END Normal"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Normal"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Normal -> Understock",
+          "target": "Goods Issue [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "CHANGE Normal -> Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Normal",
+      "id": "inter-12",
+      "label": "Normal -> Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000031",
+          "end_time_ms": 1735776200000,
+          "object_id": "IL-0005",
+          "start_event": "INV-E-000005",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "CHANGE Normal -> Understock",
+        "Goods Issue [Understock]",
+        "END Understock"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Understock"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Normal -> Unknown",
+          "target": "Data Gap Started [Unknown]",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "END Unknown",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "CHANGE Normal -> Unknown",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Normal",
+      "id": "inter-13",
+      "label": "Normal -> Unknown on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000036",
+          "end_time_ms": 1735862900000,
+          "object_id": "IL-0008",
+          "start_event": "INV-E-000008",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "CHANGE Normal -> Unknown",
+        "Data Gap Started [Unknown]",
+        "END Unknown"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Unknown"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "END Critical Understock",
+          "weight": 1
+        },
+        {
+          "source": "CHANGE Understock -> Critical Understock",
+          "target": "Backorder Registered [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "CHANGE Understock -> Critical Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Goods Issue [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Understock",
+      "id": "inter-14",
+      "label": "Understock -> Critical Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000032",
+          "end_time_ms": 1735776210000,
+          "object_id": "IL-0005",
+          "start_event": "INV-E-000031",
+          "start_time_ms": 1735776200000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Goods Issue [Understock]",
+        "CHANGE Understock -> Critical Understock",
+        "Backorder Registered [Critical Understock]",
+        "END Critical Understock"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Critical Understock"
+    },
+    {
+      "df_edges": [
+        {
+          "source": "CHANGE Understock -> Normal",
+          "target": "Transfer Receive [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "CHANGE Understock -> Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Initialize Inventory [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "inter",
+      "from_state": "Understock",
+      "id": "inter-15",
+      "label": "Understock -> Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000030",
+          "end_time_ms": 1736035220000,
+          "object_id": "IL-0004",
+          "start_event": "INV-E-000004",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Initialize Inventory [Understock]",
+        "CHANGE Understock -> Normal",
+        "Transfer Receive [Normal]",
+        "END Normal"
+      ],
+      "state": null,
+      "support": 1,
+      "to_state": "Normal"
+    }
+  ],
+  "intra": [
+    {
+      "df_edges": [
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "END Normal",
+          "weight": 2
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 2
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 2
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-1",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000005",
+          "end_time_ms": 1735689600000,
+          "object_id": "IL-0005",
+          "start_event": "INV-E-000005",
+          "start_time_ms": 1735689600000
+        },
+        {
+          "end_event": "INV-E-000008",
+          "end_time_ms": 1735689600000,
+          "object_id": "IL-0008",
+          "start_event": "INV-E-000008",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 2,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Purchase Order Item Created [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Replenishment Proposal Created [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Goods Receipt [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Transfer Ship [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Normal]",
+          "target": "Purchase Order Item Created [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Normal]",
+          "target": "Replenishment Proposal Approved [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Material",
+          "weight": 2
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 2
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Normal]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Normal]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Normal]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Normal]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-2",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 8,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "ReplenishmentProposal",
+        "Supplier",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000044",
+          "end_time_ms": 1736294800000,
+          "object_id": "IL-0007",
+          "start_event": "INV-E-000007",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 7
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 7
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "ReplenishmentProposal",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "Replenishment Proposal Created [Normal]",
+        "Replenishment Proposal Approved [Normal]",
+        "Purchase Order Item Created [Normal]",
+        "Goods Receipt [Normal]",
+        "Purchase Order Item Created [Normal]",
+        "Transfer Ship [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Expedite Requested [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "Purchase Order Item Created [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Supplier Confirmation Received [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Initialize Inventory [Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Delivery Delayed [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Delivery Delayed [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Expedite Requested [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Supplier Confirmation Received [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-3",
+      "label": "Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 6,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000022",
+          "end_time_ms": 1736035300000,
+          "object_id": "IL-0002",
+          "start_event": "INV-E-000002",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 5
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 5
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 4
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 4
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Initialize Inventory [Understock]",
+        "Purchase Order Item Created [Understock]",
+        "Supplier Confirmation Received [Understock]",
+        "Delivery Delayed [Understock]",
+        "Expedite Requested [Understock]",
+        "END Understock"
+      ],
+      "state": "Understock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Replenishment Proposal Created [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "END Critical Understock",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Replenishment Proposal Approved [Critical Understock]",
+          "weight": 1
+        },
+        {
+          "source": "START Critical Understock",
+          "target": "Backorder Registered [Critical Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Approved [Critical Understock]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Replenishment Proposal Created [Critical Understock]",
+          "target": "ReplenishmentProposal",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-4",
+      "label": "Critical Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "ReplenishmentProposal",
+        "SalesOrderItem"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000014",
+          "end_time_ms": 1735776060000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000012",
+          "start_time_ms": 1735776040000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "ReplenishmentProposal",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "SalesOrderItem",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Critical Understock",
+        "Backorder Registered [Critical Understock]",
+        "Replenishment Proposal Created [Critical Understock]",
+        "Replenishment Proposal Approved [Critical Understock]",
+        "END Critical Understock"
+      ],
+      "state": "Critical Understock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Sales Order Item Created [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "Reservation Created [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Reservation Created [Normal]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Sales Order Item Created [Normal]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-5",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "SalesOrderItem"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000010",
+          "end_time_ms": 1735776020000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000001",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "SalesOrderItem",
+          "weight": 2
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "Sales Order Item Created [Normal]",
+        "Reservation Created [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Purchase Order Item Created [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Goods Receipt [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Initialize Inventory [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Normal]",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-6",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000025",
+          "end_time_ms": 1735862400000,
+          "object_id": "IL-0003",
+          "start_event": "INV-E-000003",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Initialize Inventory [Normal]",
+        "Purchase Order Item Created [Normal]",
+        "Goods Receipt [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Policy Threshold Updated [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Transfer Requested [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "START Overstock",
+          "target": "Goods Receipt [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "END Overstock",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Policy Threshold Updated [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-7",
+      "label": "Overstock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 4,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000028",
+          "end_time_ms": 1735948830000,
+          "object_id": "IL-0003",
+          "start_event": "INV-E-000026",
+          "start_time_ms": 1735948810000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 3
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Overstock",
+        "Goods Receipt [Overstock]",
+        "Policy Threshold Updated [Overstock]",
+        "Transfer Requested [Overstock]",
+        "END Overstock"
+      ],
+      "state": "Overstock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Data Gap Ended [Normal]",
+          "target": "Transfer Receive [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Data Gap Ended [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Data Gap Ended [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Ended [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-8",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 3,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000043",
+          "end_time_ms": 1736208400000,
+          "object_id": "IL-0008",
+          "start_event": "INV-E-000037",
+          "start_time_ms": 1735949300000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Data Gap Ended [Normal]",
+        "Transfer Receive [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "END Overstock",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Overstock]",
+          "target": "Cycle Count Performed [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "START Overstock",
+          "target": "Initialize Inventory [Overstock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Cycle Count Performed [Overstock]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Overstock]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-9",
+      "label": "Overstock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 3,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000034",
+          "end_time_ms": 1735862700000,
+          "object_id": "IL-0006",
+          "start_event": "INV-E-000006",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Overstock",
+        "Initialize Inventory [Overstock]",
+        "Cycle Count Performed [Overstock]",
+        "END Overstock"
+      ],
+      "state": "Overstock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Transfer Requested [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "START Overstock",
+          "target": "Goods Receipt [Overstock]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "END Overstock",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Overstock]",
+          "target": "Supplier",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Requested [Overstock]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-10",
+      "label": "Overstock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 3,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000017",
+          "end_time_ms": 1736208000000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000016",
+          "start_time_ms": 1736121600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 2
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Overstock",
+        "Goods Receipt [Overstock]",
+        "Transfer Requested [Overstock]",
+        "END Overstock"
+      ],
+      "state": "Overstock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "END Critical Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Critical Understock",
+          "target": "Backorder Registered [Critical Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Backorder Registered [Critical Understock]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-11",
+      "label": "Critical Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000032",
+          "end_time_ms": 1735776210000,
+          "object_id": "IL-0005",
+          "start_event": "INV-E-000032",
+          "start_time_ms": 1735776210000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Critical Understock",
+        "Backorder Registered [Critical Understock]",
+        "END Critical Understock"
+      ],
+      "state": "Critical Understock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "START Normal",
+          "target": "Transfer Ship [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-12",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000029",
+          "end_time_ms": 1736035210000,
+          "object_id": "IL-0003",
+          "start_event": "INV-E-000029",
+          "start_time_ms": 1736035210000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Transfer Ship [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Inventory Adjustment [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-13",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000033",
+          "end_time_ms": 1735949010000,
+          "object_id": "IL-0005",
+          "start_event": "INV-E-000033",
+          "start_time_ms": 1735949010000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Inventory Adjustment [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Inventory Adjustment [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Inventory Adjustment [Normal]",
+          "target": "Planner",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-14",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000035",
+          "end_time_ms": 1735862710000,
+          "object_id": "IL-0006",
+          "start_event": "INV-E-000035",
+          "start_time_ms": 1735862710000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Inventory Adjustment [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "START Normal",
+          "target": "Transfer Receive [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Receive [Normal]",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-15",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "TransferOrder"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000030",
+          "end_time_ms": 1736035220000,
+          "object_id": "IL-0004",
+          "start_event": "INV-E-000030",
+          "start_time_ms": 1736035220000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "TransferOrder",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Transfer Receive [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "START Normal",
+          "target": "Transfer Ship [Normal]",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Transfer Ship [Normal]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-16",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000018",
+          "end_time_ms": 1736294400000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000018",
+          "start_time_ms": 1736294400000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Transfer Ship [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "END Normal",
+          "weight": 1
+        },
+        {
+          "source": "START Normal",
+          "target": "Goods Receipt [Normal]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Delivery",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Goods Receipt [Normal]",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-17",
+      "label": "Normal on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "Delivery",
+        "ItemLocation",
+        "Location",
+        "Material",
+        "Planner",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000023",
+          "end_time_ms": 1736380900000,
+          "object_id": "IL-0002",
+          "start_event": "INV-E-000023",
+          "start_time_ms": 1736380900000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "Delivery",
+          "target": "ItemLocation",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Planner",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Normal",
+        "Goods Receipt [Normal]",
+        "END Normal"
+      ],
+      "state": "Normal",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Goods Issue [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-18",
+      "label": "Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000031",
+          "end_time_ms": 1735776200000,
+          "object_id": "IL-0005",
+          "start_event": "INV-E-000031",
+          "start_time_ms": 1735776200000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Goods Issue [Understock]",
+        "END Understock"
+      ],
+      "state": "Understock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Goods Issue [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Goods Issue [Understock]",
+          "target": "SalesOrderItem",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-19",
+      "label": "Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "SalesOrderItem"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000011",
+          "end_time_ms": 1735776030000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000011",
+          "start_time_ms": 1735776030000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "SalesOrderItem",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Goods Issue [Understock]",
+        "END Understock"
+      ],
+      "state": "Understock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Purchase Order Item Created [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "Purchase Order Item Created [Understock]",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-20",
+      "label": "Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material",
+        "PurchaseOrderItem",
+        "Supplier"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000015",
+          "end_time_ms": 1735948860000,
+          "object_id": "IL-0001",
+          "start_event": "INV-E-000015",
+          "start_time_ms": 1735948860000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "PurchaseOrderItem",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Supplier",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Purchase Order Item Created [Understock]",
+        "END Understock"
+      ],
+      "state": "Understock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "END Understock",
+          "weight": 1
+        },
+        {
+          "source": "START Understock",
+          "target": "Initialize Inventory [Understock]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Initialize Inventory [Understock]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-21",
+      "label": "Understock on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000004",
+          "end_time_ms": 1735689600000,
+          "object_id": "IL-0004",
+          "start_event": "INV-E-000004",
+          "start_time_ms": 1735689600000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Understock",
+        "Initialize Inventory [Understock]",
+        "END Understock"
+      ],
+      "state": "Understock",
+      "support": 1,
+      "to_state": null
+    },
+    {
+      "df_edges": [
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "END Unknown",
+          "weight": 1
+        },
+        {
+          "source": "START Unknown",
+          "target": "Data Gap Started [Unknown]",
+          "weight": 1
+        }
+      ],
+      "eo_edges": [
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "Data Gap Started [Unknown]",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "family": "intra",
+      "from_state": null,
+      "id": "intra-22",
+      "label": "Unknown on ItemLocation",
+      "leading_object_type": "ItemLocation",
+      "mass": 2,
+      "object_types": [
+        "ItemLocation",
+        "Location",
+        "Material"
+      ],
+      "occurrences": [
+        {
+          "end_event": "INV-E-000036",
+          "end_time_ms": 1735862900000,
+          "object_id": "IL-0008",
+          "start_event": "INV-E-000036",
+          "start_time_ms": 1735862900000
+        }
+      ],
+      "oo_edges": [
+        {
+          "source": "ItemLocation",
+          "target": "Location",
+          "weight": 1
+        },
+        {
+          "source": "ItemLocation",
+          "target": "Material",
+          "weight": 1
+        }
+      ],
+      "sequence": [
+        "START Unknown",
+        "Data Gap Started [Unknown]",
+        "END Unknown"
+      ],
+      "state": "Unknown",
+      "support": 1,
+      "to_state": null
+    }
+  ]
+}

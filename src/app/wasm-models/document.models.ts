@@ -26,8 +26,10 @@ export interface OcelDocumentHandle {
   objectLifecycleJson(objectId: string): string;
   applyStateQuery(query: string): string;
   applyStateDetection(requestJson: string): string;
-  statePatternsJson(): string;
+  statePatternsJson(requestJson?: string): string;
   stateDetectionJson(requestJson: string): string;
+  stateDetectionAssignmentsJson(requestJson: string): string;
+  stateDetectionAssignmentsCsv(requestJson: string): string;
   stateDetectionCellJson(requestJson: string): string;
   stateFeatureTableCsv(requestJson: string): string;
   stateCorrelationsJson(): string;

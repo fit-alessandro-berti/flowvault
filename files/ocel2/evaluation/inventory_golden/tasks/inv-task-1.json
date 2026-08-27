@@ -1,0 +1,59 @@
+{
+  "acceptable_alternative_explanations": [
+    "supplier delay",
+    "policy threshold change",
+    "count discrepancy"
+  ],
+  "baseline_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs"
+  ],
+  "correct_answer": {
+    "primary_regime": "Demand Surge Without Inbound"
+  },
+  "maximum_score": 100,
+  "object_cohort": [
+    "IL-0001"
+  ],
+  "pre_registered": true,
+  "prompt": "Identify the dominant mechanism behind the selected Understock entry.",
+  "required_evidence_items": [
+    "INV-T-00001",
+    "INV-E-000011"
+  ],
+  "scoring_rubric": [
+    {
+      "criterion": "correct conclusion",
+      "points": 40
+    },
+    {
+      "criterion": "required evidence identified",
+      "points": 35
+    },
+    {
+      "criterion": "timeline and object context are consistent",
+      "points": 15
+    },
+    {
+      "criterion": "alternatives are considered",
+      "points": 10
+    }
+  ],
+  "task_id": "INV-TASK-1",
+  "time_range": {
+    "end": "2025-01-02T00:00:30Z",
+    "start": "2025-01-01T00:00:00Z"
+  },
+  "title": "Dominant Understock cause",
+  "treatment_view": [
+    "object lifecycles",
+    "OCDFG",
+    "conventional KPIs",
+    "state calendars",
+    "SA-OCDFG",
+    "transition KPIs",
+    "state patterns",
+    "boundary windows"
+  ]
+}
