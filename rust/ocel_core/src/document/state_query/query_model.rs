@@ -47,6 +47,7 @@ impl StateQuery {
 struct ReferencedFields {
     event_attributes: HashSet<String>,
     object_attributes: HashSet<String>,
+    quantile_fields: HashSet<FieldRef>,
 }
 
 impl ReferencedFields {
@@ -66,11 +67,15 @@ impl ReferencedFields {
 struct StateEvalIndex {
     event_attributes: Vec<HashMap<String, usize>>,
     object_attributes: Vec<HashMap<String, Vec<usize>>>,
+    quantile_values: HashMap<FieldRef, Vec<f64>>,
 }
 
 impl StateEvalIndex {
-    fn build(log: &CompactOcelLog, query: &StateQuery) -> Self {
-        Self::for_fields(log, query.referenced_fields())
+    fn build(log: &CompactOcelLog, query: &StateQuery) -> OcelResult<Self> {
+        let leading_type = log
+            .object_type_symbol(&query.leading_object_type)
+            .ok_or_else(|| OcelError::new("unknown leading object type for quantiles"))?;
+        Self::with_quantiles(log, query.referenced_fields(), leading_type)
     }
 
     fn for_fields(log: &CompactOcelLog, fields: ReferencedFields) -> Self {
@@ -113,6 +118,7 @@ impl StateEvalIndex {
         Self {
             event_attributes,
             object_attributes,
+            quantile_values: HashMap::new(),
         }
     }
 }
@@ -171,6 +177,7 @@ enum ValueExpr {
     Coalesce(Vec<ValueExpr>),
     Case(Vec<StateBranch>, Option<Box<ValueExpr>>),
     Null,
+    Quantile { field: FieldRef, probability: f64 },
 }
 
 impl ValueExpr {
@@ -209,12 +216,16 @@ impl ValueExpr {
                     value.collect_fields(fields);
                 }
             }
+            Self::Quantile { field, .. } => {
+                fields.quantile_fields.insert(field.clone());
+                Self::Field(field.clone()).collect_fields(fields);
+            }
             Self::Literal(_) | Self::Null => {}
         }
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 enum FieldRef {
     Event(String),
     Object(String),

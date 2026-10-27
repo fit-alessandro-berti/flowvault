@@ -103,7 +103,7 @@ impl CompactOcelLog {
                     state_query.leading_object_type
                 ))
             })?;
-        let eval_index = StateEvalIndex::build(self, &state_query);
+        let eval_index = StateEvalIndex::build(self, &state_query)?;
         let values = (0..self.events.len())
             .map(|event_index| self.evaluate_state_query(&state_query, &eval_index, event_index))
             .collect::<Vec<_>>();

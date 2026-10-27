@@ -137,7 +137,7 @@ export const appStateDialogMethods = {
       state_expression: 'event.state',
       activity_expression: "CONCAT(event.type, ' [', event.combined_state, ']')",
     });
-    const preset = presetsForFile(fileName)[0];
+    const preset = presetsForFile(fileName, this.filterOptions().object_types)[0];
     if (preset) {
       this.selectStatePreset(preset);
       return;

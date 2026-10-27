@@ -174,6 +174,14 @@ impl QueryParser {
                     return match identifier.to_ascii_uppercase().as_str() {
                         "CONCAT" => Ok(ValueExpr::Concat(values)),
                         "COALESCE" => Ok(ValueExpr::Coalesce(values)),
+                        "QUANTILE" => match values.as_slice() {
+                            [ValueExpr::Field(field), ValueExpr::Literal(QueryValue::Number(probability))]
+                                if probability.is_finite() && (0.0..=1.0).contains(probability) =>
+                            {
+                                Ok(ValueExpr::Quantile { field: field.clone(), probability: *probability })
+                            }
+                            _ => Err(OcelError::new("QUANTILE requires a field and a numeric probability from 0 to 1, e.g. QUANTILE(event.stock, 0.9)")),
+                        },
                         _ => Err(OcelError::new(format!(
                             "unsupported function '{identifier}'"
                         ))),

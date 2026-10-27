@@ -54,7 +54,12 @@ impl CompactOcelLog {
         }
         let mut fields = ReferencedFields::default();
         value.collect_fields(&mut fields);
-        if value.references_object() {
+        if value.references_object()
+            || fields
+                .quantile_fields
+                .iter()
+                .any(|field| matches!(field, FieldRef::Object(_)))
+        {
             return Err(OcelError::new("composition uses event attributes; define object states separately with a STATE query"));
         }
         for field in &fields.event_attributes {
@@ -79,11 +84,15 @@ impl CompactOcelLog {
         Ok(value)
     }
 
-    fn evaluate_event_expression(&self, value: &ValueExpr) -> Vec<Option<String>> {
+    fn evaluate_event_expression(
+        &self,
+        value: &ValueExpr,
+        leading_type: Symbol,
+    ) -> OcelResult<Vec<Option<String>>> {
         let mut fields = ReferencedFields::default();
         value.collect_fields(&mut fields);
-        let eval_index = StateEvalIndex::for_fields(self, fields);
-        (0..self.events.len())
+        let eval_index = StateEvalIndex::with_quantiles(self, fields, leading_type)?;
+        Ok((0..self.events.len())
             .map(|event_index| {
                 EvalContext {
                     log: self,
@@ -93,7 +102,7 @@ impl CompactOcelLog {
                 }
                 .eval_state_value(value)
             })
-            .collect()
+            .collect())
     }
 
     fn write_event_strings(&mut self, name: &str, values: Vec<Option<String>>) {
@@ -122,9 +131,9 @@ impl CompactOcelLog {
         // Validate both expressions before writing either output.
         let state = self.parse_composition_expression(&composition.state_expression, false)?;
         let activity = self.parse_composition_expression(&composition.activity_expression, true)?;
-        let values = self.evaluate_event_expression(&state);
+        let values = self.evaluate_event_expression(&state, leading_type)?;
         self.write_event_strings(COMBINED_STATE, values);
-        let labels = self.evaluate_event_expression(&activity);
+        let labels = self.evaluate_event_expression(&activity, leading_type)?;
         // A composed state must have an activity label; missing labels are explicit errors.
         let state_attribute = self
             .symbol_for_value(COMBINED_STATE)

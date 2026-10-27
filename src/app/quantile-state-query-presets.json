@@ -1,0 +1,44 @@
+[
+  {
+    "id": "p2p-quantity-quantiles",
+    "logKey": "ocel20_example",
+    "name": "Purchase Quantity Quantiles",
+    "leadingObjectType": "Purchase Order",
+    "query": "STATE state FOR LEADING OBJECT TYPE 'Purchase Order' AS CASE\n  WHEN object.po_quantity IS NULL OR QUANTILE(object.po_quantity, 0.5) IS NULL THEN 'Unknown'\n  WHEN object.po_quantity = QUANTILE(object.po_quantity, 0.1) AND object.po_quantity = QUANTILE(object.po_quantity, 0.9) THEN 'Typical Purchase'\n  WHEN object.po_quantity <= QUANTILE(object.po_quantity, 0.1) THEN 'Small Purchase'\n  WHEN object.po_quantity >= QUANTILE(object.po_quantity, 0.9) THEN 'Large Purchase'\n  ELSE 'Typical Purchase'\nEND"
+  },
+  {
+    "id": "container-load-quantiles",
+    "logKey": "container_logistics",
+    "name": "Load Size Quantiles",
+    "leadingObjectType": "Customer Order",
+    "query": "STATE state FOR LEADING OBJECT TYPE 'Customer Order' AS CASE\n  WHEN object.AmountofGoods IS NULL OR QUANTILE(object.AmountofGoods, 0.5) IS NULL THEN 'Unknown'\n  WHEN object.AmountofGoods = QUANTILE(object.AmountofGoods, 0.1) AND object.AmountofGoods = QUANTILE(object.AmountofGoods, 0.9) THEN 'Typical Load'\n  WHEN object.AmountofGoods <= QUANTILE(object.AmountofGoods, 0.1) THEN 'Small Load'\n  WHEN object.AmountofGoods >= QUANTILE(object.AmountofGoods, 0.9) THEN 'Large Load'\n  ELSE 'Typical Load'\nEND"
+  },
+  {
+    "id": "orders-price-quantiles",
+    "logKey": "order-management",
+    "name": "Item Price Quantiles",
+    "leadingObjectType": "items",
+    "query": "STATE state FOR LEADING OBJECT TYPE 'items' AS CASE\n  WHEN object.price IS NULL OR QUANTILE(object.price, 0.5) IS NULL THEN 'Unknown'\n  WHEN object.price = QUANTILE(object.price, 0.1) AND object.price = QUANTILE(object.price, 0.9) THEN 'Typical Value'\n  WHEN object.price <= QUANTILE(object.price, 0.1) THEN 'Low Value'\n  WHEN object.price >= QUANTILE(object.price, 0.9) THEN 'High Value'\n  ELSE 'Typical Value'\nEND"
+  },
+  {
+    "id": "inventory-stock-quantiles",
+    "logKey": "inventory_management_simulated",
+    "name": "Stock Level Quantiles",
+    "leadingObjectType": "MAT",
+    "query": "STATE state FOR LEADING OBJECT TYPE 'MAT' AS CASE\n  WHEN event.\"Stock After\" IS NULL OR QUANTILE(event.\"Stock After\", 0.5) IS NULL THEN 'Unknown'\n  WHEN event.\"Stock After\" = QUANTILE(event.\"Stock After\", 0.1) AND event.\"Stock After\" = QUANTILE(event.\"Stock After\", 0.9) THEN 'Normal'\n  WHEN event.\"Stock After\" <= QUANTILE(event.\"Stock After\", 0.1) THEN 'Understock'\n  WHEN event.\"Stock After\" >= QUANTILE(event.\"Stock After\", 0.9) THEN 'Overstock'\n  ELSE 'Normal'\nEND"
+  },
+  {
+    "id": "evaluation-inventory-stock-quantiles",
+    "logKey": "evaluation_inventory",
+    "name": "Stock Level Quantiles",
+    "leadingObjectType": "ItemLocation",
+    "query": "STATE state FOR LEADING OBJECT TYPE 'ItemLocation' AS CASE\n  WHEN event.on_hand_after IS NULL OR QUANTILE(event.on_hand_after, 0.5) IS NULL THEN 'Unknown'\n  WHEN event.on_hand_after = QUANTILE(event.on_hand_after, 0.1) AND event.on_hand_after = QUANTILE(event.on_hand_after, 0.9) THEN 'Normal'\n  WHEN event.on_hand_after <= QUANTILE(event.on_hand_after, 0.1) THEN 'Understock'\n  WHEN event.on_hand_after >= QUANTILE(event.on_hand_after, 0.9) THEN 'Overstock'\n  ELSE 'Normal'\nEND"
+  },
+  {
+    "id": "evaluation-manufacturing-health-quantiles",
+    "logKey": "evaluation_manufacturing",
+    "name": "Machine Health Quantiles",
+    "leadingObjectType": "Machine",
+    "query": "STATE state FOR LEADING OBJECT TYPE 'Machine' AS CASE\n  WHEN event.health_index IS NULL OR QUANTILE(event.health_index, 0.5) IS NULL THEN 'Unknown'\n  WHEN event.health_index = QUANTILE(event.health_index, 0.1) AND event.health_index = QUANTILE(event.health_index, 0.9) THEN 'Typical Health'\n  WHEN event.health_index <= QUANTILE(event.health_index, 0.1) THEN 'Low Health'\n  WHEN event.health_index >= QUANTILE(event.health_index, 0.9) THEN 'High Health'\n  ELSE 'Typical Health'\nEND"
+  }
+]

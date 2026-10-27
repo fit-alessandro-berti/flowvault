@@ -43,6 +43,12 @@
                   Values support <code>CONCAT</code>, <code>COALESCE</code>, <code>||</code>, and
                   nested <code>CASE</code>.
                 </li>
+                <li>
+                  Use <code>QUANTILE(event.stock, 0.1)</code> for the 10th percentile, or
+                  <code>QUANTILE(object.stock, 0.9)</code> for the 90th. Numeric strings are
+                  supported. Thresholds use the full imported log for the leading type; filtering
+                  does not recalibrate them.
+                </li>
                 <li>Quote spaced names like <code>event."Stock After"</code>.</li>
                 <li>
                   Use <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
@@ -251,6 +257,10 @@
                 Use <code>CONCAT(...)</code> or <code>||</code> to join values in any order,
                 including literal text. Use <code>CASE WHEN ... THEN ... ELSE ... END</code> for
                 conditional labels.
+              </p>
+              <p>
+                <code>QUANTILE(event.stock, 0.9)</code> also works here. It uses numeric values from
+                events related to the analysis leading type in the full imported log.
               </p>
               <p>
                 A missing value makes a concatenation missing. Use

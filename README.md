@@ -93,6 +93,46 @@ Reapplying a query replaces only its named attribute, removing old values on eve
 
 The state editor lists the definitions saved in the current document. **Add attribute** starts a new named definition (for example, `state1` and `state2`); select a saved definition to edit it. Each definition has its own leading object type. A query's name must be an identifier such as `stock_state` or `shipping-state`; names differing only by case are rejected. `combined_state`, `state_activity`, and the built-in event field names are reserved.
 
+### Quantile-based states
+
+Use `QUANTILE(field, probability)` wherever a value is allowed. The probability is a numeric literal between `0` and `1`: `0.1` is the 10th percentile, `0.9` the 90th, `0.5` the median, and `0`/`1` the minimum/maximum. For example, the inventory simulation can classify stock into the bottom and top deciles:
+
+```sql
+STATE stock_band FOR LEADING OBJECT TYPE 'MAT' AS CASE
+  WHEN event."Stock After" IS NULL
+    OR QUANTILE(event."Stock After", 0.5) IS NULL THEN 'Unknown'
+  WHEN event."Stock After" = QUANTILE(event."Stock After", 0.1)
+    AND event."Stock After" = QUANTILE(event."Stock After", 0.9) THEN 'Normal'
+  WHEN event."Stock After" <= QUANTILE(event."Stock After", 0.1) THEN 'Understock'
+  WHEN event."Stock After" >= QUANTILE(event."Stock After", 0.9) THEN 'Overstock'
+  ELSE 'Normal'
+END
+```
+
+For 100 distinct evenly spaced values, this assigns 10 understock, 80 normal, and 10 overstock observations. Equal values stay together, so ties and small populations can change those proportions. The second branch keeps a value that equals both tail thresholds in the normal group, including constant-valued logs; it does not suppress genuinely lower or higher outliers. Change the comparison operators or probabilities to choose another boundary policy.
+
+Quantile semantics:
+
+- Thresholds are calculated once per evaluation from the **full imported log**, restricted to the query's leading object type. Applying or changing display filters does not recalibrate states.
+- An `event.*` field contributes one observation per event related to at least one leading object. Multiple relationships do not count that event multiple times.
+- An `object.*` field contributes one observation for each distinct related leading object at each event, using its latest value at or before the event timestamp. This is an observation-weighted distribution across the selected object type, not one vote per object's final value. Future attribute changes are not read early.
+- Integers, floats, and finite numeric strings are accepted. Missing values, nonnumeric strings, infinities, NaNs, and booleans are excluded from the population. An empty population returns `NULL`; one numeric observation returns that value at every probability. Nonnumeric strings are not ordered lexically against numeric thresholds.
+- Values are sorted once per referenced field and linearly interpolated at index `(n - 1) * probability`. Repeated quantile calls reuse this distribution.
+- The first argument must be a field reference; the second must be a numeric literal in `[0, 1]`. Invalid arguments and unknown fields reject the update without changing existing states.
+
+The **State** dialog includes one quantile preset for every supported sample/evaluation log family. The same presets work for each log's supported file formats:
+
+| Log | Quantile preset | Leading type | Field |
+| --- | --- | --- | --- |
+| Purchase-to-Pay (`ocel20_example`) | Purchase Quantity Quantiles | Purchase Order | `object.po_quantity` |
+| Container Logistics | Load Size Quantiles | Customer Order | `object.AmountofGoods` |
+| Order Management | Item Price Quantiles | items | `object.price` |
+| Inventory Simulation | Stock Level Quantiles | MAT | `event."Stock After"` |
+| Inventory evaluation (golden, smoke, paper, scale) | Stock Level Quantiles | ItemLocation | `event.on_hand_after` |
+| Manufacturing evaluation (golden, smoke, paper, scale) | Machine Health Quantiles | Machine | `event.health_index` |
+
+All six examples use 10th/90th percentile boundaries, handle missing populations and coincident boundaries, and are defined in `src/app/quantile-state-query-presets.json`. They are exercised against the actual logs by the Rust test suite, including JSON and XML versions of the four bundled samples. In **Activity composition**, `QUANTILE(event.<attribute>, p)` also works with existing numeric event attributes or numeric state strings. Its population uses the composition's analysis leading object type. Object fields belong in a named state definition before composition.
+
 ### Editable state and activity composition
 
 Open **Activity composition** in the state editor after defining attributes. This is a separate configuration that can be changed without re-running or replacing those definitions. **Combine states only** and **Activity + states** provide editable starting expressions. For example:
@@ -138,7 +178,7 @@ The Rust/WASM APIs are `apply_state_query` / `applyStateQuery`, `state_configura
 
 Applying SOM state detection keeps other named attributes, updates the `state` attribute, and selects it as the current composition.
 
-The UI opens the state query editor as an overlay after import. For the bundled fixture logs it proposes three named presets on the left:
+The UI opens the state query editor as an overlay after import. For the bundled fixture logs it proposes named presets on the left, including a quantile example for each log family:
 
 - `ocel20_example`: Payment Block Status, Purchase Size, Actor and Automation
 - `container_logistics`: Shipment Status, Load Planning, Process Phase

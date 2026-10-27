@@ -9,6 +9,9 @@ fn compare_ordered(left: &QueryValue, right: &QueryValue) -> Option<i8> {
                 Some(0)
             }
         }
+        _ if matches!(left, QueryValue::Number(_)) || matches!(right, QueryValue::Number(_)) => {
+            None
+        }
         _ => {
             let left = left.as_state_string();
             let right = right.as_state_string();
@@ -27,6 +30,7 @@ fn query_value_as_number(value: &QueryValue) -> Option<f64> {
         QueryValue::String(value) => value.trim().parse::<f64>().ok(),
         QueryValue::Boolean(_) => None,
     }
+    .filter(|number| number.is_finite())
 }
 
 fn sql_like(value: &str, pattern: &str) -> bool {

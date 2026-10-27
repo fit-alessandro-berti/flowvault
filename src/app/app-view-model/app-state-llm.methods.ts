@@ -106,6 +106,9 @@ State expression language:
 - Use object.attribute_name or object."Attribute Name" for the selected leading object's attributes.
 - Supported comparisons include =, !=, <, <=, >, >=, LIKE, IS NULL, IS NOT NULL.
 - Combine conditions with AND, OR, NOT and parentheses.
+- Use QUANTILE(event.attribute, 0.1) / QUANTILE(object.attribute, 0.9) for percentile thresholds; probability must be a numeric literal from 0 to 1.
+- Quantiles use numeric values (including numeric strings) over the full imported log for the leading type, ignoring missing or nonnumeric values. Object fields are sampled at each related event timestamp.
+- Quantiles return NULL if no numeric values exist. Ties can make tail groups larger than 10%; when the low and high thresholds coincide, leave that shared value in the normal state.
 - Return concise, interpretable state labels.
 
 Few-shot examples:

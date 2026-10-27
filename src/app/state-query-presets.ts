@@ -1,3 +1,5 @@
+import quantilePresets from './quantile-state-query-presets.json';
+
 export interface StateQueryPreset {
   id: string;
   logKey: string;
@@ -184,10 +186,14 @@ END`,
   ELSE 'No Stock Change'
 END`,
   },
+  ...quantilePresets,
 ];
 
-export function presetsForFile(fileName: string): StateQueryPreset[] {
-  const key = logKeyForFile(fileName);
+export function presetsForFile(fileName: string, objectTypes: string[] = []): StateQueryPreset[] {
+  const fileKey = logKeyForFile(fileName);
+  const key = STATE_QUERY_PRESETS.some((preset) => preset.logKey === fileKey)
+    ? fileKey
+    : (logKeyForObjectTypes(objectTypes) ?? fileKey);
   const presets = STATE_QUERY_PRESETS.filter((preset) => preset.logKey === key);
 
   return presets.length > 0 ? presets : STATE_QUERY_PRESETS.slice(0, 3);
@@ -209,4 +215,16 @@ function logKeyForFile(fileName: string): string {
     return 'evaluation_manufacturing';
   }
   return normalized;
+}
+
+function logKeyForObjectTypes(objectTypes: string[]): string | undefined {
+  const families: Array<[string, string[]]> = [
+    ['evaluation_inventory', ['ItemLocation', 'Material']],
+    ['evaluation_manufacturing', ['Machine', 'ProductionOrder']],
+    ['ocel20_example', ['Invoice', 'Purchase Order']],
+    ['container_logistics', ['Container', 'Customer Order']],
+    ['order-management', ['orders', 'items']],
+    ['inventory_management_simulated', ['MAT']],
+  ];
+  return families.find(([, required]) => required.every((type) => objectTypes.includes(type)))?.[0];
 }

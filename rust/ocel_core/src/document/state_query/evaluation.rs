@@ -10,8 +10,8 @@ impl QueryValue {
         match self {
             Self::String(value) => value.clone(),
             Self::Number(value) => {
-                if value.fract() == 0.0 {
-                    (*value as i64).to_string()
+                if *value == 0.0 {
+                    "0".to_owned()
                 } else {
                     value.to_string()
                 }
@@ -74,6 +74,10 @@ impl EvalContext<'_> {
             ValueExpr::Literal(value) => Some(value.clone()),
             ValueExpr::Field(field) => self.eval_field(field),
             ValueExpr::Null => None,
+            ValueExpr::Quantile { field, probability } => {
+                interpolated_quantile(self.eval_index.quantile_values.get(field)?, *probability)
+                    .map(QueryValue::Number)
+            }
             ValueExpr::Concat(values) => {
                 let parts = values
                     .iter()

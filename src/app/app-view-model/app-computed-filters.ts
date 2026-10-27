@@ -24,7 +24,7 @@ export class AppFilterComputedState extends AppStateFields {
       this.selectedTextAttribute() !== null ||
       this.selectedPatternFilters().length > 0,
   );
-  protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName()));
+  protected readonly stateQueryPresets = computed(() => presetsForFile(this.fileName(), this.filterOptions().object_types));
   protected readonly isLlmStateMode = computed(
     () => this.selectedPresetId() === LLM_STATE_PRESET_ID,
   );
