@@ -1,4 +1,3 @@
-
 impl OcelDocumentCore {
     /// Imports an OCEL 2.0 JSON, XML, or CSV string.
     ///
@@ -10,6 +9,9 @@ impl OcelDocumentCore {
             original_log: log.clone(),
             log,
             current_filter,
+            state_definitions: Vec::new(),
+            state_composition: None,
+            state_composition_customized: false,
         })
     }
 
@@ -24,6 +26,9 @@ impl OcelDocumentCore {
             original_log: log.clone(),
             log,
             current_filter,
+            state_definitions: Vec::new(),
+            state_composition: None,
+            state_composition_customized: false,
         })
     }
 
@@ -85,9 +90,73 @@ impl OcelDocumentCore {
     /// Applies a SQL-like CASE query and writes a string state attribute to events.
     pub fn apply_state_query(&mut self, query: &str) -> OcelResult<String> {
         let parsed_query = StateQuery::parse(query)?;
+        if parsed_query
+            .referenced_fields()
+            .event_attributes
+            .iter()
+            .any(|name| name == COMBINED_STATE || name == STATE_ACTIVITY)
+        {
+            return Err(OcelError::new(
+                "state definitions cannot depend on composition outputs",
+            ));
+        }
         let attribute = parsed_query.attribute_name;
         let leading_object_type = parsed_query.leading_object_type;
-        self.original_log.apply_state_query(query)?;
+        if [
+            COMBINED_STATE,
+            STATE_ACTIVITY,
+            "id",
+            "type",
+            "activity",
+            "time",
+            "timestamp",
+        ]
+        .iter()
+        .any(|name| attribute.eq_ignore_ascii_case(name))
+        {
+            return Err(OcelError::new(format!(
+                "'{attribute}' is reserved; choose a different state attribute name"
+            )));
+        }
+        if self.original_log.event_types.iter().any(|kind| {
+            kind.attributes.iter().any(|attr| {
+                let name = self.original_log.pool.resolve(attr.name);
+                name.eq_ignore_ascii_case(&attribute) && name != attribute
+            })
+        }) {
+            return Err(OcelError::new(
+                "state attribute names must not differ only in letter case",
+            ));
+        }
+        let mut updated = self.original_log.clone();
+        updated.apply_state_query(query)?;
+        let default_composition = StateComposition::for_attribute(&attribute, &leading_object_type);
+        let composition = match &self.state_composition {
+            Some(current)
+                if self.state_composition_customized
+                    || current.state_expression != default_composition.state_expression =>
+            {
+                current.clone()
+            }
+            _ => default_composition,
+        };
+        updated.apply_state_composition(&composition)?;
+        self.original_log = updated;
+        self.state_composition = Some(composition);
+        let definition = StateDefinition {
+            attribute: attribute.clone(),
+            leading_object_type: leading_object_type.clone(),
+            query: query.to_owned(),
+        };
+        if let Some(existing) = self
+            .state_definitions
+            .iter_mut()
+            .find(|item| item.attribute == attribute)
+        {
+            *existing = definition;
+        } else {
+            self.state_definitions.push(definition);
+        }
         self.log = self.original_log.filter(&self.current_filter);
         let assigned_events = self.log.count_events_with_attribute(&attribute);
         let total_events = self.log.events.len();
@@ -102,6 +171,32 @@ impl OcelDocumentCore {
             .map_err(|err| OcelError::new(format!("could not serialize state result: {err}")))
     }
 
+    /// Returns editable definitions and the current composition for this document.
+    pub fn state_configuration_json(&self) -> OcelResult<String> {
+        serde_json::to_string(&json!({ "definitions": self.state_definitions, "composition": self.state_composition }))
+            .map_err(|err| OcelError::new(format!("could not serialize state configuration: {err}")))
+    }
+
+    /// Recombines existing event states without changing their definitions or values.
+    pub fn apply_state_composition(&mut self, request_json: &str) -> OcelResult<String> {
+        let composition: StateComposition = serde_json::from_str(request_json)
+            .map_err(|err| OcelError::new(format!("could not parse state composition: {err}")))?;
+        let mut updated = self.original_log.clone();
+        updated.apply_state_composition(&composition)?;
+        self.original_log = updated;
+        self.log = self.original_log.filter(&self.current_filter);
+        let result = StateQueryResult {
+            attribute: COMBINED_STATE.to_owned(),
+            leading_object_type: composition.leading_object_type.clone(),
+            assigned_events: self.log.count_events_with_attribute(COMBINED_STATE),
+            total_events: self.log.events.len(),
+        };
+        self.state_composition = Some(composition);
+        self.state_composition_customized = true;
+        serde_json::to_string(&result)
+            .map_err(|err| OcelError::new(format!("could not serialize composition result: {err}")))
+    }
+
     /// Applies the current State Detection SOM labels as the string `state` event attribute.
     pub fn apply_state_detection(&mut self, request_json: &str) -> OcelResult<String> {
         let request =
@@ -109,10 +204,19 @@ impl OcelDocumentCore {
                 OcelError::new(format!("could not parse state detection request: {err}"))
             })?;
         let assignments = self.log.state_detection_state_assignments(&request)?;
-        self.original_log.apply_state_labels_by_event_id(
+        let mut updated = self.original_log.clone();
+        updated.apply_state_labels_by_event_id(
             &assignments.leading_object_type,
             &assignments.states,
         )?;
+        let composition =
+            StateComposition::for_attribute("state", &assignments.leading_object_type);
+        updated.apply_state_composition(&composition)?;
+        self.original_log = updated;
+        self.state_composition = Some(composition);
+        self.state_composition_customized = false;
+        self.state_definitions
+            .retain(|definition| definition.attribute != "state");
         self.log = self.original_log.filter(&self.current_filter);
         let assigned_events = self.log.count_events_with_attribute("state");
         let total_events = self.log.events.len();

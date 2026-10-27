@@ -1,7 +1,6 @@
 impl CompactOcelLog {
-
     fn state_correlations(&self) -> OcelResult<StateCorrelationResult> {
-        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+        let state_attribute = self.state_attribute_symbol().ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
         })?;
         let leading_type_symbol = self.state_leading_object_type.ok_or_else(|| {

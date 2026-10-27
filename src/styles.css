@@ -140,8 +140,8 @@ body {
 }
 
 .state-editor {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 

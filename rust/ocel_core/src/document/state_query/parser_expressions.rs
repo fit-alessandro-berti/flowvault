@@ -1,4 +1,3 @@
-
 impl QueryParser {
     fn parse_state_query(&mut self) -> OcelResult<StateQuery> {
         self.expect_keyword("STATE")?;
@@ -121,10 +120,65 @@ impl QueryParser {
     }
 
     fn parse_value_expr(&mut self) -> OcelResult<ValueExpr> {
+        let first = self.parse_value_atom()?;
+        if !self.consume_token(&Token::Concat) {
+            return Ok(first);
+        }
+        let mut values = vec![first, self.parse_value_atom()?];
+        while self.consume_token(&Token::Concat) {
+            values.push(self.parse_value_atom()?);
+        }
+        Ok(ValueExpr::Concat(values))
+    }
+
+    fn parse_value_atom(&mut self) -> OcelResult<ValueExpr> {
         match self.next().cloned() {
             Some(Token::String(value)) => Ok(ValueExpr::Literal(QueryValue::String(value))),
             Some(Token::Number(value)) => Ok(ValueExpr::Literal(QueryValue::Number(value))),
+            Some(Token::LParen) => {
+                let value = self.parse_value_expr()?;
+                self.expect_token(&Token::RParen)?;
+                Ok(value)
+            }
             Some(Token::Identifier(identifier)) => {
+                if identifier.eq_ignore_ascii_case("NULL") {
+                    return Ok(ValueExpr::Null);
+                }
+                if identifier.eq_ignore_ascii_case("CASE") {
+                    let mut branches = Vec::new();
+                    while self.consume_keyword("WHEN") {
+                        let condition = self.parse_expr()?;
+                        self.expect_keyword("THEN")?;
+                        branches.push(StateBranch {
+                            condition,
+                            value: self.parse_value_expr()?,
+                        });
+                    }
+                    if branches.is_empty() {
+                        return Err(OcelError::new("CASE requires a WHEN branch"));
+                    }
+                    let fallback = if self.consume_keyword("ELSE") {
+                        Some(Box::new(self.parse_value_expr()?))
+                    } else {
+                        None
+                    };
+                    self.expect_keyword("END")?;
+                    return Ok(ValueExpr::Case(branches, fallback));
+                }
+                if self.consume_token(&Token::LParen) {
+                    let mut values = vec![self.parse_value_expr()?];
+                    while self.consume_token(&Token::Comma) {
+                        values.push(self.parse_value_expr()?);
+                    }
+                    self.expect_token(&Token::RParen)?;
+                    return match identifier.to_ascii_uppercase().as_str() {
+                        "CONCAT" => Ok(ValueExpr::Concat(values)),
+                        "COALESCE" => Ok(ValueExpr::Coalesce(values)),
+                        _ => Err(OcelError::new(format!(
+                            "unsupported function '{identifier}'"
+                        ))),
+                    };
+                }
                 if identifier.eq_ignore_ascii_case("TRUE") {
                     return Ok(ValueExpr::Literal(QueryValue::Boolean(true)));
                 }

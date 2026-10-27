@@ -1,5 +1,4 @@
 impl CompactOcelLog {
-
     fn object_search(&self, request: &ObjectSearchRequest) -> ObjectSearchResult {
         let query = request
             .query
@@ -45,7 +44,7 @@ impl CompactOcelLog {
             ))
         })?;
         let object = &self.objects[object_index];
-        let state_attribute = self.symbol_for_value("state");
+        let state_attribute = self.state_attribute_symbol();
         let mut events = Vec::new();
         let mut stock_points = Vec::new();
         let mut related = BTreeMap::<(Symbol, String), LifecycleRelatedObjectAccumulator>::new();

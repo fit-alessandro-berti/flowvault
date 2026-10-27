@@ -1,4 +1,3 @@
-
 #[derive(Debug, Clone)]
 enum QueryValue {
     String(String),
@@ -74,6 +73,23 @@ impl EvalContext<'_> {
         match value {
             ValueExpr::Literal(value) => Some(value.clone()),
             ValueExpr::Field(field) => self.eval_field(field),
+            ValueExpr::Null => None,
+            ValueExpr::Concat(values) => {
+                let parts = values
+                    .iter()
+                    .map(|value| self.eval_state_value(value))
+                    .collect::<Option<Vec<_>>>()?;
+                Some(QueryValue::String(parts.concat()))
+            }
+            ValueExpr::Coalesce(values) => values.iter().find_map(|value| self.eval_value(value)),
+            ValueExpr::Case(branches, fallback) => {
+                for branch in branches {
+                    if self.eval_condition(&branch.condition) {
+                        return self.eval_value(&branch.value);
+                    }
+                }
+                fallback.as_ref().and_then(|value| self.eval_value(value))
+            }
         }
     }
 

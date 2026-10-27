@@ -1,10 +1,9 @@
 impl CompactOcelLog {
-
     fn state_transition_kpis(
         &self,
         request: &StateTransitionKpiRequest,
     ) -> OcelResult<StateTransitionKpiResult> {
-        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+        let state_attribute = self.state_attribute_symbol().ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
         })?;
         let object_type_symbol = request

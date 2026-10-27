@@ -14,7 +14,7 @@ struct StateQuery {
     else_value: Option<ValueExpr>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct StateBranch {
     condition: Expr,
     value: ValueExpr,
@@ -70,7 +70,10 @@ struct StateEvalIndex {
 
 impl StateEvalIndex {
     fn build(log: &CompactOcelLog, query: &StateQuery) -> Self {
-        let fields = query.referenced_fields();
+        Self::for_fields(log, query.referenced_fields())
+    }
+
+    fn for_fields(log: &CompactOcelLog, fields: ReferencedFields) -> Self {
         let event_attributes = log
             .events
             .iter()
@@ -164,18 +167,49 @@ impl Expr {
 enum ValueExpr {
     Field(FieldRef),
     Literal(QueryValue),
+    Concat(Vec<ValueExpr>),
+    Coalesce(Vec<ValueExpr>),
+    Case(Vec<StateBranch>, Option<Box<ValueExpr>>),
+    Null,
 }
 
 impl ValueExpr {
     fn references_object(&self) -> bool {
-        matches!(self, Self::Field(FieldRef::Object(_)))
+        match self {
+            Self::Field(FieldRef::Object(_)) => true,
+            Self::Concat(values) | Self::Coalesce(values) => {
+                values.iter().any(Self::references_object)
+            }
+            Self::Case(branches, fallback) => {
+                branches.iter().any(|branch| {
+                    branch.condition.references_object() || branch.value.references_object()
+                }) || fallback
+                    .as_ref()
+                    .is_some_and(|value| value.references_object())
+            }
+            _ => false,
+        }
     }
 
     fn collect_fields(&self, fields: &mut ReferencedFields) {
         match self {
             Self::Field(FieldRef::Event(field)) => fields.add_event_field(field),
             Self::Field(FieldRef::Object(field)) => fields.add_object_field(field),
-            Self::Literal(_) => {}
+            Self::Concat(values) | Self::Coalesce(values) => {
+                for value in values {
+                    value.collect_fields(fields);
+                }
+            }
+            Self::Case(branches, fallback) => {
+                for branch in branches {
+                    branch.condition.collect_fields(fields);
+                    branch.value.collect_fields(fields);
+                }
+                if let Some(value) = fallback {
+                    value.collect_fields(fields);
+                }
+            }
+            Self::Literal(_) | Self::Null => {}
         }
     }
 }

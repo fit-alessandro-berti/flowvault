@@ -1,10 +1,9 @@
 impl CompactOcelLog {
-
     fn time_perspective(
         &self,
         request: &TimePerspectiveRequest,
     ) -> OcelResult<TimePerspectiveResult> {
-        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+        let state_attribute = self.state_attribute_symbol().ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
         })?;
         let leading_type_symbol = request

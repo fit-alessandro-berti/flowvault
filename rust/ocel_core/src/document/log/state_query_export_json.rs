@@ -1,5 +1,4 @@
 impl CompactOcelLog {
-
     fn evaluate_state_query(
         &self,
         query: &StateQuery,
@@ -36,7 +35,7 @@ impl CompactOcelLog {
                     log: self,
                     eval_index,
                     event_index,
-                    object_index: None,
+                    object_index: related_objects.first().copied(),
                 };
                 if context.eval_condition(&branch.condition) {
                     return context.eval_state_value(&branch.value);

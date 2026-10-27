@@ -1,4 +1,3 @@
-
 .llm-config-modal {
   width: min(620px, 100%);
 }
@@ -207,4 +206,56 @@
   border: 1px solid #d7dfdd;
   border-radius: 8px;
   background: #fbfdfc;
+}
+
+/* State definitions and independently editable activity composition. */
+.state-editor {
+  overflow: auto;
+}
+.state-editor > textarea {
+  min-height: 240px;
+  flex: 1 0 240px;
+}
+.state-name-control {
+  display: grid;
+  gap: 6px;
+  padding: 12px 12px 0;
+}
+.state-name-control input,
+.state-composition-editor select {
+  min-height: 38px;
+  border: 1px solid #b9c7c3;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+}
+.state-composition-editor {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  overflow: auto;
+  padding: 16px;
+}
+.state-composition-editor h3,
+.state-composition-editor p {
+  margin: 0;
+}
+.state-composition-editor label {
+  display: grid;
+  gap: 6px;
+}
+.state-modal .state-composition-editor textarea {
+  min-height: 80px;
+  height: 80px;
+  border: 1px solid #b9c7c3;
+  border-radius: 6px;
+  padding: 10px;
+}
+.state-composition-editor details p {
+  margin-top: 10px;
+}
+.state-dialog-error {
+  margin: 0 auto 0 0;
+  color: #a12622;
+  overflow-wrap: anywhere;
 }

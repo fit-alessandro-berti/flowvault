@@ -10,7 +10,7 @@
     >
       <header class="state-modal-header">
         <div class="state-modal-title">
-          <h2 id="state-dialog-title">Add Event State</h2>
+          <h2 id="state-dialog-title">State Attributes & Activities</h2>
           <div class="state-language-help">
             <button
               type="button"
@@ -35,6 +35,14 @@
                   Reference fields with <code>event.type</code>, <code>event.attribute</code>, or
                   <code>object.attribute</code>.
                 </li>
+                <li>
+                  Choose a different name after <code>STATE</code> for each attribute. Combine them
+                  later with Activity composition.
+                </li>
+                <li>
+                  Values support <code>CONCAT</code>, <code>COALESCE</code>, <code>||</code>, and
+                  nested <code>CASE</code>.
+                </li>
                 <li>Quote spaced names like <code>event."Stock After"</code>.</li>
                 <li>
                   Use <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
@@ -50,6 +58,38 @@
 
       <div class="state-modal-body">
         <nav class="preset-list" aria-label="State query presets">
+          <button
+            type="button"
+            class="preset-option"
+            data-testid="state-composition-tab"
+            [class.is-selected]="vm.stateDialogMode() === 'composition'"
+            (click)="vm.openStateComposition()"
+          >
+            Activity composition
+          </button>
+          <strong>Defined attributes</strong>
+          @for (definition of vm.stateDefinitions(); track definition.attribute) {
+            <button
+              type="button"
+              class="preset-option"
+              [class.is-selected]="
+                vm.stateDialogMode() === 'attribute' &&
+                vm.stateAttributeName() === definition.attribute
+              "
+              (click)="vm.selectStateDefinition(definition)"
+            >
+              {{ definition.attribute }} · {{ definition.leading_object_type }}
+            </button>
+          }
+          <button
+            type="button"
+            class="ghost-button"
+            data-testid="add-state-attribute"
+            (click)="vm.addStateAttribute()"
+          >
+            Add attribute
+          </button>
+          <strong>Query presets</strong>
           @if (vm.persistedStateExpression()) {
             <button
               type="button"
@@ -81,58 +121,171 @@
           </button>
         </nav>
 
-        <div class="state-editor">
-          @if (vm.isLlmStateMode()) {
-            <section class="llm-state-panel">
-              <label>
-                <span>LLM request</span>
-                <textarea
-                  class="llm-prompt-input"
-                  spellcheck="true"
-                  [value]="vm.llmStatePrompt()"
-                  (input)="vm.onLlmStatePromptChange($event)"
-                ></textarea>
-              </label>
+        @if (vm.stateDialogMode() === 'attribute') {
+          <div class="state-editor">
+            <label class="state-name-control">
+              <span>Attribute name</span>
+              <input
+                aria-label="State attribute name"
+                [value]="vm.stateAttributeName()"
+                (input)="vm.onStateAttributeNameChange($event)"
+                placeholder="state1"
+              />
+              <small
+                >Saving replaces only this attribute. Use Add attribute to define another
+                state.</small
+              >
+            </label>
+            @if (vm.isLlmStateMode()) {
+              <section class="llm-state-panel">
+                <label>
+                  <span>LLM request</span>
+                  <textarea
+                    class="llm-prompt-input"
+                    spellcheck="true"
+                    [value]="vm.llmStatePrompt()"
+                    (input)="vm.onLlmStatePromptChange($event)"
+                  ></textarea>
+                </label>
+                <button
+                  type="button"
+                  class="ghost-button"
+                  (click)="vm.generateStateExpressionWithLlm()"
+                  [disabled]="vm.isGeneratingStateExpression()"
+                >
+                  @if (vm.isGeneratingStateExpression()) {
+                    Generating
+                  } @else {
+                    Generate Expression
+                  }
+                </button>
+              </section>
+            }
+            <label class="state-leading-control">
+              <span>Leading object type</span>
+              <select
+                aria-label="Leading object type"
+                [value]="vm.selectedLeadingObjectType()"
+                (change)="vm.onLeadingObjectTypeChange($event)"
+              >
+                @for (objectType of vm.leadingObjectTypeOptions(); track objectType) {
+                  <option [value]="objectType">{{ objectType }}</option>
+                }
+              </select>
+            </label>
+
+            <textarea
+              spellcheck="false"
+              [value]="vm.stateQueryDraft()"
+              (input)="vm.onStateQueryDraftChange($event)"
+              aria-label="SQL-like state query"
+            ></textarea>
+          </div>
+        } @else {
+          <div class="state-composition-editor">
+            <h3>Compose states and activities</h3>
+            <p>
+              Combine any saved event attributes. Change these expressions whenever you need a
+              different view.
+            </p>
+            <label>
+              <span>Analysis leading object type</span>
+              <select
+                aria-label="Analysis leading object type"
+                [value]="vm.stateCompositionDraft().leading_object_type"
+                (change)="vm.onStateCompositionChange('leading_object_type', $event)"
+              >
+                @for (objectType of vm.filterOptions().object_types; track objectType) {
+                  <option [value]="objectType">{{ objectType }}</option>
+                }
+              </select>
+            </label>
+            <div class="filter-actions">
               <button
                 type="button"
                 class="ghost-button"
-                (click)="vm.generateStateExpressionWithLlm()"
-                [disabled]="vm.isGeneratingStateExpression()"
+                (click)="vm.useAllStateAttributes(false)"
+                [disabled]="!vm.stateDefinitions().length"
               >
-                @if (vm.isGeneratingStateExpression()) {
-                  Generating
-                } @else {
-                  Generate Expression
-                }
+                Combine states only
               </button>
-            </section>
-          }
-          <label class="state-leading-control">
-            <span>Leading object type</span>
-            <select
-              [value]="vm.selectedLeadingObjectType()"
-              (change)="vm.onLeadingObjectTypeChange($event)"
+              <button
+                type="button"
+                class="ghost-button"
+                (click)="vm.useAllStateAttributes(true)"
+                [disabled]="!vm.stateDefinitions().length"
+              >
+                Activity + states
+              </button>
+            </div>
+            <label>
+              <span>Combined state expression</span>
+              <textarea
+                aria-label="Combined state expression"
+                spellcheck="false"
+                [value]="vm.stateCompositionDraft().state_expression"
+                (input)="vm.onStateCompositionChange('state_expression', $event)"
+              ></textarea>
+            </label>
+            <small
+              >Example: <code>CONCAT(event.state1, ' / ', event.state2)</code>. This defines
+              episodes and transitions.</small
             >
-              @for (objectType of vm.leadingObjectTypeOptions(); track objectType) {
-                <option [value]="objectType">{{ objectType }}</option>
-              }
-            </select>
-          </label>
-
-          <textarea
-            spellcheck="false"
-            [value]="vm.stateQueryDraft()"
-            (input)="vm.onStateQueryDraftChange($event)"
-            aria-label="SQL-like state query"
-          ></textarea>
-        </div>
+            <label>
+              <span>Activity label expression</span>
+              <textarea
+                aria-label="Activity label expression"
+                spellcheck="false"
+                [value]="vm.stateCompositionDraft().activity_expression"
+                (input)="vm.onStateCompositionChange('activity_expression', $event)"
+              ></textarea>
+            </label>
+            <small
+              >Use <code>event.combined_state</code> for states only, or
+              <code>CONCAT(event.type, ' [', event.combined_state, ']')</code> to include the
+              original activity.</small
+            >
+            <details>
+              <summary>Expressions and missing values</summary>
+              <p>
+                Use <code>CONCAT(...)</code> or <code>||</code> to join values in any order,
+                including literal text. Use <code>CASE WHEN ... THEN ... ELSE ... END</code> for
+                conditional labels.
+              </p>
+              <p>
+                A missing value makes a concatenation missing. Use
+                <code>COALESCE(event.state2, 'Unknown')</code> to include events without that state.
+                Events with no combined state are excluded from state analyses. Every stateful event
+                must have a nonempty activity label.
+              </p>
+              <p>
+                Named states retain their own leading object type and values. The analysis leading
+                type controls pattern lifecycles. Outputs are exported as
+                <code>combined_state</code> and <code>state_activity</code>.
+              </p>
+            </details>
+          </div>
+        }
       </div>
 
       <footer class="state-modal-footer">
+        @if (vm.errorMessage()) {
+          <p role="alert" class="state-dialog-error">{{ vm.errorMessage() }}</p>
+        }
         <button type="button" class="ghost-button" (click)="vm.closeStateDialog()">Cancel</button>
-        <button type="button" data-testid="apply-state-query" (click)="vm.applyStateQuery()">
-          OK
-        </button>
+        @if (vm.stateDialogMode() === 'attribute') {
+          <button type="button" data-testid="apply-state-query" (click)="vm.applyStateQuery()">
+            Save attribute
+          </button>
+        } @else {
+          <button
+            type="button"
+            data-testid="apply-state-composition"
+            (click)="vm.applyStateComposition()"
+          >
+            Apply composition
+          </button>
+        }
       </footer>
     </section>
   </div>

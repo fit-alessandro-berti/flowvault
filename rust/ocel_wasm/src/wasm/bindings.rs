@@ -1,4 +1,3 @@
-
 #[wasm_bindgen]
 impl OcelDocument {
     /// Imports an OCEL 2.0 JSON, XML, or CSV string.
@@ -86,6 +85,16 @@ impl OcelDocument {
         into_js_result(self.inner.apply_state_query(query))
     }
 
+    #[wasm_bindgen(js_name = stateConfigurationJson)]
+    pub fn state_configuration_json(&self) -> Result<String, JsValue> {
+        into_js_result(self.inner.state_configuration_json())
+    }
+
+    #[wasm_bindgen(js_name = applyStateComposition)]
+    pub fn apply_state_composition(&mut self, request_json: &str) -> Result<String, JsValue> {
+        into_js_result(self.inner.apply_state_composition(request_json))
+    }
+
     /// Applies the current State Detection SOM labels as the string `state` event attribute.
     #[wasm_bindgen(js_name = applyStateDetection)]
     pub fn apply_state_detection(&mut self, request_json: &str) -> Result<String, JsValue> {
@@ -109,19 +118,13 @@ impl OcelDocument {
 
     /// Returns all PCA/SOM lifecycle-window assignments as JSON.
     #[wasm_bindgen(js_name = stateDetectionAssignmentsJson)]
-    pub fn state_detection_assignments_json(
-        &self,
-        request_json: &str,
-    ) -> Result<String, JsValue> {
+    pub fn state_detection_assignments_json(&self, request_json: &str) -> Result<String, JsValue> {
         into_js_result(self.inner.state_detection_assignments_json(request_json))
     }
 
     /// Returns all PCA/SOM lifecycle-window assignments as CSV.
     #[wasm_bindgen(js_name = stateDetectionAssignmentsCsv)]
-    pub fn state_detection_assignments_csv(
-        &self,
-        request_json: &str,
-    ) -> Result<String, JsValue> {
+    pub fn state_detection_assignments_csv(&self, request_json: &str) -> Result<String, JsValue> {
         into_js_result(self.inner.state_detection_assignments_csv(request_json))
     }
 

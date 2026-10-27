@@ -25,6 +25,8 @@ export interface OcelDocumentHandle {
   exportBundle(): Uint8Array;
   objectLifecycleJson(objectId: string): string;
   applyStateQuery(query: string): string;
+  stateConfigurationJson(): string;
+  applyStateComposition(requestJson: string): string;
   applyStateDetection(requestJson: string): string;
   statePatternsJson(requestJson?: string): string;
   stateDetectionJson(requestJson: string): string;
@@ -60,4 +62,21 @@ export interface ImportedOcelDocument {
   summary: OcelSummary;
   originalSummary: OcelSummary;
   filterOptions: OcelFilterOptions;
+}
+
+export interface StateDefinition {
+  attribute: string;
+  leading_object_type: string;
+  query: string;
+}
+
+export interface StateComposition {
+  leading_object_type: string;
+  state_expression: string;
+  activity_expression: string;
+}
+
+export interface StateConfiguration {
+  definitions: StateDefinition[];
+  composition: StateComposition | null;
 }

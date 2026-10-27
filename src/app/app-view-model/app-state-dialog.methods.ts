@@ -1,20 +1,18 @@
-import { exportBaseName, formatHintForFile } from '../ocel-file';
-import { presetsForFile, StateQueryPreset } from '../state-query-presets';
-import { providerById, requestChatCompletion, type LlmConfig } from '../llm';
-import type { CausalFeatureTableResult, CausalFitResult, LifecycleEventDetail, ObjectLifecycleDetail, ObjectSearchResult, OcelFilterOptions, OcelSummary, ProcessGraph, ProcessGraphSettings, StateCorrelationResult, StateCorrelationRow, StateDetectionPreviewRow, StateDetectionResult, StateDetectionCellDetail, StateDetectionSomCell, StateDetectionSomTransition, StatePattern, StatePatternAnalysis, StatePatternEdge, StateQueryResult, StateTransitionKpiResult, StateTransitionKpiRow, StateDwellKpiRow, StuckStateRow, TextAttributeOption, TimePerspectiveResult } from '../ocel-wasm.service';
-import type { DfEdgeFilterRequest, FilterDialogKind, FilterRequest, TextAttributeFilterRequest } from '../models/filter.models';
-import type { CausalModelNode, CausalOperation } from '../models/causal.models';
-import type { PatternTab, PatternGraph, PatternGraphEdge, PatternGraphNode, PatternVisualization, StaticSampleLog } from '../models/pattern.models';
-import type { FeaturePage, StateDetectionCellTab } from '../models/feature.models';
-import type { SummaryDisplayValue, SummaryMetric } from '../models/summary.models';
-import type { TimeFilterCurve, TransitionMatrixCell } from '../models/time.models';
-import { DEFAULT_STATE_DETECTION_COLOR_OPTIONS } from '../helpers/static-data';
-import { DEFAULT_LLM_STATE_PROMPT, LLM_CONFIG_STORAGE_KEY, LLM_STATE_PRESET_ID, SAVED_STATE_PRESET_ID, STATE_EXPRESSION_EXAMPLES, STATE_EXPRESSION_STORAGE_KEY, defaultStateQuery, extractStateExpression, readStoredString, writeStoredJson, writeStoredString } from '../helpers/state-expression.helpers';
-import { clampInteger, correlationHeatStyle, edgeKey, emptySummaryValue, errorToMessage, graphMenuPosition, graphRequestJson, safeFilePart, sameEdge, selectedPattern, textAttributeKey, toggleSelection, uniqueEdges, withLeadingObjectTypeClause } from '../helpers/common.helpers';
-import { canAddCausalEdge, causalFeatureLabel, nextCausalNodeId, parseCausalModelSuggestion, pruneCausalEdges } from '../helpers/causal-model.helpers';
-import { patternFilterRequest, wrapGraphLabel } from '../helpers/pattern.helpers';
-import { fromDateTimeLocalInput, normalizeTimeRange, timeRangeLabel, toDateTimeLocalInput } from '../helpers/time-range.helpers';
-import { formatDateTime, formatDuration, validStateSelection } from '../helpers/time-format.helpers';
+import { presetsForFile, type StateQueryPreset } from '../state-query-presets';
+import type {
+  StateConfiguration,
+  StateComposition,
+  StateDefinition,
+  StateQueryResult,
+  OcelFilterOptions,
+  OcelSummary,
+} from '../ocel-wasm.service';
+import {
+  LLM_STATE_PRESET_ID,
+  SAVED_STATE_PRESET_ID,
+  defaultStateQuery,
+} from '../helpers/state-expression.helpers';
+import { errorToMessage, withLeadingObjectTypeClause } from '../helpers/common.helpers';
 
 export const appStateDialogMethods = {
   openStateDialog(this: any): void {
@@ -22,11 +20,13 @@ export const appStateDialogMethods = {
       return;
     }
 
+    this.refreshStateConfiguration();
     const presets = this.stateQueryPresets();
     const selectedPreset =
-      presets.find((preset: StateQueryPreset) => preset.id === this.selectedPresetId()) ?? presets[0];
+      presets.find((preset: StateQueryPreset) => preset.id === this.selectedPresetId()) ??
+      presets[0];
 
-    if (selectedPreset) {
+    if (!this.stateQueryDraft().trim() && selectedPreset) {
       this.selectStatePreset(selectedPreset);
     } else {
       this.ensureLeadingObjectTypeSelection();
@@ -48,7 +48,8 @@ export const appStateDialogMethods = {
     const leadingObjectType = this.validLeadingObjectType(preset.leadingObjectType);
     this.selectedPresetId.set(preset.id);
     this.selectedLeadingObjectType.set(leadingObjectType);
-    this.stateQueryDraft.set(withLeadingObjectTypeClause(preset.query, leadingObjectType));
+    this.stateDialogMode.set('attribute');
+    this.setStateQueryTemplate(preset.query);
   },
 
   selectPersistedStateExpression(this: any): void {
@@ -58,14 +59,24 @@ export const appStateDialogMethods = {
     }
 
     this.ensureLeadingObjectTypeSelection();
+    this.stateDialogMode.set('attribute');
     this.selectedPresetId.set(SAVED_STATE_PRESET_ID);
+    this.setStateQueryTemplate(expression);
+  },
+
+  setStateQueryTemplate(this: any, expression: string): void {
+    const attribute = this.stateAttributeName() || 'state';
     this.stateQueryDraft.set(
-      withLeadingObjectTypeClause(expression, this.selectedLeadingObjectType()),
+      withLeadingObjectTypeClause(expression, this.selectedLeadingObjectType()).replace(
+        /^(\s*STATE\s+)[A-Za-z_][A-Za-z0-9_-]*/im,
+        (_: string, prefix: string) => `${prefix}${attribute}`,
+      ),
     );
   },
 
   selectLlmStateExpression(this: any): void {
     this.ensureLeadingObjectTypeSelection();
+    this.stateDialogMode.set('attribute');
     this.selectedPresetId.set(LLM_STATE_PRESET_ID);
     if (!this.stateQueryDraft().trim()) {
       this.stateQueryDraft.set(defaultStateQuery(this.selectedLeadingObjectType()));
@@ -105,19 +116,9 @@ export const appStateDialogMethods = {
     try {
       const result = JSON.parse(this.documentHandle.applyStateQuery(query)) as StateQueryResult;
       this.persistStateExpression(query);
-      this.filterOptions.set(
-        JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions,
-      );
-      this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
-      this.originalSummary.set(
-        JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary,
-      );
-      this.stateCorrelation.set(null);
-      this.timePerspective.set(null);
-      this.stateTransitionKpis.set(null);
-      this.lifecycleDetail.set(null);
-      this.loadStatePatterns();
-      this.activeFeature.set('patterns');
+      this.refreshStateConfiguration();
+      this.refreshStateAnalysis();
+      this.activeFeature.set(this.summary()?.stateful_events > 0 ? 'patterns' : 'statistics');
       this.stateMessage.set(
         `Added ${result.attribute} for ${result.leading_object_type} to ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
       );
@@ -128,6 +129,14 @@ export const appStateDialogMethods = {
   },
 
   initializeStatePresetForFile(this: any, fileName: string): void {
+    this.stateDefinitions.set([]);
+    this.stateDialogMode.set('attribute');
+    this.stateQueryDraft.set('');
+    this.stateCompositionDraft.set({
+      leading_object_type: this.validLeadingObjectType(''),
+      state_expression: 'event.state',
+      activity_expression: "CONCAT(event.type, ' [', event.combined_state, ']')",
+    });
     const preset = presetsForFile(fileName)[0];
     if (preset) {
       this.selectStatePreset(preset);
@@ -137,6 +146,122 @@ export const appStateDialogMethods = {
     this.selectedPresetId.set('');
     this.ensureLeadingObjectTypeSelection();
     this.stateQueryDraft.set(defaultStateQuery(this.selectedLeadingObjectType()));
+  },
+
+  stateAttributeName(this: any): string {
+    return (
+      this.stateQueryDraft().match(/^\s*STATE\s+([A-Za-z_][A-Za-z0-9_-]*)\s+FOR\b/i)?.[1] ?? ''
+    );
+  },
+
+  onStateAttributeNameChange(this: any, event: Event): void {
+    const name = (event.target as HTMLInputElement).value;
+    this.stateQueryDraft.set(
+      this.stateQueryDraft().replace(
+        /^(\s*STATE\s+).*?(\s+FOR\b)/i,
+        (_: string, prefix: string, suffix: string) => `${prefix}${name}${suffix}`,
+      ),
+    );
+  },
+
+  addStateAttribute(this: any): void {
+    this.ensureLeadingObjectTypeSelection();
+    const names = new Set(this.stateDefinitions().map((item: StateDefinition) => item.attribute));
+    let index = 1;
+    while (names.has(`state${index}`)) index++;
+    this.stateQueryDraft.set(
+      defaultStateQuery(this.selectedLeadingObjectType()).replace(
+        'STATE state ',
+        `STATE state${index} `,
+      ),
+    );
+    this.stateDialogMode.set('attribute');
+    this.selectedPresetId.set('');
+  },
+
+  selectStateDefinition(this: any, definition: StateDefinition): void {
+    this.stateDialogMode.set('attribute');
+    this.selectedPresetId.set('');
+    this.selectedLeadingObjectType.set(definition.leading_object_type);
+    this.stateQueryDraft.set(definition.query);
+  },
+
+  refreshStateConfiguration(this: any): void {
+    if (!this.documentHandle?.stateConfigurationJson) return;
+    const configuration = JSON.parse(
+      this.documentHandle.stateConfigurationJson(),
+    ) as StateConfiguration;
+    this.stateDefinitions.set(configuration.definitions);
+    if (configuration.composition) this.stateCompositionDraft.set(configuration.composition);
+  },
+
+  openStateComposition(this: any): void {
+    this.refreshStateConfiguration();
+    this.stateDialogMode.set('composition');
+  },
+
+  onStateCompositionChange(this: any, key: keyof StateComposition, event: Event): void {
+    this.stateCompositionDraft.update((draft: StateComposition) => ({
+      ...draft,
+      [key]: (event.target as HTMLInputElement).value,
+    }));
+  },
+
+  useAllStateAttributes(this: any, withActivity: boolean): void {
+    const fields = this.stateDefinitions().map(
+      (definition: StateDefinition) => `event."${definition.attribute.replace(/"/g, '""')}"`,
+    );
+    if (!fields.length) return;
+    const expression = fields.length === 1 ? fields[0] : `CONCAT(${fields.join(", ' / ', ")})`;
+    this.stateCompositionDraft.update((draft: StateComposition) => ({
+      ...draft,
+      state_expression: expression,
+      activity_expression: withActivity
+        ? "CONCAT(event.type, ' [', event.combined_state, ']')"
+        : 'event.combined_state',
+    }));
+  },
+
+  applyStateComposition(this: any): void {
+    if (!this.documentHandle) return;
+    try {
+      const result = JSON.parse(
+        this.documentHandle.applyStateComposition(JSON.stringify(this.stateCompositionDraft())),
+      ) as StateQueryResult;
+      this.refreshStateConfiguration();
+      this.refreshStateAnalysis();
+      this.activeFeature.set(
+        this.summary()?.stateful_events > 0 ? 'stateAwareOcdfg' : 'statistics',
+      );
+      this.stateMessage.set(
+        `Updated activity composition for ${result.assigned_events.toLocaleString()} of ${result.total_events.toLocaleString()} events.`,
+      );
+      this.errorMessage.set('');
+      this.isStateDialogOpen.set(false);
+    } catch (error) {
+      this.errorMessage.set(errorToMessage(error));
+    }
+  },
+
+  refreshStateAnalysis(this: any): void {
+    this.filterOptions.set(
+      JSON.parse(this.documentHandle.filterOptionsJson()) as OcelFilterOptions,
+    );
+    this.summary.set(JSON.parse(this.documentHandle.summaryJson()) as OcelSummary);
+    this.originalSummary.set(JSON.parse(this.documentHandle.originalSummaryJson()) as OcelSummary);
+    this.stateCorrelation.set(null);
+    this.timePerspective.set(null);
+    this.stateTransitionKpis.set(null);
+    this.lifecycleDetail.set(null);
+    if (this.summary()?.stateful_events > 0) {
+      this.loadStatePatterns();
+    } else {
+      this.patternAnalysis.set(null);
+      this.stateAwareOcdfg.set(null);
+      this.selectedIntraPatternId.set('');
+      this.selectedInterPatternId.set('');
+      this.fullScreenPattern.set(null);
+    }
   },
 
   ensureLeadingObjectTypeSelection(this: any): void {

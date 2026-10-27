@@ -1,3 +1,4 @@
+import type { StateDefinition, StateComposition } from '../wasm-models/document.models';
 import { inject, signal } from '@angular/core';
 import { LLM_PROVIDERS, type LlmProviderId } from '../llm';
 import { OcelWasmService } from '../ocel-wasm.service';
@@ -27,6 +28,13 @@ export class AppStateFields {
   protected readonly selectedPresetId = signal('');
   protected readonly selectedLeadingObjectType = signal('');
   protected readonly stateQueryDraft = signal('');
+  protected readonly stateDefinitions = signal<StateDefinition[]>([]);
+  protected readonly stateDialogMode = signal<'attribute' | 'composition'>('attribute');
+  protected readonly stateCompositionDraft = signal<StateComposition>({
+    leading_object_type: '',
+    state_expression: 'event.state',
+    activity_expression: "CONCAT(event.type, ' [', event.combined_state, ']')",
+  });
   protected readonly persistedStateExpression = signal(
     readStoredString(STATE_EXPRESSION_STORAGE_KEY),
   );

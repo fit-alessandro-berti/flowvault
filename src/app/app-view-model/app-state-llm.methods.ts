@@ -47,12 +47,7 @@ export const appStateLlmMethods = {
           content: this.buildLlmStatePrompt(),
         },
       ]);
-      this.stateQueryDraft.set(
-        withLeadingObjectTypeClause(
-          extractStateExpression(expression),
-          this.selectedLeadingObjectType(),
-        ),
-      );
+      this.setStateQueryTemplate(extractStateExpression(expression));
       this.stateMessage.set('LLM state expression generated.');
     } catch (error) {
       this.errorMessage.set(errorToMessage(error));
@@ -103,7 +98,7 @@ Basic OCEL metadata:
 - Leading object type to use: ${this.selectedLeadingObjectType() || 'choose one from active object types'}
 ${stateDetectionMetadata}
 State expression language:
-- Shape: STATE state FOR LEADING OBJECT TYPE '<object type>' AS CASE ... END
+- Shape: STATE ${this.stateAttributeName() || 'state'} FOR LEADING OBJECT TYPE '<object type>' AS CASE ... END
 - Each branch is WHEN <condition> THEN '<state label>'.
 - Add ELSE '<state label>' unless a partial state assignment is intentional.
 - Use event.type for the activity name.

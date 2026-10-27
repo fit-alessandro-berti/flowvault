@@ -33,7 +33,7 @@ The Rust core parses standard OCEL 2.0 files into a memory-oriented representati
 
 This keeps large logs more compact in memory while preserving standard multi-format export.
 
-The WebAssembly document keeps two compact logs in memory after import: the original log and the active log. Activity and object-type filters rebuild the active log from the original log, so changing a filter also clears derived event states and state-pattern results.
+The WebAssembly document keeps two compact logs in memory after import: the original log and the active log. Activity and object-type filters rebuild the active log from the original log, so changing a filter preserves derived event states and rebuilds state-pattern results for the selected log.
 
 ## Supported Import/Export
 
@@ -57,11 +57,11 @@ The importer validates duplicate IDs/types, declared attribute types, unknown re
 
 The first screen is intentionally minimal: it asks for any supported OCEL 2.0 file and also offers bundled compressed sample logs served from `public/static/ocel2_compressed`. After importing a log, Flowvault switches to a workspace with a persistent black toolbar and a left-side feature selector. The toolbar contains import/export/state actions and a filter menu for activities and object types. Selecting a subset filters the active OCEL log in memory while the original imported log remains available for comparison. When filters are active, the toolbar shows the number of filters; opening it reveals the filter chain and removal controls. The `Statistics` page shows plain numbers when no filter is active, and `filtered/original` fractions when any activity or object-type filter is active.
 
-Filtered exports use the active filtered log. Changing any filter resets derived state enrichment and pattern analysis because those results belong to the previous active log.
+Filtered exports use the active filtered log. Changing a filter preserves state enrichment and recomputes pattern analysis for the active log.
 
 ## State-Aware Event Enrichment
 
-Flowvault implements the state-aware OCEL idea from Kretzschmann, Berti, and van der Aalst by adding a derived string event attribute named `state`. The paper models states as discrete values derived from dynamic object attributes, then enriches events with state context and transition information. Flowvault focuses on the event enrichment part: a SQL-like query is evaluated against each event and its related objects, then the resulting state is exported as a normal OCEL 2.0 event attribute.
+Flowvault implements state-aware event enrichment with independently named string event attributes, each derived from its own leading object type and query. The original single-attribute `STATE state` syntax remains supported. The paper models states as discrete values derived from dynamic object attributes, then enriches events with state context and transition information. Flowvault focuses on the event enrichment part: a SQL-like query is evaluated against each event and its related objects, then the resulting state is exported as a normal OCEL 2.0 event attribute.
 
 The state query syntax is:
 
@@ -89,7 +89,54 @@ Supported predicates:
 - `IS NULL` and `IS NOT NULL`
 - boolean composition with `AND`, `OR`, `NOT`, and parentheses
 
-Reapplying a query replaces the existing `state` attribute on every assigned event. The exporter also adds the `state` attribute definition to every event type so the generated JSON/XML remains self-describing.
+Reapplying a query replaces only its named attribute, removing old values on events that no longer match. Every named attribute receives a string schema definition on every event type. Named states and the composition outputs survive filtering and export in all supported formats.
+
+The state editor lists the definitions saved in the current document. **Add attribute** starts a new named definition (for example, `state1` and `state2`); select a saved definition to edit it. Each definition has its own leading object type. A query's name must be an identifier such as `stock_state` or `shipping-state`; names differing only by case are rejected. `combined_state`, `state_activity`, and the built-in event field names are reserved.
+
+### Editable state and activity composition
+
+Open **Activity composition** in the state editor after defining attributes. This is a separate configuration that can be changed without re-running or replacing those definitions. **Combine states only** and **Activity + states** provide editable starting expressions. For example:
+
+```sql
+-- Combined state expression (defines episodes and transitions):
+CONCAT(event.state1, ' / ', COALESCE(event.state2, 'Unknown'))
+
+-- Activity label expression (labels in patterns and the state-aware OC-DFG):
+event.combined_state
+```
+
+This produces activities such as `Open / Transit`. To retain the original activity, use:
+
+```sql
+CONCAT(event.type, ' [', event.combined_state, ']')
+```
+
+The expressions support event fields, string/number/boolean literals, `NULL`, `CONCAT(...)`, the concatenation operator `||`, `COALESCE(...)`, and nested `CASE WHEN ... THEN ... ELSE ... END`. Values can be reordered, selected, repeated, or combined with literal text; conditional expressions can map combinations to activity names:
+
+```sql
+CASE
+  WHEN event.state1 = 'Closed' AND event.state2 = 'Delivered' THEN 'Complete'
+  ELSE CONCAT(event.type, ': ', event.combined_state)
+END
+```
+
+Concatenation returns missing when any operand is missing. Use `COALESCE(event.state2, 'Unknown')` to supply an explicit fallback. Events without a combined state are excluded from state analyses; every event with a combined state must have a nonempty activity label. Invalid expressions, unknown fields, recursive output references, and missing activity labels reject the entire update without changing the current log.
+
+The first saved definition is selected automatically as the combined state. Adding another definition preserves that selection until you edit the composition. Updating a definition automatically recomputes the current composition. The composition's **Analysis leading object type** selects lifecycles for patterns and default state analyses; each source attribute keeps its own object type and timestamp-aware values. Composition evaluates event attributes across the log, including states from different object types. As with the original state query, when several objects of a leading type relate to one event, the first matching object supplies a branch's value (the first related leading object supplies an object value for an event-only condition or ELSE).
+
+Outputs are normal OCEL string event attributes: `combined_state` and `state_activity`. Named inputs and original event types remain intact. State patterns, transition KPIs, correlations, timelines, and the state-aware OC-DFG use `combined_state` (falling back to `state` for older imported logs). Patterns and the state-aware OC-DFG use `state_activity` as the activity label. Traditional graphs continue to use original event types. Definitions and composition settings are retained for the current document session; OCEL exports preserve their evaluated values, not the query configuration. Imported named event attributes can be recombined using the composition editor.
+
+The Rust/WASM APIs are `apply_state_query` / `applyStateQuery`, `state_configuration_json` / `stateConfigurationJson`, and `apply_state_composition` / `applyStateComposition`. The composition method takes JSON:
+
+```json
+{
+  "leading_object_type": "Order",
+  "state_expression": "CONCAT(event.state1, ' / ', COALESCE(event.state2, 'Unknown'))",
+  "activity_expression": "event.combined_state"
+}
+```
+
+Applying SOM state detection keeps other named attributes, updates the `state` attribute, and selects it as the current composition.
 
 The UI opens the state query editor as an overlay after import. For the bundled fixture logs it proposes three named presets on the left:
 
@@ -98,14 +145,14 @@ The UI opens the state query editor as an overlay after import. For the bundled 
 - `order-management`: Fulfillment Stage, Value and Weight, Exception Risk
 - `inventory_management_simulated`: Stock Status, Activity Phase, Stock Movement
 
-Selecting a preset writes its query into the editor on the right and selects its leading object type. The leading object type can be changed from the dropdown above the editor; the query header is updated accordingly. `OK` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
+Selecting a preset writes its query into the editor on the right and selects its leading object type. The leading object type can be changed from the dropdown above the editor; the query header is updated accordingly. `Save attribute` applies the edited query to the in-memory log; `Cancel` closes the overlay without changing the imported log.
 
 ## State Pattern Detection
 
 State-based feature pages are visible in the left selector but disabled until a state query has been applied. After state enrichment, Flowvault runs the pattern detection core in Rust/WebAssembly. It follows the state-determined segmentation described by Kretzschmann, Berti, and van der Aalst:
 
 - each object of the selected leading object type is treated as a candidate leading object lifecycle;
-- consecutive lifecycle events with the same event `state` form an intra-state episode;
+- consecutive lifecycle events with the same combined state form an intra-state episode;
 - neighboring episodes with different states form an inter-state transition segment;
 - each segment is represented as a small graph with directly-follows control-flow edges, event-to-object-type edges, and leading-object-type context edges;
 - structurally equal segment graphs are grouped and ranked by descending support, then by control-flow mass.
@@ -144,7 +191,7 @@ Flowvault exposes three layout-ready graph computations from the Rust/WebAssembl
 
 - `directlyFollowsGraphJson(objectType)`: flattens the active OCEL over one object type and counts directly-follows activity pairs along those object lifecycles.
 - `objectCentricDirectlyFollowsGraphJson()`: flattens over every object type, creates separate typed edges for each object type, and adds typed `START`/`END` lifecycle nodes.
-- `stateAwareObjectCentricDirectlyFollowsGraphJson()`: uses the enriched event `state` attribute, labels activities as `Activity [State]`, inserts explicit `CHANGE previous -> next` transition nodes when consecutive stateful lifecycle events change state, and keeps the same typed OC-DFG start/end and edge semantics.
+- `stateAwareObjectCentricDirectlyFollowsGraphJson()`: uses the combined state and configurable activity labels (default: `Activity [State]`), inserts explicit `CHANGE previous -> next` transition nodes when consecutive stateful lifecycle events change state, and keeps the same typed OC-DFG start/end and edge semantics.
 
 Each method returns a shared `ProcessGraph` JSON shape with positioned nodes, curved routed edge paths, labels, weights, object-type colors, and node shape metadata. OC-DFG start/end nodes are rendered as ellipses; typed edges use the same color as their object type, so parallel edges of different object types between the same activities remain visually distinct. The layout uses wider layer and row spacing so larger directly-follows graphs read as left-to-right flows rather than dense grids. The Angular `app-process-graph` component renders that shape as SVG and embeds a left-side panel for choosing visualized object types and minimum activity/path frequencies. Draft changes are applied only when the `Apply` button is pressed. The `Object-Centric DFG` feature shows the traditional OCDFG, and the `State-Aware OC-DFG` feature becomes available after state enrichment.
 

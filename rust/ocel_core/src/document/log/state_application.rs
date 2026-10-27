@@ -1,5 +1,4 @@
 impl CompactOcelLog {
-
     fn object_matches_pattern_filter(
         &self,
         object_index: usize,
@@ -12,7 +11,7 @@ impl CompactOcelLog {
             return false;
         }
 
-        let Some(state_attribute) = self.symbol_for_value("state") else {
+        let Some(state_attribute) = self.state_attribute_symbol() else {
             return false;
         };
         let state_lifecycle = object
@@ -105,9 +104,14 @@ impl CompactOcelLog {
                 ))
             })?;
         let eval_index = StateEvalIndex::build(self, &state_query);
+        let values = (0..self.events.len())
+            .map(|event_index| self.evaluate_state_query(&state_query, &eval_index, event_index))
+            .collect::<Vec<_>>();
         let attribute_symbol = self.pool.intern(&state_query.attribute_name);
         self.ensure_event_attribute(attribute_symbol, AttrType::String);
-        self.state_leading_object_type = Some(leading_type_symbol);
+        if state_query.attribute_name == "state" {
+            self.state_leading_object_type = Some(leading_type_symbol);
+        }
 
         for event in &mut self.events {
             event
@@ -116,8 +120,8 @@ impl CompactOcelLog {
         }
 
         let mut assigned = 0usize;
-        for event_index in 0..self.events.len() {
-            if let Some(state) = self.evaluate_state_query(&state_query, &eval_index, event_index) {
+        for (event_index, value) in values.into_iter().enumerate() {
+            if let Some(state) = value {
                 let state_symbol = self.pool.intern(&state);
                 let event = &mut self.events[event_index];
                 event.attributes.push(Attribute {

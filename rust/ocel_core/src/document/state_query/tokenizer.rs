@@ -1,4 +1,3 @@
-
 fn compare_ordered(left: &QueryValue, right: &QueryValue) -> Option<i8> {
     match (query_value_as_number(left), query_value_as_number(right)) {
         (Some(left), Some(right)) => {
@@ -80,6 +79,8 @@ enum Token {
     LParen,
     RParen,
     Semicolon,
+    Comma,
+    Concat,
 }
 
 fn tokenize(input: &str) -> OcelResult<Vec<Token>> {
@@ -141,6 +142,11 @@ fn tokenize(input: &str) -> OcelResult<Vec<Token>> {
             '(' => tokens.push(Token::LParen),
             ')' => tokens.push(Token::RParen),
             ';' => tokens.push(Token::Semicolon),
+            ',' => tokens.push(Token::Comma),
+            '|' if chars.peek().is_some_and(|(_, next)| *next == '|') => {
+                chars.next();
+                tokens.push(Token::Concat);
+            }
             character if character.is_ascii_digit() || character == '-' => {
                 let mut literal = character.to_string();
                 while let Some((_, next)) = chars.peek() {

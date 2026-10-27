@@ -1,0 +1,16 @@
+{
+  "eventTypes": [{"name":"Act","attributes":[]},{"name":"Finish","attributes":[]}],
+  "objectTypes": [
+    {"name":"Order","attributes":[{"name":"status","type":"string"}]},
+    {"name":"Shipment","attributes":[{"name":"status","type":"string"}]}
+  ],
+  "events": [
+    {"id":"e1","type":"Act","time":"2025-01-01T12:00:00Z","attributes":[],"relationships":[{"objectId":"o1","qualifier":""},{"objectId":"s1","qualifier":""}]},
+    {"id":"e2","type":"Act","time":"2025-01-02T12:00:00Z","attributes":[],"relationships":[{"objectId":"o1","qualifier":""}]},
+    {"id":"e3","type":"Finish","time":"2025-01-03T12:00:00Z","attributes":[],"relationships":[{"objectId":"o1","qualifier":""},{"objectId":"s1","qualifier":""}]}
+  ],
+  "objects": [
+    {"id":"o1","type":"Order","attributes":[{"name":"status","time":"2025-01-01T00:00:00Z","value":"Open"},{"name":"status","time":"2025-01-03T00:00:00Z","value":"Closed"}],"relationships":[]},
+    {"id":"s1","type":"Shipment","attributes":[{"name":"status","time":"2025-01-01T00:00:00Z","value":"Transit"},{"name":"status","time":"2025-01-03T00:00:00Z","value":"Delayed"}],"relationships":[]}
+  ]
+}

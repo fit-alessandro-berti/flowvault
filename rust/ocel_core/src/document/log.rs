@@ -24,3 +24,5 @@ include!("log/export_xml.rs");
 include!("log/export_csv.rs");
 include!("log/export_sqlite.rs");
 include!("log/export_bundle.rs");
+
+include!("log/state_composition.rs");

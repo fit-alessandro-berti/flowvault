@@ -1,5 +1,4 @@
 impl CompactOcelLog {
-
     fn summary(&self) -> OcelSummary {
         OcelSummary {
             source_format: self.format.as_str(),
@@ -23,7 +22,10 @@ impl CompactOcelLog {
                 .iter()
                 .filter(|object| !object.lifecycle.is_empty())
                 .count(),
-            stateful_events: self.count_events_with_attribute("state"),
+            stateful_events: self
+                .state_attribute_symbol()
+                .map(|attribute| self.count_events_with_attribute(self.pool.resolve(attribute)))
+                .unwrap_or(0),
         }
     }
 

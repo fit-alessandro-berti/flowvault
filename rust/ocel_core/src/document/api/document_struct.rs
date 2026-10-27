@@ -6,4 +6,7 @@ pub struct OcelDocumentCore {
     original_log: CompactOcelLog,
     log: CompactOcelLog,
     current_filter: OcelFilterRequest,
+    state_definitions: Vec<StateDefinition>,
+    state_composition: Option<StateComposition>,
+    state_composition_customized: bool,
 }

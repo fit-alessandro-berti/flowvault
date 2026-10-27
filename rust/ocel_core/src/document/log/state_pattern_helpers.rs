@@ -1,5 +1,4 @@
 impl CompactOcelLog {
-
     fn pattern_instance(
         &self,
         family: PatternFamily,
@@ -73,8 +72,14 @@ impl CompactOcelLog {
             oo_edges,
             occurrence: PatternOccurrence {
                 object_id: self.pool.resolve(leading_object.id).to_owned(),
-                start_event: self.pool.resolve(self.events[first_event_index].id).to_owned(),
-                end_event: self.pool.resolve(self.events[last_event_index].id).to_owned(),
+                start_event: self
+                    .pool
+                    .resolve(self.events[first_event_index].id)
+                    .to_owned(),
+                end_event: self
+                    .pool
+                    .resolve(self.events[last_event_index].id)
+                    .to_owned(),
                 start_time_ms: self.events[first_event_index].time_ms,
                 end_time_ms: self.events[last_event_index].time_ms,
             },
@@ -82,6 +87,15 @@ impl CompactOcelLog {
     }
 
     fn state_aware_event_label(&self, event_index: usize, state: &str) -> String {
+        if let Some(attribute) = self.events[event_index]
+            .attributes
+            .iter()
+            .find(|attribute| self.pool.resolve(attribute.name) == STATE_ACTIVITY)
+        {
+            if let AttrValue::String(label) = attribute.value {
+                return self.pool.resolve(label).to_owned();
+            }
+        }
         format!(
             "{} [{}]",
             self.pool.resolve(self.events[event_index].type_name),
@@ -136,13 +150,7 @@ impl CompactOcelLog {
         left: &StateEpisode,
         right: &StateEpisode,
     ) -> Vec<String> {
-        self.inter_sequence_bounded(
-            state_lifecycle,
-            left,
-            right,
-            left.start,
-            right.end,
-        )
+        self.inter_sequence_bounded(state_lifecycle, left, right, left.start, right.end)
     }
 
     fn inter_sequence_bounded(
@@ -193,11 +201,13 @@ impl CompactOcelLog {
 
     fn ensure_event_attribute(&mut self, attribute_symbol: Symbol, attr_type: AttrType) {
         for event_type in &mut self.event_types {
-            if !event_type
+            if let Some(attribute) = event_type
                 .attributes
-                .iter()
-                .any(|attribute| attribute.name == attribute_symbol)
+                .iter_mut()
+                .find(|attribute| attribute.name == attribute_symbol)
             {
+                attribute.attr_type = attr_type;
+            } else {
                 event_type.attributes.push(AttributeDef {
                     name: attribute_symbol,
                     attr_type,

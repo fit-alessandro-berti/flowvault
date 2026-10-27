@@ -125,7 +125,7 @@ export function withLeadingObjectTypeClause(query: string, leadingObjectType: st
     });
   }
 
-  return `STATE state ${clause} AS CASE\n  WHEN event.type IS NOT NULL THEN 'State'\nEND`;
+  return query;
 }
 
 export function escapeSqlString(value: string): string {

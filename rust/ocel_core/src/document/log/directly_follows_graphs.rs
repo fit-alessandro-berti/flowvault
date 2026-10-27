@@ -1,5 +1,4 @@
 impl CompactOcelLog {
-
     fn window_attribute_value<'a>(
         &'a self,
         window: &WindowEncoding,
@@ -88,7 +87,7 @@ impl CompactOcelLog {
         &self,
         request: &GraphFilterRequest,
     ) -> OcelResult<String> {
-        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+        let state_attribute = self.state_attribute_symbol().ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
         })?;
         let mut graph = GraphAccumulator::new(

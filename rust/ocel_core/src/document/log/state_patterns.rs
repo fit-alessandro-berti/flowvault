@@ -1,5 +1,4 @@
 impl CompactOcelLog {
-
     fn accumulate_state_aware_directly_follows_for_object(
         &self,
         graph: &mut GraphAccumulator,
@@ -32,14 +31,12 @@ impl CompactOcelLog {
         );
 
         for (position, (event_index, state)) in stateful_lifecycle.iter().enumerate() {
-            let event_type = self.pool.resolve(self.events[*event_index].type_name);
-            let label = format!("{event_type} [{state}]");
+            let label = self.state_aware_event_label(*event_index, state);
             graph.add_node(&label, "state-activity", position as f64 * 2.0 + 1.0, 1);
         }
 
         if let Some((first_index, first_state)) = stateful_lifecycle.first() {
-            let first_event_type = self.pool.resolve(self.events[*first_index].type_name);
-            let first = format!("{first_event_type} [{first_state}]");
+            let first = self.state_aware_event_label(*first_index, first_state);
             graph.add_edge(&start, &first, object_type, 1);
         }
 
@@ -47,10 +44,8 @@ impl CompactOcelLog {
             let [(source_index, source_state), (target_index, target_state)] = pair else {
                 continue;
             };
-            let source_event_type = self.pool.resolve(self.events[*source_index].type_name);
-            let target_event_type = self.pool.resolve(self.events[*target_index].type_name);
-            let source = format!("{source_event_type} [{source_state}]");
-            let target = format!("{target_event_type} [{target_state}]");
+            let source = self.state_aware_event_label(*source_index, source_state);
+            let target = self.state_aware_event_label(*target_index, target_state);
 
             if source_state == target_state {
                 graph.add_edge(&source, &target, object_type, 1);
@@ -64,14 +59,13 @@ impl CompactOcelLog {
         }
 
         if let Some((last_index, last_state)) = stateful_lifecycle.last() {
-            let last_event_type = self.pool.resolve(self.events[*last_index].type_name);
-            let last = format!("{last_event_type} [{last_state}]");
+            let last = self.state_aware_event_label(*last_index, last_state);
             graph.add_edge(&last, &end, object_type, 1);
         }
     }
 
     fn detect_state_patterns(&self, request: &StatePatternRequest) -> OcelResult<PatternAnalysis> {
-        let state_attribute = self.symbol_for_value("state").ok_or_else(|| {
+        let state_attribute = self.state_attribute_symbol().ok_or_else(|| {
             OcelError::new("event state attribute is missing; apply a state query first")
         })?;
 
@@ -93,7 +87,9 @@ impl CompactOcelLog {
             ));
         }
         if request.pre_radius == Some(0) || request.post_radius == Some(0) {
-            return Err(OcelError::new("pattern radii must be positive when provided"));
+            return Err(OcelError::new(
+                "pattern radii must be positive when provided",
+            ));
         }
         let min_support = request.min_support.max(1);
         let ignored_event_types = request
